@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "zerodao utils",
   "main": "lib/index.js",
-  "repository": "https://github.com/zerodao-finance/zero-protocol",
+  "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
   "license": "MIT",
   "private": false,

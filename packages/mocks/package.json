@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "zerodao SDK mocks",
   "main": "index.js",
-  "repository": "https://github.com/zerodao-finance/zero-protocol",
+  "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
   "license": "MIT",
   "private": false

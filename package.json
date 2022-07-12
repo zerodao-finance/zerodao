@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "zeroDAO Protocol SDK",
   "main": "dist/lib/zero.js",
-  "repository": "https://github.com/zerodao-finance/zero-protocol",
+  "repository": "https://github.com/zerodao-finance/zerodao",
   "types": "./lib/types.d.ts",
   "scripts": {
     "prettier:sol": "prettier --write ./**/*.sol",
