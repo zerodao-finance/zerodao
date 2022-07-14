@@ -1,4 +1,4 @@
-import fixtures from "zero-protocol/lib/fixtures";
+import fixtures from "../../../../../common/lib/index";
 import { ethers } from "ethers";
 const { getAddress, isAddress } = ethers.utils;
 

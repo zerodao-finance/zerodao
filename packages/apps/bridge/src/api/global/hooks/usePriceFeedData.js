@@ -2,9 +2,9 @@ import { storeContext } from "../global";
 import { useContext, useEffect } from "react";
 import { ChainId, Token, WETH, Fetcher, Route } from "@uniswap/sdk";
 import * as JOE from "@traderjoe-xyz/sdk";
-import fixtures from "zero-protocol/lib/fixtures";
+import fixtures from "../../../../../../common/lib/index";
 import { ethers } from "ethers";
-const Quotes = require("zero-protocol/lib/quotes");
+const Quotes = require("../../../../../../../lib/quotes");
 
 export const usePriceFeedContracts = () => {
   const { dispatch } = useContext(storeContext);

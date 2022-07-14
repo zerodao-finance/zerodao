@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { ETHEREUM, ARBITRUM, MATIC } from "zero-protocol/dist/lib/fixtures";
+import { ETHEREUM, ARBITRUM, MATIC } from "../../../../../common/lib/index";
 export const NETWORK_ROUTER = {
   137: {
     ...MATIC,

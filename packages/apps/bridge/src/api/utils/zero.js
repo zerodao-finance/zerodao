@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import deployments from "zero-protocol/deployments/deployments.json";
+import deployments from "../../../../../common/deployments/deployments.json";
 
 export const test = {
   TEST_KEEPER_ADDRESS: "0x4A423AB37d70c00e8faA375fEcC4577e3b376aCa",

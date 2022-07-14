@@ -4,11 +4,11 @@ import { ethers } from "ethers";
 import {
   createZeroUser,
   createZeroConnection,
-} from "zero-protocol/dist/lib/zero.js";
+} from "";
 import {
   enableGlobalMockRuntime,
   createMockKeeper,
-} from "zero-protocol/dist/lib/mock";
+} from "../../../../../../dist/lib/zero";
 import _ from "lodash";
 
 export const useZero = () => {

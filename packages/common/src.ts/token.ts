@@ -22,6 +22,8 @@ export function tokenMapping({tokenName, chainId}) {
     switch (tokenName.toLowerCase()) {
         case "avax":
             return AddressZero;
+        case "matic":
+            return AddressZero;
         case "eth":
             return AddressZero;
         case "renbtc":

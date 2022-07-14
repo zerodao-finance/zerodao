@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import fixtures from "zero-protocol/lib/fixtures";
+import fixtures from "../../../../../common/lib/index";
 
 const getRenBTCAddress = async (signer) => {
   const { chainId } = await signer.provider.getNetwork();

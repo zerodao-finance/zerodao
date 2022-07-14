@@ -3,18 +3,18 @@ import { deploymentsFromSigner } from "./zero";
 import {
   UnderwriterTransferRequest,
   UnderwriterBurnRequest,
-} from "zero-protocol/dist/lib/zero";
-import { EIP712_TYPES } from "zero-protocol/dist/lib/config/constants";
+} from "../../../../../../dist/lib/zero";
+import { EIP712_TYPES } from "../../../../../common/lib/index";
 import { Buffer } from "buffer";
-import fixtures from "zero-protocol/lib/fixtures";
+import fixtures from "../../../../../common/lib/index";
 import { createGetGasPrice } from "ethers-gasnow";
-import { tokenMapping } from "../utils/tokenMapping.js";
+import { tokenMapping } from "../../../../../common/lib/index";
 import EventEmitter from "events";
 import {
   selectFixture,
   chainIdToName,
   DECIMALS,
-} from "../utils/tokenMapping.js";
+} from "./tokenMapping.js";
 
 const remoteETHTxMap = new WeakMap();
 
