@@ -27,6 +27,8 @@ export const RENVM_PROVIDERS = {
 	Avalanche,
 };
 
+
+
 export const getVanillaProvider = (request) => {
 	const checkSummedContractAddr = ethers.utils.getAddress(request.contractAddress);
 	if (Object.keys(CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {

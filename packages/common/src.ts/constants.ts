@@ -49,3 +49,21 @@ export const EIP712_TYPES = {
     },
   ],
 };
+
+
+export const CONTRACTS = [
+  "ZeroController",
+  "DelegateUnderwriter",
+  "Convert",
+  "BTCVault",
+  "ArbitrumConvertQuick"
+];
+
+export const chainNameMapping = {
+  [1]: "ethereum",
+  [42161]: "arbitrum",
+  [137]: "matic",
+  [43114]: "avalanche"
+}
+
+
