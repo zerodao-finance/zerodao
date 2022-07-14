@@ -1,0 +1,32 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "ignorePatterns": ["**/__tests__/*", "**/*.css", "**/*.svg", "**/*.woff2"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "no-case-declarations": "off",
+    "react/no-unescaped-entities": "off",
+    "react/prop-types": "off",
+    "react/no-unknown-property": "off",
+    "no-duplicate-case": "off",
+    "no-async-promise-executor": "warn",
+    "no-inner-declarations": "warn",
+    "react/jsx-no-target-blank": "warn",
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "no-redeclare": "warn",
+    "react/jsx-no-undef": "warn"
+  }
+}

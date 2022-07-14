@@ -1,0 +1,27 @@
+{
+  "short_name": "zeroDAO",
+  "start_url": ".",
+  "homepage": "./",
+  "name": "zeroDAO",
+  "launch_path": "/public/index.html",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/svg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/svg",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "browser",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
