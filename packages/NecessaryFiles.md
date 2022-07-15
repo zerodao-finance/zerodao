@@ -1,6 +1,9 @@
+## Files/Functions/Utilites directly used by zeroBRIDGE and zero-keeper
+
 # zero-protocol: 
 
-- UnderwriterRequest.ts
+- UnderwriterRequest.ts **In sdk package**
+  - MetaRequest.ts
 - quotes.js
 - TransferRequest.ts
 - BurnRequest.ts

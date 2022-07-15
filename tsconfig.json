@@ -15,7 +15,7 @@
 		"checkJs": false,
 		"types": []
 	},
-	"include": ["./deployments/**/*.json", "./deploy", "./lib", "./lib/**/*"],
+	"include": ["./deployments/**/*.json", "./deploy", "./lib", "./lib/**/*", "packages/sdk/lib/quotes copy.js", "packages/sdk/lib/MetaRequest copy.ts", "packages/sdk/lib/UnderwriterRequest copy.ts"],
 	"exclude": ["node_modules"],
 	"typeAcquisition": { "enable": true },
 	"files": ["./hardhat.config.ts"]
