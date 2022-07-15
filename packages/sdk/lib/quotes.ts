@@ -6,7 +6,7 @@ const JOE = require("@traderjoe-xyz/sdk");
 const UNISWAP = require("@uniswap/sdk");
 const { Route } = require("@uniswap/sdk");
 
-const returnChainDetails = (CHAINID, _provider) => {
+export const returnChainDetails = (CHAINID, _provider) => {
   const provider = (chain) =>
     _provider ||
     new ethers.providers.InfuraProvider(
@@ -45,7 +45,7 @@ const returnChainDetails = (CHAINID, _provider) => {
   }
 };
 
-module.exports = function makeQuoter(CHAIN = "1", provider) {
+export function makeQuoter(CHAIN = "1", provider) {
   const chain = returnChainDetails(CHAIN, provider);
   const renCrv = new ethers.Contract(
     fixtures[chain.name]["Curve_Ren"],

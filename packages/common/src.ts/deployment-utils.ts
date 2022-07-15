@@ -5,6 +5,7 @@ import { _TypedDataEncoder } from '@ethersproject/hash';
 import type { SignerWithAddress } from 'hardhat-deploy-ethers/dist/src/signer-with-address';
 import { ethers } from 'ethers';
 import { Polygon, Ethereum, Arbitrum, Avalanche } from '@renproject/chains';
+import fixtures from './fixtures';
 
 export const CONTROLLER_DEPLOYMENTS = {
 	[ethers.utils.getAddress(require('../deployments/arbitrum/BadgerBridgeZeroController.json').address)]: 'Arbitrum',
