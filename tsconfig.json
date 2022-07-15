@@ -15,7 +15,7 @@
 		"checkJs": false,
 		"types": []
 	},
-	"include": ["./deployments/**/*.json", "./deploy", "./lib", "./lib/**/*", "packages/common/src.ts/badger copy.js", "packages/common/src.ts/badger copy.js", "packages/mocks/mock copy.ts", "packages/sdk/lib/quotes copy.js", "packages/sdk/lib/MetaRequest copy.ts", "packages/sdk/lib/UnderwriterRequest copy.ts"],
+	"include": ["./deployments/**/*.json", "./deploy", "./lib", "./lib/**/*", "packages/logger copy", "packages/common/src.ts/badger copy.js", "packages/common/src.ts/badger copy.js", "packages/mocks/mock copy.ts", "packages/sdk/lib/quotes copy.js", "packages/sdk/lib/MetaRequest copy.ts", "packages/sdk/lib/UnderwriterRequest copy.ts"],
 	"exclude": ["node_modules"],
 	"typeAcquisition": { "enable": true },
 	"files": ["./hardhat.config.ts"]

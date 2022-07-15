@@ -11,8 +11,8 @@
 - fixtures from "zero-protocol/lib/fixtures" **Added to common package**
 - deployments.json **Added to common package**
 - { createZeroUser, createZeroConnection } from "zero-protocol/dist/lib/zero.js"
-- { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" **Added to mocks package
-- { makeCompute } from "zero-protocol/lib/badger" **Added to common package
+- { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" **Added to mocks package**
+- { makeCompute } from "zero-protocol/lib/badger" **Added to common package**
 - Logger
 
 ## zeroBRIDGE:
