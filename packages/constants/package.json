@@ -1,0 +1,13 @@
+{
+  "name": "@zerodao/constants",
+  "version": "0.1.0",
+  "description": "zerodao sdk package",
+  "main": "lib/index.js",
+  "repository": "https:github.com/zerodao-finance/zerodao.git",
+  "author": "protoeloka",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "typescript": "^4.7.4"
+  }
+}
