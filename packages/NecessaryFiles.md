@@ -13,7 +13,7 @@
 - { createZeroUser, createZeroConnection } from "zero-protocol/dist/lib/zero.js"
 - { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" **Added to mocks package**
 - { makeCompute } from "zero-protocol/lib/badger" **Added to common package**
-- Logger
+- Logger **Added as own Package**
 
 ## zeroBRIDGE:
 
