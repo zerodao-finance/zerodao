@@ -1,6 +1,9 @@
 const { FIXTURES } = require("@zerodao/constants")
 import { isAddress, getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
+import { BigNumber } from "@ethersproject/bignumber";
+import { formatUnits, formatEther } from "@ethersproject/units"
+
 import _ from "lodash";
 
 export function selectFixture(chainId) {
@@ -15,6 +18,29 @@ export function selectFixture(chainId) {
             return FIXTURES.ETHEREUM;
     }
 }
+
+export function getChainUnits({ amount, tokenName }) {
+    const BNAmount = BigNumber.from(amount);
+
+    switch (tokenName ? tokenName.toLowerCase() : "") {
+        case "eth":
+            return formatEther(BNAmount);
+        case "avax":
+            return formatEther(BNAmount);
+        case "usdc":
+            return formatUnits(BNAmount, 6);
+        default:
+            return formatUnits(BNAmount, 8);
+    }
+}
+
+export const getChainIdToName = {
+    [1]: "ethereum",
+    [42161]: "arbitrum",
+    [137]: "matic",
+    [43114]: "avalance"
+}
+
 
 
 export function tokenMapping({ tokenName, chainId }) {
