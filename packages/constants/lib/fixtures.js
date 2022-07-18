@@ -1,4 +1,7 @@
-export const FIXTURES = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FIXTURES = void 0;
+exports.FIXTURES = {
     MATIC: {
         MATIC: "0x" + "00".repeat(20),
         btcGateway: "0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20",
@@ -63,4 +66,4 @@ export const FIXTURES = {
         btcGateway: "0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20",
     },
 };
-
+//# sourceMappingURL=fixtures.js.map
