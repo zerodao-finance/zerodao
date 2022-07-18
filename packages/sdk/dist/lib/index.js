@@ -18,4 +18,5 @@ __exportStar(require("./BurnRequest"), exports);
 __exportStar(require("./TransferRequest"), exports);
 __exportStar(require("./MetaRequest"), exports);
 __exportStar(require("./UnderwriterRequest"), exports);
+__exportStar(require("./quotes"), exports);
 //# sourceMappingURL=index.js.map
