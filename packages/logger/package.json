@@ -1,0 +1,22 @@
+{
+    "name": "@zerodao/logger",
+    "version": "0.1.0",
+    "description": "zerodao SDK logger exports",
+    "main": "lib/index.js",
+    "repository": "https://github.com/zerodao-finance/zerodao",
+    "author": "aedSidhe",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "build": "tsc"
+      },
+      "dependencies": {
+        "winston": "^3.3.3",
+        "ts-node": "^10.8.2",
+        "typescript": "^4.7.4"
+      },
+      "devDependencies": {
+        "cross-env": "^7.0.3"
+      }
+  }
+  
