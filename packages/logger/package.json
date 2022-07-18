@@ -8,8 +8,7 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-        "build": "tsc",
-        "test": "yarn build && cross-env node dist/test"
+        "build": "tsc"
       },
       "dependencies": {
         "winston": "^3.3.3",
