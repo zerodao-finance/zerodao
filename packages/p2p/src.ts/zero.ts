@@ -9,3 +9,5 @@ export async function createZeroConnection(signer: Signer, address?: string): Pr
 	//expects libp2p options that will be generated when super() is called on the class
 	return await ZeroP2P.fromPassword(connOptions)
 }
+
+export async function createZeroUser
