@@ -1,5 +1,7 @@
 import { EventEmitter } from "events";
+import Logger from "@zerodao/logger";
 const { TransferRequest, BurnRequest } = require("@zerodao/sdk")
+
 
 export class SDKTransfer extends EventEmitter {
 
