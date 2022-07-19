@@ -95,3 +95,11 @@ export type RequestStates = "pending" | "failed" | "succeeded"
 export type RequestWithStatus<T = Record<string, any>> = T & {
     status: RequestStates
 }
+
+
+export declare enum ChainId {
+    AVALANCHE = 43114,
+    MAINNET = 1,
+    MATIC = 137,
+    ARBITRUM = 42117
+}
