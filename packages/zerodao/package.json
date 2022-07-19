@@ -1,0 +1,10 @@
+{
+  "name": "@zerodao/zerodao",
+  "version": "0.1.0",
+  "description": "zerodao sdk umbrella package",
+  "main": "lib/index.js",
+  "repository": "https://github.com/zerodao-finance/zerodao.git",
+  "author": "protoeloka",
+  "license": "MIT",
+  "private": false
+}
