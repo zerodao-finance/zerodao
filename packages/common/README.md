@@ -1,4 +1,4 @@
-# Chains
+# Common
 
 this sub-module is part of the zerodao software development kit (sdk)
 

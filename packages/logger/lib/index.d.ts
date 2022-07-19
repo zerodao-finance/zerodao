@@ -1,5 +1,5 @@
-import winston, { Logger } from 'winston';
+import { Logger } from 'winston';
 import { UserTypes } from './types';
-declare const createLogger: (userType?: UserTypes) => winston.Logger;
+declare const createLogger: (userType?: UserTypes) => Logger;
 export default createLogger;
 export { Logger };
