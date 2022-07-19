@@ -8,14 +8,16 @@
       "noImplicitAny": false,
       "esModuleInterop": true,
       "sourceMap": true,
-      "outDir": "./dist",
+      "outDir": "./lib",
       "declaration": true,
       "types": [
         "node"
       ]
     },
     "include": [
-      "./lib/**/*",
-      "./test/**/*"
-   ]
+      "./src.ts/**/*"],
+
+    "exclude": [
+        "lib/**/*"
+      ]
   }
