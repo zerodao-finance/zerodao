@@ -18,7 +18,7 @@ most users will prefer to use the umbrella package, but for those with more spec
         reverseTokenMapping,
         getChainUnits,
         getChainIdToName
-    }
+    } = require("@zerodao/chains")
 ```
 
 ## License

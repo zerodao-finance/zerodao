@@ -1,4 +1,4 @@
-import winston, { createLogger as createWinstonLogger, transports, Logger } from 'winston';
+import { createLogger as createWinstonLogger, transports, Logger } from 'winston';
 import { UserTypes } from './types';
 
 const createLogger = (userType?: UserTypes) =>

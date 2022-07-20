@@ -11,3 +11,10 @@ export declare const EIP712_TYPES: {
         type: string;
     }[];
 };
+export declare const CONTRACTS: string[];
+export declare const chainNameMapping: {
+    1: string;
+    42161: string;
+    137: string;
+    43114: string;
+};

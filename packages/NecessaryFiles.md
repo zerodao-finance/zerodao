@@ -2,18 +2,18 @@
 
 ## zero-protocol: 
 
-- UnderwriterRequest.ts 
-  - MetaRequest.ts 
-- quotes.js 
-- TransferRequest.ts 
-- BurnRequest.ts 
-- { EIP712_TYPES } from "zero-protocol/dist/lib/config/constants" \
-- fixtures from "zero-protocol/lib/fixtures" 
-- deployments.json 
+- UnderwriterRequest.ts **In sdk**
+  - MetaRequest.ts **In sdk**
+- quotes.js **In compute**
+- TransferRequest.ts **In sdk**
+- BurnRequest.ts **In sdk**
+- { EIP712_TYPES } from "zero-protocol/dist/lib/config/constants" \ **In common**
+- fixtures from "zero-protocol/lib/fixtures" **In constants**
+- deployments.json **In Common**
 - { createZeroUser, createZeroConnection } from "zero-protocol/dist/lib/zero.js"
-- { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" 
-- { makeCompute } from "zero-protocol/lib/badger" 
-- Logger 
+- { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" **In Mocks**
+- { makeCompute } from "zero-protocol/lib/badger" **In Compute**
+- Logger **In Logger**
 
 ## zeroBRIDGE:
 

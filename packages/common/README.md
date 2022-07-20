@@ -1,8 +1,8 @@
-# Compute
+# Common
 
 this sub-module is part of the zerodao software development kit (sdk)
 
-it is responsible for computation utilities. These are the most recent update default exports used for zerodao software & intefrations
+it is responsible for integrated chain utilities. 
 
 for more information, see the documentation
 
@@ -10,11 +10,15 @@ for more information, see the documentation
 
 most users will prefer to use the umbrella package, but for those with more specific needs, individual components can be imported.
 
-``` javascript
-    { computeRandomValue,
-    getNonce,
-    getPNonce,
-    btcAddressToHex } = require('@zerodao/compute')
+``` javascript 
+
+    const {
+        selectFixture,
+        tokenMapping,
+        reverseTokenMapping,
+        getChainUnits,
+        getChainIdToName
+    } = require("@zerodao/chains")
 ```
 
 ## License

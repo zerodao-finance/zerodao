@@ -26,7 +26,7 @@ export function makeQuoter(CHAIN = "1", provider) {
      */
 }
 
-class Quoter {
+export class Quoter {
     static makeQuoter(chain = "1", provider: JsonRpcProvider) {
         let _chain = getChainData(chain);
         return new Quoter(_chain, provider)
