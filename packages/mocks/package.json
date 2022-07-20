@@ -2,7 +2,7 @@
   "name": "@zerodao/mocks",
   "version": "1.0.0",
   "description": "zerodao SDK mocks",
-  "main": "dist/lib/index.js",
+  "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
   "license": "MIT",
