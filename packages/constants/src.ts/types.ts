@@ -1,6 +1,7 @@
 import { BigNumberish } from '@ethersproject/bignumber';
 //import { SignerWithAddress } from 'hardhat-deploy-ethers/dist/src/signer-with-address';
 import { EIP712TypedData } from '@0x/types';
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 export interface GatewayAddressInput {
     isTest: boolean;
@@ -102,4 +103,11 @@ export declare enum ChainId {
     MAINNET = 1,
     MATIC = 137,
     ARBITRUM = 42117
+}
+
+export type Chain = {
+    name: string;
+    uniswapName: string;
+    chainId: string;
+    provider: JsonRpcProvider
 }

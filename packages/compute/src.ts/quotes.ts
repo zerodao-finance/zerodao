@@ -4,6 +4,18 @@ import { parseEther } from "@ethersproject/units";
 import { FIXTURES } from "@zerodao/constants";
 import JOE from "@traderjoe-xyz/sdk";
 
+
+type Chain = {
+    name: string;
+    uniswapName: string
+    chainId: string;
+    provider: JsonRpcProvider;
+}
+
+const getChainData = (chain: string): Chain => { return };
+
+
+
 export function makeQuoter(CHAIN = "1", provider) {
     let chain; // = function that returns chain details
     /**
@@ -16,14 +28,15 @@ export function makeQuoter(CHAIN = "1", provider) {
 
 class Quoter {
     static makeQuoter(chain = "1", provider: JsonRpcProvider) {
-        return new Quoter(chain, provider)
+        let _chain = getChainData(chain);
+        return new Quoter(_chain, provider)
     }
 
-    chain: string;
+    chain: Chain;
     provider: JsonRpcProvider;
     quoter: Contract
     renCrv: Contract
-    constructor(chain = "1", provider: JsonRpcProvider) {
+    constructor(chain: Chain, provider: JsonRpcProvider) {
         this.chain = chain
         this.provider = provider
 
