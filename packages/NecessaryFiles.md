@@ -12,8 +12,8 @@
 - deployments.json **In Common**
 - { createZeroUser, createZeroConnection } from "zero-protocol/dist/lib/zero.js"
 - { enableGlobaleMockRuntime, createMockKeeper } from "zero-protocol/dist/lib/mock" **In Mocks**
-- { makeCompute } from "zero-protocol/lib/badger" 
-- Logger 
+- { makeCompute } from "zero-protocol/lib/badger" **In Compute**
+- Logger **In Logger**
 
 ## zeroBRIDGE:
 
