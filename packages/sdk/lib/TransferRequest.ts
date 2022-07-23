@@ -16,7 +16,7 @@ import { EthArgs } from "@renproject/interfaces";
 import { getProvider } from "@zerodao/common";
 
 
-export class ReleaseRequest {}
+export class ReleaseRequest { }
 
 export class TransferRequest {
   public module: string;
@@ -60,8 +60,8 @@ export class TransferRequest {
       typeof params.amount === "number"
         ? params.amount
         : typeof params.amount === "string"
-        ? ethers.BigNumber.from(params.amount)
-        : params.amount
+          ? ethers.BigNumber.from(params.amount)
+          : params.amount
     );
     this.data = params.data;
     this.nonce = params.nonce

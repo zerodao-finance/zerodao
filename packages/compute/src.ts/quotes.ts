@@ -95,6 +95,44 @@ export class Quoter {
         }
     }
 
+    async getUsdcquoteAVAX(direction, amount) {
+        const aTricrypto = new Contract(
+            "0xB755B949C126C04e0348DD881a5cF55d424742B2",
+            ["function get_dy(uint256, uint256, uint256) view returns (uint256)"],
+            this.provider
+        )
+
+        const crvUSD = new Contract(
+            "0x7f90122BF0700F9E7e1F688fe926940E8839F353",
+            [
+                "function calc_token_amount(uint256[3] calldata, bool) view returns (uint256)",
+                "function calc_withdraw_one_coin(uint256, int128) view returns (uint256)",
+            ],
+            this.provider
+        )
+
+        const renCrvPath = [0, 1];
+
+        const path = [0, 1];
+
+        if (direction) {
+            const av3usdAmount = await crvUSD.calc_token_amount([0, amount, 0], true);
+
+            const wbtcAmount = await aTricrypto.get_dy(...path, av3usdAmount);
+            return await this.renCrv.get_dy(...renCrvPath, wbtcAmount);
+        } else {
+            const wbtcAmount = await this.renCrv.get_dy(
+                ...[...renCrvPath].reverse(),
+                amount
+            );
+            const av3usdAmount = await aTricrypto.get_dy(
+                ...[...path].reverse(),
+                wbtcAmount
+            );
+            return await crvUSD.calc_withdraw_one_coin(av3usdAmount, 1);
+        }
+    }
+
     async getWbtcQuote(direction, amount) {
         const path = this.chain.name === "ETHEREUM" ? [0, 1] : [1, 0];
         return await this.renCrv[
