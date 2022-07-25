@@ -19,8 +19,8 @@
 
 - sdk.js, at least ({ sdkBurn, sdkTransfer })
 - { deploymentsFromSigner } from "./zero";
-- { tokenMapping, selectFixture, chainIdToName, DECIMALS, available_chains } from "utils/tokenMapping.js"
-- network.js, formatters.js, walletModal.js, chains.js from utils
+- { tokenMapping, selectFixture, chainIdToName, DECIMALS, available_chains } from "utils/tokenMapping.js" **In Chains**
+- network.js, formatters.js, walletModal.js?, chains.js from utils **In Chains and Compute**
 
 ## zero-keeper:
 

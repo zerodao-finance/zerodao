@@ -23,4 +23,7 @@ export const DECIMALS = {
     [toLower(FIXTURES.MATIC.USDC)]: 6,
     //@ts-ignore-error
     [toLower(FIXTURES.MATIC.ibBTC)]: 8,
+    [toLower(FIXTURES.OPTIMISM.WBTC)]: 8,
+    [toLower(FIXTURES.OPTIMISM.renBTC)]: 8,
+    [toLower(FIXTURES.OPTIMISM.USDC)]: 6,
 };

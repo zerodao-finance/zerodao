@@ -14,6 +14,8 @@ export function selectFixture(chainId) {
             return FIXTURES.AVALANCHE;
         case "137":
             return FIXTURES.MATIC;
+        case "10":
+            return FIXTURES.OPTIMISM
         default:
             return FIXTURES.ETHEREUM;
     }
@@ -27,6 +29,10 @@ export function getChainUnits({ amount, tokenName }) {
             return formatEther(BNAmount);
         case "avax":
             return formatEther(BNAmount);
+        case "matic":
+            return formatEther(BNAmount)
+        case "op":
+            return formatEther(BNAmount)
         case "usdc":
             return formatUnits(BNAmount, 6);
         default:
@@ -38,10 +44,54 @@ export const getChainIdToName = {
     [1]: "ethereum",
     [42161]: "arbitrum",
     [137]: "matic",
-    [43114]: "avalance"
+    [43114]: "avalanche",
+    [10]: "optimism"
 }
 
-
+export const chainIdToNetworkName = (chainId) => {
+    return {
+      [10]: [
+        "optimism",
+        [
+          { BadgerBridgeZeroController: "ZeroController" },
+          { BadgerBridgeZeroController: "DelegateUnderwriter" },
+        ],
+        [],
+      ],
+      [42161]: [
+        "arbitrum",
+        [
+          { BadgerBridgeZeroController: "ZeroController" },
+          { BadgerBridgeZeroController: "DelegateUnderwriter" },
+        ],
+        [],
+      ],
+      [43114]: [
+        "avalanche",
+        [
+          { BadgerBridgeZeroController: "ZeroController" },
+          { BadgerBridgeZeroController: "DelegateUnderwriter" },
+        ],
+        [],
+      ],
+      [137]: [
+        "matic",
+        [
+          { BadgerBridgeZeroController: "ZeroController" },
+          { BadgerBridgeZeroController: "DelegateUnderwriter" },
+        ],
+        [],
+      ],
+      [1]: [
+        "mainnet",
+        [
+          { BadgerBridgeZeroController: "ZeroController" },
+          { BadgerBridgeZeroController: "DelegateUnderwriter" },
+        ],
+        [],
+      ],
+    }[chainId];
+  };
 
 export function tokenMapping({ tokenName, chainId }) {
     const fixture: any = selectFixture(chainId);
@@ -55,8 +105,6 @@ export function tokenMapping({ tokenName, chainId }) {
             return fixture.renBTC
         case "wbtc":
             return fixture.WBTC;
-        case "ibbtc":
-            return fixture.ibBTC;
         case "usdc":
             return fixture.USDC;
     }

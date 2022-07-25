@@ -59,11 +59,6 @@ export const CONTRACTS = [
   "ArbitrumConvertQuick"
 ];
 
-export const chainNameMapping = {
-  [1]: "ethereum",
-  [42161]: "arbitrum",
-  [137]: "matic",
-  [43114]: "avalanche"
-}
+
 
 
