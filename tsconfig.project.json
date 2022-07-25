@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2015",
+      "es5",
+      "dom"
+    ],
+    "preserveWatchOutput": true,
+    "pretty": false
+  },
+  "references": [
+      {
+        "path": "./packages/buffer"
+      },
+      {
+        "path": "./packages/chains"
+      },
+      {
+        "path": "./packages/client"
+      },
+      {
+        "path": "./packages/common"
+      },
+      {
+        "path": "./packages/compute"
+      },
+      {
+        "path": "./packages/constants"
+      },
+      {
+        "path": "./packages/dispatcher"
+      },
+      {
+        "path": "./packages/keeper"
+      },
+      {
+        "path": "./packages/logger"
+      },
+      {
+        "path": "./packages/mocks"
+      },
+      {
+        "path": "./packages/p2p"
+      },
+      {
+        "path": "./packages/sdk"
+      },
+      {
+        "path": "./packages/zerodao"
+      },
+      {
+        "path": "./packages/watcher"
+      }
+],
+"files": []
+}

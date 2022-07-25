@@ -8,15 +8,15 @@
       "noImplicitAny": false,
       "esModuleInterop": true,
       "sourceMap": true,
-      "outDir": "lib",
+      "outDir": "src.ts/lib",
       "declaration": true,
       "types": [
         "node"
       ]
     },
     "include": [
-      "./src.ts/**/*"],
-
+       "src.ts/**/*"
+    ], 
     "exclude": [
         "lib/**/*"
       ]

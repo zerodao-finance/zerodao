@@ -1,0 +1,22 @@
+{
+  "name": "@zerodao/pending",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "cross-env node bin/pending"
+  },
+  "description": "keeper pending process",
+  "main": "lib/index.js",
+  "repository": "https://github.com/zerodao-finance/zerodao",
+  "author": "zeroDAO",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@renproject/ren": "^2.5.13",
+    "ioredis": "^5.0.5",
+    "send-crypto": "^0.2.37",
+    "zero-protocol": "https://github.com/zerodao-finance/zero-protocol"
+  }
+}
