@@ -1,5 +1,3 @@
-"use strict";
-
 // only run one of these
 
 const { UnderwriterTransferRequest } = require("@zerodao/sdk");
