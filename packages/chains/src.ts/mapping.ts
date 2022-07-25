@@ -105,6 +105,8 @@ export function tokenMapping({ tokenName, chainId }) {
             return fixture.renBTC
         case "wbtc":
             return fixture.WBTC;
+        case "ibbtc":
+            return fixture.ibBTC;
         case "usdc":
             return fixture.USDC;
     }
