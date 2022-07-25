@@ -13,11 +13,7 @@ most users will prefer to use the umbrella package, but for those with more spec
 ``` javascript 
 
     const {
-        selectFixture,
-        tokenMapping,
-        reverseTokenMapping,
-        getChainUnits,
-        getChainIdToName
+
     } = require("@zerodao/keeper")
 ```
 
