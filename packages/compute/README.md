@@ -10,11 +10,14 @@ for more information, see the documentation
 
 most users will prefer to use the umbrella package, but for those with more specific needs, individual components can be imported.
 
-``` javascript
-    { computeRandomValue,
-    getNonce,
-    getPNonce,
-    btcAddressToHex } = require('@zerodao/compute')
+``` Javascript
+    const = 
+    { 
+        computeRandomValue,
+        getNonce,
+        getPNonce,
+        btcAddressToHex 
+    } = require('@zerodao/compute')
 ```
 
 ## License

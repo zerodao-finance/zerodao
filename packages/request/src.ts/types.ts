@@ -1,7 +1,12 @@
-export type RequestTemplate = string[];
-export type RequestType = _RequestTypes;
+export type Transaction = {
+    chainId: string,
+    to: string,
+    data: string
+}
 
-enum _RequestTypes {
-    BURN = "burn",
-    TRANSFER = "tranfer"
+export type QueryTXResult = {
+    amount: string,
+    nHash: HexString,
+    pHash: HexString,
+    signature: HexString
 }

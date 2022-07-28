@@ -3,13 +3,15 @@ import peerId = require('peer-id');
 import lp from 'it-length-prefixed';
 import pipe from 'it-pipe';
 
-export abstract class Request {
+abstract class Request {
     static PROTOCOL = "/zero/1.1.0/dispatch";
     constructor() {
 
     }
 
-    abstract serialize(): string;
+    serialize(): Buffer {
+        throw new Error("Serialize must be implemented")
+    };
 
     async publish(peer: ZeroP2P): Promise<void> {
         const request = this.serialize();
@@ -36,3 +38,5 @@ export abstract class Request {
     }
 
 }
+
+export default Request;
