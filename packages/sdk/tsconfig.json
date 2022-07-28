@@ -17,5 +17,6 @@
     "include": [
       "./lib/**/*",
       "./test/**/*"
-   ]
+       ],
+    "exclude": "./dist"
   }

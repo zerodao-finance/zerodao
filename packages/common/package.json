@@ -2,7 +2,7 @@
   "name": "@zerodao/common",
   "version": "0.1.0",
   "description": "zerodao utils",
-  "main": "lib/index.js",
+  "main": "src.ts/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
   "license": "MIT",

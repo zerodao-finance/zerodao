@@ -60,7 +60,7 @@ export const makeCompute = (CHAIN = "1") => {
     return amountAfterDeduction <= 0 ? 0 : amountAfterDeduction;
   };
 
-  const deductMintFee = async (amount) => {
+  const deductMintFee = async (amount, multiplier?) => {
     amount = ethers.BigNumber.from(amount);
 
     const feeAmounts = await applyFee(amount, mintFee);

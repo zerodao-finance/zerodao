@@ -1,0 +1,19 @@
+{
+  "name": "@zerodao/watcher",
+  "version": "0.1.0",
+  "description": "watcher",
+  "scripts": {
+    "start": "cross-env node bin/watcher"
+  },
+  "main": "lib/watcher.js",
+  "repository": "https://github.com/zerodao-finance/zerodao",
+  "author": "zeroDAO",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "zero-protocol": "https://github.com/zerodao-finance/zero-protocol"
+  },
+  "dependencies": {
+    "ioredis": "^5.0.5"
+  }
+}
