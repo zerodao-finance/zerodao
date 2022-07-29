@@ -5,7 +5,7 @@ import pipe from 'it-pipe';
 
 abstract class Request {
     static PROTOCOL = "/zero/1.1.0/dispatch";
-    constructor() {
+    constructor(params: any) {
 
     }
 

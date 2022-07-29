@@ -1,4 +1,81 @@
 import { ethers } from "ethers";
+import { hexValue } from "@ethersproject/bytes";
+
+
+
+interface IIntegratedChain {
+  id: number,
+  hex: string
+  name: string | string[];
+  symbol: string;
+  decimals?: number;
+  explorerRootUrl?: string;
+  rpcUrls(): string | string[] | undefined
+}
+
+
+const ETHEREUM: IIntegratedChain = {
+  id: 1,
+  hex: hexValue(1),
+  name: ["Ether", "Ethereum"],
+  symbol: "ETH",
+  decimals: 18,
+  rpcUrls: () => process.env.infuraKey ? `https://mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  explorerRootUrl: "https://etherscan.io/address/"
+}
+
+const AVALANCHE: IIntegratedChain = {
+  id: 43114,
+  hex: hexValue(43114),
+  name: ["Avax", "Avalanche"],
+  symbol: "AVAX",
+  decimals: 18,
+  rpcUrls: () => "https://api.avax.network/ext/bc/C/rpc",
+  explorerRootUrl: "https://snowtrace.io/address/"
+}
+
+const ARBITRUM: IIntegratedChain = {
+  id: 42161,
+  hex: hexValue(42161),
+  name: "Arbitrum",
+  symbol: "Arb",
+  rpcUrls: () => process.env.infuraKey ? `https://arbitrum-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  explorerRootUrl: "https://snowtrace.io/address/"
+}
+
+const POLYGON: IIntegratedChain = {
+  id: 137,
+  hex: hexValue(137),
+  name: ["Polygon", "Matic"],
+  symbol: "MATIC",
+  rpcUrls: () => process.env.infuraKey ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  explorerRootUrl: "https://polygonscan.com/address/"
+}
+
+const OPTIMISM: IIntegratedChain = {
+  id: 10,
+  hex: hexValue(10),
+  name: "Optimism",
+  symbol: "OPTIMISM",
+  rpcUrls: () => process.env.infuraKey ? `https://optimism-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  explorerRootUrl: "https://optimistic.etherscan.io/address/"
+}
+
+const ID_CHAIN = {
+  [1]: ETHEREUM,
+  [43114]: AVALANCHE,
+  [42161]: ARBITRUM,
+  [137]: POLYGON,
+  [10]: OPTIMISM
+}
+
+const NAME_CHAIN = {
+  "Arbitrum": ARBITRUM,
+  "Ethereum": ETHEREUM,
+  "Avalanche": AVALANCHE,
+  "Optimism": OPTIMISM,
+  "Polygon": POLYGON
+}
 
 const ETH = {
   name: "Ether",
@@ -22,8 +99,8 @@ export const getChainName = (chainId) => {
   switch (chainId) {
     case "42161":
       return "Arbitrum";
-    // case "43114":
-    //   return "Avalanche";
+    case "43114":
+      return "Avalanche";
     case "137":
       return "Polygon";
     case "1":

@@ -3,6 +3,7 @@ import type { Transaction, QueryTXResult } from "./types";
 import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
 import { EthArgs } from "@renproject/interfaces";
 import { arrayify } from "@ethersproject/bytes";
+import { BigNumberish } from "@ethersproject/bignumber";
 import { Bitcoin } from "@renproject/chains";
 import { getProvider } from "@zerodao/common";
 
@@ -10,16 +11,26 @@ abstract class BaseTransferRequest extends Request {
     public _mint: any;
     public requestType = "transfer";
     public contractAddress: string;
-    public nonce: string;
-    private _contractParams: EthArgs;
-    private _contractFn: string;
+
+    public to: string;
+    public amount: BigNumberish;
+    public nonce?: BytesLike | BigNumberish;
+    public pNonce?: BytesLike | BigNumberish;
     private _ren: RenJS
     private bitcoin: Bitcoin;
-    constructor() {
-        super()
+    private _contractFn: string;
+    private _contractParams: EthArgs;
+
+
+    constructor(params: {
+        network?: "mainnet" | "testnet";
+    }) {
+        super(params)
         this._contractFn = "zeroCall";
-        const networkName = "mainnet"
-        this.bitcoin = new Bitcoin({ network: networkName })
+
+        const networkName = params.network || "mainnet"
+        this.bitcoin = new Bitcoin({ network: networkName });
+        this._ren = new RenJS(networkName).withChain(this.bitcoin)
     }
 
     buildLoanTransaction(): Transaction { throw new Error("BaseTransferRequest: abstract function not implemented") }
@@ -44,9 +55,14 @@ abstract class BaseTransferRequest extends Request {
 
     destination(contractAddress?: string, chainId?: number, signature?: string) { return }
 
-    async waitForSignature(): Promise<QueryTXResult> { return }
+    async waitForSignature(): Promise<QueryTXResult> {
+        return
+    }
 
-    async toGatewayAddress(): Promise<string> { return }
+    async toGatewayAddress(): Promise<string> {
+        const mint = await this.submitToRenVM();
+        return mint.gatewayAddress;
+    }
 
 
 }

@@ -16,6 +16,7 @@ most users will prefer to use the umbrella package, but for those with more spec
         selectFixture,
         tokenMapping,
         reverseTokenMapping,
+        getChainName,
         getChainUnits,
         getChainIdToName
     } = require("@zerodao/chains")
