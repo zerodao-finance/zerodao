@@ -14,7 +14,6 @@
     "cross-env": "^7.0.3"
   },
   "dependencies": {
-    "@renproject/ren": "^2.5.13",
     "ioredis": "^5.0.5",
     "send-crypto": "^0.2.37",
     "zero-protocol": "https://github.com/zerodao-finance/zero-protocol"

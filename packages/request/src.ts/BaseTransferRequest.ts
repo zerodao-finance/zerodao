@@ -2,7 +2,7 @@ import Request from "./Request"
 import type { Transaction, QueryTXResult } from "./types";
 import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
 import { EthArgs } from "@renproject/interfaces";
-import { arrayify } from "@ethersproject/bytes";
+import { arrayify, type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Bitcoin } from "@renproject/chains";
 import { getProvider } from "@zerodao/common";
