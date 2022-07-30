@@ -9,5 +9,11 @@
   "private": false,
   "dependencies": {
     "typescript": "^4.7.4"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.2"
   }
 }

@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { hexValue } from "@ethersproject/bytes";
 
 
@@ -129,7 +128,7 @@ export const getExplorerRoot = (chainId) => {
 
 export const CHAINS = {
   1: {
-    chainId: ethers.utils.hexValue(1),
+    chainId: hexValue(1),
     chainName: "mainnet",
     nativeCurrency: ETH,
     rpcUrls: [
@@ -141,7 +140,7 @@ export const CHAINS = {
     blockExplorerUrls: ["https://etherscan.io"],
   },
   10: {
-    chainId: ethers.utils.hexValue(10),
+    chainId: hexValue(10),
     chainName: "Optimism",
     nativeCurrency: ETH,
     rpcUrls: [
@@ -153,7 +152,7 @@ export const CHAINS = {
     blockExplorerUrls: ["https://optimistic.etherscan.io"],
   },
   42161: {
-    chainId: ethers.utils.hexValue(42161),
+    chainId: hexValue(42161),
     chainName: "Arbitrum",
     nativeCurrency: ETH,
     rpcUrls: [
@@ -165,7 +164,7 @@ export const CHAINS = {
     blockExplorerUrls: ["https://arbiscan.io"],
   },
   43114: {
-    chainId: ethers.utils.hexValue(43114),
+    chainId: hexValue(43114),
     chainName: "Avalanche",
     nativeCurrency: AVAX,
     rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"].filter(
@@ -174,7 +173,7 @@ export const CHAINS = {
     blockExplorerUrls: ["https://avascan.info/"],
   },
   137: {
-    chainId: ethers.utils.hexValue(137),
+    chainId: hexValue(137),
     chainName: "Polygon",
     nativeCurrency: MATIC,
     rpcUrls: [

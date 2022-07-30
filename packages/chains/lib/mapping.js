@@ -3,10 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reverseTokenMapping = exports.tokenMapping = exports.selectFixture = void 0;
+exports.reverseTokenMapping = exports.tokenMapping = exports.chainIdToNetworkName = exports.getChainIdToName = exports.getChainUnits = exports.selectFixture = void 0;
 const { FIXTURES } = require("@zerodao/constants");
 const address_1 = require("@ethersproject/address");
 const constants_1 = require("@ethersproject/constants");
+const bignumber_1 = require("@ethersproject/bignumber");
+const units_1 = require("@ethersproject/units");
 const lodash_1 = __importDefault(require("lodash"));
 function selectFixture(chainId) {
     switch (chainId) {
@@ -16,11 +18,83 @@ function selectFixture(chainId) {
             return FIXTURES.AVALANCHE;
         case "137":
             return FIXTURES.MATIC;
+        case "10":
+            return FIXTURES.OPTIMISM;
         default:
             return FIXTURES.ETHEREUM;
     }
 }
 exports.selectFixture = selectFixture;
+function getChainUnits({ amount, tokenName }) {
+    const BNAmount = bignumber_1.BigNumber.from(amount);
+    switch (tokenName ? tokenName.toLowerCase() : "") {
+        case "eth":
+            return (0, units_1.formatEther)(BNAmount);
+        case "avax":
+            return (0, units_1.formatEther)(BNAmount);
+        case "matic":
+            return (0, units_1.formatEther)(BNAmount);
+        case "op":
+            return (0, units_1.formatEther)(BNAmount);
+        case "usdc":
+            return (0, units_1.formatUnits)(BNAmount, 6);
+        default:
+            return (0, units_1.formatUnits)(BNAmount, 8);
+    }
+}
+exports.getChainUnits = getChainUnits;
+exports.getChainIdToName = {
+    [1]: "ethereum",
+    [42161]: "arbitrum",
+    [137]: "matic",
+    [43114]: "avalanche",
+    [10]: "optimism"
+};
+const chainIdToNetworkName = (chainId) => {
+    return {
+        [10]: [
+            "optimism",
+            [
+                { BadgerBridgeZeroController: "ZeroController" },
+                { BadgerBridgeZeroController: "DelegateUnderwriter" },
+            ],
+            [],
+        ],
+        [42161]: [
+            "arbitrum",
+            [
+                { BadgerBridgeZeroController: "ZeroController" },
+                { BadgerBridgeZeroController: "DelegateUnderwriter" },
+            ],
+            [],
+        ],
+        [43114]: [
+            "avalanche",
+            [
+                { BadgerBridgeZeroController: "ZeroController" },
+                { BadgerBridgeZeroController: "DelegateUnderwriter" },
+            ],
+            [],
+        ],
+        [137]: [
+            "matic",
+            [
+                { BadgerBridgeZeroController: "ZeroController" },
+                { BadgerBridgeZeroController: "DelegateUnderwriter" },
+            ],
+            [],
+        ],
+        [1]: [
+            "mainnet",
+            [
+                { BadgerBridgeZeroController: "ZeroController" },
+                { BadgerBridgeZeroController: "DelegateUnderwriter" },
+            ],
+            [],
+        ],
+    }[chainId];
+};
+exports.chainIdToNetworkName = chainIdToNetworkName;
 function tokenMapping({ tokenName, chainId }) {
     const fixture = selectFixture(chainId);
     switch (tokenName.toLowerCase()) {

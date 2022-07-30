@@ -61,4 +61,16 @@ export declare const FIXTURES: {
         Router: string;
         btcGateway: string;
     };
+    OPTIMISM: {
+        USDC: string;
+        Optimism: string;
+        wNative: string;
+        wETH: string;
+        WBTC: string;
+        btcGateway: string;
+        Router: string;
+        ETH: string;
+        renBTC: string;
+        Curve_Ren: string;
+    };
 };

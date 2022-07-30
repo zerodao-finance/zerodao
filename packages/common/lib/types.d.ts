@@ -42,7 +42,7 @@ export interface Request {
     contractAddress: string;
     [property: string]: any;
 }
-export interface TransferRequest extends Request {
+export interface TransferRequest_I extends Request {
     module: string;
     to: string;
     underwriter: string;
@@ -52,7 +52,7 @@ export interface TransferRequest extends Request {
     amount: BigNumberish;
     data: string;
 }
-export interface BurnRequest extends Request {
+export interface BurnRequest_I extends Request {
     asset: string;
     underwriter: string;
     owner: string;
@@ -61,7 +61,7 @@ export interface BurnRequest extends Request {
     nonce: BigNumberish;
     pNonce: BigNumberish;
 }
-export interface MetaRequest extends Request {
+export interface MetaRequest_I extends Request {
 }
 export declare type RequestStates = "pending" | "failed" | "succeeded";
 export declare type RequestWithStatus<T = Record<string, any>> = T & {

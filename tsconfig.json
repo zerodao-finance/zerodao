@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"baseUrl": "src",
+		"baseUrl": ".",
 		"outDir": "dist",
 		"module": "commonjs",
 		"noUnusedLocals": false,
@@ -15,8 +15,13 @@
 		"checkJs": false,
 		"types": []
 	},
-	"include": ["./deployments/**/*.json", "./deploy", "./lib", "./lib/**/*"],
-	"exclude": ["node_modules"],
-	"typeAcquisition": { "enable": true },
-	"files": ["./hardhat.config.ts"]
+	"include": [
+		"packages/**"
+	],
+	"exclude": [
+		"node_modules"
+	],
+	"typeAcquisition": {
+		"enable": true
+	},
 }

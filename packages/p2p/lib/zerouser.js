@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZeroUser = void 0;
-const common_1 = require("@zerodao/common");
+const buffer_1 = require("@zerodao/buffer");
 const it_pipe_1 = __importDefault(require("it-pipe"));
 const peer_id_1 = __importDefault(require("peer-id"));
 const it_length_prefixed_1 = __importDefault(require("it-length-prefixed"));
@@ -33,7 +33,7 @@ class ZeroUser extends P2PClient {
         await this.conn.start();
         this.conn.pubsub.on("zero.keepers", async (message) => {
             const { data, from } = message;
-            const { address } = (0, common_1.fromBufferToJSON)(data);
+            const { address } = (0, buffer_1.fromBufferToJSON)(data);
             if (!this.keepers.includes(from)) {
                 try {
                     this.keepers.push(from);

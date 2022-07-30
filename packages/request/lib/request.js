@@ -3,13 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Request = void 0;
 const peerId = require("peer-id");
 const it_length_prefixed_1 = __importDefault(require("it-length-prefixed"));
 const it_pipe_1 = __importDefault(require("it-pipe"));
 class Request {
-    constructor() {
+    constructor(params) {
     }
+    serialize() {
+        throw new Error("Serialize must be implemented");
+    }
+    ;
     async publish(peer) {
         const request = this.serialize();
         if (peer.keepers.length === 0) {
@@ -34,6 +37,6 @@ class Request {
         }
     }
 }
-exports.Request = Request;
 Request.PROTOCOL = "/zero/1.1.0/dispatch";
-//# sourceMappingURL=request.js.map
+exports.default = Request;
+//# sourceMappingURL=Request.js.map

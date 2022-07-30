@@ -1,5 +1,5 @@
 import libp2p from "libp2p";
-import { fromBufferToJSON } from "@zerodao/common";
+import { fromBufferToJSON } from "@zerodao/buffer";
 import { ConnectionTypes } from "./types"
 import pipe from "it-pipe";
 import peerId from "peer-id";
@@ -12,10 +12,10 @@ class P2PClient extends EventEmitter {
     // TODO: implement logger > log: Logger; 
     log: Console
     _pending: Object;
-    constructor (options: {
+    constructor(options: {
         conn: ConnectionTypes;
     }) {
-        super ();
+        super();
         this.conn = options.conn;
         this.keepers = [];
         this._pending = {};
@@ -27,7 +27,7 @@ class P2PClient extends EventEmitter {
     handleConnections() { }
     async publishRequest(request, requestTemplate?, requestType: string = "transfer"): Promise<EventEmitter> { return this }
     async publishBurnRequest(burnReqeust): Promise<EventEmitter> { return this }
-    async publishMetaRequest(metaRequest): Promise<EventEmitter> { return  this }
+    async publishMetaRequest(metaRequest): Promise<EventEmitter> { return this }
     async publishTransferRequest(transferRequest): Promise<EventEmitter> { return this }
 }
 
@@ -74,7 +74,7 @@ export class ZeroUser extends P2PClient {
     }
 
     handleConnection(callback: Function): any {
-        return ({stream}: { stream: any }) => {
+        return ({ stream }: { stream: any }) => {
             pipe(stream.source, lp.decode(), async (rawData: any) => {
                 let string: any[] = [];
                 for await (const msg of rawData) {
@@ -105,7 +105,7 @@ export class ZeroUser extends P2PClient {
 
                 // @ts-expect-error
                 // ackReceieved set to true in the handler of /zero/user/confirmation
-                if (ackReceived !== true) { 
+                if (ackReceived !== true) {
                     try {
                         const peer = await peerId.createFromB58String(keeper);
                         const { stream } = await this.conn.dialProtocol(peer, '/zero/1.1.0/dispatch');
@@ -125,63 +125,63 @@ export class ZeroUser extends P2PClient {
     }
 
     async publishBurnRequest(burnRequest: any): Promise<EventEmitter> {
-		return await this.publishRequest(
-			burnRequest,
-			[
-				'asset',
-				'chainId',
-				'contractAddress',
-				'data',
-				'module',
-				'nonce',
-				'pNonce',
-				'signature',
-				'underwriter',
-				'owner',
-				'amount',
-				'deadline',
-				'destination',
-				'requestType',
-			],
-			'burn',
-		);
-	}
-	async publishMetaRequest(metaRequest: any): Promise<EventEmitter> {
-		return await this.publishRequest(
-			metaRequest,
-			[
-				'asset',
-				'chainId',
-				'contractAddress',
-				'data',
-				'module',
-				'nonce',
-				'pNonce',
-				'signature',
-				'underwriter',
-				'addressFrom',
-				'requestType',
-			],
-			'meta',
-		);
-	}
+        return await this.publishRequest(
+            burnRequest,
+            [
+                'asset',
+                'chainId',
+                'contractAddress',
+                'data',
+                'module',
+                'nonce',
+                'pNonce',
+                'signature',
+                'underwriter',
+                'owner',
+                'amount',
+                'deadline',
+                'destination',
+                'requestType',
+            ],
+            'burn',
+        );
+    }
+    async publishMetaRequest(metaRequest: any): Promise<EventEmitter> {
+        return await this.publishRequest(
+            metaRequest,
+            [
+                'asset',
+                'chainId',
+                'contractAddress',
+                'data',
+                'module',
+                'nonce',
+                'pNonce',
+                'signature',
+                'underwriter',
+                'addressFrom',
+                'requestType',
+            ],
+            'meta',
+        );
+    }
 
-	async publishTransferRequest(transferRequest: any): Promise<EventEmitter> {
-		return await this.publishRequest(transferRequest, [
-			'amount',
-			'asset',
-			'chainId',
-			'contractAddress',
-			'data',
-			'module',
-			'nonce',
-			'pNonce',
-			'signature',
-			'to',
-			'underwriter',
-			'requestType',
-		]);
-	}
+    async publishTransferRequest(transferRequest: any): Promise<EventEmitter> {
+        return await this.publishRequest(transferRequest, [
+            'amount',
+            'asset',
+            'chainId',
+            'contractAddress',
+            'data',
+            'module',
+            'nonce',
+            'pNonce',
+            'signature',
+            'to',
+            'underwriter',
+            'requestType',
+        ]);
+    }
 
 
 
