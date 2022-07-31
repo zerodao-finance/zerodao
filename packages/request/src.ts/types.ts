@@ -1,3 +1,4 @@
+import { type BytesLike } from "@ethersproject/bytes";
 export type Transaction = {
     chainId: string,
     to: string,
@@ -6,7 +7,7 @@ export type Transaction = {
 
 export type QueryTXResult = {
     amount: string,
-    nHash: HexString,
-    pHash: HexString,
-    signature: HexString
+    nHash: BytesLike,
+    pHash: BytesLike,
+    signature: BytesLike
 }

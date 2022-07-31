@@ -7,12 +7,16 @@ const peerId = require("peer-id");
 const it_length_prefixed_1 = __importDefault(require("it-length-prefixed"));
 const it_pipe_1 = __importDefault(require("it-pipe"));
 class Request {
-    constructor(params) {
+    constructor() {
     }
     serialize() {
         throw new Error("Serialize must be implemented");
     }
     ;
+    getChainId() {
+        this.contractAddress;
+        return;
+    }
     async publish(peer) {
         const request = this.serialize();
         if (peer.keepers.length === 0) {

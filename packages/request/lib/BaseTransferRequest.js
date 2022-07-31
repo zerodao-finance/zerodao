@@ -1,22 +1,20 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Request_1 = __importDefault(require("./Request"));
-const ren_1 = __importDefault(require("@renproject/ren"));
 const bytes_1 = require("@ethersproject/bytes");
-const chains_1 = require("@renproject/chains");
 const common_1 = require("@zerodao/common");
-class BaseTransferRequest extends Request_1.default {
-    constructor(params) {
-        super(params);
+class BaseTransferRequest {
+    constructor() {
         this.requestType = "transfer";
-        this._contractFn = "zeroCall";
-        const networkName = params.network || "mainnet";
-        this.bitcoin = new chains_1.Bitcoin({ network: networkName });
-        this._ren = new ren_1.default(networkName).withChain(this.bitcoin);
     }
+    // constructor(params: {
+    //     network?: "mainnet" | "testnet";
+    // }) {
+    //     super()
+    //     this._contractFn = "zeroCall";
+    //     const networkName = params.network || "mainnet"
+    //     this.bitcoin = new Bitcoin({ network: networkName });
+    //     this._ren = new RenJS(networkName).withChain(this.bitcoin)
+    // }
     buildLoanTransaction() { throw new Error("BaseTransferRequest: abstract function not implemented"); }
     buildRepayTransaction() { throw new Error("BaseTransferRequest: abstract function not implemented"); }
     async submitToRenVM() {
@@ -32,12 +30,40 @@ class BaseTransferRequest extends Request_1.default {
                 params: this._contractParams,
                 withRenParams: true
             }),
-            nonce: (0, bytes_1.arrayify)(this.nonce)
+            nonce: this.nonce
         }));
+        return result;
+    }
+    getChainId() {
+        return;
     }
     destination(contractAddress, chainId, signature) { return; }
     async waitForSignature() {
-        return;
+        if (this._queryTxResult)
+            return this._queryTxResult;
+        const mint = await this.submitToRenVM();
+        const deposit = await new Promise((resolve) => {
+            mint.on("transaction", (tx) => {
+                console.log("transaction received");
+                resolve(tx);
+            });
+        });
+        await deposit.in.wait();
+        await deposit.renVM.submit();
+        await deposit.renVM.wait();
+        const queryTx = deposit.queryTxResult.tx;
+        const { amount, sig: signature } = queryTx.out;
+        const { nhash, phash } = queryTx.in;
+        const result = (this._queryTxResult = {
+            amount: String(amount),
+            nHash: (0, bytes_1.hexlify)(nhash),
+            pHash: (0, bytes_1.hexlify)(phash),
+            signature: (0, bytes_1.hexlify)(signature)
+        });
+        return result;
+    }
+    testInherit() {
+        console.log("overwrite");
     }
     async toGatewayAddress() {
         const mint = await this.submitToRenVM();

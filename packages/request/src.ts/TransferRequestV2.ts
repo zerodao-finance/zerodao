@@ -1,7 +1,8 @@
-import BaseTransferRequest from "./request";
+import BaseTransferRequest from "./BaseTransferRequest";
 import { randomBytes } from "@ethersproject/random";
-import { hexlify, arrayify } from "@ethersproject/bytes";
+import { hexlify, type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
+import { Interface } from "@ethersproject/abi";
 import { EthArgs } from "@renproject/interfaces";
 import type { Transaction } from "./types";
 
@@ -11,16 +12,16 @@ export class TransferRequestV2 extends BaseTransferRequest {
     public module: string;
     public to: string;
     public amount: BigNumberish;
-    public nonce: BigNumberish;
-    public pNonce: BigNumberish;
+    public nonce: BytesLike | BigNumberish;
+    public pNonce: BytesLike | BigNumberish;
     public contractAddress?: string;
     public data: string;
-    private _contractParams?: EthArgs;
+
     constructor(params: {
         module: string;
         to: string;
         amount: BigNumberish;
-        nonce: BigNumberish;
+        nonce: BytesLike | BigNumberish;
         pNonce: BigNumberish;
         contractAddress?: string;
         data: string;
@@ -51,12 +52,42 @@ export class TransferRequestV2 extends BaseTransferRequest {
     }
 
     buildLoanTransaction(): Transaction {
-        return
+        const _iface = new Interface([
+            "function loan(address, address, uint256, uint256, bytes)"
+        ])
+        const data = _iface.encodeFunctionData("loan", [
+            this.module,
+            this.to,
+            this.amount,
+            this.nonce,
+            this.data
+        ])
+        return {
+            chainId: this.getChainId(),
+            to: this.contractAddress,
+            data: data
+        }
     }
 
     buildRepayTransaction(): Transaction {
-        return
+        const _iface = new Interface([
+            "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)"
+        ])
+
+        const data = _iface.encodeFunctionData("repay", [
+            this.module,
+            this.to,
+            this.amount,
+            this.nonce,
+            this.data
+        ])
+        return {
+            chainId: this.getChainId(),
+            to: this.contractAddress,
+            data: data
+        }
     }
+
 
 
 }

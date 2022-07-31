@@ -14,6 +14,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "node lib/TransferRequestV2.js"
   }
 }

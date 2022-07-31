@@ -5,13 +5,18 @@ import pipe from 'it-pipe';
 
 abstract class Request {
     static PROTOCOL = "/zero/1.1.0/dispatch";
-    constructor(params: any) {
-
+    public contractAddress?: string;
+    constructor() {
     }
 
     serialize(): Buffer {
         throw new Error("Serialize must be implemented")
     };
+
+    getChainId(): string {
+        this.contractAddress
+        return
+    }
 
     async publish(peer: ZeroP2P): Promise<void> {
         const request = this.serialize();
@@ -36,6 +41,7 @@ abstract class Request {
             console.error(e);
         }
     }
+
 
 }
 

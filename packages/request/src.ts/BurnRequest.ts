@@ -1,37 +1,38 @@
-import { Request } from "./request";
+import Request from "./request";
 
-export class BurnRequest extends Request {
-    constructor() {
-        super()
-    }
+export { }
+// export class BurnRequest extends Request {
+//     constructor() {
+//         super()
+//     }
 
 
-    serialize(): string {
-        const _template = [
-            "asset",
-            "chainId",
-            "contractAddress",
-            "data",
-            "module",
-            "nonce",
-            "pNonce",
-            "signature",
-            "underwriter",
-            "owner",
-            "amount",
-            "deadline",
-            "destination",
-            "requestType",
-        ]
+//     serialize(): string {
+//         const _template = [
+//             "asset",
+//             "chainId",
+//             "contractAddress",
+//             "data",
+//             "module",
+//             "nonce",
+//             "pNonce",
+//             "signature",
+//             "underwriter",
+//             "owner",
+//             "amount",
+//             "deadline",
+//             "destination",
+//             "requestType",
+//         ]
 
-        let requestFromTemplate = _template
-            ? Object.fromEntries(
-                Object.entries(this).filter(([k, v]) =>
-                    _template.includes(k))
-            )
-            :
-            this
+//         let requestFromTemplate = _template
+//             ? Object.fromEntries(
+//                 Object.entries(this).filter(([k, v]) =>
+//                     _template.includes(k))
+//             )
+//             :
+//             this
 
-        return JSON.stringify(requestFromTemplate)
-    }
-}
+//         return JSON.stringify(requestFromTemplate)
+//     }
+// }

@@ -2,7 +2,7 @@ import Request from "./Request"
 import type { Transaction, QueryTXResult } from "./types";
 import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
 import { EthArgs } from "@renproject/interfaces";
-import { arrayify, type BytesLike } from "@ethersproject/bytes";
+import { hexlify, type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Bitcoin } from "@renproject/chains";
 import { getProvider } from "@zerodao/common";
@@ -10,7 +10,7 @@ import { getProvider } from "@zerodao/common";
 abstract class BaseTransferRequest extends Request {
     public _mint: any;
     public requestType = "transfer";
-    public contractAddress: string;
+    public contractAddress?: string;
 
     public to: string;
     public amount: BigNumberish;
@@ -20,12 +20,13 @@ abstract class BaseTransferRequest extends Request {
     private bitcoin: Bitcoin;
     private _contractFn: string;
     private _contractParams: EthArgs;
+    private _queryTxResult: QueryTXResult;
 
 
     constructor(params: {
         network?: "mainnet" | "testnet";
     }) {
-        super(params)
+        super()
         this._contractFn = "zeroCall";
 
         const networkName = params.network || "mainnet"
@@ -39,7 +40,7 @@ abstract class BaseTransferRequest extends Request {
 
     async submitToRenVM(): Promise<Gateway> {
         if (this._mint) return this._mint;
-        const eth = getProvider(this);
+        const eth = getProvider({ contractAddress: this.contractAddress });
         const result = (this._mint = this._ren.gateway({
             asset: "BTC",
             from: this.bitcoin.GatewayAddress(),
@@ -49,14 +50,40 @@ abstract class BaseTransferRequest extends Request {
                 params: this._contractParams,
                 withRenParams: true
             }),
-            nonce: (arrayify(this.nonce) as unknown as string | number)
+            nonce: this.nonce as string | number
         }));
+
+        return result;
     }
 
     destination(contractAddress?: string, chainId?: number, signature?: string) { return }
 
     async waitForSignature(): Promise<QueryTXResult> {
-        return
+        if (this._queryTxResult) return this._queryTxResult;
+        const mint = await this.submitToRenVM();
+        const deposit: GatewayTransaction<any> = await new Promise((resolve) => {
+            mint.on("transaction", (tx) => {
+                console.log("transaction received");
+                resolve(tx);
+            })
+        });
+
+        await deposit.in.wait();
+
+        await deposit.renVM.submit();
+        await deposit.renVM.wait();
+
+
+        const queryTx = (deposit as any).queryTxResult.tx;
+        const { amount, sig: signature } = queryTx.out;
+        const { nhash, phash } = queryTx.in;
+        const result = (this._queryTxResult = {
+            amount: String(amount),
+            nHash: hexlify(nhash),
+            pHash: hexlify(phash),
+            signature: hexlify(signature)
+        });
+        return result;
     }
 
     async toGatewayAddress(): Promise<string> {
