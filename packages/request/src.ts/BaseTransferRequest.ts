@@ -1,4 +1,4 @@
-import Request from "./Request"
+import { Request } from "./Request"
 import type { Transaction, QueryTXResult } from "./types";
 import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
 import { EthArgs } from "@renproject/interfaces";
