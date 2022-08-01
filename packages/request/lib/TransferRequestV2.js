@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequestV2 = void 0;
-const request_1 = __importDefault(require("./request"));
+const BaseTransferRequest_1 = __importDefault(require("./BaseTransferRequest"));
 const random_1 = require("@ethersproject/random");
 const bytes_1 = require("@ethersproject/bytes");
 const abi_1 = require("@ethersproject/abi");
-class TransferRequestV2 extends request_1.default {
+class TransferRequestV2 extends BaseTransferRequest_1.default {
     constructor(params) {
-        super();
+        super({ network: params.network });
         this.module = params.module;
         this.to = params.to;
         this.amount = params.amount;
@@ -59,11 +59,12 @@ class TransferRequestV2 extends request_1.default {
             this.nonce,
             this.data
         ]);
-        return;
+        return {
+            chainId: this.getChainId(),
+            to: this.contractAddress,
+            data: data
+        };
     }
-    testInherit() { }
 }
 exports.TransferRequestV2 = TransferRequestV2;
-let tf = new TransferRequestV2({ module: "", to: "", amount: 40, nonce: "", pNonce: "", contractAddress: "", data: "" });
-tf.testInherit();
 //# sourceMappingURL=TransferRequestV2.js.map

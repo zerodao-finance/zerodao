@@ -1,11 +1,14 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { ZeroP2P } from '@zerodao/p2p';
-declare abstract class Request {
-    static PROTOCOL: string;
+import { EventEmitter } from "events";
+export declare class PublishEventEmitter extends EventEmitter {
+    toPromise(): any;
+}
+export declare abstract class Request {
+    static get PROTOCOL(): void;
     contractAddress?: string;
-    constructor();
     serialize(): Buffer;
     getChainId(): string;
-    publish(peer: ZeroP2P): Promise<void>;
+    publish(peer: ZeroP2P): Promise<PublishEventEmitter>;
 }
-export default Request;

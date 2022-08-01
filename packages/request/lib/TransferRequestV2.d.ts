@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import BaseTransferRequest from "./request";
+import BaseTransferRequest from "./BaseTransferRequest";
 import { type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 import type { Transaction } from "./types";
@@ -12,7 +12,6 @@ export declare class TransferRequestV2 extends BaseTransferRequest {
     pNonce: BytesLike | BigNumberish;
     contractAddress?: string;
     data: string;
-    private _contractParams?;
     constructor(params: {
         module: string;
         to: string;
@@ -26,5 +25,4 @@ export declare class TransferRequestV2 extends BaseTransferRequest {
     serialize(): Buffer;
     buildLoanTransaction(): Transaction;
     buildRepayTransaction(): Transaction;
-    testInherit(): void;
 }

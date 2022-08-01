@@ -56,8 +56,8 @@ export abstract class Request {
           const { stream } = await peer.dialProtocol(_peerId, this.constructor().PROTOCOL);
           pipe(request, lp.encode(), stream.sink);
           result.emit('dialed', keeper);
-        } catch (e: Error) {
-          result.emit('error', new Error(`Failed dialing keeper: ${keeper}`);
+        } catch (e: any) {
+          result.emit('error', new Error(`Failed dialing keeper: ${keeper}`));
         }
       }
       result.emit('finish');
