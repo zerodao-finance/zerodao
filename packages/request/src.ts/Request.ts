@@ -32,7 +32,7 @@ export class PublishEventEmitter extends EventEmitter {
 
 
 export abstract class Request {
-  static get PROTOCOL() { throw new Error('static get PROTOCOL() must be implemented'); }
+  static get PROTOCOL(): string | void { throw new Error('static get PROTOCOL() must be implemented'); }
   public contractAddress?: string;
   serialize(): Buffer {
     throw new Error("Serialize must be implemented")

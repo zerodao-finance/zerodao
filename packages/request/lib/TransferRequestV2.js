@@ -22,6 +22,7 @@ class TransferRequestV2 extends BaseTransferRequest_1.default {
             : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
         this.data = params.data;
     }
+    static get PROTOCOL() { return "/zero/2.0.0/dispatch"; }
     serialize() {
         return Buffer.from(JSON.stringify({
             module: this.module,

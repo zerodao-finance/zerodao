@@ -6,7 +6,7 @@ export declare class PublishEventEmitter extends EventEmitter {
     toPromise(): any;
 }
 export declare abstract class Request {
-    static get PROTOCOL(): void;
+    static get PROTOCOL(): string | void;
     contractAddress?: string;
     serialize(): Buffer;
     getChainId(): string;

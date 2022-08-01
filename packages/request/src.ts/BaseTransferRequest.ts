@@ -8,6 +8,7 @@ import { Bitcoin } from "@renproject/chains";
 import { getProvider } from "@zerodao/common";
 
 abstract class BaseTransferRequest extends Request {
+    static get PROTOCOL(): string | void { throw new Error('static get PROTOCOL() must be implemeneted') }
     public _mint: any;
     public requestType = "transfer";
     public contractAddress?: string;

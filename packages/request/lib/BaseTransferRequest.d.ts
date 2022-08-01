@@ -4,6 +4,7 @@ import { Gateway } from "@renproject/ren";
 import { type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 declare abstract class BaseTransferRequest extends Request {
+    static get PROTOCOL(): string | void;
     _mint: any;
     requestType: string;
     contractAddress?: string;

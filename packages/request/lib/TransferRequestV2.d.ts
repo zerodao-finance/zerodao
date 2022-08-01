@@ -4,7 +4,7 @@ import { type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 import type { Transaction } from "./types";
 export declare class TransferRequestV2 extends BaseTransferRequest {
-    static PROTOCOL: "/zero/2.0.0/dispatch";
+    static get PROTOCOL(): string;
     module: string;
     to: string;
     amount: BigNumberish;

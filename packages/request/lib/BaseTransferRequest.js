@@ -17,6 +17,7 @@ class BaseTransferRequest extends Request_1.Request {
         this.bitcoin = new chains_1.Bitcoin({ network: networkName });
         this._ren = new ren_1.default(networkName).withChain(this.bitcoin);
     }
+    static get PROTOCOL() { throw new Error('static get PROTOCOL() must be implemeneted'); }
     buildLoanTransaction() { throw new Error("BaseTransferRequest: abstract function not implemented"); }
     buildRepayTransaction() { throw new Error("BaseTransferRequest: abstract function not implemented"); }
     async submitToRenVM() {

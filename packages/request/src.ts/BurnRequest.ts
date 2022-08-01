@@ -1,4 +1,4 @@
-import Request from "./request";
+import { Request } from "./request";
 
 export { }
 // export class BurnRequest extends Request {

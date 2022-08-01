@@ -7,8 +7,8 @@ import { EthArgs } from "@renproject/interfaces";
 import type { Transaction } from "./types";
 
 export class TransferRequestV2 extends BaseTransferRequest {
-    static PROTOCOL: "/zero/2.0.0/dispatch"
 
+    static get PROTOCOL() { return "/zero/2.0.0/dispatch" }
     public module: string;
     public to: string;
     public amount: BigNumberish;
