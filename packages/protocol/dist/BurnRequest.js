@@ -52,7 +52,7 @@ var buffer_1 = require("buffer");
 var ethers_1 = require("ethers");
 var utils_1 = require("@0x/utils");
 require("@0x/types");
-var chains_1 = require("@renproject/chains");
+require("@renproject/chains");
 var ren_1 = __importDefault(require("@renproject/ren"));
 require("@renproject/interfaces");
 var deployment_utils_1 = require("./deployment-utils");
@@ -68,16 +68,20 @@ var constants_1 = require("./config/constants");
  */
 var BurnRequest = /** @class */ (function () {
     function BurnRequest(params) {
-        this.requestType = 'burn';
+        this.requestType = "burn";
         this.destination = params.destination;
         this._destination = params.destination;
         this.owner = params.owner;
         this.underwriter = params.underwriter;
         this.asset = params.asset;
-        this.data = params.data || '0x';
-        console.log('params.nonce', params.nonce);
-        this.nonce = params.nonce ? (0, bytes_1.hexlify)(params.nonce) : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
-        this.pNonce = params.pNonce ? (0, bytes_1.hexlify)(params.pNonce) : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.data = params.data || "0x";
+        console.log("params.nonce", params.nonce);
+        this.nonce = params.nonce
+            ? (0, bytes_1.hexlify)(params.nonce)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.pNonce = params.pNonce
+            ? (0, bytes_1.hexlify)(params.pNonce)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
         this.chainId = params.chainId;
         this.amount = params.amount;
         this.deadline = params.deadline;
@@ -86,20 +90,20 @@ var BurnRequest = /** @class */ (function () {
         //this._config =
         //
         this.gatewayIface = new ethers_1.ethers.utils.Interface([
-            'event LogBurn(bytes _to, uint256 _amount, uint256 indexed _n, bytes indexed _indexedTo)',
+            "event LogBurn(bytes _to, uint256 _amount, uint256 indexed _n, bytes indexed _indexedTo)",
         ]);
-        this._ren = new ren_1["default"]('mainnet', { loadCompletedDeposits: true });
-        this._contractFn = 'burn';
+        this._ren = new ren_1["default"]("mainnet", { loadCompletedDeposits: true });
+        this._contractFn = "burn";
         //TODO: figure out exactly what values go in here
         this._contractParams = [
             {
-                name: '_to',
-                type: 'bytes',
+                name: "_to",
+                type: "bytes",
                 value: this.destination
             },
             {
-                name: 'amount',
-                type: 'uint256',
+                name: "amount",
+                type: "uint256",
                 value: this.amount
             },
         ];
@@ -107,68 +111,6 @@ var BurnRequest = /** @class */ (function () {
     BurnRequest.prototype.setProvider = function (provider) {
         this.provider = provider;
         return this;
-    };
-    BurnRequest.prototype.submitToRenVM = function (isTest) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, _a;
-            var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        console.log('submitToRenVM');
-                        console.log(this);
-                        if (this._burn)
-                            return [2 /*return*/, this._burn];
-                        _a = this;
-                        return [4 /*yield*/, this._ren.burnAndRelease({
-                                asset: 'BTC',
-                                to: (0, chains_1.Bitcoin)().Address(this.destination),
-                                from: (0, deployment_utils_1.getProvider)(this).Contract(function (btcAddress) { return ({
-                                    sendTo: _this.contractAddress,
-                                    contractFn: _this._contractFn,
-                                    contractParams: _this._contractParams
-                                }); })
-                            })];
-                    case 1:
-                        result = (_a._burn = _b.sent());
-                        //    result.params.nonce = this.nonce;
-                        return [2 /*return*/, result];
-                }
-            });
-        });
-    };
-    BurnRequest.prototype.waitForTxNonce = function (burn) {
-        return __awaiter(this, void 0, void 0, function () {
-            var burnt, tx, parsed;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (this._queryTxResult)
-                            return [2 /*return*/, this._queryTxResult];
-                        return [4 /*yield*/, new Promise(function (resolve, reject) {
-                                burn.on('transactionHash', resolve);
-                                burn.on('error', reject);
-                            })];
-                    case 1:
-                        burnt = _a.sent();
-                        return [4 /*yield*/, this.provider.waitForTransaction(burnt)];
-                    case 2:
-                        tx = _a.sent();
-                        parsed = tx.logs.reduce(function (v, d) {
-                            if (v)
-                                return v;
-                            try {
-                                return _this.gatewayIface.parseLog(d);
-                            }
-                            catch (e) { }
-                        }, null);
-                        this.nonce = parsed._n;
-                        this._queryTxResult = parsed;
-                        return [2 /*return*/, parsed];
-                }
-            });
-        });
     };
     BurnRequest.prototype.setUnderwriter = function (underwriter) {
         if (!ethers_1.ethers.utils.isAddress(underwriter))
@@ -181,43 +123,77 @@ var BurnRequest = /** @class */ (function () {
     };
     BurnRequest.prototype.getExpiry = function (nonce) {
         nonce = nonce || this.tokenNonce;
-        console.log([this.asset, this.amount, this.deadline, nonce, this.data, this.destination]);
-        return ethers_1.ethers.utils.solidityKeccak256(['address', 'uint256', 'uint256', 'uint256', 'bytes', 'bytes'], [this.asset, this.amount, this.deadline, nonce, this.data, this.destination]);
+        console.log([
+            this.asset,
+            this.amount,
+            this.deadline,
+            nonce,
+            this.data,
+            this.destination,
+        ]);
+        return ethers_1.ethers.utils.solidityKeccak256(["address", "uint256", "uint256", "uint256", "bytes", "bytes"], [
+            this.asset,
+            this.amount,
+            this.deadline,
+            nonce,
+            this.data,
+            this.destination,
+        ]);
     };
     BurnRequest.prototype.toEIP712 = function (contractAddress, chainId) {
         this.contractAddress = contractAddress || this.contractAddress;
         this.chainId = chainId || this.chainId;
         return {
             types: {
-                EIP712Domain: constants_1.EIP712_TYPES.EIP712Domain,
+                EIP712Domain: Number(this.chainId) == 137 &&
+                    this.asset.toLowerCase() == fixtures_1["default"].MATIC.USDC.toLowerCase()
+                    ? [
+                        {
+                            name: "name",
+                            type: "string"
+                        },
+                        {
+                            name: "version",
+                            type: "string"
+                        },
+                        {
+                            name: "verifyingContract",
+                            type: "address"
+                        },
+                        {
+                            name: "salt",
+                            type: "bytes32"
+                        },
+                    ]
+                    : constants_1.EIP712_TYPES.EIP712Domain,
                 Permit: [
                     {
-                        name: 'holder',
-                        type: 'address'
+                        name: "holder",
+                        type: "address"
                     },
                     {
-                        name: 'spender',
-                        type: 'address'
+                        name: "spender",
+                        type: "address"
                     },
                     {
-                        name: 'nonce',
-                        type: 'uint256'
+                        name: "nonce",
+                        type: "uint256"
                     },
                     {
-                        name: 'expiry',
-                        type: 'uint256'
+                        name: "expiry",
+                        type: "uint256"
                     },
                     {
-                        name: 'allowed',
-                        type: 'bool'
+                        name: "allowed",
+                        type: "bool"
                     },
                 ]
             },
-            primaryType: 'Permit',
+            primaryType: "Permit",
             domain: {
                 name: this.assetName,
-                version: '1',
-                chainId: String(this.chainId) || '1',
+                version: "1",
+                chainId: String(this.chainId) || "1",
                 verifyingContract: this.asset || ethers_1.ethers.constants.AddressZero
             },
             message: {
@@ -225,92 +201,78 @@ var BurnRequest = /** @class */ (function () {
                 spender: contractAddress,
                 nonce: this.tokenNonce,
                 expiry: this.getExpiry(),
-                allowed: 'true'
+                allowed: "true"
             }
         };
     };
-    BurnRequest.prototype.toGatewayAddress = function (input) {
-        return __awaiter(this, void 0, void 0, function () {
-            var burn;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.submitToRenVM(false)];
-                    case 1:
-                        burn = _a.sent();
-                        return [2 /*return*/, burn.gatewayAddress];
-                }
-            });
-        });
-    };
     BurnRequest.prototype.sign = function (signer, contractAddress) {
         return __awaiter(this, void 0, void 0, function () {
-            var provider, chainId, token, _a, _b, _c, _d, _e, _f, _g, payload, sig, e_1, _h, _j, _k, _l;
-            return __generator(this, function (_m) {
-                switch (_m.label) {
+            var provider, chainId, token, _a, _b, _c, _d, payload, sig, e_1, _e, _f, _g, _h;
+            return __generator(this, function (_j) {
+                switch (_j.label) {
                     case 0:
                         provider = signer.provider;
                         return [4 /*yield*/, signer.provider.getNetwork()];
                     case 1:
-                        chainId = (_m.sent()).chainId;
-                        console.log(chainId);
+                        chainId = (_j.sent()).chainId;
                         token = new ethers_1.ethers.Contract(this.asset, [
-                            'function DOMAIN_SEPARATOR() view returns (bytes32)',
-                            'function name() view returns (string)',
-                            'function nonces(address) view returns (uint256)',
+                            "function DOMAIN_SEPARATOR() view returns (bytes32)",
+                            "function name() view returns (string)",
+                            "function nonces(address) view returns (uint256)",
                         ], signer.provider);
-                        _b = (_a = console).log;
-                        _c = ['domain'];
-                        return [4 /*yield*/, token.DOMAIN_SEPARATOR()];
-                    case 2:
-                        _b.apply(_a, _c.concat([_m.sent()]));
-                        _d = this;
+                        _a = this;
                         return [4 /*yield*/, token.name()];
-                    case 3:
-                        _d.assetName = _m.sent();
-                        _e = this;
-                        _g = (_f = token).nonces;
+                    case 2:
+                        _a.assetName = _j.sent();
+                        _b = this;
+                        _d = (_c = token).nonces;
                         return [4 /*yield*/, signer.getAddress()];
-                    case 4: return [4 /*yield*/, _g.apply(_f, [_m.sent()])];
-                    case 5:
-                        _e.tokenNonce = (_m.sent()).toString();
+                    case 3: return [4 /*yield*/, _d.apply(_c, [_j.sent()])];
+                    case 4:
+                        _b.tokenNonce = (_j.sent()).toString();
                         console.log(this.assetName, this.tokenNonce);
-                        _m.label = 6;
-                    case 6:
-                        _m.trys.push([6, 8, , 11]);
+                        _j.label = 5;
+                    case 5:
+                        _j.trys.push([5, 7, , 10]);
                         payload = this.toEIP712(contractAddress, chainId);
                         console.log(payload);
                         delete payload.types.EIP712Domain;
                         return [4 /*yield*/, signer._signTypedData(payload.domain, payload.types, payload.message)];
-                    case 7:
-                        sig = _m.sent();
+                    case 6:
+                        sig = _j.sent();
                         return [2 /*return*/, (this.signature = ethers_1.ethers.utils.joinSignature(ethers_1.ethers.utils.splitSignature(sig)))];
-                    case 8:
-                        e_1 = _m.sent();
+                    case 7:
+                        e_1 = _j.sent();
                         console.error(e_1);
-                        _h = this;
-                        _k = (_j = provider).send;
-                        _l = ['eth_signTypedData_v4'];
+                        _e = this;
+                        _g = (_f = provider).send;
+                        _h = ["eth_signTypedData_v4"];
                         return [4 /*yield*/, signer.getAddress()];
-                    case 9: return [4 /*yield*/, _k.apply(_j, _l.concat([[
-                                _m.sent(),
+                    case 8: return [4 /*yield*/, _g.apply(_f, _h.concat([[
+                                _j.sent(),
                                 this.toEIP712(this.contractAddress || contractAddress, chainId)
                             ]]))];
-                    case 10: return [2 /*return*/, (_h.signature = _m.sent())];
-                    case 11: return [2 /*return*/];
+                    case 9: return [2 /*return*/, (_e.signature = _j.sent())];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
     };
     BurnRequest.prototype.waitForHostTransaction = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var network, provider, renbtc;
+            var deployment_chain, network, provider, renbtc;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        network = (function (v) { return v === 'ethereum' ? 'mainnet' : v; })(deployment_utils_1.CONTROLLER_DEPLOYMENTS[this.contractAddress.toLowerCase()].toLowerCase());
-                        provider = new ethers_1.ethers.providers.InfuraProvider(network, '2f1de898efb74331bf933d3ac469b98d');
-                        renbtc = new ethers_1.ethers.Contract(fixtures_1["default"][(function (v) { return v === 'mainnet' ? 'ethereum' : v; })(network).toUpperCase()].renBTC, ['event Transfer(address indexed from, address indexed to, uint256 amount)'], provider);
+                        deployment_chain = deployment_utils_1.CONTROLLER_DEPLOYMENTS[ethers_1.ethers.utils.getAddress(this.contractAddress)].toLowerCase();
+                        deployment_chain =
+                            deployment_chain == "polygon" ? "matic" : deployment_chain;
+                        network = (function (v) { return (v === "ethereum" ? "mainnet" : v); })(deployment_chain);
+                        provider = (0, deployment_utils_1.getVanillaProvider)(this);
+                        renbtc = new ethers_1.ethers.Contract(fixtures_1["default"][(function (v) { return (v === "mainnet" ? "ethereum" : v); })(network).toUpperCase()].renBTC, [
+                            "event Transfer(address indexed from, address indexed to, uint256 amount)",
+                        ], provider);
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 var filter = renbtc.filters.Transfer(_this.contractAddress, ethers_1.ethers.constants.AddressZero);
                                 var done = function (rcpt) {
@@ -324,12 +286,14 @@ var BurnRequest = /** @class */ (function () {
                                         return __generator(this, function (_b) {
                                             switch (_b.label) {
                                                 case 0:
-                                                    console.log('evt', evt);
+                                                    console.log("evt", evt);
                                                     if (!(this.asset == ethers_1.ethers.constants.AddressZero)) return [3 /*break*/, 4];
                                                     return [4 /*yield*/, evt.getTransaction()];
                                                 case 1:
                                                     tx = _b.sent();
-                                                    if (!(tx.from === this.owner && ethers_1.ethers.utils.hexlify(tx.value) === ethers_1.ethers.utils.hexlify(this.amount))) return [3 /*break*/, 3];
+                                                    if (!(tx.from === this.owner &&
+                                                        ethers_1.ethers.utils.hexlify(tx.value) ===
+                                                            ethers_1.ethers.utils.hexlify(this.amount))) return [3 /*break*/, 3];
                                                     _a = done;
                                                     return [4 /*yield*/, evt.getTransactionReceipt()];
                                                 case 2: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
@@ -337,19 +301,28 @@ var BurnRequest = /** @class */ (function () {
                                                 case 4: return [4 /*yield*/, evt.getTransactionReceipt()];
                                                 case 5:
                                                     receipt = _b.sent();
-                                                    console.log('receipt', receipt);
+                                                    console.log("receipt", receipt);
                                                     return [4 /*yield*/, evt.getTransactionReceipt()];
                                                 case 6:
                                                     logs = (_b.sent()).logs;
-                                                    decoded_1 = logs.map(function (v) { try {
-                                                        return renbtc.interface.parseLog(v);
-                                                    }
-                                                    catch (e) {
-                                                        console.error(e);
-                                                    } }).filter(Boolean);
+                                                    decoded_1 = logs
+                                                        .map(function (v) {
+                                                        try {
+                                                            return renbtc.interface.parseLog(v);
+                                                        }
+                                                        catch (e) {
+                                                            console.error(e);
+                                                        }
+                                                    })
+                                                        .filter(Boolean);
                                                     events = logs.map(function (v, i) { return ({ log: v, event: decoded_1[i] }); });
-                                                    console.log('events', events);
-                                                    if (events.find(function (v) { return v.event.args.from.toLowerCase() === _this.owner.toLowerCase() && ethers_1.ethers.utils.hexlify(_this.amount) === ethers_1.ethers.utils.hexlify(v.event.args && v.event.args.amount || 0); }))
+                                                    console.log("events", events);
+                                                    if (events.find(function (v) {
+                                                        return v.event.args.from.toLowerCase() ===
+                                                            _this.owner.toLowerCase() &&
+                                                            ethers_1.ethers.utils.hexlify(_this.amount) ===
+                                                                ethers_1.ethers.utils.hexlify((v.event.args && v.event.args.amount) || 0);
+                                                    }))
                                                         return [2 /*return*/, done(receipt)];
                                                     _b.label = 7;
                                                 case 7: return [2 /*return*/];
@@ -372,7 +345,7 @@ var BurnRequest = /** @class */ (function () {
                     case 0:
                         arrayed = Array.from(ethers_1.ethers.utils.arrayify(this.destination));
                         if (arrayed.length > 40)
-                            address = buffer_1.Buffer.from(arrayed).toString('utf8');
+                            address = buffer_1.Buffer.from(arrayed).toString("utf8");
                         else
                             address = ethers_1.ethers.utils.base58.encode(this.destination);
                         return [4 /*yield*/, BTCHandler_1.BTCHandler.getUTXOs(false, {

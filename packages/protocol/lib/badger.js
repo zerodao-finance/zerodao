@@ -1,50 +1,33 @@
 "use strict";
-
 const ethers = require("ethers");
 const fixtures = require("./fixtures");
-const UNISWAP = require("@uniswap/sdk");
-const { Route } = require("@uniswap/sdk");
+const Quotes = require("./quotes");
+const RenJS = require('@renproject/ren');
+const { Bitcoin, Arbitrum, Avalanche, Polygon, Ethereum, Optimism } = require("@renproject/chains");
+const { RPC_ENDPOINTS } = require('../dist/lib/deployment-utils');
 
-const provider = new ethers.providers.InfuraProvider(
-  "mainnet",
-  "816df2901a454b18b7df259e61f92cd2"
-);
-
-const quoter = new ethers.Contract(
-  "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
-  [
-    "function quoteExactInputSingle(address tokenIn, address tokenOut, uint24 fee, uint256 amountIn, uint160 sqrtPriceLimitX96) public view returns (uint256 amountOut)",
-    "function quoteExactInput(bytes path, uint256 amountIn) public view returns (uint256 amountOut)",
-  ],
-  provider
-);
-
-const getRenBTCForOneETHPrice = async () => {
-  const renBTC = new UNISWAP.Token(
-    UNISWAP.ChainId.MAINNET,
-    fixtures.ETHEREUM.renBTC,
-    8
-  );
-  const pair = await UNISWAP.Fetcher.fetchPairData(
-    renBTC,
-    UNISWAP.WETH[renBTC.chainId],
-    provider
-  );
-  const route = new Route([pair], UNISWAP.WETH[renBTC.chainId]);
-
-  const renBTCForOneEth = route.midPrice.toSignificant(7);
-  return ethers.utils.parseUnits(renBTCForOneEth, 8);
-};
-
-const computeRenBTCGasFee = async (gasCost, gasPrice) => {
-  return gasCost
-    .mul(gasPrice)
-    .mul(await getRenBTCForOneETHPrice())
-    .div(ethers.utils.parseEther("1"));
-};
-
-const GAS_COST = ethers.BigNumber.from("370000");
 const keeperReward = ethers.utils.parseEther("0.001");
+
+const getProvider = (chainName) => {
+  return new ethers.providers.JsonRpcProvider(RPC_ENDPOINTS[chainName]);
+}
+
+const getChainName = (chainId) => {
+  switch (chainId) {
+    case "42161":
+      return "Arbitrum";
+    case "43114":
+      return "Avalanche";
+    case "137":
+      return "Polygon";
+    case "1":
+      return "Mainnet";
+    case "10":
+      return "Optimism";
+    default:
+      return "Unsupported Chain";
+  }
+};
 
 const applyRatio = (amount, ratio) => {
   return ethers.BigNumber.from(amount)
@@ -52,185 +35,136 @@ const applyRatio = (amount, ratio) => {
     .div(ethers.utils.parseEther("1"));
 };
 
-const applyFee = (exports.applyFee = async (amountIn, fee, multiplier) => {
-  const gasPrice = await provider.getGasPrice();
-
-  const gasFee = await computeRenBTCGasFee(
-    GAS_COST.add(keeperReward.div(gasPrice)),
-    gasPrice
+exports.makeCompute = (CHAIN = "1") => {
+  const quotes = Quotes(CHAIN);
+  const GAS_COST = ethers.BigNumber.from(
+    (() => {
+      switch (CHAIN) {
+        case "42161":
+          return "480000";
+        case "137":
+          return "642000";
+        case "43114":
+          return "1240000";
+        default:
+          return "420000";
+      }
+    })()
   );
-  const opFee = applyRatio(amountIn, fee);
-  const totalFees = gasFee.add(opFee);
 
-  return { gasFee: gasFee, opFee: opFee, totalFees: totalFees };
-});
+  const bitcoin = new Bitcoin({ network: "mainnet" });
+  const arbitrum = new Arbitrum({ provider: getProvider('Arbitrum'), network: "mainnet" });
+  const avalanche = new Avalanche({ provider: getProvider('Avalanche'), network: "mainnet" });
+  const polygon = new Polygon({ provider: getProvider('Polygon'), network: "mainnet" });
+  const optimism = new Optimism({ provider: getProvider('Optimism'), network: "mainnet" });
+  const ethereum = new Ethereum({ provider: getProvider('Ethereum'), network: "mainnet" });
+  const renJS = new RenJS.RenJS("mainnet").withChains(bitcoin, arbitrum, avalanche, polygon, optimism, ethereum);
 
-const burnFee = (exports.burnFee = ethers.utils.parseEther("0.004"));
-const mintFee = (exports.mintFee = ethers.utils.parseEther("0.0025"));
+  const computeTransferOutput = async ({ module, amount }) => {
+    switch (module) {
+      case fixtures[quotes.chain.name].USDC:
+        return await quotes.toUSDC(await deductMintFee(amount));
+      case fixtures[quotes.chain.name].WBTC:
+        return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
+      case fixtures[quotes.chain.name].renBTC:
+        return await deductMintFee(amount);
+      case ethers.constants.AddressZero:
+        return await quotes.renBTCToETH(await deductMintFee(amount));
+      default:
+        return ethers.BigNumber.from("0");
+    }
+  };
 
-const deductBurnFee = async (amount, multiplier) => {
-  amount = ethers.BigNumber.from(amount);
+  const computeRenBTCGasFee = async (gasCost, gasPrice) => {
+    return gasCost
+      .mul(gasPrice)
+      .mul(await quotes.getRenBTCForOneETHPrice())
+      .div(ethers.utils.parseEther("1"));
+  };
 
-  const feeAmounts = await applyFee(amount, burnFee, multiplier);
-  const amountAfterDeduction = amount.sub(feeAmounts.totalFees);
-  return amountAfterDeduction <= 0 ? 0 : amountAfterDeduction;
-};
+  const deductBurnFee = async (amount, multiplier) => {
+    amount = ethers.BigNumber.from(amount);
 
-const deductMintFee = async (amount, multiplier) => {
-  amount = ethers.BigNumber.from(amount);
+    const feeAmounts = await applyFee(amount, burnFee, renVmFeeBurn);
+    const amountAfterDeduction = amount.sub(feeAmounts.totalFees);
+    return amountAfterDeduction <= 0 ? 0 : amountAfterDeduction;
+  };
 
-  const feeAmounts = await applyFee(amount, mintFee, multiplier);
-  const amountAfterDeduction = amount.sub(feeAmounts.totalFees);
-  return amountAfterDeduction <= 0 ? 0 : amountAfterDeduction;
-};
+  const deductMintFee = async (amount) => {
+    amount = ethers.BigNumber.from(amount);
 
-const renCrv = (exports.renCrv = new ethers.Contract(
-  "0x93054188d876f558f4a66B2EF1d97d16eDf0895B",
-  ["function get_dy(int128, int128, uint256) view returns (uint256)"],
-  provider
-));
+    const feeAmounts = await applyFee(amount, mintFee, renVmFeeMint);
+    const amountAfterDeduction = amount.sub(feeAmounts.totalFees);
+    return amountAfterDeduction <= 0 ? 0 : amountAfterDeduction;
+  };
 
-const applyRenVMFee = (exports.applyRenVMFee = (input) => {
-  input = ethers.BigNumber.from(input);
-  return input
-    .mul(ethers.utils.parseEther("0.9985"))
-    .div(ethers.utils.parseEther("1"));
-});
+  const getConvertedAmount = (exports.getConvertedAmount = async (
+    asset,
+    amount
+  ) => {
+    switch (asset) {
+      case fixtures[quotes.chain.name].WBTC:
+        return await quotes.getWbtcQuote(false, amount);
+      case fixtures[quotes.chain.name].renBTC:
+        return amount;
+      case fixtures[quotes.chain.name].USDC:
+        return await quotes.fromUSDC(amount);
+      case ethers.constants.AddressZero:
+        return await quotes.ETHtoRenBTC(amount);
+      default:
+        console.error("no asset found for getConvertedAmount:" + asset);
+        return amount;
+    }
+  });
 
-const applyRenVMMintFee = (exports.applyRenVMMintFee = (input) => {
-  input = ethers.BigNumber.from(input);
-  const result = input
-    .mul(ethers.utils.parseEther("0.9985"))
-    .div(ethers.utils.parseEther("1"))
-    .sub(ethers.utils.parseUnits("0.001", 8));
-  return result;
-});
+  const computeOutputBTC = async (burnRequest) => {
+    const { asset, amount } = burnRequest;
+    const convertedAmount = await getConvertedAmount(asset, amount);
 
-const fromUSDC = async (amount) => {
-  const WETH = UNISWAP.WETH["1"];
-  let output = null;
-  try {
-    output = await quoter.quoteExactInput(
-      ethers.utils.solidityPack(
-        ["address", "uint24", "address", "uint24", "address"],
-        [fixtures.ETHEREUM.USDC, 500, WETH.address, 500, fixtures.ETHEREUM.WBTC]
-      ),
-      amount
+    return await deductBurnFee(convertedAmount);
+  };
+
+  const applyFee = async (amountIn, zeroFee, renVmFee) => {
+    const gasPrice = await quotes.chain.provider.getGasPrice();
+
+    const gasFee = await computeRenBTCGasFee(
+      GAS_COST.add(keeperReward.div(gasPrice)),
+      gasPrice
     );
-  } catch (e) {
-    console.error(e);
-    console.error("Insufficient USDC amount for price fetch");
-    return 0;
-  }
-  const result = await renBTCFromWBTC(output);
-  return result;
+
+    const evmChain = getChainName(CHAIN) == 'Mainnet' ? 'Ethereum' : getChainName(CHAIN);
+    const renVmFees = await renJS.getFees({
+      asset: "BTC",
+      from: zeroFee == mintFee ? "Bitcoin" : evmChain,
+      to: zeroFee == burnFee ? "Bitcoin" : evmChain,
+    })
+    const renOutput = ethers.BigNumber.from(renVmFees.estimateOutput(amountIn.toString()).toFixed());
+
+    const zeroProtocolFeeAmt = applyRatio(amountIn, zeroFee);
+    const renVmFeeAmt = applyRatio(amountIn, renVmFee);
+    const renVmBtcNetworkFee = amountIn.sub(renOutput).sub(renVmFeeAmt);
+    const opFee = zeroProtocolFeeAmt.add(renVmFeeAmt);
+
+    var totalFees = gasFee.add(opFee);
+    totalFees = totalFees.add(renVmBtcNetworkFee);
+
+    return { gasFee, zeroProtocolFeeAmt, renVmFeeAmt, renVmBtcNetworkFee, opFee, totalFees };
+  };
+
+  const burnFee = ethers.utils.parseEther("0.003");
+  const renVmFeeBurn = ethers.utils.parseEther("0.001");
+  const mintFee = ethers.utils.parseEther("0.002");
+  const renVmFeeMint = ethers.utils.parseEther("0.002");
+
+  return {
+    computeTransferOutput,
+    computeOutputBTC,
+    applyFee,
+    burnFee,
+    mintFee,
+    renVmFeeBurn,
+    renVmFeeMint,
+    computeRenBTCGasFee,
+    getConvertedAmount,
+  };
 };
-
-const toUSDC = (exports.toUSDC = async (amount) => {
-  try {
-    const wbtcOut = await WBTCFromRenBTC(amount);
-    const WETH = UNISWAP.WETH["1"];
-    return await quoter.quoteExactInput(
-      ethers.utils.solidityPack(
-        ["address", "uint24", "address", "uint24", "address"],
-        [fixtures.ETHEREUM.WBTC, 500, WETH.address, 500, fixtures.ETHEREUM.USDC]
-      ),
-      wbtcOut
-    );
-  } catch (e) {
-    console.error(e);
-    return 0;
-  }
-});
-
-const computeTransferOutput = (exports.computeTransferOutput = async ({
-  module,
-  amount,
-}) => {
-  switch (module) {
-    case fixtures.ETHEREUM.USDC:
-      return await toUSDC(await deductMintFee(applyRenVMMintFee(amount)));
-    case fixtures.ETHEREUM.WBTC:
-      return await deductMintFee(
-        await renCrv.get_dy(0, 1, applyRenVMMintFee(amount)),
-        1
-      );
-    case fixtures.ETHEREUM.renBTC:
-      return await deductMintFee(applyRenVMMintFee(amount));
-    case ethers.constants.AddressZero:
-      return await renBTCToETH(await deductMintFee(applyRenVMMintFee(amount)));
-    default:
-      return ethers.BigNumber.from("0");
-  }
-});
-
-const renBTCFromWBTC = async (amount) => {
-  return await renCrv.get_dy(1, 0, amount);
-};
-
-const WBTCFromRenBTC = async (amount) => {
-  return await renCrv.get_dy(0, 1, amount);
-};
-
-const WBTCFromETH = async (amount) => {
-  const WETH = UNISWAP.WETH[UNISWAP.ChainId.MAINNET];
-  const output = await quoter.quoteExactInputSingle(
-    WETH.address,
-    fixtures.ETHEREUM.WBTC,
-    500,
-    amount,
-    0
-  );
-  const result = await renBTCFromWBTC(output);
-  return result;
-};
-
-const renBTCToETH = (exports.renBTCToETH = async (amount) => {
-  const wbtcOut = await WBTCFromRenBTC(amount);
-  const WETH = UNISWAP.WETH[UNISWAP.ChainId.MAINNET];
-  return await quoter.quoteExactInputSingle(
-    fixtures.ETHEREUM.WBTC,
-    WETH.address,
-    500,
-    wbtcOut,
-    0
-  );
-});
-
-const getConvertedAmount = (exports.getConvertedAmount = async (
-  asset,
-  amount
-) => {
-  switch (asset) {
-    case fixtures.ETHEREUM.WBTC:
-      return await renBTCFromWBTC(amount);
-    case fixtures.ETHEREUM.renBTC:
-      return amount;
-    case fixtures.ETHEREUM.USDC:
-      return await fromUSDC(amount);
-    case ethers.constants.AddressZero:
-      return await renBTCFromWBTC(await WBTCFromETH(amount));
-    default:
-      console.error("no asset found for getConvertedAmount:" + asset);
-      return amount;
-  }
-});
-
-const computeOutputBTC = (exports.computeOutputBTC = async (burnRequest) => {
-  const { asset, amount } = burnRequest;
-  const convertedAmount = await getConvertedAmount(asset, amount);
-
-  switch (asset) {
-    case fixtures.ETHEREUM.WBTC:
-      return await deductBurnFee(applyRenVMFee(convertedAmount));
-    case fixtures.ETHEREUM.renBTC:
-      return await deductBurnFee(applyRenVMFee(convertedAmount));
-    case fixtures.ETHEREUM.USDC:
-      return await deductBurnFee(applyRenVMFee(convertedAmount));
-    case ethers.constants.AddressZero:
-      return await deductBurnFee(applyRenVMFee(convertedAmount));
-    default:
-      console.error("no asset found for computeOutputBTC:" + asset);
-      return burnRequest.amount;
-  }
-});

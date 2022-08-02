@@ -2258,6 +2258,22 @@
     node-fetch "^2.6.0"
     semver "^6.3.0"
 
+"@nomiclabs/hardhat-etherscan@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-etherscan/-/hardhat-etherscan-3.1.0.tgz#7137554862b3b1c914f1b1bf110f0529fd2dec53"
+  integrity sha512-JroYgfN1AlYFkQTQ3nRwFi4o8NtZF7K/qFR2dxDUgHbCtIagkUseca9L4E/D2ScUm4XT40+8PbCdqZi+XmHyQA==
+  dependencies:
+    "@ethersproject/abi" "^5.1.2"
+    "@ethersproject/address" "^5.0.2"
+    cbor "^5.0.2"
+    chalk "^2.4.2"
+    debug "^4.1.1"
+    fs-extra "^7.0.1"
+    lodash "^4.17.11"
+    semver "^6.3.0"
+    table "^6.8.0"
+    undici "^5.4.0"
+
 "@nomiclabs/hardhat-waffle@^2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-waffle/-/hardhat-waffle-2.0.3.tgz#9c538a09c5ed89f68f5fd2dc3f78f16ed1d6e0b1"
@@ -3722,6 +3738,20 @@
   version "2.4.6"
   resolved "https://registry.yarnpkg.com/@traderjoe-xyz/core/-/core-2.4.6.tgz#d7657530cab4c5e10e6ba09bf955be76b918fa77"
   integrity sha512-YmDEkxa8avXRlILFNT3p87vkXrQ1ONK/Hb3XJiUZxGktTPf4gaAHjAPtETn1LwDBAqLvs2ZhiZDSgHSdDivhNw==
+
+"@traderjoe-xyz/sdk@^1.6.4":
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/@traderjoe-xyz/sdk/-/sdk-1.6.4.tgz#a0382bd891f9f684d0df87f2b0012063809e78c7"
+  integrity sha512-hLfAa9SdSABql6cSN3VW+E+AIfY8RWBSBHeJvokX82RXciD2buRirWiqbECcbDVR/moMKdOFWfqQ4Qz3NYIgFA==
+  dependencies:
+    "@openzeppelin/cli" "^2.8.2"
+    "@uniswap/v2-core" "^1.0.1"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
 
 "@traderjoe-xyz/sdk@^2.0.1":
   version "2.0.1"
@@ -12006,7 +12036,7 @@ hardhat-watcher@^2.1.1:
   dependencies:
     chokidar "^3.5.3"
 
-hardhat@^2.8.4:
+hardhat@^2.10.1, hardhat@^2.8.4:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.10.1.tgz#37fdc0c96d6a5d16b322269db2ad8f9f115c4046"
   integrity sha512-0FN9TyCtn7Lt25SB2ei2G7nA2rZjP+RN6MvFOm+zYwherxLZNo6RbD8nDz88eCbhRapevmXqOiL2nM8INKsjmA==
@@ -21408,7 +21438,7 @@ table@^5.2.3:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-table@^6.0.9:
+table@^6.0.9, table@^6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/table/-/table-6.8.0.tgz#87e28f14fa4321c3377ba286f07b79b281a3b3ca"
   integrity sha512-s/fitrbVeEyHKFa7mFdkuQMWlH1Wgw/yEXMt5xACT4ZpzWFluehAxRtUUQKPuWhaLAWhFcVx6w3oC8VKaUfPGA==

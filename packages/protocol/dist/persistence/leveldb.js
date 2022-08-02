@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -45,8 +45,8 @@ var ethers_1 = require("ethers");
 require("./types");
 require("path");
 var memdown_1 = __importDefault(require("memdown"));
-var level = require('level');
-var levelup = require('levelup');
+var level = require("level");
+var levelup = require("levelup");
 var getValue = function (level, key) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -66,22 +66,32 @@ var getValue = function (level, key) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-var setValue = function (level, key, value) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, new Promise(function (resolve, reject) { return level.put(key, value, function (err) { return (err ? reject(err) : resolve()); }); })];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-var delValue = function (level, key) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, new Promise(function (resolve, reject) { return level.del(key, function (err) { return (err ? reject(err) : resolve()); }); })];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-var toKey = function (key) { return 'request:' + key; };
-var toIndexKey = function (key) { return 'index:' + key; };
-var toKeyFromIndexKey = function (index) { return 'key: ' + index; };
-var requestToKey = function (request) { return ethers_1.ethers.utils.solidityKeccak256(['bytes'], [request.signature]); };
+var setValue = function (level, key, value) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
+                    return level.put(key, value, function (err) { return (err ? reject(err) : resolve()); });
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+var delValue = function (level, key) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
+                    return level.del(key, function (err) { return (err ? reject(err) : resolve()); });
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+var toKey = function (key) { return "request:" + key; };
+var toIndexKey = function (key) { return "index:" + key; };
+var toKeyFromIndexKey = function (index) { return "key: " + index; };
+var requestToKey = function (request) {
+    return ethers_1.ethers.utils.solidityKeccak256(["bytes"], [request.signature]);
+};
 var requestToPlain = function (request) {
     var to = request.to, underwriter = request.underwriter, contractAddress = request.contractAddress, nonce = request.nonce, pNonce = request.pNonce, data = request.data, module = request.module, amount = request.amount, asset = request.asset, status = request.status, signature = request.signature, chainId = request.chainId, _destination = request._destination, addressFrom = request.addressFrom, requestType = request.requestType;
     return {
@@ -105,7 +115,7 @@ var requestToPlain = function (request) {
 var LevelDBPersistenceAdapter = /** @class */ (function () {
     function LevelDBPersistenceAdapter() {
         var db = process.env.ZERO_PERSISTENCE_DB;
-        if (db === '::memory')
+        if (db === "::memory")
             this.backend = levelup((0, memdown_1["default"])("./"));
         else
             this.backend = level(db);
@@ -117,7 +127,7 @@ var LevelDBPersistenceAdapter = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = Number;
-                        return [4 /*yield*/, getValue(this.backend, 'length')];
+                        return [4 /*yield*/, getValue(this.backend, "length")];
                     case 1: return [2 /*return*/, _a.apply(void 0, [(_b.sent()) || 0])];
                 }
             });
@@ -131,7 +141,7 @@ var LevelDBPersistenceAdapter = /** @class */ (function () {
                     case 0:
                         _b = (_a = JSON).parse;
                         return [4 /*yield*/, getValue(this.backend, toKey(key))];
-                    case 1: return [2 /*return*/, _b.apply(_a, [(_c.sent()) || '0']) || null];
+                    case 1: return [2 /*return*/, (_b.apply(_a, [(_c.sent()) || "0"]) || null)];
                 }
             });
         });
@@ -173,7 +183,7 @@ var LevelDBPersistenceAdapter = /** @class */ (function () {
                         return [4 /*yield*/, this.length()];
                     case 2:
                         index = _a.sent();
-                        return [4 /*yield*/, setValue(this.backend, 'length', String(index + 1))];
+                        return [4 /*yield*/, setValue(this.backend, "length", String(index + 1))];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -231,8 +241,8 @@ var LevelDBPersistenceAdapter = /** @class */ (function () {
                     case 1:
                         transferRequest = _a.sent();
                         if (!transferRequest)
-                            return [2 /*return*/, 'pending'];
-                        return [2 /*return*/, transferRequest.status || 'pending'];
+                            return [2 /*return*/, "pending"];
+                        return [2 /*return*/, transferRequest.status || "pending"];
                 }
             });
         });
@@ -273,7 +283,7 @@ var LevelDBPersistenceAdapter = /** @class */ (function () {
                         return [4 /*yield*/, this.get(key)];
                     case 4:
                         request = (_a.sent());
-                        request.status = request.status || 'pending';
+                        request.status = request.status || "pending";
                         if (request && (!filter || request.requestType === filter)) {
                             result.push(request);
                         }

@@ -78,4 +78,3 @@ module.exports = {
     Curve_Ren: "",
   },
 };
-

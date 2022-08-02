@@ -8,14 +8,16 @@ require("@ethersproject/hash");
 var ethers_1 = require("ethers");
 var chains_1 = require("@renproject/chains");
 exports.CONTROLLER_DEPLOYMENTS = {
-    Arbitrum: require('../deployments/arbitrum/ZeroController').address,
-    Polygon: require('../deployments/matic/ZeroController').address,
+    Arbitrum: require("@zerodao/contracts/deployments/arbitrum/ZeroController")
+        .address,
+    Polygon: require("@zerodao/contracts/deployments/matic/ZeroController")
+        .address,
     Ethereum: ethers_1.ethers.constants.AddressZero
 };
 exports.RPC_ENDPOINTS = {
-    Arbitrum: 'https://arbitrum-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2',
-    Polygon: 'https://polygon-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2',
-    Ethereum: 'https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2'
+    Arbitrum: "https://arbitrum-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
+    Polygon: "https://polygon-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
+    Ethereum: "https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2"
 };
 exports.RENVM_PROVIDERS = {
     Arbitrum: chains_1.Arbitrum,
@@ -28,7 +30,7 @@ var getProvider = function (transferRequest) {
         return transferRequest.contractAddress === v;
     });
     var chain_key = chain[0];
-    return exports.RENVM_PROVIDERS[chain_key](new ethers_1.ethers.providers.JsonRpcProvider(exports.RPC_ENDPOINTS[chain_key]), 'mainnet');
+    return exports.RENVM_PROVIDERS[chain_key](new ethers_1.ethers.providers.JsonRpcProvider(exports.RPC_ENDPOINTS[chain_key]), "mainnet");
 };
 exports.getProvider = getProvider;
 exports.logger = {
