@@ -1,0 +1,739 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "contracts/erc4626/ConstantAddresses.sol",
+    "id": 2360,
+    "exportedSymbols": {
+      "bCrvRen": [
+        2353
+      ],
+      "btcGateway": [
+        2317
+      ],
+      "factory": [
+        2326
+      ],
+      "ibbtc": [
+        2359
+      ],
+      "renCrv": [
+        2341
+      ],
+      "renCrvLp": [
+        2350
+      ],
+      "renbtc": [
+        2338
+      ],
+      "router": [
+        2320
+      ],
+      "routerv3": [
+        2323
+      ],
+      "settPeak": [
+        2356
+      ],
+      "threepool": [
+        2344
+      ],
+      "tricrypto": [
+        2347
+      ],
+      "usdc": [
+        2329
+      ],
+      "wbtc": [
+        2335
+      ],
+      "weth": [
+        2332
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:1088:13",
+    "nodes": [
+      {
+        "id": 2314,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:13",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 2317,
+        "nodeType": "VariableDeclaration",
+        "src": "59:72:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "btcGateway",
+        "nameLocation": "76:10:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2315,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "59:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307865346236373934303046306632363732313244354438313242393566353843383332343345453731",
+          "id": 2316,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "89:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xe4b679400F0f267212D5D812B95f58C83243EE71"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2320,
+        "nodeType": "VariableDeclaration",
+        "src": "133:68:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "router",
+        "nameLocation": "150:6:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2318,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "133:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307837613235306435363330423463463533393733396446324335644163623463363539463234383844",
+          "id": 2319,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "159:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2323,
+        "nodeType": "VariableDeclaration",
+        "src": "203:70:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "routerv3",
+        "nameLocation": "220:8:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2321,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "203:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307845353932343237413041456365393244653345646565314631384530313537433035383631353634",
+          "id": 2322,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "231:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2326,
+        "nodeType": "VariableDeclaration",
+        "src": "275:69:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "factory",
+        "nameLocation": "292:7:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2324,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "275:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307835433639624565373031656638313461324236613345444434423136353243423963633561413666",
+          "id": 2325,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "302:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2329,
+        "nodeType": "VariableDeclaration",
+        "src": "346:66:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "usdc",
+        "nameLocation": "363:4:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2327,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "346:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307841306238363939316336323138623336633164313944346132653945623063453336303665423438",
+          "id": 2328,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "370:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2332,
+        "nodeType": "VariableDeclaration",
+        "src": "414:66:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "weth",
+        "nameLocation": "431:4:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2330,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "414:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307843303261614133396232323346453844304130653543344632376541443930383343373536436332",
+          "id": 2331,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "438:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2335,
+        "nodeType": "VariableDeclaration",
+        "src": "482:66:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "wbtc",
+        "nameLocation": "499:4:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2333,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "482:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307832323630464143354535353432613737334161343466424366654466374331393362633243353939",
+          "id": 2334,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "506:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2338,
+        "nodeType": "VariableDeclaration",
+        "src": "550:68:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "renbtc",
+        "nameLocation": "567:6:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2336,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "550:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307845423443323738316534656241383034434539613938303343363764303839333433366242323744",
+          "id": 2337,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "576:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2341,
+        "nodeType": "VariableDeclaration",
+        "src": "620:68:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "renCrv",
+        "nameLocation": "637:6:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2339,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "620:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307839333035343138386438373666353538663461363642324546316439376431366544663038393542",
+          "id": 2340,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "646:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x93054188d876f558f4a66B2EF1d97d16eDf0895B"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2344,
+        "nodeType": "VariableDeclaration",
+        "src": "690:71:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "threepool",
+        "nameLocation": "707:9:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2342,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "690:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307862456263343437383243376442306131413630436236666539376430623438333033324646314337",
+          "id": 2343,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "719:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2347,
+        "nodeType": "VariableDeclaration",
+        "src": "763:71:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "tricrypto",
+        "nameLocation": "780:9:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2345,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "763:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307838303436366336343836384531616231346131446466323741363736433366634245363338466535",
+          "id": 2346,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "792:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x80466c64868E1ab14a1Ddf27A676C3fcBE638Fe5"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2350,
+        "nodeType": "VariableDeclaration",
+        "src": "836:70:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "renCrvLp",
+        "nameLocation": "853:8:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2348,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "836:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307834393834394339386165333946666631323238303643303637393146613733373834464233363735",
+          "id": 2349,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "864:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x49849C98ae39Fff122806C06791Fa73784FB3675"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2353,
+        "nodeType": "VariableDeclaration",
+        "src": "908:69:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "bCrvRen",
+        "nameLocation": "925:7:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2351,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "908:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307836644566353564326531383438364239644466614130373562633465344545304232386331353435",
+          "id": 2352,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "935:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2356,
+        "nodeType": "VariableDeclaration",
+        "src": "979:70:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "settPeak",
+        "nameLocation": "996:8:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2354,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "979:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307834313637314241316162636241333837623962324237353263323035653232653931364245366533",
+          "id": 2355,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "1007:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0x41671BA1abcbA387b9b2B752c205e22e916BE6e3"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 2359,
+        "nodeType": "VariableDeclaration",
+        "src": "1051:67:13",
+        "constant": true,
+        "mutability": "constant",
+        "name": "ibbtc",
+        "nameLocation": "1068:5:13",
+        "scope": 2360,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_address",
+          "typeString": "address"
+        },
+        "typeName": {
+          "id": 2357,
+          "name": "address",
+          "nodeType": "ElementaryTypeName",
+          "src": "1051:7:13",
+          "stateMutability": "nonpayable",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          }
+        },
+        "value": {
+          "hexValue": "307863344531353937334536664632413335634338303463324346394432613162383137613862343046",
+          "id": 2358,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "1076:42:13",
+          "typeDescriptions": {
+            "typeIdentifier": "t_address",
+            "typeString": "address"
+          },
+          "value": "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F"
+        },
+        "visibility": "internal"
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 13
+}

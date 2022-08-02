@@ -1,0 +1,316 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "NotGovernance",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldGovernance",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newGovernance",
+          "type": "address"
+        }
+      ],
+      "name": "GovernanceTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "governance",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_governance",
+          "type": "address"
+        }
+      ],
+      "name": "setGovernance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "governance()": "5aa6e675",
+    "setGovernance(address)": "ab033ea9"
+  },
+  "ast": {
+    "absolutePath": "contracts/erc4626/interfaces/IGovernable.sol",
+    "id": 2910,
+    "exportedSymbols": {
+      "IGovernable": [
+        2909
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:643:23",
+    "nodes": [
+      {
+        "id": 2890,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:23",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 2909,
+        "nodeType": "ContractDefinition",
+        "src": "59:615:23",
+        "nodes": [
+          {
+            "id": 2895,
+            "nodeType": "FunctionDefinition",
+            "src": "85:53:23",
+            "functionSelector": "ab033ea9",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setGovernance",
+            "nameLocation": "94:13:23",
+            "parameters": {
+              "id": 2893,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2892,
+                  "mutability": "mutable",
+                  "name": "_governance",
+                  "nameLocation": "116:11:23",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2895,
+                  "src": "108:19:23",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2891,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "108:7:23",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "107:21:23"
+            },
+            "returnParameters": {
+              "id": 2894,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "137:0:23"
+            },
+            "scope": 2909,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 2900,
+            "nodeType": "FunctionDefinition",
+            "src": "142:54:23",
+            "functionSelector": "5aa6e675",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "governance",
+            "nameLocation": "151:10:23",
+            "parameters": {
+              "id": 2896,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "161:2:23"
+            },
+            "returnParameters": {
+              "id": 2899,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2898,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2900,
+                  "src": "187:7:23",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2897,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "187:7:23",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "186:9:23"
+            },
+            "scope": 2909,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 2902,
+            "nodeType": "ErrorDefinition",
+            "src": "372:22:23",
+            "errorSelector": "b56f932c",
+            "name": "NotGovernance",
+            "nameLocation": "378:13:23",
+            "parameters": {
+              "id": 2901,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "391:2:23"
+            }
+          },
+          {
+            "id": 2908,
+            "nodeType": "EventDefinition",
+            "src": "570:102:23",
+            "anonymous": false,
+            "eventSelector": "5f56bee8cffbe9a78652a74a60705edede02af10b0bbb888ca44b79a0d42ce80",
+            "name": "GovernanceTransferred",
+            "nameLocation": "576:21:23",
+            "parameters": {
+              "id": 2907,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2904,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "oldGovernance",
+                  "nameLocation": "619:13:23",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2908,
+                  "src": "603:29:23",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2903,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "603:7:23",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2906,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "newGovernance",
+                  "nameLocation": "654:13:23",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2908,
+                  "src": "638:29:23",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2905,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "638:7:23",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "597:74:23"
+            }
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IGovernable",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          2909
+        ],
+        "name": "IGovernable",
+        "nameLocation": "69:11:23",
+        "scope": 2910,
+        "usedErrors": [
+          2902
+        ]
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 23
+}

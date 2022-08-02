@@ -1,0 +1,1226 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "_indexedSymbol",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_gatewayAddress",
+          "type": "address"
+        }
+      ],
+      "name": "LogGatewayDeregistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "_indexedSymbol",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_gatewayAddress",
+          "type": "address"
+        }
+      ],
+      "name": "LogGatewayRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_currentGatewayAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_newGatewayAddress",
+          "type": "address"
+        }
+      ],
+      "name": "LogGatewayUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_tokenSymbol",
+          "type": "string"
+        }
+      ],
+      "name": "getGatewayBySymbol",
+      "outputs": [
+        {
+          "internalType": "contract IGateway",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getGatewayByToken",
+      "outputs": [
+        {
+          "internalType": "contract IGateway",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_start",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_count",
+          "type": "uint256"
+        }
+      ],
+      "name": "getGateways",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_start",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_count",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRenTokens",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_tokenSymbol",
+          "type": "string"
+        }
+      ],
+      "name": "getTokenBySymbol",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "getGatewayBySymbol(string)": "64936b1e",
+    "getGatewayByToken(address)": "1b95e305",
+    "getGateways(address,uint256)": "f4146ba2",
+    "getRenTokens(address,uint256)": "cf4f775c",
+    "getTokenBySymbol(string)": "efa74f1f"
+  },
+  "ast": {
+    "absolutePath": "contracts/interfaces/IGatewayRegistry.sol",
+    "id": 9343,
+    "exportedSymbols": {
+      "IBurnGateway": [
+        9252
+      ],
+      "IERC20": [
+        9216
+      ],
+      "IGateway": [
+        9257
+      ],
+      "IGatewayRegistry": [
+        9342
+      ],
+      "IMintGateway": [
+        9237
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:1967:63",
+    "nodes": [
+      {
+        "id": 9259,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:63",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.6",
+          ".0"
+        ]
+      },
+      {
+        "id": 9261,
+        "nodeType": "ImportDirective",
+        "src": "58:38:63",
+        "absolutePath": "contracts/interfaces/IERC20.sol",
+        "file": "./IERC20.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 9343,
+        "sourceUnit": 9217,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 9260,
+              "name": "IERC20",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 9216,
+              "src": "67:6:63",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 9262,
+        "nodeType": "ImportDirective",
+        "src": "98:24:63",
+        "absolutePath": "contracts/interfaces/IGateway.sol",
+        "file": "./IGateway.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 9343,
+        "sourceUnit": 9258,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 9342,
+        "nodeType": "ContractDefinition",
+        "src": "233:1765:63",
+        "nodes": [
+          {
+            "id": 9274,
+            "nodeType": "EventDefinition",
+            "src": "392:158:63",
+            "anonymous": false,
+            "documentation": {
+              "id": 9264,
+              "nodeType": "StructuredDocumentation",
+              "src": "264:125:63",
+              "text": "@dev The symbol is included twice because strings have to be hashed\n first in order to be used as a log index/topic."
+            },
+            "eventSelector": "d433aae9ea620c1976ff88f75c629f477dbffe6bf277edad8a31c983117ab32a",
+            "name": "LogGatewayRegistered",
+            "nameLocation": "398:20:63",
+            "parameters": {
+              "id": 9273,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9266,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "_symbol",
+                  "nameLocation": "431:7:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9274,
+                  "src": "424:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9265,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "424:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9268,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_indexedSymbol",
+                  "nameLocation": "459:14:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9274,
+                  "src": "444:29:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9267,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "444:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9270,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_tokenAddress",
+                  "nameLocation": "495:13:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9274,
+                  "src": "479:29:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9269,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "479:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9272,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_gatewayAddress",
+                  "nameLocation": "530:15:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9274,
+                  "src": "514:31:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9271,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "514:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "418:131:63"
+            }
+          },
+          {
+            "id": 9284,
+            "nodeType": "EventDefinition",
+            "src": "553:160:63",
+            "anonymous": false,
+            "eventSelector": "ea98e49727cf7c3a8c3926a036a6d41047c9b766d9109f22962950f37a2094aa",
+            "name": "LogGatewayDeregistered",
+            "nameLocation": "559:22:63",
+            "parameters": {
+              "id": 9283,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9276,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "_symbol",
+                  "nameLocation": "594:7:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9284,
+                  "src": "587:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9275,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "587:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9278,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_indexedSymbol",
+                  "nameLocation": "622:14:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9284,
+                  "src": "607:29:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9277,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "607:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9280,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_tokenAddress",
+                  "nameLocation": "658:13:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9284,
+                  "src": "642:29:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9279,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "642:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9282,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_gatewayAddress",
+                  "nameLocation": "693:15:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9284,
+                  "src": "677:31:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9281,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "677:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "581:131:63"
+            }
+          },
+          {
+            "id": 9292,
+            "nodeType": "EventDefinition",
+            "src": "716:147:63",
+            "anonymous": false,
+            "eventSelector": "2dc9e208c924a5b14066ecb7121b371da427e696ad69456ed07a52cd2a710d99",
+            "name": "LogGatewayUpdated",
+            "nameLocation": "722:17:63",
+            "parameters": {
+              "id": 9291,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9286,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_tokenAddress",
+                  "nameLocation": "761:13:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9292,
+                  "src": "745:29:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9285,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "745:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9288,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_currentGatewayAddress",
+                  "nameLocation": "796:22:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9292,
+                  "src": "780:38:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9287,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "780:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9290,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "_newGatewayAddress",
+                  "nameLocation": "840:18:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9292,
+                  "src": "824:34:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9289,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "824:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "739:123:63"
+            }
+          },
+          {
+            "id": 9303,
+            "nodeType": "FunctionDefinition",
+            "src": "928:106:63",
+            "documentation": {
+              "id": 9293,
+              "nodeType": "StructuredDocumentation",
+              "src": "867:58:63",
+              "text": "@dev To get all the registered gateways use count = 0."
+            },
+            "functionSelector": "f4146ba2",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getGateways",
+            "nameLocation": "937:11:63",
+            "parameters": {
+              "id": 9298,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9295,
+                  "mutability": "mutable",
+                  "name": "_start",
+                  "nameLocation": "957:6:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9303,
+                  "src": "949:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9294,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "949:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9297,
+                  "mutability": "mutable",
+                  "name": "_count",
+                  "nameLocation": "973:6:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9303,
+                  "src": "965:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 9296,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "965:7:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "948:32:63"
+            },
+            "returnParameters": {
+              "id": 9302,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9301,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9303,
+                  "src": "1016:16:63",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 9299,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1016:7:63",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 9300,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1016:9:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1015:18:63"
+            },
+            "scope": 9342,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 9314,
+            "nodeType": "FunctionDefinition",
+            "src": "1100:107:63",
+            "documentation": {
+              "id": 9304,
+              "nodeType": "StructuredDocumentation",
+              "src": "1038:59:63",
+              "text": "@dev To get all the registered RenERC20s use count = 0."
+            },
+            "functionSelector": "cf4f775c",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getRenTokens",
+            "nameLocation": "1109:12:63",
+            "parameters": {
+              "id": 9309,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9306,
+                  "mutability": "mutable",
+                  "name": "_start",
+                  "nameLocation": "1130:6:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9314,
+                  "src": "1122:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9305,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1122:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9308,
+                  "mutability": "mutable",
+                  "name": "_count",
+                  "nameLocation": "1146:6:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9314,
+                  "src": "1138:14:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 9307,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1138:7:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1121:32:63"
+            },
+            "returnParameters": {
+              "id": 9313,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9312,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9314,
+                  "src": "1189:16:63",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 9310,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1189:7:63",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 9311,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1189:9:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1188:18:63"
+            },
+            "scope": 9342,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 9323,
+            "nodeType": "FunctionDefinition",
+            "src": "1371:95:63",
+            "documentation": {
+              "id": 9315,
+              "nodeType": "StructuredDocumentation",
+              "src": "1211:157:63",
+              "text": "@notice Returns the Gateway contract for the given RenERC20\n         address.\n @param _tokenAddress The address of the RenERC20 contract."
+            },
+            "functionSelector": "1b95e305",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getGatewayByToken",
+            "nameLocation": "1380:17:63",
+            "parameters": {
+              "id": 9318,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9317,
+                  "mutability": "mutable",
+                  "name": "_tokenAddress",
+                  "nameLocation": "1406:13:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9323,
+                  "src": "1398:21:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 9316,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1398:7:63",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1397:23:63"
+            },
+            "returnParameters": {
+              "id": 9322,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9321,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9323,
+                  "src": "1456:8:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IGateway_$9257",
+                    "typeString": "contract IGateway"
+                  },
+                  "typeName": {
+                    "id": 9320,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 9319,
+                      "name": "IGateway",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 9257,
+                      "src": "1456:8:63"
+                    },
+                    "referencedDeclaration": 9257,
+                    "src": "1456:8:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IGateway_$9257",
+                      "typeString": "contract IGateway"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1455:10:63"
+            },
+            "scope": 9342,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 9332,
+            "nodeType": "FunctionDefinition",
+            "src": "1627:103:63",
+            "documentation": {
+              "id": 9324,
+              "nodeType": "StructuredDocumentation",
+              "src": "1470:154:63",
+              "text": "@notice Returns the Gateway contract for the given RenERC20\n         symbol.\n @param _tokenSymbol The symbol of the RenERC20 contract."
+            },
+            "functionSelector": "64936b1e",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getGatewayBySymbol",
+            "nameLocation": "1636:18:63",
+            "parameters": {
+              "id": 9327,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9326,
+                  "mutability": "mutable",
+                  "name": "_tokenSymbol",
+                  "nameLocation": "1671:12:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9332,
+                  "src": "1655:28:63",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9325,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1655:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1654:30:63"
+            },
+            "returnParameters": {
+              "id": 9331,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9330,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9332,
+                  "src": "1720:8:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IGateway_$9257",
+                    "typeString": "contract IGateway"
+                  },
+                  "typeName": {
+                    "id": 9329,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 9328,
+                      "name": "IGateway",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 9257,
+                      "src": "1720:8:63"
+                    },
+                    "referencedDeclaration": 9257,
+                    "src": "1720:8:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IGateway_$9257",
+                      "typeString": "contract IGateway"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1719:10:63"
+            },
+            "scope": 9342,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 9341,
+            "nodeType": "FunctionDefinition",
+            "src": "1897:99:63",
+            "documentation": {
+              "id": 9333,
+              "nodeType": "StructuredDocumentation",
+              "src": "1734:160:63",
+              "text": "@notice Returns the RenERC20 address for the given token symbol.\n @param _tokenSymbol The symbol of the RenERC20 contract to\n        lookup."
+            },
+            "functionSelector": "efa74f1f",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenBySymbol",
+            "nameLocation": "1906:16:63",
+            "parameters": {
+              "id": 9336,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9335,
+                  "mutability": "mutable",
+                  "name": "_tokenSymbol",
+                  "nameLocation": "1939:12:63",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9341,
+                  "src": "1923:28:63",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 9334,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1923:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1922:30:63"
+            },
+            "returnParameters": {
+              "id": 9340,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 9339,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 9341,
+                  "src": "1988:6:63",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IERC20_$9216",
+                    "typeString": "contract IERC20"
+                  },
+                  "typeName": {
+                    "id": 9338,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 9337,
+                      "name": "IERC20",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 9216,
+                      "src": "1988:6:63"
+                    },
+                    "referencedDeclaration": 9216,
+                    "src": "1988:6:63",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IERC20_$9216",
+                      "typeString": "contract IERC20"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1987:8:63"
+            },
+            "scope": 9342,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IGatewayRegistry",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 9263,
+          "nodeType": "StructuredDocumentation",
+          "src": "124:109:63",
+          "text": "@notice GatewayRegistry is a mapping from assets to their associated\n RenERC20 and Gateway contracts."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          9342
+        ],
+        "name": "IGatewayRegistry",
+        "nameLocation": "243:16:63",
+        "scope": 9343,
+        "usedErrors": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 63
+}

@@ -1,0 +1,3002 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220f1c9a61dd97fb7ec58571602026eb5ef85eb14cb6d7295b6a3dcfc21378db8e864736f6c634300080f0033",
+    "sourceMap": "653:4238:45:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x600080fdfea2646970667358221220f1c9a61dd97fb7ec58571602026eb5ef85eb14cb6d7295b6a3dcfc21378db8e864736f6c634300080f0033",
+    "sourceMap": "653:4238:45:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "contracts/erc4626/utils/LoanRecordCoder.sol",
+    "id": 5468,
+    "exportedSymbols": {
+      "DefaultLoanRecord": [
+        5359
+      ],
+      "GlobalState_Cached_maskOut": [
+        4453
+      ],
+      "GlobalState_Fees_maskOut": [
+        4456
+      ],
+      "GlobalState_LoanInfo_maskOut": [
+        4459
+      ],
+      "GlobalState_ParamsForModuleFees_maskOut": [
+        4462
+      ],
+      "GlobalState_UnburnedShares_maskOut": [
+        4465
+      ],
+      "GlobalState_gweiPerGas_bitsAfter": [
+        4468
+      ],
+      "GlobalState_gweiPerGas_maskOut": [
+        4471
+      ],
+      "GlobalState_lastUpdateTimestamp_bitsAfter": [
+        4474
+      ],
+      "GlobalState_lastUpdateTimestamp_maskOut": [
+        4477
+      ],
+      "GlobalState_renBorrowFeeBips_bitsAfter": [
+        4480
+      ],
+      "GlobalState_renBorrowFeeBips_maskOut": [
+        4483
+      ],
+      "GlobalState_renBorrowFeeStatic_bitsAfter": [
+        4486
+      ],
+      "GlobalState_renBorrowFeeStatic_maskOut": [
+        4489
+      ],
+      "GlobalState_satoshiPerEth_bitsAfter": [
+        4492
+      ],
+      "GlobalState_satoshiPerEth_maskOut": [
+        4495
+      ],
+      "GlobalState_totalBitcoinBorrowed_bitsAfter": [
+        4498
+      ],
+      "GlobalState_totalBitcoinBorrowed_maskOut": [
+        4501
+      ],
+      "GlobalState_unburnedGasReserveShares_bitsAfter": [
+        4504
+      ],
+      "GlobalState_unburnedGasReserveShares_maskOut": [
+        4507
+      ],
+      "GlobalState_unburnedZeroFeeShares_bitsAfter": [
+        4510
+      ],
+      "GlobalState_unburnedZeroFeeShares_maskOut": [
+        4513
+      ],
+      "GlobalState_zeroBorrowFeeBips_bitsAfter": [
+        4516
+      ],
+      "GlobalState_zeroBorrowFeeBips_maskOut": [
+        4519
+      ],
+      "GlobalState_zeroBorrowFeeStatic_bitsAfter": [
+        4522
+      ],
+      "GlobalState_zeroBorrowFeeStatic_maskOut": [
+        4525
+      ],
+      "GlobalState_zeroFeeShareBips_bitsAfter": [
+        4528
+      ],
+      "GlobalState_zeroFeeShareBips_maskOut": [
+        4531
+      ],
+      "LoanRecord": [
+        5352
+      ],
+      "LoanRecordCoder": [
+        5467
+      ],
+      "LoanRecord_SharesAndDebt_maskOut": [
+        4534
+      ],
+      "LoanRecord_actualBorrowAmount_bitsAfter": [
+        4537
+      ],
+      "LoanRecord_actualBorrowAmount_maskOut": [
+        4540
+      ],
+      "LoanRecord_btcFeeForLoanGas_bitsAfter": [
+        4543
+      ],
+      "LoanRecord_btcFeeForLoanGas_maskOut": [
+        4546
+      ],
+      "LoanRecord_expiry_bitsAfter": [
+        4549
+      ],
+      "LoanRecord_expiry_maskOut": [
+        4552
+      ],
+      "LoanRecord_lenderDebt_bitsAfter": [
+        4555
+      ],
+      "LoanRecord_lenderDebt_maskOut": [
+        4558
+      ],
+      "LoanRecord_sharesLocked_bitsAfter": [
+        4561
+      ],
+      "LoanRecord_sharesLocked_maskOut": [
+        4564
+      ],
+      "MaxUint11": [
+        4567
+      ],
+      "MaxUint13": [
+        4570
+      ],
+      "MaxUint16": [
+        4573
+      ],
+      "MaxUint2": [
+        4576
+      ],
+      "MaxUint23": [
+        4579
+      ],
+      "MaxUint24": [
+        4582
+      ],
+      "MaxUint28": [
+        4585
+      ],
+      "MaxUint30": [
+        4588
+      ],
+      "MaxUint32": [
+        4591
+      ],
+      "MaxUint40": [
+        4594
+      ],
+      "MaxUint48": [
+        4597
+      ],
+      "MaxUint64": [
+        4600
+      ],
+      "MaxUint8": [
+        4603
+      ],
+      "ModuleState_BitcoinGasFees_maskOut": [
+        4606
+      ],
+      "ModuleState_Cached_maskOut": [
+        4609
+      ],
+      "ModuleState_GasParams_maskOut": [
+        4612
+      ],
+      "ModuleState_LoanParams_maskOut": [
+        4615
+      ],
+      "ModuleState_RepayParams_maskOut": [
+        4618
+      ],
+      "ModuleState_btcFeeForLoanGas_bitsAfter": [
+        4621
+      ],
+      "ModuleState_btcFeeForLoanGas_maskOut": [
+        4624
+      ],
+      "ModuleState_btcFeeForRepayGas_bitsAfter": [
+        4627
+      ],
+      "ModuleState_btcFeeForRepayGas_maskOut": [
+        4630
+      ],
+      "ModuleState_ethRefundForLoanGas_bitsAfter": [
+        4633
+      ],
+      "ModuleState_ethRefundForLoanGas_maskOut": [
+        4636
+      ],
+      "ModuleState_ethRefundForRepayGas_bitsAfter": [
+        4639
+      ],
+      "ModuleState_ethRefundForRepayGas_maskOut": [
+        4642
+      ],
+      "ModuleState_lastUpdateTimestamp_bitsAfter": [
+        4645
+      ],
+      "ModuleState_lastUpdateTimestamp_maskOut": [
+        4648
+      ],
+      "ModuleState_loanGasE4_bitsAfter": [
+        4651
+      ],
+      "ModuleState_loanGasE4_maskOut": [
+        4654
+      ],
+      "ModuleState_moduleType_bitsAfter": [
+        4657
+      ],
+      "ModuleState_moduleType_maskOut": [
+        4660
+      ],
+      "ModuleState_repayGasE4_bitsAfter": [
+        4663
+      ],
+      "ModuleState_repayGasE4_maskOut": [
+        4666
+      ],
+      "Panic_arithmetic": [
+        4669
+      ],
+      "Panic_error_length": [
+        4672
+      ],
+      "Panic_error_offset": [
+        4675
+      ],
+      "Panic_error_signature": [
+        4678
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:4860:45",
+    "nodes": [
+      {
+        "id": 5349,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:45",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 5350,
+        "nodeType": "ImportDirective",
+        "src": "58:30:45",
+        "absolutePath": "contracts/erc4626/utils/CoderConstants.sol",
+        "file": "./CoderConstants.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 5468,
+        "sourceUnit": 4679,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 5352,
+        "nodeType": "UserDefinedValueTypeDefinition",
+        "src": "563:27:45",
+        "canonicalName": "LoanRecord",
+        "name": "LoanRecord",
+        "nameLocation": "568:10:45",
+        "underlyingType": {
+          "id": 5351,
+          "name": "uint256",
+          "nodeType": "ElementaryTypeName",
+          "src": "582:7:45",
+          "typeDescriptions": {
+            "typeIdentifier": "t_uint256",
+            "typeString": "uint256"
+          }
+        }
+      },
+      {
+        "id": 5359,
+        "nodeType": "VariableDeclaration",
+        "src": "592:58:45",
+        "constant": true,
+        "mutability": "constant",
+        "name": "DefaultLoanRecord",
+        "nameLocation": "612:17:45",
+        "scope": 5468,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+          "typeString": "LoanRecord"
+        },
+        "typeName": {
+          "id": 5354,
+          "nodeType": "UserDefinedTypeName",
+          "pathNode": {
+            "id": 5353,
+            "name": "LoanRecord",
+            "nodeType": "IdentifierPath",
+            "referencedDeclaration": 5352,
+            "src": "592:10:45"
+          },
+          "referencedDeclaration": 5352,
+          "src": "592:10:45",
+          "typeDescriptions": {
+            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+            "typeString": "LoanRecord"
+          }
+        },
+        "value": {
+          "arguments": [
+            {
+              "hexValue": "30",
+              "id": 5357,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "648:1:45",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_0_by_1",
+                "typeString": "int_const 0"
+              },
+              "value": "0"
+            }
+          ],
+          "expression": {
+            "argumentTypes": [
+              {
+                "typeIdentifier": "t_rational_0_by_1",
+                "typeString": "int_const 0"
+              }
+            ],
+            "expression": {
+              "id": 5355,
+              "name": "LoanRecord",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 5352,
+              "src": "632:10:45",
+              "typeDescriptions": {
+                "typeIdentifier": "t_type$_t_userDefinedValueType$_LoanRecord_$5352_$",
+                "typeString": "type(LoanRecord)"
+              }
+            },
+            "id": 5356,
+            "isConstant": false,
+            "isLValue": false,
+            "isPure": true,
+            "lValueRequested": false,
+            "memberName": "wrap",
+            "nodeType": "MemberAccess",
+            "src": "632:15:45",
+            "typeDescriptions": {
+              "typeIdentifier": "t_function_wrap_pure$_t_uint256_$returns$_t_userDefinedValueType$_LoanRecord_$5352_$",
+              "typeString": "function (uint256) pure returns (LoanRecord)"
+            }
+          },
+          "id": 5358,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "functionCall",
+          "lValueRequested": false,
+          "names": [],
+          "nodeType": "FunctionCall",
+          "src": "632:18:45",
+          "tryCall": false,
+          "typeDescriptions": {
+            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+            "typeString": "LoanRecord"
+          }
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 5467,
+        "nodeType": "ContractDefinition",
+        "src": "653:4238:45",
+        "nodes": [
+          {
+            "id": 5377,
+            "nodeType": "FunctionDefinition",
+            "src": "852:737:45",
+            "body": {
+              "id": 5376,
+              "nodeType": "Block",
+              "src": "1073:516:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "1088:497:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "1096:63:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "LoanRecord_sharesLocked_bitsAfter",
+                              "nodeType": "YulIdentifier",
+                              "src": "1116:33:45"
+                            },
+                            {
+                              "name": "encoded",
+                              "nodeType": "YulIdentifier",
+                              "src": "1151:7:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "shr",
+                            "nodeType": "YulIdentifier",
+                            "src": "1112:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1112:47:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "sharesLocked",
+                            "nodeType": "YulIdentifier",
+                            "src": "1096:12:45"
+                          }
+                        ]
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "1166:115:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "1201:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_actualBorrowAmount_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1224:39:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1265:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "1220:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1220:53:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "1188:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1188:93:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "actualBorrowAmount",
+                            "nodeType": "YulIdentifier",
+                            "src": "1166:18:45"
+                          }
+                        ]
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "1288:99:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "1315:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_lenderDebt_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1338:31:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1371:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "1334:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1334:45:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "1302:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1302:85:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "lenderDebt",
+                            "nodeType": "YulIdentifier",
+                            "src": "1288:10:45"
+                          }
+                        ]
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "1394:111:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "1427:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_btcFeeForLoanGas_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1450:37:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1489:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "1446:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1446:51:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "1414:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1414:91:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "btcFeeForLoanGas",
+                            "nodeType": "YulIdentifier",
+                            "src": "1394:16:45"
+                          }
+                        ]
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "1512:67:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint32",
+                              "nodeType": "YulIdentifier",
+                              "src": "1526:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_expiry_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1541:27:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1570:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "1537:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1537:41:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "1522:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1522:57:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "expiry",
+                            "nodeType": "YulIdentifier",
+                            "src": "1512:6:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4537,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1224:39:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4543,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1450:37:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4549,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1541:27:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4555,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1338:31:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4561,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1116:33:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4591,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1526:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1201:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1315:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1427:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5367,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1166:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5371,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1394:16:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5362,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1151:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5362,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1265:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5362,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1371:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5362,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1489:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5362,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1570:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5373,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1512:6:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5369,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1288:10:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5365,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1096:12:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5375,
+                  "nodeType": "InlineAssembly",
+                  "src": "1079:506:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "decode",
+            "nameLocation": "861:6:45",
+            "parameters": {
+              "id": 5363,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5362,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "879:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "868:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5361,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5360,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "868:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "868:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "867:20:45"
+            },
+            "returnParameters": {
+              "id": 5374,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5365,
+                  "mutability": "mutable",
+                  "name": "sharesLocked",
+                  "nameLocation": "938:12:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "930:20:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5364,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "930:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5367,
+                  "mutability": "mutable",
+                  "name": "actualBorrowAmount",
+                  "nameLocation": "966:18:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "958:26:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5366,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "958:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5369,
+                  "mutability": "mutable",
+                  "name": "lenderDebt",
+                  "nameLocation": "1000:10:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "992:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5368,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "992:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5371,
+                  "mutability": "mutable",
+                  "name": "btcFeeForLoanGas",
+                  "nameLocation": "1026:16:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "1018:24:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5370,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1018:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5373,
+                  "mutability": "mutable",
+                  "name": "expiry",
+                  "nameLocation": "1058:6:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5377,
+                  "src": "1050:14:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5372,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1050:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "922:148:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5395,
+            "nodeType": "FunctionDefinition",
+            "src": "1593:1062:45",
+            "body": {
+              "id": 5394,
+              "nodeType": "Block",
+              "src": "1788:867:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "1803:848:45",
+                    "statements": [
+                      {
+                        "body": {
+                          "nodeType": "YulBlock",
+                          "src": "2066:141:45",
+                          "statements": [
+                            {
+                              "expression": {
+                                "arguments": [
+                                  {
+                                    "kind": "number",
+                                    "nodeType": "YulLiteral",
+                                    "src": "2083:1:45",
+                                    "type": "",
+                                    "value": "0"
+                                  },
+                                  {
+                                    "name": "Panic_error_signature",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2086:21:45"
+                                  }
+                                ],
+                                "functionName": {
+                                  "name": "mstore",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "2076:6:45"
+                                },
+                                "nodeType": "YulFunctionCall",
+                                "src": "2076:32:45"
+                              },
+                              "nodeType": "YulExpressionStatement",
+                              "src": "2076:32:45"
+                            },
+                            {
+                              "expression": {
+                                "arguments": [
+                                  {
+                                    "name": "Panic_error_offset",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2124:18:45"
+                                  },
+                                  {
+                                    "name": "Panic_arithmetic",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2144:16:45"
+                                  }
+                                ],
+                                "functionName": {
+                                  "name": "mstore",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "2117:6:45"
+                                },
+                                "nodeType": "YulFunctionCall",
+                                "src": "2117:44:45"
+                              },
+                              "nodeType": "YulExpressionStatement",
+                              "src": "2117:44:45"
+                            },
+                            {
+                              "expression": {
+                                "arguments": [
+                                  {
+                                    "kind": "number",
+                                    "nodeType": "YulLiteral",
+                                    "src": "2177:1:45",
+                                    "type": "",
+                                    "value": "0"
+                                  },
+                                  {
+                                    "name": "Panic_error_length",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2180:18:45"
+                                  }
+                                ],
+                                "functionName": {
+                                  "name": "revert",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "2170:6:45"
+                                },
+                                "nodeType": "YulFunctionCall",
+                                "src": "2170:29:45"
+                              },
+                              "nodeType": "YulExpressionStatement",
+                              "src": "2170:29:45"
+                            }
+                          ]
+                        },
+                        "condition": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "name": "sharesLocked",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1829:12:45"
+                                },
+                                {
+                                  "name": "MaxUint48",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "1843:9:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "gt",
+                                "nodeType": "YulIdentifier",
+                                "src": "1826:2:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1826:27:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "arguments": [
+                                    {
+                                      "name": "actualBorrowAmount",
+                                      "nodeType": "YulIdentifier",
+                                      "src": "1880:18:45"
+                                    },
+                                    {
+                                      "name": "MaxUint48",
+                                      "nodeType": "YulIdentifier",
+                                      "src": "1900:9:45"
+                                    }
+                                  ],
+                                  "functionName": {
+                                    "name": "gt",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "1877:2:45"
+                                  },
+                                  "nodeType": "YulFunctionCall",
+                                  "src": "1877:33:45"
+                                },
+                                {
+                                  "arguments": [
+                                    {
+                                      "arguments": [
+                                        {
+                                          "name": "lenderDebt",
+                                          "nodeType": "YulIdentifier",
+                                          "src": "1941:10:45"
+                                        },
+                                        {
+                                          "name": "MaxUint48",
+                                          "nodeType": "YulIdentifier",
+                                          "src": "1953:9:45"
+                                        }
+                                      ],
+                                      "functionName": {
+                                        "name": "gt",
+                                        "nodeType": "YulIdentifier",
+                                        "src": "1938:2:45"
+                                      },
+                                      "nodeType": "YulFunctionCall",
+                                      "src": "1938:25:45"
+                                    },
+                                    {
+                                      "arguments": [
+                                        {
+                                          "arguments": [
+                                            {
+                                              "name": "btcFeeForLoanGas",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "1983:16:45"
+                                            },
+                                            {
+                                              "name": "MaxUint48",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2001:9:45"
+                                            }
+                                          ],
+                                          "functionName": {
+                                            "name": "gt",
+                                            "nodeType": "YulIdentifier",
+                                            "src": "1980:2:45"
+                                          },
+                                          "nodeType": "YulFunctionCall",
+                                          "src": "1980:31:45"
+                                        },
+                                        {
+                                          "arguments": [
+                                            {
+                                              "name": "expiry",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2016:6:45"
+                                            },
+                                            {
+                                              "name": "MaxUint32",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2024:9:45"
+                                            }
+                                          ],
+                                          "functionName": {
+                                            "name": "gt",
+                                            "nodeType": "YulIdentifier",
+                                            "src": "2013:2:45"
+                                          },
+                                          "nodeType": "YulFunctionCall",
+                                          "src": "2013:21:45"
+                                        }
+                                      ],
+                                      "functionName": {
+                                        "name": "or",
+                                        "nodeType": "YulIdentifier",
+                                        "src": "1977:2:45"
+                                      },
+                                      "nodeType": "YulFunctionCall",
+                                      "src": "1977:58:45"
+                                    }
+                                  ],
+                                  "functionName": {
+                                    "name": "or",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "1922:2:45"
+                                  },
+                                  "nodeType": "YulFunctionCall",
+                                  "src": "1922:125:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "or",
+                                "nodeType": "YulIdentifier",
+                                "src": "1863:2:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "1863:194:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "or",
+                            "nodeType": "YulIdentifier",
+                            "src": "1814:2:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "1814:251:45"
+                        },
+                        "nodeType": "YulIf",
+                        "src": "1811:396:45"
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "2214:431:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_sharesLocked_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "2241:33:45"
+                                },
+                                {
+                                  "name": "sharesLocked",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "2276:12:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shl",
+                                "nodeType": "YulIdentifier",
+                                "src": "2237:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "2237:52:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "arguments": [
+                                    {
+                                      "name": "LoanRecord_actualBorrowAmount_bitsAfter",
+                                      "nodeType": "YulIdentifier",
+                                      "src": "2317:39:45"
+                                    },
+                                    {
+                                      "name": "actualBorrowAmount",
+                                      "nodeType": "YulIdentifier",
+                                      "src": "2358:18:45"
+                                    }
+                                  ],
+                                  "functionName": {
+                                    "name": "shl",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2313:3:45"
+                                  },
+                                  "nodeType": "YulFunctionCall",
+                                  "src": "2313:64:45"
+                                },
+                                {
+                                  "arguments": [
+                                    {
+                                      "arguments": [
+                                        {
+                                          "name": "LoanRecord_lenderDebt_bitsAfter",
+                                          "nodeType": "YulIdentifier",
+                                          "src": "2409:31:45"
+                                        },
+                                        {
+                                          "name": "lenderDebt",
+                                          "nodeType": "YulIdentifier",
+                                          "src": "2442:10:45"
+                                        }
+                                      ],
+                                      "functionName": {
+                                        "name": "shl",
+                                        "nodeType": "YulIdentifier",
+                                        "src": "2405:3:45"
+                                      },
+                                      "nodeType": "YulFunctionCall",
+                                      "src": "2405:48:45"
+                                    },
+                                    {
+                                      "arguments": [
+                                        {
+                                          "arguments": [
+                                            {
+                                              "name": "LoanRecord_btcFeeForLoanGas_bitsAfter",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2489:37:45"
+                                            },
+                                            {
+                                              "name": "btcFeeForLoanGas",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2528:16:45"
+                                            }
+                                          ],
+                                          "functionName": {
+                                            "name": "shl",
+                                            "nodeType": "YulIdentifier",
+                                            "src": "2485:3:45"
+                                          },
+                                          "nodeType": "YulFunctionCall",
+                                          "src": "2485:60:45"
+                                        },
+                                        {
+                                          "arguments": [
+                                            {
+                                              "name": "LoanRecord_expiry_bitsAfter",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2565:27:45"
+                                            },
+                                            {
+                                              "name": "expiry",
+                                              "nodeType": "YulIdentifier",
+                                              "src": "2594:6:45"
+                                            }
+                                          ],
+                                          "functionName": {
+                                            "name": "shl",
+                                            "nodeType": "YulIdentifier",
+                                            "src": "2561:3:45"
+                                          },
+                                          "nodeType": "YulFunctionCall",
+                                          "src": "2561:40:45"
+                                        }
+                                      ],
+                                      "functionName": {
+                                        "name": "or",
+                                        "nodeType": "YulIdentifier",
+                                        "src": "2467:2:45"
+                                      },
+                                      "nodeType": "YulFunctionCall",
+                                      "src": "2467:148:45"
+                                    }
+                                  ],
+                                  "functionName": {
+                                    "name": "or",
+                                    "nodeType": "YulIdentifier",
+                                    "src": "2389:2:45"
+                                  },
+                                  "nodeType": "YulFunctionCall",
+                                  "src": "2389:238:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "or",
+                                "nodeType": "YulIdentifier",
+                                "src": "2299:2:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "2299:338:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "or",
+                            "nodeType": "YulIdentifier",
+                            "src": "2225:2:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "2225:420:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "encoded",
+                            "nodeType": "YulIdentifier",
+                            "src": "2214:7:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4537,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2317:39:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4543,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2489:37:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4549,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2565:27:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4555,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2409:31:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4561,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2241:33:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4591,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2024:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1843:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1900:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1953:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2001:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4669,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2144:16:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4672,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2180:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4675,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2124:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4678,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2086:21:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5381,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1880:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5381,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2358:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5385,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1983:16:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5385,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2528:16:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5391,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2214:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5387,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2016:6:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5387,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2594:6:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5383,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1941:10:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5383,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2442:10:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5379,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "1829:12:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5379,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2276:12:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5393,
+                  "nodeType": "InlineAssembly",
+                  "src": "1794:857:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "encode",
+            "nameLocation": "1602:6:45",
+            "parameters": {
+              "id": 5388,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5379,
+                  "mutability": "mutable",
+                  "name": "sharesLocked",
+                  "nameLocation": "1622:12:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1614:20:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5378,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1614:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5381,
+                  "mutability": "mutable",
+                  "name": "actualBorrowAmount",
+                  "nameLocation": "1648:18:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1640:26:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5380,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1640:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5383,
+                  "mutability": "mutable",
+                  "name": "lenderDebt",
+                  "nameLocation": "1680:10:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1672:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5382,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1672:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5385,
+                  "mutability": "mutable",
+                  "name": "btcFeeForLoanGas",
+                  "nameLocation": "1704:16:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1696:24:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5384,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1696:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5387,
+                  "mutability": "mutable",
+                  "name": "expiry",
+                  "nameLocation": "1734:6:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1726:14:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5386,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1726:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1608:136:45"
+            },
+            "returnParameters": {
+              "id": 5392,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5391,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "1779:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5395,
+                  "src": "1768:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5390,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5389,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "1768:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "1768:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1767:20:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5407,
+            "nodeType": "FunctionDefinition",
+            "src": "2841:327:45",
+            "body": {
+              "id": 5406,
+              "nodeType": "Block",
+              "src": "2966:202:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "2981:183:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "2989:63:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "LoanRecord_sharesLocked_bitsAfter",
+                              "nodeType": "YulIdentifier",
+                              "src": "3009:33:45"
+                            },
+                            {
+                              "name": "encoded",
+                              "nodeType": "YulIdentifier",
+                              "src": "3044:7:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "shr",
+                            "nodeType": "YulIdentifier",
+                            "src": "3005:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "3005:47:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "sharesLocked",
+                            "nodeType": "YulIdentifier",
+                            "src": "2989:12:45"
+                          }
+                        ]
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "3059:99:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "3086:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_lenderDebt_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "3109:31:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "3142:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "3105:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "3105:45:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "3073:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "3073:85:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "lenderDebt",
+                            "nodeType": "YulIdentifier",
+                            "src": "3059:10:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4555,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3109:31:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4561,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3009:33:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3086:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5398,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3044:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5398,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3142:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5403,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3059:10:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5401,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "2989:12:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5405,
+                  "nodeType": "InlineAssembly",
+                  "src": "2972:192:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getSharesAndDebt",
+            "nameLocation": "2850:16:45",
+            "parameters": {
+              "id": 5399,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5398,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "2878:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5407,
+                  "src": "2867:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5397,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5396,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "2867:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "2867:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2866:20:45"
+            },
+            "returnParameters": {
+              "id": 5404,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5401,
+                  "mutability": "mutable",
+                  "name": "sharesLocked",
+                  "nameLocation": "2930:12:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5407,
+                  "src": "2922:20:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5400,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2922:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5403,
+                  "mutability": "mutable",
+                  "name": "lenderDebt",
+                  "nameLocation": "2952:10:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5407,
+                  "src": "2944:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5402,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2944:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2921:42:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5417,
+            "nodeType": "FunctionDefinition",
+            "src": "3356:264:45",
+            "body": {
+              "id": 5416,
+              "nodeType": "Block",
+              "src": "3472:148:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "3487:129:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "3495:115:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "3530:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_actualBorrowAmount_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "3553:39:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "3594:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "3549:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "3549:53:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "3517:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "3517:93:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "actualBorrowAmount",
+                            "nodeType": "YulIdentifier",
+                            "src": "3495:18:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4537,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3553:39:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3530:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5413,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3495:18:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5410,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3594:7:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5415,
+                  "nodeType": "InlineAssembly",
+                  "src": "3478:138:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getActualBorrowAmount",
+            "nameLocation": "3365:21:45",
+            "parameters": {
+              "id": 5411,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5410,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "3398:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5417,
+                  "src": "3387:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5409,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5408,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "3387:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "3387:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3386:20:45"
+            },
+            "returnParameters": {
+              "id": 5414,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5413,
+                  "mutability": "mutable",
+                  "name": "actualBorrowAmount",
+                  "nameLocation": "3450:18:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5417,
+                  "src": "3442:26:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5412,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3442:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3441:28:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5427,
+            "nodeType": "FunctionDefinition",
+            "src": "3807:256:45",
+            "body": {
+              "id": 5426,
+              "nodeType": "Block",
+              "src": "3919:144:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "3934:125:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "3942:111:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint48",
+                              "nodeType": "YulIdentifier",
+                              "src": "3975:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_btcFeeForLoanGas_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "3998:37:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "4037:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "3994:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "3994:51:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "3962:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "3962:91:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "btcFeeForLoanGas",
+                            "nodeType": "YulIdentifier",
+                            "src": "3942:16:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4543,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3998:37:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4597,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3975:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5423,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "3942:16:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5420,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4037:7:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5425,
+                  "nodeType": "InlineAssembly",
+                  "src": "3925:134:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getBtcFeeForLoanGas",
+            "nameLocation": "3816:19:45",
+            "parameters": {
+              "id": 5421,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5420,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "3847:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5427,
+                  "src": "3836:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5419,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5418,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "3836:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "3836:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3835:20:45"
+            },
+            "returnParameters": {
+              "id": 5424,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5423,
+                  "mutability": "mutable",
+                  "name": "btcFeeForLoanGas",
+                  "nameLocation": "3899:16:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5427,
+                  "src": "3891:24:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5422,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3891:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3890:26:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5437,
+            "nodeType": "FunctionDefinition",
+            "src": "4245:192:45",
+            "body": {
+              "id": 5436,
+              "nodeType": "Block",
+              "src": "4337:100:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "4352:81:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "4360:67:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "MaxUint32",
+                              "nodeType": "YulIdentifier",
+                              "src": "4374:9:45"
+                            },
+                            {
+                              "arguments": [
+                                {
+                                  "name": "LoanRecord_expiry_bitsAfter",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "4389:27:45"
+                                },
+                                {
+                                  "name": "encoded",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "4418:7:45"
+                                }
+                              ],
+                              "functionName": {
+                                "name": "shr",
+                                "nodeType": "YulIdentifier",
+                                "src": "4385:3:45"
+                              },
+                              "nodeType": "YulFunctionCall",
+                              "src": "4385:41:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "and",
+                            "nodeType": "YulIdentifier",
+                            "src": "4370:3:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "4370:57:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "expiry",
+                            "nodeType": "YulIdentifier",
+                            "src": "4360:6:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 4549,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4389:27:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 4591,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4374:9:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5430,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4418:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5433,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4360:6:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5435,
+                  "nodeType": "InlineAssembly",
+                  "src": "4343:90:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getExpiry",
+            "nameLocation": "4254:9:45",
+            "parameters": {
+              "id": 5431,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5430,
+                  "mutability": "mutable",
+                  "name": "encoded",
+                  "nameLocation": "4275:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5437,
+                  "src": "4264:18:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5429,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5428,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "4264:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "4264:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4263:20:45"
+            },
+            "returnParameters": {
+              "id": 5434,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5433,
+                  "mutability": "mutable",
+                  "name": "expiry",
+                  "nameLocation": "4327:6:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5437,
+                  "src": "4319:14:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5432,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4319:7:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4318:16:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5450,
+            "nodeType": "FunctionDefinition",
+            "src": "4622:147:45",
+            "body": {
+              "id": 5449,
+              "nodeType": "Block",
+              "src": "4717:52:45",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "4732:33:45",
+                    "statements": [
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "4740:19:45",
+                        "value": {
+                          "arguments": [
+                            {
+                              "name": "a",
+                              "nodeType": "YulIdentifier",
+                              "src": "4754:1:45"
+                            },
+                            {
+                              "name": "b",
+                              "nodeType": "YulIdentifier",
+                              "src": "4757:1:45"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "eq",
+                            "nodeType": "YulIdentifier",
+                            "src": "4751:2:45"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "4751:8:45"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "_equals",
+                            "nodeType": "YulIdentifier",
+                            "src": "4740:7:45"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "london",
+                  "externalReferences": [
+                    {
+                      "declaration": 5446,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4740:7:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5440,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4754:1:45",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 5443,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "4757:1:45",
+                      "valueSize": 1
+                    }
+                  ],
+                  "id": 5448,
+                  "nodeType": "InlineAssembly",
+                  "src": "4723:42:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "equals",
+            "nameLocation": "4631:6:45",
+            "parameters": {
+              "id": 5444,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5440,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "4649:1:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5450,
+                  "src": "4638:12:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5439,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5438,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "4638:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "4638:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5443,
+                  "mutability": "mutable",
+                  "name": "b",
+                  "nameLocation": "4663:1:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5450,
+                  "src": "4652:12:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5442,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5441,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "4652:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "4652:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4637:28:45"
+            },
+            "returnParameters": {
+              "id": 5447,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5446,
+                  "mutability": "mutable",
+                  "name": "_equals",
+                  "nameLocation": "4706:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5450,
+                  "src": "4701:12:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 5445,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4701:4:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4700:14:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "id": 5466,
+            "nodeType": "FunctionDefinition",
+            "src": "4773:116:45",
+            "body": {
+              "id": 5465,
+              "nodeType": "Block",
+              "src": "4840:49:45",
+              "statements": [
+                {
+                  "expression": {
+                    "id": 5463,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 5458,
+                      "name": "_isNull",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5456,
+                      "src": "4846:7:45",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "arguments": [
+                        {
+                          "id": 5460,
+                          "name": "a",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5453,
+                          "src": "4863:1:45",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                            "typeString": "LoanRecord"
+                          }
+                        },
+                        {
+                          "id": 5461,
+                          "name": "DefaultLoanRecord",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5359,
+                          "src": "4866:17:45",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                            "typeString": "LoanRecord"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                            "typeString": "LoanRecord"
+                          },
+                          {
+                            "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                            "typeString": "LoanRecord"
+                          }
+                        ],
+                        "id": 5459,
+                        "name": "equals",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5450,
+                        "src": "4856:6:45",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_userDefinedValueType$_LoanRecord_$5352_$_t_userDefinedValueType$_LoanRecord_$5352_$returns$_t_bool_$",
+                          "typeString": "function (LoanRecord,LoanRecord) pure returns (bool)"
+                        }
+                      },
+                      "id": 5462,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "4856:28:45",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "4846:38:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 5464,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4846:38:45"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isNull",
+            "nameLocation": "4782:6:45",
+            "parameters": {
+              "id": 5454,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5453,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "4800:1:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5466,
+                  "src": "4789:12:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                    "typeString": "LoanRecord"
+                  },
+                  "typeName": {
+                    "id": 5452,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 5451,
+                      "name": "LoanRecord",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 5352,
+                      "src": "4789:10:45"
+                    },
+                    "referencedDeclaration": 5352,
+                    "src": "4789:10:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_LoanRecord_$5352",
+                      "typeString": "LoanRecord"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4788:14:45"
+            },
+            "returnParameters": {
+              "id": 5457,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5456,
+                  "mutability": "mutable",
+                  "name": "_isNull",
+                  "nameLocation": "4831:7:45",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5466,
+                  "src": "4826:12:45",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 5455,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4826:4:45",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4825:14:45"
+            },
+            "scope": 5467,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "LoanRecordCoder",
+        "contractDependencies": [],
+        "contractKind": "library",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          5467
+        ],
+        "name": "LoanRecordCoder",
+        "nameLocation": "661:15:45",
+        "scope": 5468,
+        "usedErrors": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 45
+}

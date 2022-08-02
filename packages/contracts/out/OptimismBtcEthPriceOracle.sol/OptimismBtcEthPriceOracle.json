@@ -1,0 +1,877 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IChainlinkOracle",
+          "name": "ethUsdPriceOracle",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IChainlinkOracle",
+          "name": "btcUsdPriceOracle",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "latestAnswer",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x60c03461007957601f61037738819003918201601f19168301916001600160401b0383118484101761007e57808492604094855283398101031261007957610052602061004b83610094565b9201610094565b9060805260a0526040516102ce90816100a9823960805181610115015260a05181609e0152f35b600080fd5b634e487b7160e01b600052604160045260246000fd5b51906001600160a01b03821682036100795756fe608080604052600436101561001357600080fd5b600090813560e01c6350d25bcd1461002a57600080fd5b3461022457817ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc360112610224577f50d25bcd000000000000000000000000000000000000000000000000000000009182825260209273ffffffffffffffffffffffffffffffffffffffff918484600481867f0000000000000000000000000000000000000000000000000000000000000000165afa9384156101b75781946101f1575b50670de0b6b3a764000091847fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff048311851515166101c457859060046040518096819382527f0000000000000000000000000000000000000000000000000000000000000000165afa9283156101b7578193610184575b50821561015757506040519202048152f35b807f4e487b7100000000000000000000000000000000000000000000000000000000602492526012600452fd5b9092508481813d83116101b0575b61019c8183610228565b810103126101ac57519138610145565b8280fd5b503d610192565b50604051903d90823e3d90fd5b6024827f4e487b710000000000000000000000000000000000000000000000000000000081526011600452fd5b9093508481813d831161021d575b6102098183610228565b81010312610219575192386100ce565b8380fd5b503d6101ff565b5080fd5b90601f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0910116810190811067ffffffffffffffff82111761026957604052565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fdfea26469706673582212209c8218d0bfe64b19b53af2dcb2a3973f122ebecb02b0b9ebfb3bcb7d8a115aa464736f6c634300080f0033",
+    "sourceMap": "391:736:30:-:0;;;;;;;;;;;;;-1:-1:-1;;391:736:30;;;;-1:-1:-1;;;;;391:736:30;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;:::i;:::-;755:38;;;799;;391:736;;;;;;;;755:38;391:736;;;;;799:38;391:736;;;;;;;-1:-1:-1;391:736:30;;;;;;-1:-1:-1;391:736:30;;;;;-1:-1:-1;391:736:30;;;;-1:-1:-1;;;;;391:736:30;;;;;;:::o",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608080604052600436101561001357600080fd5b600090813560e01c6350d25bcd1461002a57600080fd5b3461022457817ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc360112610224577f50d25bcd000000000000000000000000000000000000000000000000000000009182825260209273ffffffffffffffffffffffffffffffffffffffff918484600481867f0000000000000000000000000000000000000000000000000000000000000000165afa9384156101b75781946101f1575b50670de0b6b3a764000091847fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff048311851515166101c457859060046040518096819382527f0000000000000000000000000000000000000000000000000000000000000000165afa9283156101b7578193610184575b50821561015757506040519202048152f35b807f4e487b7100000000000000000000000000000000000000000000000000000000602492526012600452fd5b9092508481813d83116101b0575b61019c8183610228565b810103126101ac57519138610145565b8280fd5b503d610192565b50604051903d90823e3d90fd5b6024827f4e487b710000000000000000000000000000000000000000000000000000000081526011600452fd5b9093508481813d831161021d575b6102098183610228565b81010312610219575192386100ce565b8380fd5b503d6101ff565b5080fd5b90601f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0910116810190811067ffffffffffffffff82111761026957604052565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fdfea26469706673582212209c8218d0bfe64b19b53af2dcb2a3973f122ebecb02b0b9ebfb3bcb7d8a115aa464736f6c634300080f0033",
+    "sourceMap": "391:736:30:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1037:33;;;;;391:736;;1037:18;;;391:736;1037:18;;;391:736;1037:33;;;;;;;;;;;391:736;1073:4;;391:736;;;;;;;;;;;;;;;;;1087:33;;;;;;:18;391:736;1087:33;;;;;;;;;;;391:736;;;;;;;;;;;;;;;;;;;;;;;;;1087:33;;;;;;;;;;;;;;;;;:::i;:::-;;;391:736;;;;;1087:33;;;;391:736;;;;1087:33;;;;;;391:736;;;;;;;;;;;;;;;;;;;;;1037:33;;;;;;;;;;;;;;;;;:::i;:::-;;;391:736;;;;;1037:33;;;;391:736;;;;1037:33;;;;;391:736;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;",
+    "linkReferences": {},
+    "immutableReferences": {
+      "3313": [
+        {
+          "start": 277,
+          "length": 32
+        }
+      ],
+      "3316": [
+        {
+          "start": 158,
+          "length": 32
+        }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "latestAnswer()": "50d25bcd"
+  },
+  "ast": {
+    "absolutePath": "contracts/erc4626/optimism/OptimismBtcEthPriceOracle.sol",
+    "id": 3354,
+    "exportedSymbols": {
+      "GlobalState_Cached_maskOut": [
+        4453
+      ],
+      "GlobalState_Fees_maskOut": [
+        4456
+      ],
+      "GlobalState_LoanInfo_maskOut": [
+        4459
+      ],
+      "GlobalState_ParamsForModuleFees_maskOut": [
+        4462
+      ],
+      "GlobalState_UnburnedShares_maskOut": [
+        4465
+      ],
+      "GlobalState_gweiPerGas_bitsAfter": [
+        4468
+      ],
+      "GlobalState_gweiPerGas_maskOut": [
+        4471
+      ],
+      "GlobalState_lastUpdateTimestamp_bitsAfter": [
+        4474
+      ],
+      "GlobalState_lastUpdateTimestamp_maskOut": [
+        4477
+      ],
+      "GlobalState_renBorrowFeeBips_bitsAfter": [
+        4480
+      ],
+      "GlobalState_renBorrowFeeBips_maskOut": [
+        4483
+      ],
+      "GlobalState_renBorrowFeeStatic_bitsAfter": [
+        4486
+      ],
+      "GlobalState_renBorrowFeeStatic_maskOut": [
+        4489
+      ],
+      "GlobalState_satoshiPerEth_bitsAfter": [
+        4492
+      ],
+      "GlobalState_satoshiPerEth_maskOut": [
+        4495
+      ],
+      "GlobalState_totalBitcoinBorrowed_bitsAfter": [
+        4498
+      ],
+      "GlobalState_totalBitcoinBorrowed_maskOut": [
+        4501
+      ],
+      "GlobalState_unburnedGasReserveShares_bitsAfter": [
+        4504
+      ],
+      "GlobalState_unburnedGasReserveShares_maskOut": [
+        4507
+      ],
+      "GlobalState_unburnedZeroFeeShares_bitsAfter": [
+        4510
+      ],
+      "GlobalState_unburnedZeroFeeShares_maskOut": [
+        4513
+      ],
+      "GlobalState_zeroBorrowFeeBips_bitsAfter": [
+        4516
+      ],
+      "GlobalState_zeroBorrowFeeBips_maskOut": [
+        4519
+      ],
+      "GlobalState_zeroBorrowFeeStatic_bitsAfter": [
+        4522
+      ],
+      "GlobalState_zeroBorrowFeeStatic_maskOut": [
+        4525
+      ],
+      "GlobalState_zeroFeeShareBips_bitsAfter": [
+        4528
+      ],
+      "GlobalState_zeroFeeShareBips_maskOut": [
+        4531
+      ],
+      "IChainlinkOracle": [
+        9138
+      ],
+      "LoanRecord_SharesAndDebt_maskOut": [
+        4534
+      ],
+      "LoanRecord_actualBorrowAmount_bitsAfter": [
+        4537
+      ],
+      "LoanRecord_actualBorrowAmount_maskOut": [
+        4540
+      ],
+      "LoanRecord_btcFeeForLoanGas_bitsAfter": [
+        4543
+      ],
+      "LoanRecord_btcFeeForLoanGas_maskOut": [
+        4546
+      ],
+      "LoanRecord_expiry_bitsAfter": [
+        4549
+      ],
+      "LoanRecord_expiry_maskOut": [
+        4552
+      ],
+      "LoanRecord_lenderDebt_bitsAfter": [
+        4555
+      ],
+      "LoanRecord_lenderDebt_maskOut": [
+        4558
+      ],
+      "LoanRecord_sharesLocked_bitsAfter": [
+        4561
+      ],
+      "LoanRecord_sharesLocked_maskOut": [
+        4564
+      ],
+      "Math": [
+        5616
+      ],
+      "MaxUint11": [
+        4567
+      ],
+      "MaxUint13": [
+        4570
+      ],
+      "MaxUint16": [
+        4573
+      ],
+      "MaxUint2": [
+        4576
+      ],
+      "MaxUint23": [
+        4579
+      ],
+      "MaxUint24": [
+        4582
+      ],
+      "MaxUint28": [
+        4585
+      ],
+      "MaxUint30": [
+        4588
+      ],
+      "MaxUint32": [
+        4591
+      ],
+      "MaxUint40": [
+        4594
+      ],
+      "MaxUint48": [
+        4597
+      ],
+      "MaxUint64": [
+        4600
+      ],
+      "MaxUint8": [
+        4603
+      ],
+      "ModuleState_BitcoinGasFees_maskOut": [
+        4606
+      ],
+      "ModuleState_Cached_maskOut": [
+        4609
+      ],
+      "ModuleState_GasParams_maskOut": [
+        4612
+      ],
+      "ModuleState_LoanParams_maskOut": [
+        4615
+      ],
+      "ModuleState_RepayParams_maskOut": [
+        4618
+      ],
+      "ModuleState_btcFeeForLoanGas_bitsAfter": [
+        4621
+      ],
+      "ModuleState_btcFeeForLoanGas_maskOut": [
+        4624
+      ],
+      "ModuleState_btcFeeForRepayGas_bitsAfter": [
+        4627
+      ],
+      "ModuleState_btcFeeForRepayGas_maskOut": [
+        4630
+      ],
+      "ModuleState_ethRefundForLoanGas_bitsAfter": [
+        4633
+      ],
+      "ModuleState_ethRefundForLoanGas_maskOut": [
+        4636
+      ],
+      "ModuleState_ethRefundForRepayGas_bitsAfter": [
+        4639
+      ],
+      "ModuleState_ethRefundForRepayGas_maskOut": [
+        4642
+      ],
+      "ModuleState_lastUpdateTimestamp_bitsAfter": [
+        4645
+      ],
+      "ModuleState_lastUpdateTimestamp_maskOut": [
+        4648
+      ],
+      "ModuleState_loanGasE4_bitsAfter": [
+        4651
+      ],
+      "ModuleState_loanGasE4_maskOut": [
+        4654
+      ],
+      "ModuleState_moduleType_bitsAfter": [
+        4657
+      ],
+      "ModuleState_moduleType_maskOut": [
+        4660
+      ],
+      "ModuleState_repayGasE4_bitsAfter": [
+        4663
+      ],
+      "ModuleState_repayGasE4_maskOut": [
+        4666
+      ],
+      "OneEth": [
+        5476
+      ],
+      "OptimismBtcEthPriceOracle": [
+        3353
+      ],
+      "Panic_arithmetic": [
+        4669
+      ],
+      "Panic_error_length": [
+        4672
+      ],
+      "Panic_error_offset": [
+        4675
+      ],
+      "Panic_error_signature": [
+        4678
+      ],
+      "TenThousand": [
+        5473
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "42:1086:30",
+    "nodes": [
+      {
+        "id": 3306,
+        "nodeType": "PragmaDirective",
+        "src": "42:25:30",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 3307,
+        "nodeType": "ImportDirective",
+        "src": "69:27:30",
+        "absolutePath": "contracts/erc4626/utils/Math.sol",
+        "file": "../utils/Math.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 3354,
+        "sourceUnit": 5617,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 3309,
+        "nodeType": "ImportDirective",
+        "src": "97:73:30",
+        "absolutePath": "contracts/interfaces/IChainlinkOracle.sol",
+        "file": "../../interfaces/IChainlinkOracle.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 3354,
+        "sourceUnit": 9139,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 3308,
+              "name": "IChainlinkOracle",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 9138,
+              "src": "106:16:30",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 3353,
+        "nodeType": "ContractDefinition",
+        "src": "391:736:30",
+        "nodes": [
+          {
+            "id": 3313,
+            "nodeType": "VariableDeclaration",
+            "src": "483:54:30",
+            "constant": false,
+            "mutability": "immutable",
+            "name": "_ethUsdPriceOracle",
+            "nameLocation": "519:18:30",
+            "scope": 3353,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+              "typeString": "contract IChainlinkOracle"
+            },
+            "typeName": {
+              "id": 3312,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 3311,
+                "name": "IChainlinkOracle",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 9138,
+                "src": "483:16:30"
+              },
+              "referencedDeclaration": 9138,
+              "src": "483:16:30",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                "typeString": "contract IChainlinkOracle"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 3316,
+            "nodeType": "VariableDeclaration",
+            "src": "594:54:30",
+            "constant": false,
+            "mutability": "immutable",
+            "name": "_btcUsdPriceOracle",
+            "nameLocation": "630:18:30",
+            "scope": 3353,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+              "typeString": "contract IChainlinkOracle"
+            },
+            "typeName": {
+              "id": 3315,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 3314,
+                "name": "IChainlinkOracle",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 9138,
+                "src": "594:16:30"
+              },
+              "referencedDeclaration": 9138,
+              "src": "594:16:30",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                "typeString": "contract IChainlinkOracle"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 3334,
+            "nodeType": "FunctionDefinition",
+            "src": "653:189:30",
+            "body": {
+              "id": 3333,
+              "nodeType": "Block",
+              "src": "749:93:30",
+              "statements": [
+                {
+                  "expression": {
+                    "id": 3327,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 3325,
+                      "name": "_ethUsdPriceOracle",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3313,
+                      "src": "755:18:30",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                        "typeString": "contract IChainlinkOracle"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 3326,
+                      "name": "ethUsdPriceOracle",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3319,
+                      "src": "776:17:30",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                        "typeString": "contract IChainlinkOracle"
+                      }
+                    },
+                    "src": "755:38:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                      "typeString": "contract IChainlinkOracle"
+                    }
+                  },
+                  "id": 3328,
+                  "nodeType": "ExpressionStatement",
+                  "src": "755:38:30"
+                },
+                {
+                  "expression": {
+                    "id": 3331,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 3329,
+                      "name": "_btcUsdPriceOracle",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3316,
+                      "src": "799:18:30",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                        "typeString": "contract IChainlinkOracle"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 3330,
+                      "name": "btcUsdPriceOracle",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3322,
+                      "src": "820:17:30",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                        "typeString": "contract IChainlinkOracle"
+                      }
+                    },
+                    "src": "799:38:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                      "typeString": "contract IChainlinkOracle"
+                    }
+                  },
+                  "id": 3332,
+                  "nodeType": "ExpressionStatement",
+                  "src": "799:38:30"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "parameters": {
+              "id": 3323,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3319,
+                  "mutability": "mutable",
+                  "name": "ethUsdPriceOracle",
+                  "nameLocation": "687:17:30",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3334,
+                  "src": "670:34:30",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                    "typeString": "contract IChainlinkOracle"
+                  },
+                  "typeName": {
+                    "id": 3318,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 3317,
+                      "name": "IChainlinkOracle",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 9138,
+                      "src": "670:16:30"
+                    },
+                    "referencedDeclaration": 9138,
+                    "src": "670:16:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                      "typeString": "contract IChainlinkOracle"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3322,
+                  "mutability": "mutable",
+                  "name": "btcUsdPriceOracle",
+                  "nameLocation": "727:17:30",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3334,
+                  "src": "710:34:30",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                    "typeString": "contract IChainlinkOracle"
+                  },
+                  "typeName": {
+                    "id": 3321,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 3320,
+                      "name": "IChainlinkOracle",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 9138,
+                      "src": "710:16:30"
+                    },
+                    "referencedDeclaration": 9138,
+                    "src": "710:16:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                      "typeString": "contract IChainlinkOracle"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "664:84:30"
+            },
+            "returnParameters": {
+              "id": 3324,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "749:0:30"
+            },
+            "scope": 3353,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 3352,
+            "nodeType": "FunctionDefinition",
+            "src": "961:164:30",
+            "body": {
+              "id": 3351,
+              "nodeType": "Block",
+              "src": "1017:108:30",
+              "statements": [
+                {
+                  "expression": {
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 3349,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "components": [
+                        {
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "id": 3344,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "arguments": [],
+                            "expression": {
+                              "argumentTypes": [],
+                              "expression": {
+                                "id": 3340,
+                                "name": "_btcUsdPriceOracle",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3316,
+                                "src": "1037:18:30",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                                  "typeString": "contract IChainlinkOracle"
+                                }
+                              },
+                              "id": 3341,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "latestAnswer",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 9137,
+                              "src": "1037:31:30",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
+                                "typeString": "function () view external returns (uint256)"
+                              }
+                            },
+                            "id": 3342,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1037:33:30",
+                            "tryCall": false,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "*",
+                          "rightExpression": {
+                            "hexValue": "31653138",
+                            "id": 3343,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "1073:4:30",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_1000000000000000000_by_1",
+                              "typeString": "int_const 1000000000000000000"
+                            },
+                            "value": "1e18"
+                          },
+                          "src": "1037:40:30",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        }
+                      ],
+                      "id": 3345,
+                      "isConstant": false,
+                      "isInlineArray": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "TupleExpression",
+                      "src": "1036:42:30",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "/",
+                    "rightExpression": {
+                      "arguments": [],
+                      "expression": {
+                        "argumentTypes": [],
+                        "expression": {
+                          "id": 3346,
+                          "name": "_ethUsdPriceOracle",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3313,
+                          "src": "1087:18:30",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_IChainlinkOracle_$9138",
+                            "typeString": "contract IChainlinkOracle"
+                          }
+                        },
+                        "id": 3347,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "latestAnswer",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 9137,
+                        "src": "1087:31:30",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
+                          "typeString": "function () view external returns (uint256)"
+                        }
+                      },
+                      "id": 3348,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "1087:33:30",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1036:84:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 3339,
+                  "id": 3350,
+                  "nodeType": "Return",
+                  "src": "1023:97:30"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 3335,
+              "nodeType": "StructuredDocumentation",
+              "src": "846:112:30",
+              "text": " @dev Uses BTC/USD and ETH/USD price feeds to calculate the BTC/ETH price\n in wei per bitcoin."
+            },
+            "functionSelector": "50d25bcd",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "latestAnswer",
+            "nameLocation": "970:12:30",
+            "parameters": {
+              "id": 3336,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "982:2:30"
+            },
+            "returnParameters": {
+              "id": 3339,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3338,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3352,
+                  "src": "1008:7:30",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3337,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1008:7:30",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1007:9:30"
+            },
+            "scope": 3353,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "OptimismBtcEthPriceOracle",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 3310,
+          "nodeType": "StructuredDocumentation",
+          "src": "172:218:30",
+          "text": " @dev ChainLink does not currently have a feed on Optimism for the price\n of BTC/ETH. This contract uses the BTC/USD and ETH/USD feeds to create\n an equivalent feed which is usable by ZeroBTC on Optimism."
+        },
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          3353
+        ],
+        "name": "OptimismBtcEthPriceOracle",
+        "nameLocation": "400:25:30",
+        "scope": 3354,
+        "usedErrors": []
+      }
+    ],
+    "license": "AGPL-3.0-only"
+  },
+  "id": 30
+}

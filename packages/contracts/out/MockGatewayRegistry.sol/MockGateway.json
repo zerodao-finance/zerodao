@@ -1,0 +1,1118 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract TestERC20",
+          "name": "_wbtc",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_pHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_nHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_sig",
+          "type": "bytes"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x60a03461006a57601f61036738819003918201601f19168301916001600160401b0383118484101761006f5780849260209460405283398101031261006a57516001600160a01b038116810361006a576080526040516102e190816100868239608051816101650152f35b600080fd5b634e487b7160e01b600052604160045260246000fdfe60806040818152600436101561001457600080fd5b600091823560e01c63159ab14d1461002b57600080fd5b346101c85760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126101c8576024356064359067ffffffffffffffff928383116101dd57366023840112156101dd5782600401359084821161020e57866020946100bf867fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f870116018461023b565b8383528583019336602482840101116101c85780602488930186378301015251902090845191838301600435815282878501526044356060850152606084526080840195848710908711176101e15785875283519020036101dd577f40c10f1900000000000000000000000000000000000000000000000000000000845233608483015260a482015281836044818873ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000165af180156101d357610198575b50505051f35b813d83116101cc575b6101ab818561023b565b810103126101c85751801515036101c457388080610192565b5080fd5b8280fd5b503d6101a1565b84513d87823e3d90fd5b8580fd5b6024887f4e487b710000000000000000000000000000000000000000000000000000000081526041600452fd5b6024877f4e487b710000000000000000000000000000000000000000000000000000000081526041600452fd5b90601f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0910116810190811067ffffffffffffffff82111761027c57604052565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fdfea2646970667358221220d532a233e09d4a5d01107a16368ea04f80e7bd84fc4bcff2b38fd2a94fb081cd64736f6c634300080f0033",
+    "sourceMap": "280:412:78:-:0;;;;;;;;;;;;;-1:-1:-1;;280:412:78;;;;-1:-1:-1;;;;;280:412:78;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;280:412:78;;;;;;419:12;;280:412;;;;;;;;419:12;280:412;;;;;;;-1:-1:-1;280:412:78;;;;;;-1:-1:-1;280:412:78;;;;;-1:-1:-1;280:412:78",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x60806040818152600436101561001457600080fd5b600091823560e01c63159ab14d1461002b57600080fd5b346101c85760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc3601126101c8576024356064359067ffffffffffffffff928383116101dd57366023840112156101dd5782600401359084821161020e57866020946100bf867fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f870116018461023b565b8383528583019336602482840101116101c85780602488930186378301015251902090845191838301600435815282878501526044356060850152606084526080840195848710908711176101e15785875283519020036101dd577f40c10f1900000000000000000000000000000000000000000000000000000000845233608483015260a482015281836044818873ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000165af180156101d357610198575b50505051f35b813d83116101cc575b6101ab818561023b565b810103126101c85751801515036101c457388080610192565b5080fd5b8280fd5b503d6101a1565b84513d87823e3d90fd5b8580fd5b6024887f4e487b710000000000000000000000000000000000000000000000000000000081526041600452fd5b6024877f4e487b710000000000000000000000000000000000000000000000000000000081526041600452fd5b90601f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0910116810190811067ffffffffffffffff82111761027c57604052565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fdfea2646970667358221220d532a233e09d4a5d01107a16368ea04f80e7bd84fc4bcff2b38fd2a94fb081cd64736f6c634300080f0033",
+    "sourceMap": "280:412:78:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;572:15;;280:412;;;601:41;;;;280:412;;;;;;;;;;;;;;;;601:41;;280:412;;;;;;;;;;;;;;;;;;591:52;;572:71;280:412;;;655:30;;665:10;655:30;;;280:412;;;;;655:4;;280:412;655:4;;280:412;655:4;280:412;655:30;;;;;;;;280:412;;;;;;655:30;;;;;;;;;;;;:::i;:::-;;;280:412;;;;;;;;;;;655:30;;;;;280:412;;;;;;;;655:30;;;;;;280:412;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;",
+    "linkReferences": {},
+    "immutableReferences": {
+      "11609": [
+        {
+          "start": 357,
+          "length": 32
+        }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "mint(bytes32,uint256,bytes32,bytes)": "159ab14d"
+  },
+  "ast": {
+    "absolutePath": "contracts/test/MockGatewayRegistry.sol",
+    "id": 11657,
+    "exportedSymbols": {
+      "BasisPointsOne": [
+        11603
+      ],
+      "ERC20": [
+        1001
+      ],
+      "MockGateway": [
+        11656
+      ],
+      "MockGatewayRegistry": [
+        11600
+      ],
+      "TestERC20": [
+        11756
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "0:693:78",
+    "nodes": [
+      {
+        "id": 11575,
+        "nodeType": "PragmaDirective",
+        "src": "0:25:78",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 11576,
+        "nodeType": "ImportDirective",
+        "src": "27:25:78",
+        "absolutePath": "contracts/test/TestERC20.sol",
+        "file": "./TestERC20.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 11657,
+        "sourceUnit": 11757,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 11600,
+        "nodeType": "ContractDefinition",
+        "src": "54:184:78",
+        "nodes": [
+          {
+            "id": 11582,
+            "nodeType": "VariableDeclaration",
+            "src": "87:58:78",
+            "constant": false,
+            "functionSelector": "1b95e305",
+            "mutability": "mutable",
+            "name": "getGatewayByToken",
+            "nameLocation": "128:17:78",
+            "scope": 11600,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_contract$_TestERC20_$11756_$_t_contract$_MockGateway_$11656_$",
+              "typeString": "mapping(contract TestERC20 => contract MockGateway)"
+            },
+            "typeName": {
+              "id": 11581,
+              "keyType": {
+                "id": 11578,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 11577,
+                  "name": "TestERC20",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 11756,
+                  "src": "95:9:78"
+                },
+                "referencedDeclaration": 11756,
+                "src": "95:9:78",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_TestERC20_$11756",
+                  "typeString": "contract TestERC20"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "87:33:78",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_contract$_TestERC20_$11756_$_t_contract$_MockGateway_$11656_$",
+                "typeString": "mapping(contract TestERC20 => contract MockGateway)"
+              },
+              "valueType": {
+                "id": 11580,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 11579,
+                  "name": "MockGateway",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 11656,
+                  "src": "108:11:78"
+                },
+                "referencedDeclaration": 11656,
+                "src": "108:11:78",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_MockGateway_$11656",
+                  "typeString": "contract MockGateway"
+                }
+              }
+            },
+            "visibility": "public"
+          },
+          {
+            "id": 11599,
+            "nodeType": "FunctionDefinition",
+            "src": "150:86:78",
+            "body": {
+              "id": 11598,
+              "nodeType": "Block",
+              "src": "178:58:78",
+              "statements": [
+                {
+                  "expression": {
+                    "id": 11596,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "baseExpression": {
+                        "id": 11588,
+                        "name": "getGatewayByToken",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11582,
+                        "src": "184:17:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_contract$_TestERC20_$11756_$_t_contract$_MockGateway_$11656_$",
+                          "typeString": "mapping(contract TestERC20 => contract MockGateway)"
+                        }
+                      },
+                      "id": 11590,
+                      "indexExpression": {
+                        "id": 11589,
+                        "name": "wbtc",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11585,
+                        "src": "202:4:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_TestERC20_$11756",
+                          "typeString": "contract TestERC20"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "184:23:78",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_MockGateway_$11656",
+                        "typeString": "contract MockGateway"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "arguments": [
+                        {
+                          "id": 11594,
+                          "name": "wbtc",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 11585,
+                          "src": "226:4:78",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_TestERC20_$11756",
+                            "typeString": "contract TestERC20"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_contract$_TestERC20_$11756",
+                            "typeString": "contract TestERC20"
+                          }
+                        ],
+                        "id": 11593,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "NewExpression",
+                        "src": "210:15:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_contract$_TestERC20_$11756_$returns$_t_contract$_MockGateway_$11656_$",
+                          "typeString": "function (contract TestERC20) returns (contract MockGateway)"
+                        },
+                        "typeName": {
+                          "id": 11592,
+                          "nodeType": "UserDefinedTypeName",
+                          "pathNode": {
+                            "id": 11591,
+                            "name": "MockGateway",
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 11656,
+                            "src": "214:11:78"
+                          },
+                          "referencedDeclaration": 11656,
+                          "src": "214:11:78",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_MockGateway_$11656",
+                            "typeString": "contract MockGateway"
+                          }
+                        }
+                      },
+                      "id": 11595,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "210:21:78",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_MockGateway_$11656",
+                        "typeString": "contract MockGateway"
+                      }
+                    },
+                    "src": "184:47:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_MockGateway_$11656",
+                      "typeString": "contract MockGateway"
+                    }
+                  },
+                  "id": 11597,
+                  "nodeType": "ExpressionStatement",
+                  "src": "184:47:78"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "parameters": {
+              "id": 11586,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 11585,
+                  "mutability": "mutable",
+                  "name": "wbtc",
+                  "nameLocation": "172:4:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11599,
+                  "src": "162:14:78",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_TestERC20_$11756",
+                    "typeString": "contract TestERC20"
+                  },
+                  "typeName": {
+                    "id": 11584,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 11583,
+                      "name": "TestERC20",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 11756,
+                      "src": "162:9:78"
+                    },
+                    "referencedDeclaration": 11756,
+                    "src": "162:9:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TestERC20_$11756",
+                      "typeString": "contract TestERC20"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "161:16:78"
+            },
+            "returnParameters": {
+              "id": 11587,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "178:0:78"
+            },
+            "scope": 11600,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "MockGatewayRegistry",
+        "contractDependencies": [
+          11656
+        ],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          11600
+        ],
+        "name": "MockGatewayRegistry",
+        "nameLocation": "63:19:78",
+        "scope": 11657,
+        "usedErrors": []
+      },
+      {
+        "id": 11603,
+        "nodeType": "VariableDeclaration",
+        "src": "240:37:78",
+        "constant": true,
+        "mutability": "constant",
+        "name": "BasisPointsOne",
+        "nameLocation": "257:14:78",
+        "scope": 11657,
+        "stateVariable": false,
+        "storageLocation": "default",
+        "typeDescriptions": {
+          "typeIdentifier": "t_uint256",
+          "typeString": "uint256"
+        },
+        "typeName": {
+          "id": 11601,
+          "name": "uint256",
+          "nodeType": "ElementaryTypeName",
+          "src": "240:7:78",
+          "typeDescriptions": {
+            "typeIdentifier": "t_uint256",
+            "typeString": "uint256"
+          }
+        },
+        "value": {
+          "hexValue": "316534",
+          "id": 11602,
+          "isConstant": false,
+          "isLValue": false,
+          "isPure": true,
+          "kind": "number",
+          "lValueRequested": false,
+          "nodeType": "Literal",
+          "src": "274:3:78",
+          "typeDescriptions": {
+            "typeIdentifier": "t_rational_10000_by_1",
+            "typeString": "int_const 10000"
+          },
+          "value": "1e4"
+        },
+        "visibility": "internal"
+      },
+      {
+        "id": 11656,
+        "nodeType": "ContractDefinition",
+        "src": "280:412:78",
+        "nodes": [
+          {
+            "id": 11606,
+            "nodeType": "VariableDeclaration",
+            "src": "305:45:78",
+            "constant": true,
+            "mutability": "constant",
+            "name": "dynamicFeeBips",
+            "nameLocation": "331:14:78",
+            "scope": 11656,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 11604,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "305:7:78",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "hexValue": "3130",
+              "id": 11605,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "348:2:78",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_10_by_1",
+                "typeString": "int_const 10"
+              },
+              "value": "10"
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 11609,
+            "nodeType": "VariableDeclaration",
+            "src": "355:24:78",
+            "constant": false,
+            "mutability": "immutable",
+            "name": "wbtc",
+            "nameLocation": "375:4:78",
+            "scope": 11656,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_TestERC20_$11756",
+              "typeString": "contract TestERC20"
+            },
+            "typeName": {
+              "id": 11608,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 11607,
+                "name": "TestERC20",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 11756,
+                "src": "355:9:78"
+              },
+              "referencedDeclaration": 11756,
+              "src": "355:9:78",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_TestERC20_$11756",
+                "typeString": "contract TestERC20"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 11620,
+            "nodeType": "FunctionDefinition",
+            "src": "384:52:78",
+            "body": {
+              "id": 11619,
+              "nodeType": "Block",
+              "src": "413:23:78",
+              "statements": [
+                {
+                  "expression": {
+                    "id": 11617,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 11615,
+                      "name": "wbtc",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 11609,
+                      "src": "419:4:78",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_TestERC20_$11756",
+                        "typeString": "contract TestERC20"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 11616,
+                      "name": "_wbtc",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 11612,
+                      "src": "426:5:78",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_TestERC20_$11756",
+                        "typeString": "contract TestERC20"
+                      }
+                    },
+                    "src": "419:12:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TestERC20_$11756",
+                      "typeString": "contract TestERC20"
+                    }
+                  },
+                  "id": 11618,
+                  "nodeType": "ExpressionStatement",
+                  "src": "419:12:78"
+                }
+              ]
+            },
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "parameters": {
+              "id": 11613,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 11612,
+                  "mutability": "mutable",
+                  "name": "_wbtc",
+                  "nameLocation": "406:5:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11620,
+                  "src": "396:15:78",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_TestERC20_$11756",
+                    "typeString": "contract TestERC20"
+                  },
+                  "typeName": {
+                    "id": 11611,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 11610,
+                      "name": "TestERC20",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 11756,
+                      "src": "396:9:78"
+                    },
+                    "referencedDeclaration": 11756,
+                    "src": "396:9:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TestERC20_$11756",
+                      "typeString": "contract TestERC20"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "395:17:78"
+            },
+            "returnParameters": {
+              "id": 11614,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "413:0:78"
+            },
+            "scope": 11656,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 11655,
+            "nodeType": "FunctionDefinition",
+            "src": "440:250:78",
+            "body": {
+              "id": 11654,
+              "nodeType": "Block",
+              "src": "551:139:78",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        },
+                        "id": 11643,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "arguments": [
+                            {
+                              "id": 11633,
+                              "name": "_sig",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 11628,
+                              "src": "582:4:78",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bytes_memory_ptr",
+                                "typeString": "bytes memory"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bytes_memory_ptr",
+                                "typeString": "bytes memory"
+                              }
+                            ],
+                            "id": 11632,
+                            "name": "keccak256",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": -8,
+                            "src": "572:9:78",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                              "typeString": "function (bytes memory) pure returns (bytes32)"
+                            }
+                          },
+                          "id": 11634,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "572:15:78",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "id": 11638,
+                                  "name": "_pHash",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 11622,
+                                  "src": "618:6:78",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_bytes32",
+                                    "typeString": "bytes32"
+                                  }
+                                },
+                                {
+                                  "id": 11639,
+                                  "name": "_amount",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 11624,
+                                  "src": "626:7:78",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                },
+                                {
+                                  "id": 11640,
+                                  "name": "_nHash",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 11626,
+                                  "src": "635:6:78",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_bytes32",
+                                    "typeString": "bytes32"
+                                  }
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": [
+                                  {
+                                    "typeIdentifier": "t_bytes32",
+                                    "typeString": "bytes32"
+                                  },
+                                  {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  {
+                                    "typeIdentifier": "t_bytes32",
+                                    "typeString": "bytes32"
+                                  }
+                                ],
+                                "expression": {
+                                  "id": 11636,
+                                  "name": "abi",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": -1,
+                                  "src": "601:3:78",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_magic_abi",
+                                    "typeString": "abi"
+                                  }
+                                },
+                                "id": 11637,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "lValueRequested": false,
+                                "memberName": "encodePacked",
+                                "nodeType": "MemberAccess",
+                                "src": "601:16:78",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_function_abiencodepacked_pure$__$returns$_t_bytes_memory_ptr_$",
+                                  "typeString": "function () pure returns (bytes memory)"
+                                }
+                              },
+                              "id": 11641,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "kind": "functionCall",
+                              "lValueRequested": false,
+                              "names": [],
+                              "nodeType": "FunctionCall",
+                              "src": "601:41:78",
+                              "tryCall": false,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bytes_memory_ptr",
+                                "typeString": "bytes memory"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bytes_memory_ptr",
+                                "typeString": "bytes memory"
+                              }
+                            ],
+                            "id": 11635,
+                            "name": "keccak256",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": -8,
+                            "src": "591:9:78",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                              "typeString": "function (bytes memory) pure returns (bytes32)"
+                            }
+                          },
+                          "id": 11642,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "591:52:78",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        "src": "572:71:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 11631,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "557:7:78",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 11644,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "557:92:78",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11645,
+                  "nodeType": "ExpressionStatement",
+                  "src": "557:92:78"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "expression": {
+                          "id": 11649,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": -15,
+                          "src": "665:3:78",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 11650,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "src": "665:10:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 11651,
+                        "name": "_amount",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11624,
+                        "src": "677:7:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "id": 11646,
+                        "name": "wbtc",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11609,
+                        "src": "655:4:78",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_TestERC20_$11756",
+                          "typeString": "contract TestERC20"
+                        }
+                      },
+                      "id": 11648,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "mint",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 11721,
+                      "src": "655:9:78",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
+                        "typeString": "function (address,uint256) external returns (bool)"
+                      }
+                    },
+                    "id": 11652,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "655:30:78",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 11653,
+                  "nodeType": "ExpressionStatement",
+                  "src": "655:30:78"
+                }
+              ]
+            },
+            "functionSelector": "159ab14d",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mint",
+            "nameLocation": "449:4:78",
+            "parameters": {
+              "id": 11629,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 11622,
+                  "mutability": "mutable",
+                  "name": "_pHash",
+                  "nameLocation": "467:6:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11655,
+                  "src": "459:14:78",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 11621,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "459:7:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 11624,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "487:7:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11655,
+                  "src": "479:15:78",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 11623,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "479:7:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 11626,
+                  "mutability": "mutable",
+                  "name": "_nHash",
+                  "nameLocation": "508:6:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11655,
+                  "src": "500:14:78",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 11625,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "500:7:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 11628,
+                  "mutability": "mutable",
+                  "name": "_sig",
+                  "nameLocation": "533:4:78",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11655,
+                  "src": "520:17:78",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 11627,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "520:5:78",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "453:88:78"
+            },
+            "returnParameters": {
+              "id": 11630,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "551:0:78"
+            },
+            "scope": 11656,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "MockGateway",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          11656
+        ],
+        "name": "MockGateway",
+        "nameLocation": "289:11:78",
+        "scope": 11657,
+        "usedErrors": []
+      }
+    ]
+  },
+  "id": 78
+}

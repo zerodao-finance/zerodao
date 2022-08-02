@@ -1,0 +1,135 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x60808060405234601357603a908160198239f35b600080fdfe600080fdfea2646970667358221220535ee3d0f5c12c41c8c22a9b09777e836230068d7d5474e41a4acf576d82b4cf64736f6c634300080f0033",
+    "sourceMap": "99:91:32:-:0;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x600080fdfea2646970667358221220535ee3d0f5c12c41c8c22a9b09777e836230068d7d5474e41a4acf576d82b4cf64736f6c634300080f0033",
+    "sourceMap": "99:91:32:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "contracts/erc4626/storage/ERC2612Storage.sol",
+    "id": 3379,
+    "exportedSymbols": {
+      "ERC20Storage": [
+        3368
+      ],
+      "ERC2612Storage": [
+        3378
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "42:149:32",
+    "nodes": [
+      {
+        "id": 3370,
+        "nodeType": "PragmaDirective",
+        "src": "42:25:32",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 3371,
+        "nodeType": "ImportDirective",
+        "src": "69:28:32",
+        "absolutePath": "contracts/erc4626/storage/ERC20Storage.sol",
+        "file": "./ERC20Storage.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 3379,
+        "sourceUnit": 3369,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 3378,
+        "nodeType": "ContractDefinition",
+        "src": "99:91:32",
+        "nodes": [
+          {
+            "id": 3377,
+            "nodeType": "VariableDeclaration",
+            "src": "143:44:32",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "_nonces",
+            "nameLocation": "180:7:32",
+            "scope": 3378,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+              "typeString": "mapping(address => uint256)"
+            },
+            "typeName": {
+              "id": 3376,
+              "keyType": {
+                "id": 3374,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "151:7:32",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "143:27:32",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                "typeString": "mapping(address => uint256)"
+              },
+              "valueType": {
+                "id": 3375,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "162:7:32",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 3372,
+              "name": "ERC20Storage",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 3368,
+              "src": "126:12:32"
+            },
+            "id": 3373,
+            "nodeType": "InheritanceSpecifier",
+            "src": "126:12:32"
+          }
+        ],
+        "canonicalName": "ERC2612Storage",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          3378,
+          3368
+        ],
+        "name": "ERC2612Storage",
+        "nameLocation": "108:14:32",
+        "scope": 3379,
+        "usedErrors": []
+      }
+    ],
+    "license": "AGPL-3.0-only"
+  },
+  "id": 32
+}

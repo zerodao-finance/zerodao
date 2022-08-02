@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
+    "module": "commonjs",
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strictNullChecks": false,
+    "strict": false,
+    "allowJs": true,
+    "importsNotUsedAsValues": "preserve",
+    "isolatedModules": false,
+    "checkJs": false,
+    "typeRoots": ["./typechain-types", "./node_modules/@types"],
+    "types": ["@nomiclabs/hardhat-ethers", "@nomiclabs/hardhat-waffle"]
+  },
+  "include": [
+    "./lib",
+    "./lib/**/*",
+  ],
+  "exclude": ["node_modules"],
+  "typeAcquisition": { "enable": true },
+}

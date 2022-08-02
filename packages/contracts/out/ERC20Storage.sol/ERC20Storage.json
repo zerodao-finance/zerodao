@@ -1,0 +1,198 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x60808060405234601357603a908160198239f35b600080fdfe600080fdfea264697066735822122070fe6968e3d6d88178752f91e5d5ef7e3fde728c341c62d7d413a47a83595cc364736f6c634300080f0033",
+    "sourceMap": "69:182:31:-:0;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x600080fdfea264697066735822122070fe6968e3d6d88178752f91e5d5ef7e3fde728c341c62d7d413a47a83595cc364736f6c634300080f0033",
+    "sourceMap": "69:182:31:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "contracts/erc4626/storage/ERC20Storage.sol",
+    "id": 3369,
+    "exportedSymbols": {
+      "ERC20Storage": [
+        3368
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "42:210:31",
+    "nodes": [
+      {
+        "id": 3355,
+        "nodeType": "PragmaDirective",
+        "src": "42:25:31",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 3368,
+        "nodeType": "ContractDefinition",
+        "src": "69:182:31",
+        "nodes": [
+          {
+            "id": 3357,
+            "nodeType": "VariableDeclaration",
+            "src": "95:29:31",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "_totalSupply",
+            "nameLocation": "112:12:31",
+            "scope": 3368,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 3356,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "95:7:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 3361,
+            "nodeType": "VariableDeclaration",
+            "src": "129:47:31",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "_balanceOf",
+            "nameLocation": "166:10:31",
+            "scope": 3368,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+              "typeString": "mapping(address => uint256)"
+            },
+            "typeName": {
+              "id": 3360,
+              "keyType": {
+                "id": 3358,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "137:7:31",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "129:27:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                "typeString": "mapping(address => uint256)"
+              },
+              "valueType": {
+                "id": 3359,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "148:7:31",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 3367,
+            "nodeType": "VariableDeclaration",
+            "src": "181:67:31",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "_allowance",
+            "nameLocation": "238:10:31",
+            "scope": 3368,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
+              "typeString": "mapping(address => mapping(address => uint256))"
+            },
+            "typeName": {
+              "id": 3366,
+              "keyType": {
+                "id": 3362,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "189:7:31",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "181:47:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
+                "typeString": "mapping(address => mapping(address => uint256))"
+              },
+              "valueType": {
+                "id": 3365,
+                "keyType": {
+                  "id": 3363,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "208:7:31",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "200:27:31",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                  "typeString": "mapping(address => uint256)"
+                },
+                "valueType": {
+                  "id": 3364,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "219:7:31",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                }
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ERC20Storage",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          3368
+        ],
+        "name": "ERC20Storage",
+        "nameLocation": "78:12:31",
+        "scope": 3369,
+        "usedErrors": []
+      }
+    ],
+    "license": "AGPL-3.0-only"
+  },
+  "id": 31
+}

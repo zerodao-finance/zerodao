@@ -1,0 +1,102 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "InvalidSigner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTypeHash",
+      "type": "error"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "contracts/erc4626/interfaces/EIP712Errors.sol",
+    "id": 2600,
+    "exportedSymbols": {
+      "EIP712Errors": [
+        2599
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:107:19",
+    "nodes": [
+      {
+        "id": 2594,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:19",
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".13"
+        ]
+      },
+      {
+        "id": 2599,
+        "nodeType": "ContractDefinition",
+        "src": "59:79:19",
+        "nodes": [
+          {
+            "id": 2596,
+            "nodeType": "ErrorDefinition",
+            "src": "86:24:19",
+            "errorSelector": "5ac5f4a4",
+            "name": "InvalidTypeHash",
+            "nameLocation": "92:15:19",
+            "parameters": {
+              "id": 2595,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "107:2:19"
+            }
+          },
+          {
+            "id": 2598,
+            "nodeType": "ErrorDefinition",
+            "src": "114:22:19",
+            "errorSelector": "815e1d64",
+            "name": "InvalidSigner",
+            "nameLocation": "120:13:19",
+            "parameters": {
+              "id": 2597,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "133:2:19"
+            }
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "EIP712Errors",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          2599
+        ],
+        "name": "EIP712Errors",
+        "nameLocation": "69:12:19",
+        "scope": 2600,
+        "usedErrors": [
+          2596,
+          2598
+        ]
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 19
+}
