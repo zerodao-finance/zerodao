@@ -142,6 +142,9 @@ module.exports = {
     enabled: process.env.REPORT_GAS === "true",
     excludeContracts: ["contracts/libraries/"],
   },
+  paths: {
+    sources: "contracts_old",
+  },
   solidity: {
     compilers: [
       {

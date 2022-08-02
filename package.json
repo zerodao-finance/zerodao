@@ -5,12 +5,15 @@
   "main": "dist/lib/zero.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
   "types": "./lib/types.d.ts",
-  "scripts": {},
+  "scripts": {
+    "contracts": "yarn workspace @zerodao/contracts",
+    "protocol-old": "yarn workspace @zerodao/protocol"
+  },
   "author": "zeroDAO",
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "./packages/**"
+    "./packages/*"
   ],
   "devDependencies": {},
   "dependencies": {
