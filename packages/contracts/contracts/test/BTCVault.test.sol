@@ -20,10 +20,14 @@ contract BTCVaultTest is Test {
       IChainlinkOracle(0xdeb288F737066589598e9214E782fa5A8eD689e8),
       IChainlinkOracle(0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C),
       IRenBtcEthConverter(address(converter)),
+      //cachetimetolive
+      3600,
+      //maxloanduration
       0,
-      0,
-      0,
-      0,
+      //targetethreserve
+      1 ether,
+      //maxgasprofitsharebips
+      200.000,
       address(this),
       renbtc,
       address(0x0)
