@@ -66,6 +66,7 @@
     "nice-repl": "https://github.com/raymondpulver/nice-repl",
     "oz410": "npm:@openzeppelin/contracts@3.4.1-solc-0.7-2",
     "oz460": "npm:@openzeppelin/contracts@4.6.0",
+    "ozu": "npm:@openzeppelin/contracts-upgradeable",
     "prettier": "^2.5.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "request-debug": "^0.2.0",

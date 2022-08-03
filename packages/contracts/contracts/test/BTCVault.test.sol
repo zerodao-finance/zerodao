@@ -3,11 +3,14 @@ import "forge-std/Test.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import { ConvertWBTCMainnet as ConvertWBTC } from "../modules/mainnet/ConvertWBTC.sol";
+import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../util/RenBtcEthConverter.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 
 contract BTCVaultTest is Test {
+  address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
+
   constructor() {}
 
   function test() public {
@@ -21,12 +24,10 @@ contract BTCVaultTest is Test {
       0,
       0,
       0,
-      address(0x0),
-      address(0x0),
+      address(this),
+      renbtc,
       address(0x0)
     );
-    ConvertWBTC module = new ConvertWBTC(
-      0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D
-    );
+    ConvertWBTC module = new ConvertWBTC(renbtc);
   }
 }
