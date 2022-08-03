@@ -10,7 +10,7 @@ for more information, see the documentation and https://github.com/winstonjs/win
 
 most users will prefer to use the umbrella package, but for those with more specific needs, individual components can be imported.
 
-``` javascript
+```javascript
 
     const createLogger, {
         logger
