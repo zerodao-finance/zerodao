@@ -20,19 +20,24 @@ function getRemappings() {
     .filter(Boolean)
     .map((line) => line.trim().split("="));
 }
+const chains = {
+  ARBITRUM: 42161,
+  MATIC: 137,
+  ETHEREUM: 1,
+  AVALANCHE: 43114,
+  OPTIMISM: 10,
+};
 
-if (!process.env.CHAIN_ID && process.env.CHAIN === "ARBITRUM")
-  process.env.CHAIN_ID = "42161";
-if (!process.env.CHAIN_ID && process.env.CHAIN === "MATIC")
-  process.env.CHAIN_ID = "137";
-if (!process.env.CHAIN_ID && process.env.CHAIN === "ETHEREUM")
-  process.env.CHAIN_ID = "1";
+if (!process.env.CHAIN_ID && typeof chains[process.env.CHAIN] === "number")
+  process.env.CHAIN_ID = chains[process.env.CHAIN];
 
 const RPC_ENDPOINTS = {
   ARBITRUM: "https://arb1.arbitrum.io/rpc",
   MATIC:
     "https://polygon-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
+  AVALANCHE: "https://api.avax.network/ext/bc/C/rpc",
   ETHEREUM: "https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
+  OPTIMISM: "https://mainnet.optimism.io",
 };
 
 declare var extendEnvironment;
@@ -91,11 +96,6 @@ module.exports = {
       accounts,
       chainId: 1,
     },
-    // localhost: {
-    // 	live: false,
-    // 	saveDeployments: true,
-    // 	tags: ['development'],
-    // },
     localhost: {
       live: false,
       saveDeployments: true,
@@ -106,14 +106,13 @@ module.exports = {
       saveDeployments: true,
       tags: ["development", "test"],
       chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID),
-      allowUnlimitedContractSize: true,
       forking: {
         enabled: process.env.FORKING === "true",
         url: RPC_ENDPOINTS[process.env.CHAIN || "ETHEREUM"],
       },
     },
     avalanche: {
-      url: "https://api.avax.network/ext/bc/C/rpc",
+      url: RPC_ENDPOINTS.AVALANCHE,
       accounts,
       chainId: 43114,
       live: true,
@@ -121,7 +120,7 @@ module.exports = {
       gasPrice: 470000000000,
     },
     matic: {
-      url: "https://rpc-mainnet.maticvigil.com",
+      url: "https://polygon-mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
       accounts,
       chainId: 137,
       live: true,
@@ -134,6 +133,13 @@ module.exports = {
       live: true,
       saveDeployments: true,
       blockGasLimit: 700000,
+    },
+    optimism: {
+      url: "https://mainnet.optimism.io",
+      accounts,
+      chainId: 10,
+      live: true,
+      saveDeployments: true,
     },
   },
   gasReporter: {
