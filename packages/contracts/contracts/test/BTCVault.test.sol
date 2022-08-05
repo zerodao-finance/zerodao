@@ -1,5 +1,6 @@
 pragma solidity ^0.8.15;
 import "forge-std/Test.sol";
+import "forge-std/console.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import { ConvertWBTCMainnet as ConvertWBTC } from "../modules/mainnet/ConvertWBTC.sol";
@@ -8,11 +9,15 @@ import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyA
 import "../util/RenBtcEthConverter.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import "../erc4626/vault/ZeroBTC.sol";
+import "../erc4626/utils/ModuleStateCoder.sol";
 import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 
 contract BTCVaultTest is Test {
   address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
   uint256 mainnet;
+  uint256 snapshot;
+  ZeroBTC vault;
+  ConvertWBTC module;
 
   constructor() {}
 
@@ -74,11 +79,23 @@ contract BTCVaultTest is Test {
     admin.upgrade(_proxy, vault);
   }
 
-  function test() public {
+  function fixtures() public {
+    vm.revertTo(snapshot);
+  }
+
+  function createFixture() public {
     initiateFork();
     RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
-    (ZeroBTC vault, ) = initializeProxy(address(converter));
+    (vault, ) = initializeProxy(address(converter));
 
-    ConvertWBTC module = new ConvertWBTC(renbtc);
+    module = new ConvertWBTC(renbtc);
+    vault.addModule(address(module), ModuleType.LoanOverride, 250, 250);
+    snapshot = vm.snapshot();
   }
+
+  function test() public {
+    createFixture();
+  }
+
+  function testVault() public {}
 }
