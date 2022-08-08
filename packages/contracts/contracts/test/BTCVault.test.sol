@@ -6,6 +6,7 @@ import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import { ConvertWBTCMainnet as ConvertWBTC } from "../modules/mainnet/ConvertWBTC.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
+import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 import "../util/RenBtcEthConverter.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import "../erc4626/vault/ZeroBTC.sol";
@@ -14,6 +15,7 @@ import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 
 contract BTCVaultTest is Test {
   address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
+  address constant gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;
@@ -44,8 +46,8 @@ contract BTCVaultTest is Test {
       );
   }
 
-  function deployVault(address proxy, address converter) internal returns (address vault) {
-    vault = address(
+  function deployVault(address proxy, address converter) internal returns (address _vault) {
+    _vault = address(
       new ZeroBTC(
         IGatewayRegistry(0xe4b679400F0f267212D5D812B95f58C83243EE71),
         IChainlinkOracle(0xdeb288F737066589598e9214E782fa5A8eD689e8),
@@ -54,7 +56,7 @@ contract BTCVaultTest is Test {
         //cachetimetolive
         3600,
         //maxloanduration
-        0,
+        3600,
         //targetethreserve
         1 ether,
         //maxgasprofitsharebips
@@ -72,30 +74,33 @@ contract BTCVaultTest is Test {
     TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
       dummy,
       address(admin),
-      abi.encodeWithSelector(ZeroBTCBase.initialize.selector, address(this), 200, 200, 200, 200)
+      abi.encodeWithSelector(ZeroBTCBase.initialize.selector, address(this), 200, 200, 200, 200, address(this))
     );
     proxy = ZeroBTC(payable(address(_proxy)));
-    address vault = deployVault(address(proxy), converter);
-    admin.upgrade(_proxy, vault);
+    address _vault = deployVault(address(proxy), converter);
+    admin.upgrade(_proxy, _vault);
   }
 
-  function fixtures() public {
-    vm.revertTo(snapshot);
-  }
-
-  function createFixture() public {
+  function setUp() public {
     initiateFork();
     RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
     (vault, ) = initializeProxy(address(converter));
 
     module = new ConvertWBTC(renbtc);
     vault.addModule(address(module), ModuleType.LoanOverride, 250, 250);
-    snapshot = vm.snapshot();
+    bytes memory bytecode = (vm.getCode("MockGatewayLogicV1.sol"));
+    address mockGateway;
+    assembly {
+      mockGateway := create(0, add(bytecode, 0x20), mload(bytecode))
+    }
+    vm.etch(gateway, mockGateway.code);
+    assertEq0(gateway.code, mockGateway.code);
+    gateway.call(abi.encodeWithSignature("setToken(address)", renbtc));
   }
 
-  function test() public {
-    createFixture();
+  function testMockGatewayLogic() public {
+    bytes memory sig;
+    IGateway(gateway).mint(bytes32(0x0), 100000.000, bytes32(0x0), sig);
+    console.log("balance", IERC20(renbtc).balanceOf(address(this)));
   }
-
-  function testVault() public {}
 }

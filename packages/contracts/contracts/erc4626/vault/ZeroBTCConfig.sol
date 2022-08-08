@@ -14,26 +14,20 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
                          Governance Actions
   //////////////////////////////////////////////////////////////*/
 
+  function setStrategy(address strategy) external onlyGovernance nonReentrant {
+    _strategy = strategy;
+  }
+
   function setGlobalFees(
     uint256 zeroBorrowFeeBips,
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic
   ) external onlyGovernance nonReentrant {
-    if (
-      zeroBorrowFeeBips > 2000 ||
-      renBorrowFeeBips > 2000 ||
-      zeroBorrowFeeBips == 0 ||
-      renBorrowFeeBips == 0
-    ) {
+    if (zeroBorrowFeeBips > 2000 || renBorrowFeeBips > 2000 || zeroBorrowFeeBips == 0 || renBorrowFeeBips == 0) {
       revert InvalidDynamicBorrowFee();
     }
-    _state = _state.setFees(
-      zeroBorrowFeeBips,
-      renBorrowFeeBips,
-      zeroBorrowFeeStatic,
-      renBorrowFeeStatic
-    );
+    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic);
   }
 
   function setModuleGasFees(

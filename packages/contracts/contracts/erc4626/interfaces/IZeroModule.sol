@@ -9,7 +9,7 @@ interface IZeroModule {
     uint256 repaidAmount,
     uint256 loanId,
     bytes calldata data
-  ) external returns (uint256 collateralToUnlock);
+  ) external;
 
   function receiveLoan(
     address borrower,
