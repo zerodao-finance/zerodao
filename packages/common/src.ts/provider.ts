@@ -10,7 +10,6 @@ import {
 } from "@renproject/chains";
 import { InfuraProvider, JsonRpcProvider } from "@ethersproject/providers";
 import { _TypedDataEncoder } from '@ethersproject/hash';
-import { ethers } from 'ethers';
 
 
 export const CONTROLLER_DEPLOYMENTS = {
@@ -96,9 +95,3 @@ export const getProvider: ({ contractAddress: string }) => EthereumBaseChain =
                 provider: ethersProvider
             });
     };
-
-export const logger = {
-    debug(v) {
-        console.error(v);
-    },
-};

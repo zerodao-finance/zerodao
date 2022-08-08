@@ -6,6 +6,8 @@ import { hexlify, type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Bitcoin } from "@renproject/chains";
 import { getProvider } from "@zerodao/common";
+import createLogger from "@zerodao/logger";
+
 
 abstract class BaseTransferRequest extends Request {
     static get PROTOCOL(): string | void { throw new Error('static get PROTOCOL() must be implemeneted') }
@@ -22,6 +24,7 @@ abstract class BaseTransferRequest extends Request {
     private _contractFn: string;
     private _contractParams: EthArgs;
     private _queryTxResult: QueryTXResult;
+    private logger = createLogger();
 
 
     constructor(params: {
@@ -64,7 +67,7 @@ abstract class BaseTransferRequest extends Request {
         const mint = await this.submitToRenVM();
         const deposit: GatewayTransaction<any> = await new Promise((resolve) => {
             mint.on("transaction", (tx) => {
-                console.log("transaction received");
+                this.logger.debug("transaction received");
                 resolve(tx);
             })
         });

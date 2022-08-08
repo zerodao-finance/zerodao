@@ -18,6 +18,7 @@ import fixtures from '@zerodao/common';
 // @ts-ignore
 import { BTCHandler } from 'send-crypto/build/main/handlers/BTC/BTCHandler';
 import { EIP712_TYPES } from '@zerodao/common';
+import createLogger from '@zerodao/logger';
 /**
  * Supposed to provide a way to execute other functions while using renBTC to pay for the gas fees
  * what a flow to test would look like:
@@ -50,6 +51,7 @@ export class BurnRequest {
 	public tokenNonce: string;
 	public destination: any;
 	public requestType = 'burn';
+	private logger = createLogger();
 
 	constructor(params: {
 		owner: string;
@@ -71,7 +73,7 @@ export class BurnRequest {
 		this.underwriter = params.underwriter;
 		this.asset = params.asset;
 		this.data = params.data || '0x';
-		console.log('params.nonce', params.nonce);
+		this.logger.debug('params.nonce', params.nonce);
 		this.nonce = params.nonce ? hexlify(params.nonce) : hexlify(randomBytes(32));
 		this.pNonce = params.pNonce ? hexlify(params.pNonce) : hexlify(randomBytes(32));
 		this.chainId = params.chainId;
@@ -106,8 +108,8 @@ export class BurnRequest {
 		return this;
 	}
 	async submitToRenVM(isTest) {
-		console.log('submitToRenVM');
-		console.log(this);
+		this.logger.debug('submitToRenVM');
+		this.logger.debug(this);
 		if (this._burn) return this._burn;
 		const result = (this._burn = await this._ren.burnAndRelease({
 			asset: 'BTC',
@@ -151,7 +153,7 @@ export class BurnRequest {
 	}
 	getExpiry(nonce?: string | number) {
 		nonce = nonce || this.tokenNonce;
-		console.log([this.asset, this.amount, this.deadline, nonce, this.data, this.destination]);
+		this.logger.debug([this.asset, this.amount, this.deadline, nonce, this.data, this.destination]);
 		return ethers.utils.solidityKeccak256(
 			['address', 'uint256', 'uint256', 'uint256', 'bytes', 'bytes'],
 			[this.asset, this.amount, this.deadline, nonce, this.data, this.destination],
@@ -221,15 +223,15 @@ export class BurnRequest {
 		);
 		this.assetName = await token.name();
 		this.tokenNonce = (await token.nonces(await signer.getAddress())).toString();
-		console.log(this.assetName, this.tokenNonce);
+		this.logger.debug(this.assetName, this.tokenNonce);
 		try {
 			const payload = this.toEIP712(contractAddress, chainId);
-			console.log(payload);
+			this.logger.debug(payload);
 			delete payload.types.EIP712Domain;
 			const sig = await signer._signTypedData(payload.domain, payload.types, payload.message);
 			return (this.signature = ethers.utils.joinSignature(ethers.utils.splitSignature(sig)));
 		} catch (e) {
-			console.error(e);
+			this.logger.error(e);
 			return (this.signature = await provider.send('eth_signTypedData_v4', [
 				await signer.getAddress(),
 				this.toEIP712(this.contractAddress || contractAddress, chainId),
@@ -248,20 +250,20 @@ export class BurnRequest {
 	    };
 	    const listener = (from, to, amount, evt) => {
               (async () => {
-		      console.log('evt', evt);
+				this.logger.debug('evt', evt);
                 if (this.asset == ethers.constants.AddressZero) {
                   const tx = await evt.getTransaction();
 		  if (tx.from === this.owner && ethers.utils.hexlify(tx.value) === ethers.utils.hexlify(this.amount)) return done(await evt.getTransactionReceipt());
 		} else {
                   const receipt = await evt.getTransactionReceipt();
-		  console.log('receipt', receipt);
+				  this.logger.debug('receipt', receipt);
                   const { logs } = await evt.getTransactionReceipt();
-		  const decoded = logs.map((v) => { try { return renbtc.interface.parseLog(v); } catch (e) { console.error(e); } }).filter(Boolean);
+		  const decoded = logs.map((v) => { try { return renbtc.interface.parseLog(v); } catch (e) { this.logger.error(e); } }).filter(Boolean);
 		  const events = logs.map((v, i) => ({ log: v, event: decoded[i] }));
-		  console.log('events', events);
+		  this.logger.debug('events', events);
 		  if (events.find((v) => v.event.args.from.toLowerCase() === this.owner.toLowerCase() && ethers.utils.hexlify(this.amount) === ethers.utils.hexlify(v.event.args && v.event.args.amount || 0))) return done(receipt);
 		}
-	      })().catch((err) => console.error(err));
+	      })().catch((err) => this.logger.error(err));
 	    };
 	    renbtc.on(filter, listener);
 	  });
@@ -283,7 +285,7 @@ export class BurnRequest {
 	      });
 	      if (utxos.length > length) return utxos[utxos.length - 1];
 	    } catch (e) {
-              console.error(e);
+              this.logger.error(e);
 	    }
 	    await new Promise((resolve) => setTimeout(resolve, 3000));
 	  }

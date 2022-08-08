@@ -1,6 +1,9 @@
 const ethers = require("ethers");
 const { FIXTURES } = require("@zerodao/constants");
 const Quotes = require("../../../lib/quotes");
+import createLogger from "@zerodao/logger"
+
+const logger = createLogger();
 
 const keeperReward = ethers.utils.parseEther("0.001");
 
@@ -82,7 +85,7 @@ export const makeCompute = (CHAIN = "1") => {
       case ethers.constants.AddressZero:
         return await quotes.ETHtoRenBTC(amount);
       default:
-        console.error("no asset found for getConvertedAmount:" + asset);
+        logger.error("no asset found for getConvertedAmount:" + asset);
         return amount;
     }
   });

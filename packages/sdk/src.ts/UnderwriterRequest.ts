@@ -1,12 +1,14 @@
 import { TransferRequest } from ".lib/TransferRequest";
-import { splitSignature } from "@ethersproject/bytes";
 import { BurnRequest } from ".lib/BurnRequest";
 import { MetaRequest } from "./MetaRequest";
 import { Contract } from "@ethersproject/contracts";
 import { TEST_KEEPER_ADDRESS } from "@zerodao/mocks";
+import createLogger from "@zerodao/logger";
 
 export class UnderwriterTransferRequest extends TransferRequest {
 	public callStatic: any;
+	private logger = createLogger();
+
 	repayAbi() {
 		return "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes)";
 	}
@@ -31,9 +33,9 @@ export class UnderwriterTransferRequest extends TransferRequest {
 		};
 	}
 	async getController(signer) {
-		console.log("getting controller");
+		this.logger.debug("getting controller");
 		const underwriter = this.getUnderwriter(signer);
-		console.log("got underwriter");
+		this.logger.debug("got underwriter");
 		return new Contract(
 			await underwriter.controller(),
 			[
@@ -45,7 +47,7 @@ export class UnderwriterTransferRequest extends TransferRequest {
 	async fallbackMint(signer, params = {}) {
 		const controller = await this.getController(signer);
 		const queryTxResult = await this.waitForSignature();
-		console.log(this.destination());
+		this.logger.debug(this.destination());
 		return await controller.fallbackMint(
 			this.underwriter,
 			this.destination(),
@@ -105,7 +107,7 @@ export class UnderwriterTransferRequest extends TransferRequest {
 	}
 	async dry(signer, params = {}) {
 		const underwriter = this.getUnderwriter(signer);
-		console.log("about to callstatic");
+		this.logger.debug("about to callstatic");
 		return await underwriter
 			.connect(signer.provider)
 			.callStatic[this.getExecutionFunction()](
@@ -122,7 +124,7 @@ export class UnderwriterTransferRequest extends TransferRequest {
 		} = await this.waitForSignature();
 		return await underwriter.repay(
 			...(v => {
-				console.log(v);
+				this.logger.debug(v);
 				return v;
 			})([
 				this.underwriter,
@@ -148,7 +150,7 @@ export class UnderwriterTransferRequest extends TransferRequest {
 		} = await this.waitForSignature();
 		return await underwriter.callStatic.repay(
 			...(v => {
-				console.log(v);
+				this.logger.debug(v);
 				return v;
 			})([
 				this.underwriter,
