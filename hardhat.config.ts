@@ -7,9 +7,12 @@ require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 require("./tasks/multisig");
 require("./tasks/init-multisig");
-
+import createLogger from "@zerodao/logger";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
+
+const logger = createLogger();
+
 if (!process.env.CHAIN_ID && process.env.CHAIN === "ARBITRUM")
   process.env.CHAIN_ID = "42161";
 if (!process.env.CHAIN_ID && process.env.CHAIN === "MATIC")
@@ -39,7 +42,7 @@ extendEnvironment(async (hre) => {
         ),
         artifact.deployedBytecode,
       ]);
-    })().catch((err) => console.error(err));
+    })().catch((err) => logger.error(err));
   }
 });
 

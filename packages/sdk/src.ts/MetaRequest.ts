@@ -13,6 +13,7 @@ import { Bitcoin } from '@renproject/chains';
 import RenJS from '@renproject/ren';
 import { EthArgs } from '@renproject/interfaces';
 import { getProvider } from '@zerodao/common';
+import createLogger from '@zerodao/logger';
 /**
  * Supposed to provide a way to execute other functions while using renBTC to pay for the gas fees
  * what a flow to test would look like:
@@ -39,6 +40,7 @@ export class MetaRequest {
 	public _mint: any;
 	public keeper: any;
 	public requestType = 'meta';
+	private logger = createLogger();
 
 	constructor(params: {
 		module: string;
@@ -57,7 +59,7 @@ export class MetaRequest {
 		this.underwriter = params.underwriter;
 		this.asset = params.asset;
 		this.data = params.data;
-		console.log('params.nonce', params.nonce);
+		this.logger.debug('params.nonce', params.nonce);
 		this.nonce = params.nonce ? hexlify(params.nonce) : hexlify(randomBytes(32));
 		this.pNonce = params.pNonce ? hexlify(params.pNonce) : hexlify(randomBytes(32));
 		this.chainId = params.chainId;
@@ -102,7 +104,7 @@ export class MetaRequest {
 		return this;
 	}
 	async submitToRenVM(isTest) {
-		console.log('submitToRenVM this.nonce', this.nonce);
+		this.logger.debug('submitToRenVM this.nonce', this.nonce);
 		if (this._mint) return this._mint;
 		const result = (this._mint = await this._ren.lockAndMint({
 			asset: 'BTC',
@@ -149,7 +151,7 @@ export class MetaRequest {
 	toEIP712(contractAddress: string, chainId?: number): EIP712TypedData {
 		this.contractAddress = contractAddress || this.contractAddress;
 		this.chainId = chainId || this.chainId;
-		console.log(this.underwriter);
+		this.logger.debug(this.underwriter);
 		return {
 			types: {
 				MetaRequest: [
@@ -200,10 +202,10 @@ export class MetaRequest {
 		const { chainId } = await signer.provider.getNetwork();
 		try {
 			const payload = this.toEIP712(contractAddress, chainId);
-			console.log(payload);
+			this.logger.debug(payload);
 			return (this.signature = await signer._signTypedData(payload.domain, payload.types, payload.message));
 		} catch (e) {
-			console.error(e);
+			this.logger.error(e);
 			return (this.signature = await provider.send('eth_signTypedData_v4', [
 				await signer.getAddress(),
 				this.toEIP712(this.contractAddress || contractAddress, chainId),

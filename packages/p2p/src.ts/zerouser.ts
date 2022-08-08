@@ -5,6 +5,7 @@ import pipe from "it-pipe";
 import peerId from "peer-id";
 import lp from "it-length-prefixed";
 import { EventEmitter } from "events";
+import createLogger from "@zerodao/logger";
 
 class P2PClient extends EventEmitter {
     conn: ConnectionTypes;
@@ -32,9 +33,10 @@ class P2PClient extends EventEmitter {
 }
 
 export class ZeroUser extends P2PClient {
+    private logger = createLogger();
+
     constructor(options: { conn: ConnectionTypes }) {
         super(options);
-
     }
 
 
@@ -90,7 +92,7 @@ export class ZeroUser extends P2PClient {
             ? Object.fromEntries(Object.entries(request).filter(([k, v]) => requestTemplate.includes(k)))
             : request;
 
-        console.log(request);
+        this.logger.debug(request);
 
         const digest = request.signature;
         const result = (this._pending[digest] = new EventEmitter())
@@ -118,7 +120,7 @@ export class ZeroUser extends P2PClient {
                 } else { }
             }
         } catch (e) {
-            console.error(e);
+            this.logger.error(e);
         }
 
         return result

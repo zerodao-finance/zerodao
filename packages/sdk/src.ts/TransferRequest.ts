@@ -14,6 +14,7 @@ import { Bitcoin } from "@renproject/chains";
 import RenJS from "@renproject/ren";
 import { EthArgs } from "@renproject/interfaces";
 import { getProvider } from "@zerodao/common";
+import createLogger from "@zerodao/logger";
 
 
 export class ReleaseRequest { }
@@ -38,6 +39,8 @@ export class TransferRequest {
   public provider: any;
   public _mint: any;
   public requestType = "transfer";
+  
+  private logger = createLogger();
 
   constructor(params: {
     module: string;
@@ -216,7 +219,7 @@ export class TransferRequest {
     try {
       const payload = this.toEIP712(contractAddress, chainId);
       delete payload.types.EIP712Domain;
-      console.log(payload.types);
+      this.logger.debug(payload.types);
       const sig = await signer._signTypedData(
         payload.domain,
         payload.types,
@@ -226,7 +229,7 @@ export class TransferRequest {
         ethers.utils.splitSignature(sig)
       ));
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
       return (this.signature = await provider.send("eth_signTypedData_v4", [
         await signer.getAddress(),
         this.toEIP712(this.contractAddress || contractAddress, chainId),

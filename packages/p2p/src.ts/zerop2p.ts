@@ -16,6 +16,9 @@ const returnOp = (v) => v;
 const ethers = require("ethers");
 const Libp2p = require("libp2p");
 
+import createLogger from "@zerodao/logger"
+const logger = createLogger();
+
 const wrtc = require("wrtc");
 const cryptico = require('cryptico-js');
 import crypto from "libp2p-crypto";
@@ -62,7 +65,7 @@ const coerceHexToBuffers = (v) => {
   }
   return v;
 };
-const ln = (v) => ((console.log(v)), v);
+const ln = (v) => ((logger.debug(v)), v);
 
 export class ZeroP2P extends Libp2p {
   static PRESETS = {
@@ -107,7 +110,7 @@ export class ZeroP2P extends Libp2p {
     const multiaddr = ZeroP2P.fromPresetOrMultiAddr(
       options.multiaddr || "mainnet"
     );
-    console.log("listening on", multiaddr)
+    logger.debug("listening on", multiaddr)
     super({
       peerId: options.peerId,
       connectionManager: {

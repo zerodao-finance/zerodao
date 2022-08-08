@@ -1,8 +1,10 @@
-// import { ZeroP2P } from "@zerodao/p2p";
-// const { ZeroP2P } = require("@zerodao/p2p")
-// const { MATIC, ARBITRUM } = require("@zerodao/common")
-import { MATIC } from "@zerodao/common"
-(() => {
-    console.log("test suite working")
-    console.log(MATIC)
-})()
+import createLogger from "@zerodao/logger"
+import { FIXTURES } from "@zerodao/constants"
+
+const tests = () => {
+    const logger = createLogger();
+    logger.info("test suite working");
+    logger.info(FIXTURES.MATIC);
+}
+
+tests();
