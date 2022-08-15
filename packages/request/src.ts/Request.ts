@@ -2,34 +2,7 @@ import { ZeroP2P } from '@zerodao/p2p';
 import peerId = require('peer-id');
 import lp from 'it-length-prefixed';
 import pipe from 'it-pipe';
-import { EventEmitter } from "events";
-
-function defer() {
-  let resolve, reject, promise;
-  promise = new Promise((_resolve, _reject) => {
-    resolve = _resolve;
-    reject = _reject;
-  });
-  return {
-    resolve,
-    reject,
-    promise
-  };
-};
-
-export class PublishEventEmitter extends EventEmitter {
-  toPromise() {
-    const deferred = defer();
-    this.on('finish', () => {
-      deferred.resolve();
-    });
-    this.on('error', (e) => {
-      deferred.reject(e);
-    });
-    return deferred.promise;
-  }
-}
-
+import { PublishEventEmitter } from "./PublishEventEmitter";
 
 export abstract class Request {
   static get PROTOCOL(): string | void { throw new Error('static get PROTOCOL() must be implemented'); }
@@ -37,12 +10,10 @@ export abstract class Request {
   serialize(): Buffer {
     throw new Error("Serialize must be implemented")
   };
-
   getChainId(): string {
     this.contractAddress
     return
   }
-
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
     const request = this.serialize();
     const result = new PublishEventEmitter();
@@ -57,13 +28,11 @@ export abstract class Request {
           pipe(request, lp.encode(), stream.sink);
           result.emit('dialed', keeper);
         } catch (e: any) {
-          result.emit('error', new Error(`Failed dialing keeper: ${keeper}`));
+          result.emit('error', new Error(`failed dialing keeper: ${keeper}`));
         }
       }
       result.emit('finish');
     })().catch((err) => result.emit('error', err));
     return result;
   }
-
-
 }
