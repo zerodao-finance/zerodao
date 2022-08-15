@@ -1,8 +1,7 @@
 import { AbiCoder, Interface } from "@ethersproject/abi";
+import { Contract } from "@ethersproject/contracts";
 import constants from "@ethersproject/constants";
-import { FIXTURES } from "@zerodao/common";
-import { ZeroP2P } from "@zerodao/p2p";
-import { CHAINS } from "@zerodao/chains";
+import { keccak256 } from "@ethersproject/solidity";
 import {
   joinSignature,
   arrayify,
@@ -10,11 +9,16 @@ import {
   splitSignature,
   hexZeroPad,
 } from "@ethersproject/bytes";
+import { getAddress } from "@ethersproject/address";
 import { Base58 } from "@ethersproject/basex";
-import { BigNumber } from "@ethersproject/bignumber";
-import { Request } from "./Request";
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
+import { FIXTURES } from "@zerodao/common";
+import { ZeroP2P } from "@zerodao/p2p";
+import { getVanillaProvider, CHAINS } from "@zerodao/chains";
+import { Request } from "./Request";
+import { PublishEventEmitter } from "./PublishEventEmitter";
 
 const coder = new AbiCoder();
 
@@ -67,13 +71,12 @@ function getDomainStructure(request) {
 
 function isAsset(assetName, address) {
   return Boolean(
-    Object.keys(FIXTURES).find(
-      (network) =>
-        getAddress(
-          FIXTURES[network][assetName] ===
-            constants.AddressZero.substr(0, 41) + "1"
-        ) === getAddress(address)
-    )
+    Object.keys(FIXTURES).find((network) =>
+      getAddress(
+        FIXTURES[network][assetName] ||
+          constants.AddressZero.substr(0, 41) + "1"
+      )
+    ) === getAddress(address)
   );
 }
 
@@ -141,7 +144,7 @@ function getDomain(request) {
       return {
         name: "USD Coin (PoS)",
         version: "1",
-        verifyingContract: this.asset || ethers.constants.AddressZero,
+        verifyingContract: this.asset || constants.AddressZero,
         salt: hexZeroPad(
           BigNumber.from(String(this.getChainId()) || "1").toHexString(),
           32
@@ -153,7 +156,7 @@ function getDomain(request) {
         name: "USD Coin (Arb1)",
         version: "1",
         chainId: String(chainId),
-        verifyingContract: this.asset || ethers.constants.AddressZero,
+        verifyingContract: this.asset || constants.AddressZero,
       };
     }
     return {
@@ -191,9 +194,7 @@ function getMessage(request) {
 }
 
 const isZcashAddress = (hex) =>
-  Buffer.from(ethers.utils.hexlify(hex).substr(2), "hex").toString(
-    "utf8"
-  )[0] === "t";
+  Buffer.from(hexlify(hex).substr(2), "hex").toString("utf8")[0] === "t";
 
 function getRenAssetName(request) {
   return isZcashAddress(request.destination) ? "renZEC" : "renBTC";
@@ -218,7 +219,7 @@ function getRenAsset(request) {
   const provider = getVanillaProvider(request);
   const address =
     FIXTURES[toFixtureName(request.getChainId())][getRenAssetName(request)];
-  return new ethers.Contract(
+  return new Contract(
     address,
     [
       "event Transfer(address indexed from, address indexed to, uint256 amount)",
@@ -227,39 +228,41 @@ function getRenAsset(request) {
   );
 }
 
-export class BurnRequest {
+export class BurnRequest extends Request {
   public asset: string;
   public data: string;
   public owner: string;
   public destination: string;
-  public deadline: Bignumberish;
-  public amount: Bignumberish;
+  public deadline: BigNumberish;
+  public amount: BigNumberish;
   public contractAddress: string;
-  public nonce: Bignumberish;
+  public nonce: BigNumberish;
   public tokenName: string;
+  public signature: string;
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
   }
-  constructor({
+  constructor(o: {
     asset: string,
     data: string,
     owner: string,
     destination: string,
-    deadline: Bignumberish,
-    amount: Bignumberish,
+    deadline: BigNumberish,
+    amount: BigNumberish,
     contractAddress: string,
   }) {
-    this.asset = asset;
-    this.data = data;
-    this.owner = owner;
-    this.destination = destination;
-    this.deadline = deadline;
-    this.amount = amount;
-    this.contractAddress = contractAddress;
+    super();
+    this.asset = o.asset;
+    this.data = o.data;
+    this.owner = o.owner;
+    this.destination = o.destination;
+    this.deadline = o.deadline;
+    this.amount = o.amount;
+    this.contractAddress = o.contractAddress;
   }
   async sendTransaction(signer) {
-    const { contractAddress, amount, destination, minOut } = this;
-    const contract = new ethers.Contract(
+    const { contractAddress, amount, destination } = this;
+    const contract = new Contract(
       this.contractAddress,
       [
         "function burnApproved(address, address, uint256, uint256, bytes) payable",
@@ -317,7 +320,7 @@ export class BurnRequest {
     );
   }
   async waitForHostTransaction() {
-    const receiptPromise = remoteETHTxMap.get(this);
+    const receiptPromise = remoteTxMap.get(this);
     if (receiptPromise) return await receiptPromise;
     return await new Promise((resolve, reject) => {
       const renAsset = getRenAsset(this);
@@ -331,12 +334,11 @@ export class BurnRequest {
       };
       const listener = (from, to, amount, evt) => {
         (async () => {
-          if (this.asset == ethers.constants.AddressZero) {
+          if (this.asset == constants.AddressZero) {
             const tx = await evt.getTransaction();
             if (
               tx.from === this.owner &&
-              ethers.utils.hexlify(tx.value) ===
-                ethers.utils.hexlify(this.amount)
+              hexlify(tx.value) === hexlify(this.amount)
             )
               return done(await evt.getTransactionReceipt());
           } else {
@@ -358,10 +360,8 @@ export class BurnRequest {
                 (v) =>
                   v.event.args.from.toLowerCase() ===
                     this.owner.toLowerCase() &&
-                  ethers.utils.hexlify(this.amount) ===
-                    ethers.utils.hexlify(
-                      (v.event.args && v.event.args.amount) || 0
-                    )
+                  hexlify(this.amount) ===
+                    hexlify((v.event.args && v.event.args.amount) || 0)
               )
             )
               return done(receipt);
@@ -424,19 +424,23 @@ export class BurnRequest {
       return (this.signature = joinSignature(splitSignature(sig)));
     } catch (e) {
       console.error(e);
-      return (this.signature = await provider.send("eth_signTypedData_v4", [
-        await signer.getAddress(),
-        this.toEIP712(),
-      ]));
+      return (this.signature = await signer.provider.send(
+        "eth_signTypedData_v4",
+        [await signer.getAddress(), this.toEIP712()]
+      ));
     }
   }
-  publish(peer: ZeroP2P) {
-    if (!this.isNative()) super.publish(peer);
+  publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
+    if (!this.isNative()) return super.publish(peer);
+    else {
+      const result = new PublishEventEmitter();
+      setImmediate(() => result.emit("finish"));
+    }
   }
   async fetchData() {
     if (getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset)) {
       this.nonce = String(
-        await new ethers.Contract(
+        await new Contract(
           this.contractAddress,
           ["function noncesUsdt(address) view returns (uint256)"],
           getVanillaProvider(this)
@@ -445,7 +449,7 @@ export class BurnRequest {
       this.tokenName = "USDT";
     } else if (getAddress(FIXTURES.AVALANCHE.USDC) === getAddress(this.asset)) {
       this.nonce = String(
-        await new ethers.Contract(
+        await new Contract(
           this.contractAddress,
           ["function noncesUsdc(address) view returns (uint256)"],
           getVanillaProvider(this)
@@ -458,7 +462,7 @@ export class BurnRequest {
         getAddress(FIXTURES.AVALANCHE.USDC) === getAddress(this.asset))
     ) {
       this.nonce = String(
-        await new ethers.Contract(
+        await new Contract(
           this.contractAddress,
           ["function nonces(address) view returns (uint256)"],
           getVanillaProvider(this)
@@ -467,7 +471,7 @@ export class BurnRequest {
       if (isWBTC(this.asset)) this.tokenName = "WBTC";
       else this.tokenName = "USDC";
     } else {
-      const token = new ethers.Contract(
+      const token = new Contract(
         this.asset,
         [
           "function nonces(address) view returns (uint256)",
@@ -483,7 +487,7 @@ export class BurnRequest {
   buildTransaction() {
     return {
       chainId: this.getChainId(),
-      data: new ethers.utils.Interface([
+      data: new Interface([
         "function burn(address, address, uint256, uint256, bytes, bytes, bytes)",
       ]).encodeFunctionData("burn", [
         this.owner,

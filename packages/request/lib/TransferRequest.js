@@ -15,8 +15,10 @@ const common_1 = require("@zerodao/common");
 const Request_1 = require("./Request");
 const assetToRenVMChain = (assetName) => {
     switch (assetName) {
-        case 'renBTC': return chains_1.Bitcoin;
-        case 'renZEC': return chains_1.Zcash;
+        case "renBTC":
+            return chains_1.Bitcoin;
+        case "renZEC":
+            return chains_1.Zcash;
         default:
             return chains_1.Bitcoin;
     }
@@ -24,9 +26,9 @@ const assetToRenVMChain = (assetName) => {
 const renVMChainToAssetName = (chain) => {
     switch (chain) {
         case chains_1.Bitcoin:
-            return 'BTC';
+            return "BTC";
         case chains_1.Zcash:
-            return 'ZEC';
+            return "ZEC";
     }
 };
 class TransferRequest extends Request_1.Request {
@@ -50,17 +52,32 @@ class TransferRequest extends Request_1.Request {
             : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
         this.contractAddress = params.contractAddress;
     }
-    static get PROTOCOL() { return '/zero/1.1.0/dispatch'; }
+    static get PROTOCOL() {
+        return "/zero/1.1.0/dispatch";
+    }
     buildLoanTransaction() {
-        throw Error('TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending');
+        throw Error("TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending");
     }
     buildRepayTransaction() {
         if (!this._queryTxResult)
-            throw Error('TransferRequest#buildRepayTransaction(): must call waitForSignature()');
+            throw Error("TransferRequest#buildRepayTransaction(): must call waitForSignature()");
         return {
             to: this.contractAddress,
-            data: new ethers_1.ethers.utils.Interface(['function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes)']).encodeFunctionData('repay', [this.underwriter, this.to, this.asset, this.amount, this._queryTxResult.amount, this.pNonce, this.module, this._queryTxResult.nHash, this.data, this._queryTxResult.signature]),
-            chainId: this.getChainId()
+            data: new ethers_1.ethers.utils.Interface([
+                "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes)",
+            ]).encodeFunctionData("repay", [
+                this.underwriter,
+                this.to,
+                this.asset,
+                this.amount,
+                this._queryTxResult.amount,
+                this.pNonce,
+                this.module,
+                this._queryTxResult.nHash,
+                this.data,
+                this._queryTxResult.signature,
+            ]),
+            chainId: this.getChainId(),
         };
     }
     serialize() {
@@ -73,23 +90,27 @@ class TransferRequest extends Request_1.Request {
             pNonce: this.pNonce,
             contractAddress: this.contractAddress,
             asset: this.asset,
-            underwriter: this.underwriter
+            underwriter: this.underwriter,
         }));
     }
     _getRemoteChain() {
-        const RenVMChain = assetToRenVMChain(['renBTC', 'renZEC'].find((v) => Object.values(common_1.FIXTURES).find((network) => Object.entries(network).find(([token, address]) => v === token && ethers_1.ethers.utils.getAddress(address) === ethers_1.ethers.utils.getAddress(this.asset)))));
-        return new RenVMChain({ network: renVMChainToAssetName(RenVMChain) });
+        const RenVMChain = assetToRenVMChain(["renBTC", "renZEC"].find((v) => Object.values(common_1.FIXTURES).find((network) => Object.entries(network).find(([token, address]) => v === token &&
+            ethers_1.ethers.utils.getAddress(address) ===
+                ethers_1.ethers.utils.getAddress(this.asset)))));
+        return new RenVMChain({
+            network: renVMChainToAssetName(RenVMChain),
+        });
     }
     _getRemoteChainName() {
         return renVMChainToAssetName(this._getRemoteChain().constructor);
     }
     _getRenVM() {
-        return new ren_1.default('mainnet').withChain(this._getRemoteChain());
+        return new ren_1.default("mainnet").withChain(this._getRemoteChain());
     }
     _getContractParams() {
         return {
             to: this.contractAddress,
-            method: 'zeroCall',
+            method: "zeroCall",
             params: [
                 {
                     name: "to",
@@ -112,7 +133,7 @@ class TransferRequest extends Request_1.Request {
                     value: this.data,
                 },
             ],
-            withRenParams: true
+            withRenParams: true,
         };
     }
     async submitToRenVM() {

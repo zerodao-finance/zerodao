@@ -6,10 +6,10 @@ const utils_1 = require("@zerodao/utils");
 class PublishEventEmitter extends events_1.EventEmitter {
     toPromise() {
         const deferred = (0, utils_1.defer)();
-        this.on('finish', () => {
+        this.on("finish", () => {
             deferred.resolve();
         });
-        this.on('error', (e) => {
+        this.on("error", (e) => {
             deferred.reject(e);
         });
         return deferred.promise;
