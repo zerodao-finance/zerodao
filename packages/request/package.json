@@ -11,6 +11,7 @@
     "@renproject/chains": "^3.4.2",
     "@renproject/interfaces": "^2.6.0",
     "@renproject/ren": "^3.4.2",
+    "send-crypto": "^0.2.37",
     "typescript": "^4.7.4"
   },
   "scripts": {
