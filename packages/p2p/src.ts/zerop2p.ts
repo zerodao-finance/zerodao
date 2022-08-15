@@ -182,6 +182,6 @@ export class ZeroP2P extends Libp2p {
   }
   async unsubscribeKeepers() {
     await this.conn.pubsub.unsubscribe("zero.keepers");
-    this.keepers = [];
+    this._keepers = [];
   }
 };

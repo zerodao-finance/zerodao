@@ -17,11 +17,11 @@ export abstract class Request {
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
     const request = this.serialize();
     const result = new PublishEventEmitter();
-    if (peer.keepers.length === 0) {
+    if (peer._keepers.length === 0) {
       setImmediate(() => result.emit('error', new Error('Cannot publish request if no keepers are found')));
     }
     (async () => {
-      for (const keeper of peer.keepers) {
+      for (const keeper of peer._keepers) {
         try {
           const _peerId = await peerId.createFromB58String(keeper);
           const { stream } = await peer.dialProtocol(_peerId, this.constructor().PROTOCOL);
