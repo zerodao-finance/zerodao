@@ -16,7 +16,7 @@ const returnOp = (v) => v;
 const ethers = require("ethers");
 const Libp2p = require("libp2p");
 
-import createLogger from "@zerodao/logger"
+import createLogger from "@zerodao/logger";
 const logger = createLogger();
 
 const wrtc = require("wrtc");
@@ -65,7 +65,6 @@ const coerceHexToBuffers = (v) => {
   }
   return v;
 };
-const ln = (v) => ((logger.debug(v)), v);
 
 export class ZeroP2P extends Libp2p {
   static PRESETS = {
@@ -110,7 +109,6 @@ export class ZeroP2P extends Libp2p {
     const multiaddr = ZeroP2P.fromPresetOrMultiAddr(
       options.multiaddr || "mainnet"
     );
-    logger.debug("listening on", multiaddr)
     super({
       peerId: options.peerId,
       connectionManager: {
@@ -168,6 +166,22 @@ export class ZeroP2P extends Libp2p {
         },
       },
     });
+    this.logger = logger;
+    this.logger.debug("listening on", multiaddr)
     this.setSigner(options.signer);
+  }
+  async subscribeKeepers() {
+    await this.pubsub.subscribe("zero.keepers", async (message: any) => {
+      const { data, from } = message;
+      const { address } = fromBufferToJSON(data);
+      if (!this._keepers.includes(from)) {
+        this._keepers.push(from);
+        this.emit("keeper:discovery", from);
+      }
+    });
+  }
+  async unsubscribeKeepers() {
+    await this.conn.pubsub.unsubscribe("zero.keepers");
+    this._keepers = [];
   }
 };
