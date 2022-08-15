@@ -1,5 +1,15 @@
 import { hexValue } from "@ethersproject/bytes";
+import { getAddress } from "@ethersproject/address";
 
+import {
+    Polygon,
+    Ethereum,
+    Arbitrum,
+    Avalanche,
+    Optimism,
+    EthereumBaseChain,
+} from "@renproject/chains";
+import { InfuraProvider, JsonRpcProvider } from "@ethersproject/providers";
 
 
 interface IIntegratedChain {
@@ -9,8 +19,10 @@ interface IIntegratedChain {
   symbol: string;
   decimals?: number;
   explorerRootUrl?: string;
-  rpcUrls(): string | string[] | undefined
+  rpcUrl: string | string[] | undefined
 }
+
+const INFURA_PROJECT_ID = process.env.REACT_APP_INFURA_PROJECT_ID || process.env.INFURA_PROJECT_ID || '816df2901a454b18b7df259e61f92cd2';
 
 
 const ETHEREUM: IIntegratedChain = {
@@ -19,7 +31,7 @@ const ETHEREUM: IIntegratedChain = {
   name: ["Ether", "Ethereum"],
   symbol: "ETH",
   decimals: 18,
-  rpcUrls: () => process.env.infuraKey ? `https://mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  rpcUrl: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://etherscan.io/address/"
 }
 
@@ -29,7 +41,7 @@ const AVALANCHE: IIntegratedChain = {
   name: ["Avax", "Avalanche"],
   symbol: "AVAX",
   decimals: 18,
-  rpcUrls: () => "https://api.avax.network/ext/bc/C/rpc",
+  rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
   explorerRootUrl: "https://snowtrace.io/address/"
 }
 
@@ -38,7 +50,7 @@ const ARBITRUM: IIntegratedChain = {
   hex: hexValue(42161),
   name: "Arbitrum",
   symbol: "Arb",
-  rpcUrls: () => process.env.infuraKey ? `https://arbitrum-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://snowtrace.io/address/"
 }
 
@@ -47,7 +59,7 @@ const POLYGON: IIntegratedChain = {
   hex: hexValue(137),
   name: ["Polygon", "Matic"],
   symbol: "MATIC",
-  rpcUrls: () => process.env.infuraKey ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://polygonscan.com/address/"
 }
 
@@ -56,7 +68,7 @@ const OPTIMISM: IIntegratedChain = {
   hex: hexValue(10),
   name: "Optimism",
   symbol: "OPTIMISM",
-  rpcUrls: () => process.env.infuraKey ? `https://optimism-mainnet.infura.io/v3/${process.env.infuraKey}` : undefined,
+  rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://optimistic.etherscan.io/address/"
 }
 
@@ -126,72 +138,102 @@ export const getExplorerRoot = (chainId) => {
   }
 };
 
-export const CHAINS = {
-  1: {
-    chainId: hexValue(1),
-    chainName: "mainnet",
-    nativeCurrency: ETH,
-    rpcUrls: [
-      process.env.infuraKey
-        ? `https://mainnet.infura.io/v3/${process.env.infuraKey}`
-        : undefined,
-      "https://rpc.ankr.com/eth",
-    ].filter((url) => url !== undefined),
-    blockExplorerUrls: ["https://etherscan.io"],
-  },
-  10: {
-    chainId: hexValue(10),
-    chainName: "Optimism",
-    nativeCurrency: ETH,
-    rpcUrls: [
-      process.env.infuraKey
-        ? `https://optimism-mainnet.infura.io/v3/${process.env.infuraKey}`
-        : undefined,
-      "https://mainnet.optimism.io",
-    ].filter((url) => url !== undefined),
-    blockExplorerUrls: ["https://optimistic.etherscan.io"],
-  },
-  42161: {
-    chainId: hexValue(42161),
-    chainName: "Arbitrum",
-    nativeCurrency: ETH,
-    rpcUrls: [
-      process.env.infuraKey
-        ? `https://arbitrum-mainnet.infura.io/v3/${process.env.infuraKey}`
-        : undefined,
-      "https://arb1.arbitrum.io/rpc",
-    ].filter((url) => url !== undefined),
-    blockExplorerUrls: ["https://arbiscan.io"],
-  },
-  43114: {
-    chainId: hexValue(43114),
-    chainName: "Avalanche",
-    nativeCurrency: AVAX,
-    rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"].filter(
-      (url) => url !== undefined
-    ),
-    blockExplorerUrls: ["https://avascan.info/"],
-  },
-  137: {
-    chainId: hexValue(137),
-    chainName: "Polygon",
-    nativeCurrency: MATIC,
-    rpcUrls: [
-      process.env.infuraKey
-        ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}`
-        : undefined,
-      "https://polygon-rpc.com",
-    ].filter((url) => url !== undefined),
-    blockExplorerUrls: ["https://polygonscan.com"],
-  },
+
+export const CHAINS = [[1, ETH], [10, ETH], [42161, ETH], [43114, AVAX], [137, MATIC]].reduce((r, [chainId, currency]) => {
+  const { rpcUrl, explorerRootUrl } = ID_CHAIN[Number(chainId)];
+  r[Number(chainId)] = {
+    chainId: hexValue(Number(chainId)),
+    chainName: getChainName(chainId).toLowerCase(),
+    nativeCurrency: currency,
+    rpcUrl: rpcUrl,
+    blockExplorerUrls: explorerRootUrl
+  };
+  return r;
+}, {});
+
+export const URLS = Object.keys(CHAINS).reduce((r, chainId) => {
+  r[Number(chainId)] = CHAINS[Number(chainId)].rpcUrls || [];
+  return r;
+}, {});
+
+export const CONTROLLER_DEPLOYMENTS = {
+    [getAddress(
+        require("@zerodao/protocol/deployments/arbitrum/BadgerBridgeZeroController").address
+    )]: "Arbitrum",
+    [getAddress(
+        require("@zerodao/protocol/deployments/avalanche/BadgerBridgeZeroController").address
+    )]: "Avalanche",
+    [getAddress(
+        require("@zerodao/protocol/deployments/matic/BadgerBridgeZeroController").address
+    )]: "Polygon",
+    [getAddress(
+        require("@zerodao/protocol/deployments/mainnet/BadgerBridgeZeroController").address
+    )]: "Ethereum",
+    [getAddress(
+        require("@zerodao/protocol/deployments/optimism/BadgerBridgeZeroController").address
+    )]: "Optimism",
 };
 
-export const URLS = Object.keys(CHAINS).reduce((accumulator, chainId) => {
-  const validUrls = CHAINS[Number(chainId)].rpcUrls;
+export const RPC_ENDPOINTS = {
+    Arbitrum: CHAINS[42161].rpcUrl,
+    Avalanche: CHAINS[43114].rpcUrl,
+    Polygon: CHAINS[137].rpcUrl,
+    Ethereum: CHAINS[1].rpcUrl,
+    Optimism: CHAINS[10].rpcUrl,
+    localhost: "http://localhost:8545",
+};
 
-  if (validUrls.length) {
-    accumulator[chainId] = validUrls;
-  }
+export const RENVM_PROVIDERS = {
+    Arbitrum,
+    Polygon,
+    Ethereum,
+    Avalanche,
+    Optimism,
+};
 
-  return accumulator;
-}, {});
+
+
+export const getVanillaProvider = (request) => {
+    const checkSummedContractAddr = getAddress(request.contractAddress);
+    if (Object.keys(CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {
+        const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
+        const infuraKey = (() => {
+            switch (chain_key) {
+                case 'ethereum':
+                    return 'mainnet';
+                case 'polygon':
+                    return 'matic';
+                case 'arbitrum':
+                    return chain_key;
+            }
+        })();
+        if (infuraKey) return new InfuraProvider(infuraKey, '816df2901a454b18b7df259e61f92cd2');
+        return new JsonRpcProvider(RPC_ENDPOINTS[chain_key]);
+    } else {
+        throw new Error('Not a contract currently deployed: ' + checkSummedContractAddr);
+    }
+};
+
+export const getRenVMChain = (transferRequest) => {
+    const checkSummedContractAddr = getAddress(transferRequest.contractAddress);
+    const ethersProvider = getVanillaProvider(transferRequest);
+    const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
+    return new RENVM_PROVIDERS[chain_key]({ network: "mainnet", provider: ethersProvider });
+}
+
+
+
+export const getProvider: ({ contractAddress: string }) => EthereumBaseChain =
+    (transferRequest) => {
+        const checksummedAddr = getAddress(
+            transferRequest.contractAddress
+        );
+
+        const ethersProvider = getVanillaProvider(transferRequest);
+        const chain_key = CONTROLLER_DEPLOYMENTS[checksummedAddr];
+        if (chain_key == "localhost")
+            return new RENVM_PROVIDERS.Ethereum({
+                network: "mainnet",
+                provider: ethersProvider
+            });
+    };

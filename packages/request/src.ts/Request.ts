@@ -3,6 +3,7 @@ import peerId = require('peer-id');
 import lp from 'it-length-prefixed';
 import pipe from 'it-pipe';
 import { PublishEventEmitter } from "./PublishEventEmitter";
+import deployments from "@zerodao/protocol";
 
 export abstract class Request {
   static get PROTOCOL(): string | void { throw new Error('static get PROTOCOL() must be implemented'); }
@@ -10,9 +11,8 @@ export abstract class Request {
   serialize(): Buffer {
     throw new Error("Serialize must be implemented")
   };
-  getChainId(): string {
-    this.contractAddress
-    return
+  getChainId(): number {
+    return Number(Object.keys(deployments).find((v) => Object.keys(deployments[v]).find((network) => Object.keys(deployments[v][network].contracts).find((contract) => deployments[v][network].contracts[contract].address === this.contractAddress))) || (() => { throw Error('Request#getChainId(): no contract found at ' + this.contractAddress) })());
   }
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
     const request = this.serialize();

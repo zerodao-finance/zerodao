@@ -1,6 +1,6 @@
 import { type BytesLike } from "@ethersproject/bytes";
 export declare type Transaction = {
-    chainId: string;
+    chainId: number;
     to: string;
     data: string;
 };

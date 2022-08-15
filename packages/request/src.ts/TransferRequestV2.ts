@@ -1,4 +1,4 @@
-import BaseTransferRequest from "./BaseTransferRequest";
+import { TransferRequest } from "./TransferRequest";
 import { randomBytes } from "@ethersproject/random";
 import { hexlify, type BytesLike } from "@ethersproject/bytes";
 import { BigNumberish } from "@ethersproject/bignumber";
@@ -6,88 +6,37 @@ import { Interface } from "@ethersproject/abi";
 import { EthArgs } from "@renproject/interfaces";
 import type { Transaction } from "./types";
 
-export class TransferRequestV2 extends BaseTransferRequest {
+export class TransferRequestV2 extends TransferRequest {
 
     static get PROTOCOL() { return "/zero/2.0.0/dispatch" }
-    public module: string;
-    public to: string;
-    public amount: BigNumberish;
-    public nonce: BytesLike | BigNumberish;
-    public pNonce: BytesLike | BigNumberish;
-    public contractAddress?: string;
-    public data: string;
-
-    constructor(params: {
-        module: string;
-        to: string;
-        amount: BigNumberish;
-        nonce: BytesLike | BigNumberish;
-        pNonce: BigNumberish;
-        contractAddress?: string;
-        data: string;
-        network?: "mainnet" | "testnet";
-    }) {
-        super({ network: params.network })
-        this.module = params.module;
-        this.to = params.to;
-        this.amount = params.amount;
-        this.nonce = params.nonce
-            ? hexlify(params.nonce)
-            : hexlify(randomBytes(32));
-        this.pNonce = params.pNonce
-            ? hexlify(params.pNonce)
-            : hexlify(randomBytes(32));
-        this.data = params.data;
-    }
-
-
     serialize(): Buffer {
         return Buffer.from(JSON.stringify({
             module: this.module,
+	    contractAddress: this.contractAddress,
             borrower: this.to,
             borrowAmount: this.amount,
             nonce: this.nonce,
+	    loanId: this.pNonce,
+	    asset: this.asset,
             data: this.data
         }))
     }
 
     buildLoanTransaction(): Transaction {
-        const _iface = new Interface([
-            "function loan(address, address, uint256, uint256, bytes)"
-        ])
-        const data = _iface.encodeFunctionData("loan", [
-            this.module,
-            this.to,
-            this.amount,
-            this.nonce,
-            this.data
-        ])
         return {
             chainId: this.getChainId(),
             to: this.contractAddress,
-            data: data
+            data: new Interface(['function loan(address, address, uint256, uint256, bytes)']).encodeFunctionData('loan', [ this.module, this.to, this.amount, this.pNonce, this.data ])
         }
     }
 
     buildRepayTransaction(): Transaction {
-        const _iface = new Interface([
-            "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)"
-        ])
-
-        const data = _iface.encodeFunctionData("repay", [
-            this.module,
-            this.to,
-            this.amount,
-            this.nonce,
-            this.data
-        ])
+        if (!this._queryTxResult) throw Error('TransferRequest#buildRepayTransaction(): must call waitForSignature()');
+	// TODO: add usage of this._queryTxResult.amount
         return {
             chainId: this.getChainId(),
             to: this.contractAddress,
-            data: data
+            data: new Interface(['function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)']).encodeFunctionData('repay', [ this.module, this.to, this.amount, this.pNonce, this.data, this.underwriter, this._queryTxResult.nHash, this._queryTxResult.signature ])
         }
     }
-
-
-
 }

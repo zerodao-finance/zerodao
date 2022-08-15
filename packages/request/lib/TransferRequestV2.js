@@ -1,69 +1,37 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequestV2 = void 0;
-const BaseTransferRequest_1 = __importDefault(require("./BaseTransferRequest"));
-const random_1 = require("@ethersproject/random");
-const bytes_1 = require("@ethersproject/bytes");
+const TransferRequest_1 = require("./TransferRequest");
 const abi_1 = require("@ethersproject/abi");
-class TransferRequestV2 extends BaseTransferRequest_1.default {
-    constructor(params) {
-        super({ network: params.network });
-        this.module = params.module;
-        this.to = params.to;
-        this.amount = params.amount;
-        this.nonce = params.nonce
-            ? (0, bytes_1.hexlify)(params.nonce)
-            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
-        this.pNonce = params.pNonce
-            ? (0, bytes_1.hexlify)(params.pNonce)
-            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
-        this.data = params.data;
-    }
+class TransferRequestV2 extends TransferRequest_1.TransferRequest {
     static get PROTOCOL() { return "/zero/2.0.0/dispatch"; }
     serialize() {
         return Buffer.from(JSON.stringify({
             module: this.module,
+            contractAddress: this.contractAddress,
             borrower: this.to,
             borrowAmount: this.amount,
             nonce: this.nonce,
+            loanId: this.pNonce,
+            asset: this.asset,
             data: this.data
         }));
     }
     buildLoanTransaction() {
-        const _iface = new abi_1.Interface([
-            "function loan(address, address, uint256, uint256, bytes)"
-        ]);
-        const data = _iface.encodeFunctionData("loan", [
-            this.module,
-            this.to,
-            this.amount,
-            this.nonce,
-            this.data
-        ]);
         return {
             chainId: this.getChainId(),
             to: this.contractAddress,
-            data: data
+            data: new abi_1.Interface(['function loan(address, address, uint256, uint256, bytes)']).encodeFunctionData('loan', [this.module, this.to, this.amount, this.pNonce, this.data])
         };
     }
     buildRepayTransaction() {
-        const _iface = new abi_1.Interface([
-            "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)"
-        ]);
-        const data = _iface.encodeFunctionData("repay", [
-            this.module,
-            this.to,
-            this.amount,
-            this.nonce,
-            this.data
-        ]);
+        if (!this._queryTxResult)
+            throw Error('TransferRequest#buildRepayTransaction(): must call waitForSignature()');
+        // TODO: add usage of this._queryTxResult.amount
         return {
             chainId: this.getChainId(),
             to: this.contractAddress,
-            data: data
+            data: new abi_1.Interface(['function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)']).encodeFunctionData('repay', [this.module, this.to, this.amount, this.pNonce, this.data, this.underwriter, this._queryTxResult.nHash, this._queryTxResult.signature])
         };
     }
 }
