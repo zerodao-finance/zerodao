@@ -15,6 +15,7 @@ const common_1 = require("@zerodao/common");
 const chains_1 = require("@zerodao/chains");
 const Request_1 = require("./Request");
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
+const lodash_1 = require("lodash");
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
 function getDomainStructure(request) {
@@ -59,7 +60,7 @@ function getDomainStructure(request) {
 }
 function isAsset(assetName, address) {
     return Boolean(Object.keys(common_1.FIXTURES).find((network) => (0, address_1.getAddress)(common_1.FIXTURES[network][assetName] ||
-        constants_1.AddressZero.substr(0, 41) + "1")) === (0, address_1.getAddress)(address));
+        constants_1.AddressZero.substr(0, 41) + "1") === (0, address_1.getAddress)(address)));
 }
 function isUSDC(asset) {
     return isAsset("USDC", asset);
@@ -221,15 +222,16 @@ class BurnRequest extends Request_1.Request {
         remoteTxMap.set(this, tx.wait());
     }
     serialize() {
-        return Buffer.from(JSON.stringify({
+        return Buffer.from(JSON.stringify((0, lodash_1.mapValues)({
             asset: this.asset,
             data: this.data,
             owner: this.owner,
             destination: this.destination,
-            deadline: this.getExpiry(),
+            deadline: this.deadline,
             amount: this.amount,
             contractAddress: this.contractAddress,
-        }));
+            signature: this.signature
+        }, bytes_1.hexlify)));
     }
     isNative() {
         return this.asset === constants_1.AddressZero;
@@ -299,6 +301,19 @@ class BurnRequest extends Request_1.Request {
             };
             renAsset.on(filter, listener);
         });
+    }
+    supportsERC20Permit() {
+        return !(isUSDC(this.asset) && this.getChainId() === 43114 || isWBTC(this.asset) || this.getChainId() === 1 && (0, address_1.getAddress)(common_1.FIXTURES.ETHEREUM.USDT) === (0, address_1.getAddress)(this.asset));
+    }
+    async needsApproval() {
+        const contract = new contracts_1.Contract(this.asset, ['function allowance(address, address) view returns (uint256)'], (0, chains_1.getVanillaProvider)(this));
+        return (await contract.allowance(this.owner, this.contractAddress)).lt(this.amount);
+    }
+    async approve(signer, amount) {
+        if (!amount)
+            amount = constants_1.MaxUint256;
+        const contract = new contracts_1.Contract(this.asset, ['function approve(address, uint256) returns (bool)'], signer);
+        return await contract.approve(this.contractAddress, amount);
     }
     getHandlerForDestinationChain() {
         return isZcashAddress(this.destination) ? ZECHandler_1.ZECHandler : BTCHandler_1.BTCHandler;
@@ -381,7 +396,7 @@ class BurnRequest extends Request_1.Request {
                 "function nonces(address) view returns (uint256)",
                 "function name() view returns (string)",
             ], (0, chains_1.getVanillaProvider)(this));
-            this.nonce = await token.nonces(this.owner);
+            this.nonce = String(await token.nonces(this.owner));
             this.tokenName = await token.name();
         }
         return this;

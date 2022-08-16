@@ -37,7 +37,7 @@ export abstract class Request {
     );
   }
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
-    const request = this.serialize();
+    const request = this.serialize().toString('utf8');
     const result = new PublishEventEmitter();
     if (peer._keepers.length === 0) {
       setTimeout(() =>
@@ -50,14 +50,16 @@ export abstract class Request {
       for (const keeper of peer._keepers) {
         try {
           const _peerId = await peerId.createFromB58String(keeper);
+	  console.log([_peerId, (this as any).constructor.PROTOCOL]);
+	  console.log(request);
           const { stream } = await peer.dialProtocol(
             _peerId,
-            this.constructor().PROTOCOL
+            (this as any).constructor.PROTOCOL
           );
           pipe(request, lp.encode(), stream.sink);
           result.emit("dialed", keeper);
         } catch (e: any) {
-          result.emit("error", new Error(`failed dialing keeper: ${keeper}`));
+          result.emit("error", e);
         }
       }
       result.emit("finish");

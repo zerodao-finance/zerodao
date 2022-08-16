@@ -1,6 +1,6 @@
 import { AbiCoder, Interface } from "@ethersproject/abi";
 import { Contract } from "@ethersproject/contracts";
-import { AddressZero } from "@ethersproject/constants";
+import { MaxUint256, AddressZero } from "@ethersproject/constants";
 import { keccak256 } from "@ethersproject/solidity";
 import {
   joinSignature,
@@ -19,6 +19,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { getVanillaProvider, CHAINS } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
+import { mapValues } from "lodash";
 
 const coder = new AbiCoder();
 
@@ -72,8 +73,7 @@ function isAsset(assetName, address) {
       getAddress(
         FIXTURES[network][assetName] ||
           AddressZero.substr(0, 41) + "1"
-      )
-    ) === getAddress(address)
+      ) === getAddress(address))
   );
 }
 
@@ -285,15 +285,16 @@ export class BurnRequest extends Request {
   }
   serialize(): Buffer {
     return Buffer.from(
-      JSON.stringify({
+      JSON.stringify(mapValues({
         asset: this.asset,
         data: this.data,
         owner: this.owner,
         destination: this.destination,
-        deadline: this.getExpiry(),
+        deadline: this.deadline,
         amount: this.amount,
         contractAddress: this.contractAddress,
-      })
+	signature: this.signature
+      }, hexlify))
     );
   }
   isNative() {
@@ -374,6 +375,18 @@ export class BurnRequest extends Request {
       };
       renAsset.on(filter, listener);
     });
+  }
+  supportsERC20Permit() {
+    return !(isUSDC(this.asset) && this.getChainId() === 43114 || isWBTC(this.asset) || this.getChainId() === 1 && getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset));
+  }
+  async needsApproval() {
+    const contract = new Contract(this.asset, ['function allowance(address, address) view returns (uint256)'], getVanillaProvider(this));
+    return (await contract.allowance(this.owner, this.contractAddress)).lt(this.amount);
+  }
+  async approve(signer, amount?: BigNumberish) {
+    if (!amount) amount = MaxUint256;
+    const contract = new Contract(this.asset, ['function approve(address, uint256) returns (bool)'], signer);
+    return await contract.approve(this.contractAddress, amount);
   }
   getHandlerForDestinationChain() {
     return isZcashAddress(this.destination) ? ZECHandler : BTCHandler;
@@ -483,7 +496,7 @@ export class BurnRequest extends Request {
         ],
         getVanillaProvider(this)
       );
-      this.nonce = await token.nonces(this.owner);
+      this.nonce = String(await token.nonces(this.owner));
       this.tokenName = await token.name();
     }
     return this;

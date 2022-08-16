@@ -78,6 +78,9 @@ export declare class BurnRequest extends Request {
     };
     getExpiry(): string;
     waitForHostTransaction(): Promise<any>;
+    supportsERC20Permit(): boolean;
+    needsApproval(): Promise<any>;
+    approve(signer: any, amount?: BigNumberish): Promise<any>;
     getHandlerForDestinationChain(): typeof BTCHandler | typeof ZECHandler;
     getNormalizedDestinationAddress(): any;
     waitForRemoteTransaction(): Promise<import("send-crypto/build/main/lib/utxo").UTXO>;
