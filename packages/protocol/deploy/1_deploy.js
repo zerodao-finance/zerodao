@@ -1,6 +1,6 @@
 const hre = require("hardhat");
-const { TEST_KEEPER_ADDRESS } = require("@zerodao/protocol/lib/mock");
-const deployParameters = require("@zerodao/protocol/lib/fixtures");
+const { TEST_KEEPER_ADDRESS } = require("../lib/mock");
+const deployParameters = require("../lib/fixtures");
 /*
 const validate = require("@openzeppelin/upgrades-core/dist/validate/index");
 Object.defineProperty(validate, "assertUpgradeSafe", {
@@ -22,6 +22,14 @@ const getControllerName = () => {
       return "BadgerBridgeZeroControllerOptimism";
     default:
       return "ZeroController";
+  }
+};
+const getZECControllerName = () => {
+  switch (process.env.CHAIN) {
+    case "ETHEREUM":
+      return "RenZECController";
+    default:
+      return undefined;
   }
 };
 const isLocalhost = !hre.network.config.live;
@@ -79,6 +87,32 @@ module.exports = async ({ getNamedAccounts }) => {
       unsafeAllow: ["delegatecall"],
     }
   );
+  const zecControllerName = getZECControllerName();
+  if (zecControllerName) {
+    console.log("deploying zec controller");
+    const zecControllerFactory = await hre.ethers.getContractFactory(
+      zecControllerName,
+      {}
+    );
+    const zecController = await upgrades.deployProxy(
+      zecControllerFactory,
+      [deployer, deployer],
+      {
+        unsafeAllow: ["delegatecall"],
+      }
+    );
+    const zecControllerArtifact = await deployments.getArtifact(
+      getControllerName()
+    );
+    await deployments.save(zecControllerName, {
+      contractName: zecControllerName,
+      address: zecController.address,
+      bytecode: zecControllerArtifact.bytecode,
+      abi: zecControllerArtifact.abi,
+    });
+    await zecController.deployTransaction.wait();
+  }
+
   const zeroControllerArtifact = await deployments.getArtifact(
     getControllerName()
   );
@@ -92,4 +126,3 @@ module.exports = async ({ getNamedAccounts }) => {
   console.log("waiting on proxy deploy to mine ...");
   await zeroController.deployTransaction.wait();
 };
-
