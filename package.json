@@ -1,7 +1,7 @@
 {
   "name": "zerodao",
   "version": "0.1.0",
-  "description": "zeroDAO Protocol SDK",
+  "description": "zeroDAO monorepo",
   "repository": "https://github.com/zerodao-finance/zerodao",
   "scripts": {
     "contracts": "yarn workspace @zerodao/contracts",
