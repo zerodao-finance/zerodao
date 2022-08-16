@@ -1,12 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BurnRequest = void 0;
 const abi_1 = require("@ethersproject/abi");
 const contracts_1 = require("@ethersproject/contracts");
-const constants_1 = __importDefault(require("@ethersproject/constants"));
+const constants_1 = require("@ethersproject/constants");
 const solidity_1 = require("@ethersproject/solidity");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
@@ -20,9 +17,6 @@ const Request_1 = require("./Request");
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
-function minOutFromData(request) {
-    return coder.decode(["uint256"], request.data);
-}
 function getDomainStructure(request) {
     return Number(request.getChainId()) == 137 &&
         (0, address_1.getAddress)(request.asset) === (0, address_1.getAddress)(common_1.FIXTURES.MATIC.USDC)
@@ -65,7 +59,7 @@ function getDomainStructure(request) {
 }
 function isAsset(assetName, address) {
     return Boolean(Object.keys(common_1.FIXTURES).find((network) => (0, address_1.getAddress)(common_1.FIXTURES[network][assetName] ||
-        constants_1.default.AddressZero.substr(0, 41) + "1")) === (0, address_1.getAddress)(address));
+        constants_1.AddressZero.substr(0, 41) + "1")) === (0, address_1.getAddress)(address));
 }
 function isUSDC(asset) {
     return isAsset("USDC", asset);
@@ -128,7 +122,7 @@ function getDomain(request) {
             return {
                 name: "USD Coin (PoS)",
                 version: "1",
-                verifyingContract: this.asset || constants_1.default.AddressZero,
+                verifyingContract: this.asset || constants_1.AddressZero,
                 salt: (0, bytes_1.hexZeroPad)(bignumber_1.BigNumber.from(String(this.getChainId()) || "1").toHexString(), 32),
             };
         }
@@ -137,7 +131,7 @@ function getDomain(request) {
                 name: "USD Coin (Arb1)",
                 version: "1",
                 chainId: String(chainId),
-                verifyingContract: this.asset || constants_1.default.AddressZero,
+                verifyingContract: this.asset || constants_1.AddressZero,
             };
         }
         return {
@@ -211,12 +205,19 @@ class BurnRequest extends Request_1.Request {
     static get PROTOCOL() {
         return "/zero/1.1.0/dispatch";
     }
+    static minOutFromData(data) {
+        const [result] = coder.decode(["uint256"], data);
+        return result;
+    }
+    static dataFromMinOut(minOut) {
+        return coder.encode(['uint256'], [minOut]);
+    }
     async sendTransaction(signer) {
         const { contractAddress, amount, destination } = this;
         const contract = new contracts_1.Contract(this.contractAddress, [
             "function burnApproved(address, address, uint256, uint256, bytes) payable",
         ], signer);
-        const tx = await contract.burnApproved(constants_1.default.AddressZero, this.asset, this.isNative() ? "0" : this.amount, minOutFromData(this), this.destination, this.isNative() ? { value: this.amount } : {});
+        const tx = await contract.burnApproved(constants_1.AddressZero, this.asset, this.isNative() ? "0" : this.amount, BurnRequest.minOutFromData(this.data), this.destination, this.isNative() ? { value: this.amount } : {});
         remoteTxMap.set(this, tx.wait());
     }
     serialize() {
@@ -231,7 +232,7 @@ class BurnRequest extends Request_1.Request {
         }));
     }
     isNative() {
-        return this.asset === constants_1.default.AddressZero;
+        return this.asset === constants_1.AddressZero;
     }
     toEIP712() {
         return {
@@ -260,14 +261,14 @@ class BurnRequest extends Request_1.Request {
             return await receiptPromise;
         return await new Promise((resolve, reject) => {
             const renAsset = getRenAsset(this);
-            const filter = renAsset.filters.Transfer(this.contractAddress, constants_1.default.AddressZero);
+            const filter = renAsset.filters.Transfer(this.contractAddress, constants_1.AddressZero);
             const done = (rcpt) => {
                 renAsset.off(filter, listener);
                 resolve(rcpt);
             };
             const listener = (from, to, amount, evt) => {
                 (async () => {
-                    if (this.asset == constants_1.default.AddressZero) {
+                    if (this.asset == constants_1.AddressZero) {
                         const tx = await evt.getTransaction();
                         if (tx.from === this.owner &&
                             (0, bytes_1.hexlify)(tx.value) === (0, bytes_1.hexlify)(this.amount))
@@ -354,7 +355,7 @@ class BurnRequest extends Request_1.Request {
             return super.publish(peer);
         else {
             const result = new PublishEventEmitter_1.PublishEventEmitter();
-            setImmediate(() => result.emit("finish"));
+            setTimeout(() => result.emit("finish"), 0);
         }
     }
     async fetchData() {

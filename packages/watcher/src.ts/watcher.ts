@@ -3,13 +3,13 @@
 // only run one of these
 
 import { getAddress } from "@ethersproject/address";
-import constants from "@ethersproject/constants";
+import { AddressZero } from "@ethersproject/constants";
 import { Redis } from "ioredis";
 import { Request, TransferRequest, TransferRequestV2 } from "@zerodao/request";
 import { Logger } from "@zerodao/logger";
 
 const VAULT_DEPLOYMENTS = {
-  [constants.AddressZero]: 1337,
+  [AddressZero]: 1337,
 };
 
 export class WatcherProcess {

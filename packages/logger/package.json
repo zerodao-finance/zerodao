@@ -12,6 +12,7 @@
     "format": "yarn prettier --write ."
   },
   "dependencies": {
+    "setimmediate": "^1.0.5",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
     "winston": "^3.3.3"

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -31,13 +8,14 @@ const units_1 = require("@ethersproject/units");
 const solidity_1 = require("@ethersproject/solidity");
 const contracts_1 = require("@ethersproject/contracts");
 const common_1 = require("@zerodao/common");
-const ren_1 = require("@renproject/ren");
+const ren_1 = __importDefault(require("@renproject/ren"));
 const bignumber_1 = require("@ethersproject/bignumber");
-const constants_1 = __importDefault(require("@ethersproject/constants"));
 const chains_1 = require("@renproject/chains");
-const sdk_1 = __importDefault(require("@traderjoe-xyz/sdk"));
-const sdk_2 = __importStar(require("@uniswap/sdk"));
+const JOE = require("@traderjoe-xyz/sdk");
+const UNISWAP = require("@uniswap/sdk");
+const sdk_1 = require("@uniswap/sdk");
 const chains_2 = require("@zerodao/chains");
+const constants_1 = require("@ethersproject/constants");
 exports.keeperReward = (0, units_1.parseEther)("0.001");
 const getProvider = (chainName) => {
     return (0, chains_2.providerFromChainId)(chains_2.NAME_CHAIN[chainName].id);
@@ -49,18 +27,19 @@ function applyRatio(amount, ratio) {
 }
 exports.applyRatio = applyRatio;
 ;
-function returnChainDetails(CHAINID, _provider) {
-    const provider = _provider || (0, chains_2.providerFromChainId)(CHAINID);
+function returnChainDetails(CHAINID) {
+    const provider = (0, chains_2.providerFromChainId)(Number(CHAINID));
     const chain = chains_2.CHAINS[CHAINID];
     return {
         provider,
-        name: chain.name.toUpperCase(),
+        name: chain.chainName.toUpperCase(),
         uniswapName: chain.uniswapName,
         chainId: Number(CHAINID)
     };
 }
 function makeQuoter(CHAIN = "1", provider) {
-    const chain = returnChainDetails(CHAIN, provider);
+    const chain = returnChainDetails(CHAIN);
+    console.log(chain);
     const renCrv = new contracts_1.Contract(common_1.FIXTURES[chain.name]["Curve_Ren"], [
         "function get_dy(int128, int128, uint256) view returns (uint256)",
         "function get_dy_underlying(int128, int128, uint256) view returns (uint256)",
@@ -71,36 +50,36 @@ function makeQuoter(CHAIN = "1", provider) {
     ], chain.provider);
     //direction ? renzec -> eth : eth -> renzec
     const getRenZECETHQuote = async (direction, amount) => {
-        const RENZEC = new sdk_2.default.Token(sdk_2.default.ChainId.MAINNET, common_1.FIXTURES.ETHEREUM.renZEC, 8);
-        const weth = sdk_2.default.WETH[sdk_2.default.ChainId.MAINNET];
-        const pair = await sdk_2.default.Fetcher.fetchPairData(RENZEC, weth, chain.provider);
+        const RENZEC = new UNISWAP.Token(UNISWAP.ChainId.MAINNET, common_1.FIXTURES.ETHEREUM.renZEC, 8);
+        const weth = UNISWAP.WETH[UNISWAP.ChainId.MAINNET];
+        const pair = await UNISWAP.Fetcher.fetchPairData(RENZEC, weth, chain.provider);
         if (direction) {
-            const route = new sdk_2.default.Route([pair], RENZEC);
-            const trade = new sdk_2.default.Trade(route, new sdk_2.default.TokenAmount(RENZEC, amount), sdk_2.default.TradeType.EXACT_INPUT);
+            const route = new UNISWAP.Route([pair], RENZEC);
+            const trade = new UNISWAP.Trade(route, new UNISWAP.TokenAmount(RENZEC, amount), UNISWAP.TradeType.EXACT_INPUT);
             const price = trade.outputAmount.toExact();
             return (0, units_1.parseEther)(price);
         }
         else {
-            const route = new sdk_2.default.Route([pair], weth);
-            const trade = new sdk_2.default.Trade(route, new sdk_2.default.TokenAmount(weth, amount.toString()), sdk_2.default.TradeType.EXACT_INPUT);
+            const route = new UNISWAP.Route([pair], weth);
+            const trade = new UNISWAP.Trade(route, new UNISWAP.TokenAmount(weth, amount.toString()), UNISWAP.TradeType.EXACT_INPUT);
             const price = trade.outputAmount.toExact();
             return (0, units_1.parseUnits)(price, 8);
         }
     };
     // direction ? renbtc -> avax : avax -> renbtc
     const getAVAXQuote = async (direction, amount) => {
-        const WBTC = new sdk_1.default.Token(sdk_1.default.ChainId.AVALANCHE, common_1.FIXTURES.AVALANCHE.WBTC, 8);
-        const pair = await sdk_1.default.Fetcher.fetchPairData(WBTC, sdk_1.default.WAVAX[sdk_1.default.ChainId.AVALANCHE], chain.provider);
+        const WBTC = new JOE.Token(JOE.ChainId.AVALANCHE, common_1.FIXTURES.AVALANCHE.WBTC, 8);
+        const pair = await JOE.Fetcher.fetchPairData(WBTC, JOE.WAVAX[JOE.ChainId.AVALANCHE], chain.provider);
         if (direction) {
             const wbtcAmount = await getWbtcQuote(true, amount);
-            const route = new sdk_1.default.Route([pair], WBTC);
-            const trade = new sdk_1.default.Trade(route, new sdk_1.default.TokenAmount(WBTC, wbtcAmount), sdk_1.default.TradeType.EXACT_INPUT, chain.chainId);
+            const route = new JOE.Route([pair], WBTC);
+            const trade = new JOE.Trade(route, new JOE.TokenAmount(WBTC, wbtcAmount), JOE.TradeType.EXACT_INPUT, chain.chainId);
             const price = trade.outputAmount.toExact();
             return (0, units_1.parseEther)(price);
         }
         else {
-            const route = new sdk_1.default.Route([pair], sdk_1.default.WAVAX[sdk_1.default.ChainId.AVALANCHE]);
-            const trade = new sdk_1.default.Trade(route, new sdk_1.default.TokenAmount(sdk_1.default.WAVAX[sdk_1.default.ChainId.AVALANCHE], amount), sdk_1.default.TradeType.EXACT_INPUT, chain.chainId);
+            const route = new JOE.Route([pair], JOE.WAVAX[JOE.ChainId.AVALANCHE]);
+            const trade = new JOE.Trade(route, new JOE.TokenAmount(JOE.WAVAX[JOE.ChainId.AVALANCHE], amount), JOE.TradeType.EXACT_INPUT, chain.chainId);
             return await getWbtcQuote(false, (0, units_1.parseUnits)(trade.outputAmount.toExact(), 8));
         }
     };
@@ -132,9 +111,9 @@ function makeQuoter(CHAIN = "1", provider) {
             return await getAVAXQuote(false, (0, units_1.parseEther)("1"));
         }
         else if (chain.name === "ETHEREUM") {
-            const renBTC = new sdk_2.default.Token(sdk_2.default.ChainId.MAINNET, common_1.FIXTURES.ETHEREUM.renBTC, 8);
-            const pair = await sdk_2.default.Fetcher.fetchPairData(renBTC, sdk_2.default.WETH[renBTC.chainId], chain.provider);
-            const route = new sdk_2.Route([pair], sdk_2.default.WETH[renBTC.chainId]);
+            const renBTC = new UNISWAP.Token(UNISWAP.ChainId.MAINNET, common_1.FIXTURES.ETHEREUM.renBTC, 8);
+            const pair = await UNISWAP.Fetcher.fetchPairData(renBTC, UNISWAP.WETH[renBTC.chainId], chain.provider);
+            const route = new sdk_1.Route([pair], UNISWAP.WETH[renBTC.chainId]);
             const renBTCForOneEth = route.midPrice.toSignificant(7);
             return (0, units_1.parseUnits)(renBTCForOneEth, 8);
         }
@@ -296,7 +275,7 @@ function makeCompute(CHAIN = "1") {
         provider: getProvider("Ethereum"),
         network: "mainnet",
     });
-    const renJS = new ren_1.RenJS("mainnet").withChains(bitcoin, zcash, arbitrum, avalanche, polygon, optimism, ethereum);
+    const renJS = new ren_1.default("mainnet").withChains(bitcoin, zcash, arbitrum, avalanche, polygon, optimism, ethereum);
     const computeTransferOutput = async ({ module, amount, primaryToken }) => {
         if (primaryToken == "ZEC") {
             switch (module) {
@@ -316,7 +295,7 @@ function makeCompute(CHAIN = "1") {
                 return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
             case common_1.FIXTURES[quotes.chain.name].renBTC:
                 return await deductMintFee(amount, primaryToken);
-            case constants_1.default.AddressZero:
+            case constants_1.AddressZero:
                 return await quotes.renBTCToETH(await deductMintFee(amount, primaryToken));
             default:
                 return bignumber_1.BigNumber.from("0");
@@ -373,7 +352,7 @@ function makeCompute(CHAIN = "1") {
                 return amount;
             case common_1.FIXTURES[quotes.chain.name].USDC:
                 return await quotes.fromUSDC(amount);
-            case constants_1.default.AddressZero:
+            case constants_1.AddressZero:
                 return await quotes.ETHtoRenBTC(amount);
             default:
                 console.error("no asset found for getConvertedAmount:" + asset);
@@ -397,7 +376,7 @@ function makeCompute(CHAIN = "1") {
         const gasPrice = await quotes.chain.provider.getGasPrice();
         const { network, asset } = selectNetwork(primaryToken);
         const gasFee = await computeGasFee(GAS_COST.add(exports.keeperReward.div(gasPrice)), gasPrice, primaryToken);
-        const evmChain = (0, chains_2.getChainName)(CHAIN) == "Mainnet" ? "Ethereum" : (0, chains_2.getChainName)(CHAIN);
+        const evmChain = (0, chains_2.getChainName)(CHAIN);
         let renOutput = (0, units_1.parseUnits)("0", 8);
         try {
             const renVmFees = await renJS.getFees({

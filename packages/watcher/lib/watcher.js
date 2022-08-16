@@ -1,15 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WatcherProcess = void 0;
 // only run one of these
 const address_1 = require("@ethersproject/address");
-const constants_1 = __importDefault(require("@ethersproject/constants"));
+const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
 const VAULT_DEPLOYMENTS = {
-    [constants_1.default.AddressZero]: 1337,
+    [constants_1.AddressZero]: 1337,
 };
 class WatcherProcess {
     constructor({ logger, redis }) {

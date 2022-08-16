@@ -1,3 +1,4 @@
+import 'setimmediate';
 import {
   createLogger as createWinstonLogger,
   transports,

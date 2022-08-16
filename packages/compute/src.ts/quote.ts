@@ -3,9 +3,8 @@ import { parseEther, parseUnits } from "@ethersproject/units";
 import { pack } from "@ethersproject/solidity";
 import { Contract } from "@ethersproject/contracts";
 import { FIXTURES } from "@zerodao/common";
-import { RenJS } from "@renproject/ren";
+import RenJS from "@renproject/ren";
 import { BigNumber } from "@ethersproject/bignumber";
-import constants from "@ethersproject/constants";
 import {
   Bitcoin,
   Zcash,
@@ -15,9 +14,11 @@ import {
   Ethereum,
   Optimism,
 } from "@renproject/chains";
-import JOE from "@traderjoe-xyz/sdk";
-import UNISWAP, { Route } from "@uniswap/sdk";
+import JOE = require("@traderjoe-xyz/sdk");
+import UNISWAP = require("@uniswap/sdk");
+import { Route } from "@uniswap/sdk";
 import { providerFromChainId, CHAINS, NAME_CHAIN, getChainName } from "@zerodao/chains";
+import { AddressZero } from "@ethersproject/constants";
 
 export const keeperReward = parseEther("0.001");
 
@@ -31,19 +32,20 @@ export function applyRatio(amount, ratio) {
     .div(parseEther("1"));
 };
 
-function returnChainDetails(CHAINID, _provider) {
-  const provider = _provider || providerFromChainId(CHAINID);
+function returnChainDetails(CHAINID) {
+  const provider = providerFromChainId(Number(CHAINID));
   const chain = CHAINS[CHAINID];
   return {
     provider,
-    name: chain.name.toUpperCase(),
+    name: chain.chainName.toUpperCase(),
     uniswapName: chain.uniswapName,
     chainId: Number(CHAINID)
   };
 }
 
 export function makeQuoter(CHAIN = "1", provider?) {
-  const chain = returnChainDetails(CHAIN, provider);
+  const chain = returnChainDetails(CHAIN);
+  console.log(chain);
   const renCrv = new Contract(
     FIXTURES[chain.name]["Curve_Ren"],
     [
@@ -419,7 +421,7 @@ export function makeCompute(CHAIN = "1") {
         return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
       case FIXTURES[quotes.chain.name].renBTC:
         return await deductMintFee(amount, primaryToken);
-      case constants.AddressZero:
+      case AddressZero:
         return await quotes.renBTCToETH(
           await deductMintFee(amount, primaryToken)
         );
@@ -500,7 +502,7 @@ export function makeCompute(CHAIN = "1") {
         return amount;
       case FIXTURES[quotes.chain.name].USDC:
         return await quotes.fromUSDC(amount);
-      case constants.AddressZero:
+      case AddressZero:
         return await quotes.ETHtoRenBTC(amount);
       default:
         console.error("no asset found for getConvertedAmount:" + asset);
@@ -538,8 +540,7 @@ export function makeCompute(CHAIN = "1") {
       primaryToken
     );
 
-    const evmChain =
-      getChainName(CHAIN) == "Mainnet" ? "Ethereum" : getChainName(CHAIN);
+    const evmChain = getChainName(CHAIN);
     let renOutput = parseUnits("0", 8);
 
     try {

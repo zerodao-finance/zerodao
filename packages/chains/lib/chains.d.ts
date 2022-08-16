@@ -23,7 +23,7 @@ export declare const NAME_CHAIN: {
     Optimism: IIntegratedChain;
     Polygon: IIntegratedChain;
 };
-export declare const getChainName: (chainId: any) => "Arbitrum" | "Avalanche" | "Optimism" | "Polygon" | "Mainnet" | "Unsupported Chain";
+export declare const getChainName: (chainId: any) => "Arbitrum" | "Avalanche" | "Ethereum" | "Optimism" | "Polygon" | "Unsupported Chain";
 export declare const getExplorerRoot: (chainId: any) => "https://etherscan.io/address/" | "https://snowtrace.io/address/" | "https://polygonscan.com/address/" | "https://optimistic.etherscan.io/address/" | "https://arbiscan.io/address/";
 export declare const CHAINS: {};
 export declare const URLS: {};

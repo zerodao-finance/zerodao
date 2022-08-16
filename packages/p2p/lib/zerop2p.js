@@ -122,6 +122,7 @@ class ZeroP2P extends Libp2p {
                 },
             },
         });
+        this._keepers = [];
         this.logger = logger;
         this.logger.debug("listening on", multiaddr);
         this.setSigner(options.signer);

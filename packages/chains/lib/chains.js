@@ -84,16 +84,16 @@ const AVAX = {
     decimals: 18,
 };
 const getChainName = (chainId) => {
-    switch (chainId) {
-        case "42161":
+    switch (Number(chainId)) {
+        case 42161:
             return "Arbitrum";
-        case "43114":
+        case 43114:
             return "Avalanche";
-        case "137":
+        case 137:
             return "Polygon";
-        case "1":
-            return "Mainnet";
-        case "10":
+        case 1:
+            return "Ethereum";
+        case 10:
             return "Optimism";
         default:
             return "Unsupported Chain";
@@ -153,9 +153,10 @@ exports.RENVM_PROVIDERS = {
     Optimism: chains_1.Optimism,
 };
 exports.providerFromChainId = (0, utils_1.cachedFrom)((chainId) => {
+    console.log("CHAINID", chainId);
     const chainIdNumber = Number(chainId);
     const chain = exports.CHAINS[chainIdNumber];
-    const name = chain.name.toLowerCase();
+    const name = chain.chainName.toLowerCase();
     const infuraKey = (() => {
         switch (name) {
             case 'ethereum':

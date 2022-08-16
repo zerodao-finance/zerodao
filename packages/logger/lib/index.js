@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logger = exports.createLogger = void 0;
+require("setimmediate");
 const winston_1 = require("winston");
 Object.defineProperty(exports, "Logger", { enumerable: true, get: function () { return winston_1.Logger; } });
 const customLevels = {

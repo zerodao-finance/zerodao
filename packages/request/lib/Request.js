@@ -32,7 +32,7 @@ class Request {
         const request = this.serialize();
         const result = new PublishEventEmitter_1.PublishEventEmitter();
         if (peer._keepers.length === 0) {
-            setImmediate(() => result.emit("error", new Error("Cannot publish request if no keepers are found")));
+            setTimeout(() => result.emit("error", new Error("Cannot publish request if no keepers are found")), 0);
         }
         (async () => {
             for (const keeper of peer._keepers) {
