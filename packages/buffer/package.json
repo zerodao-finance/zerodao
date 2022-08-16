@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/buffer",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "zerodao sdk package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
