@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/logger",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "zerodao SDK logger exports",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
