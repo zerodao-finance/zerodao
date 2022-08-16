@@ -1,0 +1,23 @@
+{
+  "name": "@zerodao/pending",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "cross-env node bin/pending",
+    "build": "tsc"
+  },
+  "description": "keeper pending process",
+  "main": "lib/pending.js",
+  "repository": "https://github.com/zerodao-finance/zero-keeper",
+  "author": "zeroDAO",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "ioredis": "^5.0.5",
+    "send-crypto": "^0.2.37",
+    "typescript": "^4.7.4",
+    "zero-protocol": "https://github.com/zerodao-finance/zero-protocol"
+  }
+}
