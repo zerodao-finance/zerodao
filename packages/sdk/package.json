@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -12,18 +12,18 @@
     "test": "yarn build && cross-env node dist/test"
   },
   "dependencies": {
-    "@zerodao/chains": "^0.2.0",
-    "@zerodao/common": "^0.2.0",
-    "@zerodao/compute": "^0.2.0",
-    "@zerodao/logger": "^0.2.0",
-    "@zerodao/p2p": "^0.2.0",
-    "@zerodao/protocol": "^0.2.0",
-    "@zerodao/request": "^0.2.0",
-    "@zerodao/utils": "^0.2.0",
+    "@zerodao/chains": "^0.3.0",
+    "@zerodao/common": "^0.3.0",
+    "@zerodao/compute": "^0.3.0",
+    "@zerodao/logger": "^0.3.0",
+    "@zerodao/p2p": "^0.3.0",
+    "@zerodao/protocol": "^0.3.0",
+    "@zerodao/request": "^0.3.0",
+    "@zerodao/utils": "^0.3.0",
     "typescript": "^4.7.4"
   },
   "devDependencies": {
     "cross-env": "^7.0.3"
   },
-  "gitHead": "fe63733630721858609c8b8b5ed88f09c979e0d4"
+  "gitHead": "37fda294fbda1515d1c3319af263043c0a104998"
 }

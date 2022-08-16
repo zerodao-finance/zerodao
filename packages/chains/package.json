@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/chains",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "zerodao sdk package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
@@ -13,7 +13,7 @@
     "@ethersproject/bytes": "^5.6.1",
     "@ethersproject/constants": "^5.6.1",
     "@ethersproject/units": "^5.6.1",
-    "@zerodao/common": "^0.2.0",
+    "@zerodao/common": "^0.3.0",
     "jest": "^28.1.3",
     "lodash": "^4.17.21",
     "typescript": "^4.7.4"
@@ -22,5 +22,5 @@
     "build": "tsc",
     "test": "jest"
   },
-  "gitHead": "fe63733630721858609c8b8b5ed88f09c979e0d4"
+  "gitHead": "37fda294fbda1515d1c3319af263043c0a104998"
 }

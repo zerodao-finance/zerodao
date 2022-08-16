@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/mocks",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "zerodao SDK mocks",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -13,5 +13,5 @@
   "devDependencies": {
     "typescript": "^4.7.4"
   },
-  "gitHead": "fe63733630721858609c8b8b5ed88f09c979e0d4"
+  "gitHead": "37fda294fbda1515d1c3319af263043c0a104998"
 }
