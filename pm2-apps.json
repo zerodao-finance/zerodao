@@ -1,0 +1,19 @@
+{
+  "apps": [{
+    "name": "keeper",
+    "script": "yarn workspace @zerodao/keeper start"
+  }, {
+    "name": "watcher",
+    "script": "yarn workspace @zerodao/watcher start"
+  }, {
+    "name": "pending",
+    "script": "yarn workspace @zerodao/pending start"
+  }, {
+    "name": "dispatcher",
+    "script": "yarn workspace @zerodao/dispatcher start"
+  }],
+
+  "deploy": {
+    "post-deploy": "yarn && pm2 reload pm2-apps.json"
+  }
+}

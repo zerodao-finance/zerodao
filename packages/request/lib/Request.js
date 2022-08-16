@@ -10,6 +10,11 @@ const it_pipe_1 = __importDefault(require("it-pipe"));
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
 const protocol_1 = __importDefault(require("@zerodao/protocol"));
 class Request {
+    static addressToChainId(address) {
+        return this.prototype.getChainId.call({
+            contractAddress: address
+        });
+    }
     static get PROTOCOL() {
         throw new Error("static get PROTOCOL() must be implemented");
     }

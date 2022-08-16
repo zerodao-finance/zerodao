@@ -51,5 +51,4 @@ const createLogger = (userType?: UserTypes) => {
   return logger;
 };
 
-export default createLogger;
-export { Logger };
+export { createLogger, Logger };

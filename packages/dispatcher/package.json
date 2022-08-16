@@ -1,0 +1,24 @@
+{
+  "name": "@zerodao/dispatcher",
+  "version": "0.1.0",
+  "description": "dispatcher",
+  "main": "lib/dispatcher.js",
+  "scripts": {
+    "start": "cross-env node bin/dispatcher",
+    "build": "tsc"
+  },
+  "repository": "https://github.com/zerodao-finance/zero-keeper",
+  "author": "zeroDAO",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "ethers": "^5.6.7",
+    "ethers-flashbots": "https://github.com/freelogstudio/ethers-flashbots",
+    "ethers-gasnow": "https://github.com/kungfuflex/ethers-gasnow",
+    "ethers-polygongastracker": "https://github.com/freelogstudio/ethers-polygongastracker",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

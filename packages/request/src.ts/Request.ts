@@ -6,6 +6,11 @@ import { PublishEventEmitter } from "./PublishEventEmitter";
 import deployments from "@zerodao/protocol";
 
 export abstract class Request {
+  static addressToChainId(address) {
+    return this.prototype.getChainId.call({
+      contractAddress: address
+    });
+  }
   static get PROTOCOL(): string | void {
     throw new Error("static get PROTOCOL() must be implemented");
   }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Logger = void 0;
+exports.Logger = exports.createLogger = void 0;
 const winston_1 = require("winston");
 Object.defineProperty(exports, "Logger", { enumerable: true, get: function () { return winston_1.Logger; } });
 const customLevels = {
@@ -39,5 +39,5 @@ const createLogger = (userType) => {
     });
     return logger;
 };
-exports.default = createLogger;
+exports.createLogger = createLogger;
 //# sourceMappingURL=index.js.map
