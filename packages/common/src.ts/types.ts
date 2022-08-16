@@ -35,60 +35,7 @@ export interface DarknodeSignatureInput {
 
 // export type ConnectionTypes = ZeroConnection;
 
-export declare class TransferRequest {
-	constructor(
-		module: string,
-		to: string,
-		underwriter: string,
-		asset: string,
-		amount: BigNumberish,
-		data: string,
-		nonce?: BigNumberish,
-		pNonce?: BigNumberish,
-	);
-	public setUnderwriter(underwriter: string): boolean;
-	public toEIP712Digest(contractAddress: string, chainId: number): Buffer;
-	public toEIP712(contractAddress: string, chainId: number): EIP712TypedData;
-	public toGatewayAddress(input: GatewayAddressInput): string;
-	public sign(signer: any, contractAddress: string): Promise<string>;
-}
 
-// export declare function createZeroConnection(address: string): Promise<ZeroConnection>;
-// export declare function createZeroKeeper(connection: ZeroConnection): ZeroKeeper;
-// export declare function createZeroUser(connection: ZeroConnection): ZeroUser;
-
-export interface Request {
-	requestType: "burn" | "transfer" | "meta"
-	signature: string
-	contractAddress: string
-	[property: string]: any
-}
-
-export interface TransferRequest_I extends Request {
-	module: string;
-	to: string;
-	underwriter: string;
-	asset: string;
-	nonce: BigNumberish;
-	pNonce: BigNumberish;
-	amount: BigNumberish;
-	data: string;
-}
-
-export interface BurnRequest_I extends Request {
-	asset: string;
-	underwriter: string;
-	owner: string
-	deadline: string
-	destination: any
-	nonce: BigNumberish
-	pNonce: BigNumberish
-
-}
-
-export interface MetaRequest_I extends Request {
-
-}
 
 export type RequestStates = "pending" | "failed" | "succeeded"
 

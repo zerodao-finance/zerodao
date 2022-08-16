@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProvider = exports.getRenVMChain = exports.getVanillaProvider = exports.RENVM_PROVIDERS = exports.RPC_ENDPOINTS = exports.CONTROLLER_DEPLOYMENTS = exports.URLS = exports.CHAINS = exports.getExplorerRoot = exports.getChainName = void 0;
+exports.getProvider = exports.getRenVMChain = exports.getVanillaProvider = exports.providerFromChainId = exports.RENVM_PROVIDERS = exports.RPC_ENDPOINTS = exports.CONTROLLER_DEPLOYMENTS = exports.URLS = exports.CHAINS = exports.getExplorerRoot = exports.getChainName = exports.NAME_CHAIN = exports.ID_CHAIN = void 0;
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
 const chains_1 = require("@renproject/chains");
 const providers_1 = require("@ethersproject/providers");
+const utils_1 = require("@zerodao/utils");
 const INFURA_PROJECT_ID = process.env.REACT_APP_INFURA_PROJECT_ID || process.env.INFURA_PROJECT_ID || '816df2901a454b18b7df259e61f92cd2';
 const ETHEREUM = {
     id: 1,
     hex: (0, bytes_1.hexValue)(1),
-    name: ["Ether", "Ethereum"],
+    name: "Ethereum",
+    uniswapName: "MAINNET",
     symbol: "ETH",
     decimals: 18,
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
@@ -18,8 +20,9 @@ const ETHEREUM = {
 const AVALANCHE = {
     id: 43114,
     hex: (0, bytes_1.hexValue)(43114),
-    name: ["Avax", "Avalanche"],
+    name: "Avalanche",
     symbol: "AVAX",
+    uniswapName: "",
     decimals: 18,
     rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
     explorerRootUrl: "https://snowtrace.io/address/"
@@ -29,14 +32,16 @@ const ARBITRUM = {
     hex: (0, bytes_1.hexValue)(42161),
     name: "Arbitrum",
     symbol: "Arb",
+    uniswapName: "ARBITRUM",
     rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
     explorerRootUrl: "https://snowtrace.io/address/"
 };
 const POLYGON = {
     id: 137,
     hex: (0, bytes_1.hexValue)(137),
-    name: ["Polygon", "Matic"],
+    name: "Polygon",
     symbol: "MATIC",
+    uniswapName: "POLYGON",
     rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
     explorerRootUrl: "https://polygonscan.com/address/"
 };
@@ -45,17 +50,18 @@ const OPTIMISM = {
     hex: (0, bytes_1.hexValue)(10),
     name: "Optimism",
     symbol: "OPTIMISM",
+    uniswapName: "OPTIMISM",
     rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
     explorerRootUrl: "https://optimistic.etherscan.io/address/"
 };
-const ID_CHAIN = {
+exports.ID_CHAIN = {
     [1]: ETHEREUM,
     [43114]: AVALANCHE,
     [42161]: ARBITRUM,
     [137]: POLYGON,
     [10]: OPTIMISM
 };
-const NAME_CHAIN = {
+exports.NAME_CHAIN = {
     "Arbitrum": ARBITRUM,
     "Ethereum": ETHEREUM,
     "Avalanche": AVALANCHE,
@@ -110,7 +116,7 @@ const getExplorerRoot = (chainId) => {
 };
 exports.getExplorerRoot = getExplorerRoot;
 exports.CHAINS = [[1, ETH], [10, ETH], [42161, ETH], [43114, AVAX], [137, MATIC]].reduce((r, [chainId, currency]) => {
-    const { rpcUrl, explorerRootUrl } = ID_CHAIN[Number(chainId)];
+    const { rpcUrl, explorerRootUrl } = exports.ID_CHAIN[Number(chainId)];
     r[Number(chainId)] = {
         chainId: (0, bytes_1.hexValue)(Number(chainId)),
         chainName: (0, exports.getChainName)(chainId).toLowerCase(),
@@ -146,23 +152,30 @@ exports.RENVM_PROVIDERS = {
     Avalanche: chains_1.Avalanche,
     Optimism: chains_1.Optimism,
 };
+exports.providerFromChainId = (0, utils_1.cachedFrom)((chainId) => {
+    const chainIdNumber = Number(chainId);
+    const chain = exports.CHAINS[chainIdNumber];
+    const name = chain.name.toLowerCase();
+    const infuraKey = (() => {
+        switch (name) {
+            case 'ethereum':
+                return 'mainnet';
+            case 'polygon':
+                return 'matic';
+            case 'arbitrum':
+                return name;
+        }
+    })();
+    if (infuraKey)
+        return new providers_1.InfuraProvider(infuraKey, INFURA_PROJECT_ID);
+    return new providers_1.JsonRpcProvider(chain.rpcUrl);
+});
 const getVanillaProvider = (request) => {
     const checkSummedContractAddr = (0, address_1.getAddress)(request.contractAddress);
     if (Object.keys(exports.CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {
         const chain_key = exports.CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
-        const infuraKey = (() => {
-            switch (chain_key) {
-                case 'ethereum':
-                    return 'mainnet';
-                case 'polygon':
-                    return 'matic';
-                case 'arbitrum':
-                    return chain_key;
-            }
-        })();
-        if (infuraKey)
-            return new providers_1.InfuraProvider(infuraKey, '816df2901a454b18b7df259e61f92cd2');
-        return new providers_1.JsonRpcProvider(exports.RPC_ENDPOINTS[chain_key]);
+        return (0, exports.providerFromChainId)(exports.NAME_CHAIN[chain_key].id);
+        ;
     }
     else {
         throw new Error('Not a contract currently deployed: ' + checkSummedContractAddr);

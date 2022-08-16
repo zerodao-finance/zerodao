@@ -1,5 +1,28 @@
 import { Polygon, Ethereum, Arbitrum, Avalanche, Optimism, EthereumBaseChain } from "@renproject/chains";
-import { JsonRpcProvider } from "@ethersproject/providers";
+interface IIntegratedChain {
+    id: number;
+    hex: string;
+    name: string | string[];
+    symbol: string;
+    decimals?: number;
+    uniswapName: string;
+    explorerRootUrl?: string;
+    rpcUrl: string | string[] | undefined;
+}
+export declare const ID_CHAIN: {
+    1: IIntegratedChain;
+    43114: IIntegratedChain;
+    42161: IIntegratedChain;
+    137: IIntegratedChain;
+    10: IIntegratedChain;
+};
+export declare const NAME_CHAIN: {
+    Arbitrum: IIntegratedChain;
+    Ethereum: IIntegratedChain;
+    Avalanche: IIntegratedChain;
+    Optimism: IIntegratedChain;
+    Polygon: IIntegratedChain;
+};
 export declare const getChainName: (chainId: any) => "Arbitrum" | "Avalanche" | "Optimism" | "Polygon" | "Mainnet" | "Unsupported Chain";
 export declare const getExplorerRoot: (chainId: any) => "https://etherscan.io/address/" | "https://snowtrace.io/address/" | "https://polygonscan.com/address/" | "https://optimistic.etherscan.io/address/" | "https://arbiscan.io/address/";
 export declare const CHAINS: {};
@@ -22,8 +45,10 @@ export declare const RENVM_PROVIDERS: {
     Avalanche: typeof Avalanche;
     Optimism: typeof Optimism;
 };
-export declare const getVanillaProvider: (request: any) => JsonRpcProvider;
+export declare const providerFromChainId: (v: any) => any;
+export declare const getVanillaProvider: (request: any) => any;
 export declare const getRenVMChain: (transferRequest: any) => any;
 export declare const getProvider: ({ contractAddress: string }: {
     contractAddress: any;
 }) => EthereumBaseChain;
+export {};

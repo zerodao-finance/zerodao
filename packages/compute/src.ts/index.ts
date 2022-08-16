@@ -1,3 +1,3 @@
 export * from "./compute"
-export * from "./quotes"
+export * from "./quote"
 export * from "./formatters"

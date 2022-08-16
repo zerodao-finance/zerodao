@@ -19,6 +19,7 @@ interface IIntegratedChain {
   name: string | string[];
   symbol: string;
   decimals?: number;
+  uniswapName: string;
   explorerRootUrl?: string;
   rpcUrl: string | string[] | undefined
 }
@@ -215,7 +216,7 @@ export const providerFromChainId = cachedFrom((chainId) => {
   })();
   if (infuraKey) return new InfuraProvider(infuraKey, INFURA_PROJECT_ID);
   return new JsonRpcProvider(chain.rpcUrl);
-};
+});
 
 
 export const getVanillaProvider = (request) => {
@@ -233,15 +234,6 @@ export const getRenVMChain = (transferRequest) => {
     const ethersProvider = getVanillaProvider(transferRequest);
     const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
     return new RENVM_PROVIDERS[chain_key]({ network: "mainnet", provider: ethersProvider });
-}
-
-export function providerFromChainId(chainId) {
-  const chainIdNumber = Number(chainId);
-  const { name } = CHAINS[chainIdNumber]
-  const [ contractAddress ] = Object.entries(CONTROLLER_DEPLOYMENTS).find(([ address, chainName ]) => name === chainName);
-  return getVanillaProvider({
-    contractAddress
-  });
 }
 
 

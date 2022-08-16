@@ -23,7 +23,7 @@
     ethereum-types "^3.7.0"
     popper.js "1.14.3"
 
-"@0x/utils@^6.4.3", "@0x/utils@^6.5.3":
+"@0x/utils@^6.4.3":
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/@0x/utils/-/utils-6.5.3.tgz#b944ffb197a062e3996a4f2e6e43f7babe21e113"
   integrity sha512-C8Af9MeNvWTtSg5eEOObSZ+7gjOGSHkhqDWv8iPfrMMt7yFkAjHxpXW+xufk6ZG2VTg+hel82GDyhKaGtoQZDA==
@@ -999,7 +999,7 @@
     "@ethersproject/properties" ">=5.0.0-beta.131"
     "@ethersproject/strings" ">=5.0.0-beta.130"
 
-"@ethersproject/abi@5.6.4", "@ethersproject/abi@^5.0.0-beta.146", "@ethersproject/abi@^5.1.2", "@ethersproject/abi@^5.4.0", "@ethersproject/abi@^5.5.0", "@ethersproject/abi@^5.6.3", "@ethersproject/abi@^5.6.4":
+"@ethersproject/abi@5.6.4", "@ethersproject/abi@^5.0.0-beta.146", "@ethersproject/abi@^5.1.2", "@ethersproject/abi@^5.4.0", "@ethersproject/abi@^5.5.0", "@ethersproject/abi@^5.6.2", "@ethersproject/abi@^5.6.3", "@ethersproject/abi@^5.6.4":
   version "5.6.4"
   resolved "https://registry.yarnpkg.com/@ethersproject/abi/-/abi-5.6.4.tgz#f6e01b6ed391a505932698ecc0d9e7a99ee60362"
   integrity sha512-TTeZUlCeIHG6527/2goZA6gW5F8Emoc7MrZDC7hhP84aRGvW3TEdTnZR08Ls88YXM1m2SuK42Osw/jSi3uO8gg==
@@ -1209,7 +1209,7 @@
   dependencies:
     "@ethersproject/logger" "^5.6.0"
 
-"@ethersproject/providers@5.6.8", "@ethersproject/providers@^5.4.4", "@ethersproject/providers@^5.6.1", "@ethersproject/providers@^5.6.8":
+"@ethersproject/providers@5.6.8", "@ethersproject/providers@^5.4.4", "@ethersproject/providers@^5.6.1", "@ethersproject/providers@^5.6.2", "@ethersproject/providers@^5.6.8":
   version "5.6.8"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.8.tgz#22e6c57be215ba5545d3a46cf759d265bb4e879d"
   integrity sha512-Wf+CseT/iOJjrGtAOf3ck9zS7AgPmr2fZ3N97r4+YXN3mBePTG2/bJ8DApl9mVwYL+RpYbNxMEkEp4mPGdwG/w==
@@ -2744,7 +2744,7 @@
     bn.js "^5.2.0"
     ethers "^5.4.5"
 
-"@renproject/chains-ethereum@^3.4.2", "@renproject/chains-ethereum@^3.4.4":
+"@renproject/chains-ethereum@^3.4.4":
   version "3.4.4"
   resolved "https://registry.yarnpkg.com/@renproject/chains-ethereum/-/chains-ethereum-3.4.4.tgz#e29fea242cafad8d2ce2d51736371d6ac0fa8462"
   integrity sha512-G4E77axbA5DOBkbTJj/YaH/LhRh4utvJ/TkcUQY6UPRpQkF9dXrhQCEhkpfbjp3POWoLyNjDFA4ls2HiPW3D5w==
@@ -4043,7 +4043,7 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@>=10", "@types/node@>=12.12.47", "@types/node@>=13.7.0", "@types/node@^18.0.0", "@types/node@^18.6.2":
+"@types/node@*", "@types/node@>=10", "@types/node@>=12.12.47", "@types/node@>=13.7.0", "@types/node@^18.6.2":
   version "18.7.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.4.tgz#95baa50846ae112a7376869d49fec23b2506c69d"
   integrity sha512-RzRcw8c0B8LzryWOR4Wj7YOTFXvdYKwvrb6xQQyuDfnlTxwYXGCV5RZ/TEbq5L5kn+w3rliHAUyRcG1RtbmTFg==
@@ -10293,7 +10293,7 @@ ethers@4.0.0-beta.3:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@5.6.9, ethers@^5.0.1, ethers@^5.0.2, ethers@^5.4.3, ethers@^5.4.5, ethers@^5.5.2, ethers@^5.6.1, ethers@^5.6.2, ethers@^5.6.6, ethers@^5.6.7, ethers@^5.6.8, ethers@^5.6.9:
+ethers@5.6.9, ethers@^5.0.1, ethers@^5.0.2, ethers@^5.4.3, ethers@^5.4.5, ethers@^5.5.2, ethers@^5.6.1, ethers@^5.6.2, ethers@^5.6.7, ethers@^5.6.8, ethers@^5.6.9:
   version "5.6.9"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.9.tgz#4e12f8dfcb67b88ae7a78a9519b384c23c576a4d"
   integrity sha512-lMGC2zv9HC5EC+8r429WaWu3uWJUCgUCt8xxKCFqkrFuBDZXDYIdzDUECxzjf2BMF8IVBByY1EBoGSL3RTm8RA==

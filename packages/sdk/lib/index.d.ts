@@ -5,6 +5,5 @@ export * from "@zerodao/compute";
 export * from "@zerodao/logger";
 export * from "@zerodao/p2p";
 import * as utils from "@zerodao/utils";
-export { utils } 
-import deployments = require("@zerodao/protocol");
-export const DEPLOYMENTS = deployments;
+export { utils };
+export declare const DEPLOYMENTS: any;
