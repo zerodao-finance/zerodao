@@ -10,6 +10,7 @@ const buffer_1 = require("buffer");
 const ethers_1 = require("ethers");
 const chains_1 = require("@renproject/chains");
 const ren_1 = __importDefault(require("@renproject/ren"));
+const contracts_1 = require("@ethersproject/contracts");
 const chains_2 = require("@zerodao/chains");
 const common_1 = require("@zerodao/common");
 const Request_1 = require("./Request");
@@ -176,6 +177,15 @@ class TransferRequest extends Request_1.Request {
     async toGatewayAddress() {
         const mint = await this.submitToRenVM();
         return mint.gatewayAddress;
+    }
+    async fallbackMint(signer) {
+        if (!this._queryTxResult)
+            await this.waitForSignature();
+        const { amount: actualAmount, nHash, signature } = this._queryTxResult;
+        const contract = new contracts_1.Contract(this.contractAddress, [
+            "function fallbackMint(address underwriter, address to, address asset, uint256 amount, uint256 actualAmount, uint256 nonce, address module, bytes32 nHash, bytes data, bytes signature)"
+        ], signer);
+        return await contract.fallbackMint(this.contractAddress, this.to, this.asset, this.amount, actualAmount, this.pNonce, this.module, nHash, this.data, signature);
     }
 }
 exports.TransferRequest = TransferRequest;

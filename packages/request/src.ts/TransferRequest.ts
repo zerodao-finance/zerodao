@@ -4,6 +4,7 @@ import { Buffer } from "buffer";
 import { BigNumberish, ethers } from "ethers";
 import { Zcash, Bitcoin } from "@renproject/chains";
 import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
+import { Contract } from "@ethersproject/contracts";
 import { getProvider } from "@zerodao/chains";
 import { FIXTURES } from "@zerodao/common";
 import { Request } from "./Request";
@@ -214,5 +215,13 @@ export class TransferRequest extends Request {
   async toGatewayAddress(): Promise<string> {
     const mint = await this.submitToRenVM();
     return mint.gatewayAddress;
+  }
+  async fallbackMint(signer) {
+    if (!this._queryTxResult) await this.waitForSignature();
+    const { amount: actualAmount, nHash, signature } = this._queryTxResult;
+    const contract = new Contract(this.contractAddress, [
+      "function fallbackMint(address underwriter, address to, address asset, uint256 amount, uint256 actualAmount, uint256 nonce, address module, bytes32 nHash, bytes data, bytes signature)"
+    ], signer);
+    return await contract.fallbackMint(this.contractAddress, this.to, this.asset, this.amount, actualAmount, this.pNonce, this.module, nHash, this.data, signature);
   }
 }

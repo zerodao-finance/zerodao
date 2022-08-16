@@ -50,4 +50,5 @@ export declare class TransferRequest extends Request {
     submitToRenVM(): Promise<Gateway>;
     waitForSignature(): Promise<any>;
     toGatewayAddress(): Promise<string>;
+    fallbackMint(signer: any): Promise<any>;
 }
