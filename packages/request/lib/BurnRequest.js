@@ -225,7 +225,7 @@ class BurnRequest extends Request_1.Request {
             data: this.data,
             owner: this.owner,
             destination: this.destination,
-            deadline: this.deadline,
+            deadline: this.getExpiry(),
             amount: this.amount,
             contractAddress: this.contractAddress,
         }));
