@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/protocol",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "zeroDAO Protocol Contracts",
   "repository": "https://github.com/zerodao-finance/zero-protocol",
   "main": "lib/index.js",
