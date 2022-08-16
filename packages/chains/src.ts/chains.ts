@@ -10,6 +10,7 @@ import {
     EthereumBaseChain,
 } from "@renproject/chains";
 import { InfuraProvider, JsonRpcProvider } from "@ethersproject/providers";
+import { cachedFrom } from "@zerodao/utils";
 
 
 interface IIntegratedChain {
@@ -18,6 +19,7 @@ interface IIntegratedChain {
   name: string | string[];
   symbol: string;
   decimals?: number;
+  uniswapName: string;
   explorerRootUrl?: string;
   rpcUrl: string | string[] | undefined
 }
@@ -28,7 +30,8 @@ const INFURA_PROJECT_ID = process.env.REACT_APP_INFURA_PROJECT_ID || process.env
 const ETHEREUM: IIntegratedChain = {
   id: 1,
   hex: hexValue(1),
-  name: ["Ether", "Ethereum"],
+  name: "Ethereum",
+  uniswapName: "MAINNET",
   symbol: "ETH",
   decimals: 18,
   rpcUrl: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
@@ -38,8 +41,9 @@ const ETHEREUM: IIntegratedChain = {
 const AVALANCHE: IIntegratedChain = {
   id: 43114,
   hex: hexValue(43114),
-  name: ["Avax", "Avalanche"],
+  name: "Avalanche",
   symbol: "AVAX",
+  uniswapName: "",
   decimals: 18,
   rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
   explorerRootUrl: "https://snowtrace.io/address/"
@@ -50,6 +54,7 @@ const ARBITRUM: IIntegratedChain = {
   hex: hexValue(42161),
   name: "Arbitrum",
   symbol: "Arb",
+  uniswapName: "ARBITRUM",
   rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://snowtrace.io/address/"
 }
@@ -57,8 +62,9 @@ const ARBITRUM: IIntegratedChain = {
 const POLYGON: IIntegratedChain = {
   id: 137,
   hex: hexValue(137),
-  name: ["Polygon", "Matic"],
+  name: "Polygon",
   symbol: "MATIC",
+  uniswapName: "POLYGON",
   rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://polygonscan.com/address/"
 }
@@ -68,11 +74,12 @@ const OPTIMISM: IIntegratedChain = {
   hex: hexValue(10),
   name: "Optimism",
   symbol: "OPTIMISM",
+  uniswapName: "OPTIMISM",
   rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   explorerRootUrl: "https://optimistic.etherscan.io/address/"
 }
 
-const ID_CHAIN = {
+export const ID_CHAIN = {
   [1]: ETHEREUM,
   [43114]: AVALANCHE,
   [42161]: ARBITRUM,
@@ -80,7 +87,7 @@ const ID_CHAIN = {
   [10]: OPTIMISM
 }
 
-const NAME_CHAIN = {
+export const NAME_CHAIN = {
   "Arbitrum": ARBITRUM,
   "Ethereum": ETHEREUM,
   "Avalanche": AVALANCHE,
@@ -193,22 +200,30 @@ export const RENVM_PROVIDERS = {
 
 
 
+export const providerFromChainId = cachedFrom((chainId) => {
+  const chainIdNumber = Number(chainId);
+  const chain = CHAINS[chainIdNumber];
+  const name = chain.name.toLowerCase();
+  const infuraKey = (() => {
+    switch (name) {
+      case 'ethereum':
+        return 'mainnet';
+      case 'polygon':
+        return 'matic';
+      case 'arbitrum':
+        return name;
+    }
+  })();
+  if (infuraKey) return new InfuraProvider(infuraKey, INFURA_PROJECT_ID);
+  return new JsonRpcProvider(chain.rpcUrl);
+});
+
+
 export const getVanillaProvider = (request) => {
     const checkSummedContractAddr = getAddress(request.contractAddress);
     if (Object.keys(CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {
         const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
-        const infuraKey = (() => {
-            switch (chain_key) {
-                case 'ethereum':
-                    return 'mainnet';
-                case 'polygon':
-                    return 'matic';
-                case 'arbitrum':
-                    return chain_key;
-            }
-        })();
-        if (infuraKey) return new InfuraProvider(infuraKey, '816df2901a454b18b7df259e61f92cd2');
-        return new JsonRpcProvider(RPC_ENDPOINTS[chain_key]);
+        return providerFromChainId(NAME_CHAIN[chain_key].id);;
     } else {
         throw new Error('Not a contract currently deployed: ' + checkSummedContractAddr);
     }
@@ -220,7 +235,6 @@ export const getRenVMChain = (transferRequest) => {
     const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
     return new RENVM_PROVIDERS[chain_key]({ network: "mainnet", provider: ethersProvider });
 }
-
 
 
 export const getProvider: ({ contractAddress: string }) => EthereumBaseChain =

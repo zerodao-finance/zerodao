@@ -4,32 +4,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZeroP2P = void 0;
-const libp2p = require("libp2p");
-const WS = require("libp2p-websockets");
 const Mplex = require("libp2p-mplex");
-const { NOISE } = require('libp2p-noise');
+const libp2p_noise_1 = require("libp2p-noise");
 const KadDHT = require("libp2p-kad-dht");
 const Bootstrap = require("libp2p-bootstrap");
-const PeerInfo = require("peer-info");
 const PeerId = require("peer-id");
 const GossipSub = require("libp2p-gossipsub");
-const RelayConstants = require('libp2p/src/circuit/constants');
-const { FaultTolerance } = require('libp2p/src/transport-manager');
+const RelayConstants = require("libp2p/src/circuit/constants");
 const WStar = require("libp2p-webrtc-star");
 const isBrowser = require("is-browser");
-const returnOp = (v) => v;
-const ethers = require("ethers");
+const bytes_1 = require("@ethersproject/bytes");
+const solidity_1 = require("@ethersproject/solidity");
 const Libp2p = require("libp2p");
-const wrtc = require("wrtc");
-const cryptico = require('cryptico-js');
 const libp2p_crypto_1 = __importDefault(require("libp2p-crypto"));
-const globalObject = require('the-global-object');
-const { Buffer } = require('buffer');
-globalObject.Buffer = globalObject.Buffer || Buffer;
-const base64url = require('base64url');
-const { mapValues } = require('lodash');
-const { hexlify } = require('@ethersproject/bytes');
-const mapToBuffers = (o) => mapValues(o, (v) => base64url(v.toByteArray && Buffer.from(v.toByteArray()) || Buffer.from(hexlify(v).substr(2), 'hex')));
+const wrtc = require("wrtc");
+const cryptico = require("cryptico-js");
+const globalObject = require("the-global-object");
+const buffer_1 = require("buffer");
+const lodash_1 = require("lodash");
+const base64url = require("base64url");
+const logger_1 = require("@zerodao/logger");
+const buffer_2 = require("@zerodao/buffer");
+const returnOp = (v) => v;
+const logger = (0, logger_1.createLogger)();
+globalObject.Buffer = globalObject.Buffer || buffer_1.Buffer;
+const mapToBuffers = (o) => (0, lodash_1.mapValues)(o, (v) => base64url(v.toByteArray && buffer_1.Buffer.from(v.toByteArray()) || buffer_1.Buffer.from((0, bytes_1.hexlify)(v).substr(2), 'hex')));
 const cryptoFromSeed = async function (seed) {
     const key = mapToBuffers(await cryptico.generateRSAKey(seed, 2048));
     key.dp = key.dmp1;
@@ -38,8 +37,8 @@ const cryptoFromSeed = async function (seed) {
     return libp2p_crypto_1.default.keys.supportedKeys.rsa.unmarshalRsaPrivateKey(new libp2p_crypto_1.default.keys.supportedKeys.rsa.RsaPrivateKey(key, key).marshal());
 };
 const coerceBuffersToHex = (v) => {
-    if (v instanceof Uint8Array || Buffer.isBuffer(v))
-        return ethers.utils.hexlify(v);
+    if (v instanceof Uint8Array || buffer_1.Buffer.isBuffer(v))
+        return (0, bytes_1.hexlify)(v);
     if (Array.isArray(v))
         return v.map(coerceBuffersToHex);
     if (typeof v === "object") {
@@ -52,7 +51,7 @@ const coerceBuffersToHex = (v) => {
 };
 const coerceHexToBuffers = (v) => {
     if (typeof v === "string" && v.substr(0, 2) === "0x")
-        return Buffer.from(v.substr(2), "hex");
+        return buffer_1.Buffer.from(v.substr(2), "hex");
     if (Array.isArray(v))
         return v.map(coerceHexToBuffers);
     if (typeof v === "object") {
@@ -63,11 +62,9 @@ const coerceHexToBuffers = (v) => {
     }
     return v;
 };
-const ln = (v) => ((console.log(v)), v);
 class ZeroP2P extends Libp2p {
     constructor(options) {
         const multiaddr = ZeroP2P.fromPresetOrMultiAddr(options.multiaddr || "mainnet");
-        console.log("listening on", multiaddr);
         super({
             peerId: options.peerId,
             connectionManager: {
@@ -95,7 +92,7 @@ class ZeroP2P extends Libp2p {
             modules: {
                 transport: [WStar],
                 streamMuxer: [Mplex],
-                connEncryption: [NOISE],
+                connEncryption: [libp2p_noise_1.NOISE],
                 pubsub: GossipSub,
                 peerDiscovery: [Bootstrap],
                 dht: KadDHT,
@@ -125,6 +122,8 @@ class ZeroP2P extends Libp2p {
                 },
             },
         });
+        this.logger = logger;
+        this.logger.debug("listening on", multiaddr);
         this.setSigner(options.signer);
     }
     static fromPresetOrMultiAddr(multiaddr) {
@@ -132,7 +131,7 @@ class ZeroP2P extends Libp2p {
     }
     static toMessage(password) {
         return ("/zerop2p/1.0.0/" +
-            ethers.utils.solidityKeccak256(["string"], ["/zerop2p/1.0.0/" + password]));
+            (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
     }
     static async peerIdFromSeed(seed) {
         return await PeerId.createFromPrivKey((await cryptoFromSeed(seed)).bytes);
@@ -158,6 +157,20 @@ class ZeroP2P extends Libp2p {
     setSigner(signer) {
         this.signer = signer;
         this.addressPromise = this.signer.getAddress();
+    }
+    async subscribeKeepers() {
+        await this.pubsub.subscribe("zero.keepers", async (message) => {
+            const { data, from } = message;
+            const { address } = (0, buffer_2.fromBufferToJSON)(data);
+            if (!this._keepers.includes(from)) {
+                this._keepers.push(from);
+                this.emit("keeper:discovery", from);
+            }
+        });
+    }
+    async unsubscribeKeepers() {
+        await this.pubsub.unsubscribe("zero.keepers");
+        this._keepers = [];
     }
 }
 exports.ZeroP2P = ZeroP2P;

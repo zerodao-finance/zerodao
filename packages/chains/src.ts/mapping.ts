@@ -1,10 +1,9 @@
-const { FIXTURES } = require("@zerodao/constants")
+import _ from "lodash";
 import { isAddress, getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits, formatEther } from "@ethersproject/units"
-
-import _ from "lodash";
+import { formatUnits, formatEther } from "@ethersproject/units";
+import { FIXTURES } from "@zerodao/common";
 
 export function selectFixture(chainId) {
     switch (chainId) {
