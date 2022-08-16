@@ -50,12 +50,6 @@ export declare class BurnRequest extends Request {
             salt: string;
             chainId?: undefined;
         } | {
-            name: string;
-            version: string;
-            chainId: any;
-            verifyingContract: any;
-            salt?: undefined;
-        } | {
             name: any;
             version: string;
             chainId: string;

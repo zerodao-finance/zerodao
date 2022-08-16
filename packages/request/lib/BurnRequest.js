@@ -116,14 +116,14 @@ function getPermitStructure(request) {
     ];
 }
 function getDomain(request) {
-    const chainId = this.getChainId();
-    if (isUSDC(this)) {
+    const chainId = request.getChainId();
+    if (isUSDC(request.asset)) {
         if (chainId === 137) {
             return {
                 name: "USD Coin (PoS)",
                 version: "1",
-                verifyingContract: this.asset || constants_1.AddressZero,
-                salt: (0, bytes_1.hexZeroPad)(bignumber_1.BigNumber.from(String(this.getChainId()) || "1").toHexString(), 32),
+                verifyingContract: request.asset || constants_1.AddressZero,
+                salt: (0, bytes_1.hexZeroPad)(bignumber_1.BigNumber.from(String(chainId) || "1").toHexString(), 32),
             };
         }
         if (chainId === 42161) {
@@ -131,21 +131,21 @@ function getDomain(request) {
                 name: "USD Coin (Arb1)",
                 version: "1",
                 chainId: String(chainId),
-                verifyingContract: this.asset || constants_1.AddressZero,
+                verifyingContract: request.asset || constants_1.AddressZero,
             };
         }
         return {
             name: "USD Coin",
             version: "2",
-            chainId: this.getChainId(),
-            verifyingContract: this.asset,
+            chainId: String(chainId),
+            verifyingContract: request.asset,
         };
     }
     return {
-        name: this.tokenName,
+        name: request.tokenName,
         version: "1",
         chainId: String(chainId),
-        verifyingContract: this.asset,
+        verifyingContract: request.asset,
     };
 }
 function getMessage(request) {
