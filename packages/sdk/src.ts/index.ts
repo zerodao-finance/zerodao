@@ -1,6 +1,6 @@
 export * from "@zerodao/common";
 export * from "@zerodao/request";
-export * from "@zerodao/chains";
+export { FIXTURES,  from "@zerodao/chains";
 export * from "@zerodao/compute";
 export * from "@zerodao/logger";
 export * from "@zerodao/p2p";

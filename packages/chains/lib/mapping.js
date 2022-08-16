@@ -4,24 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reverseTokenMapping = exports.tokenMapping = exports.chainIdToNetworkName = exports.getChainIdToName = exports.getChainUnits = exports.selectFixture = void 0;
-const { FIXTURES } = require("@zerodao/constants");
+const lodash_1 = __importDefault(require("lodash"));
 const address_1 = require("@ethersproject/address");
 const constants_1 = require("@ethersproject/constants");
 const bignumber_1 = require("@ethersproject/bignumber");
 const units_1 = require("@ethersproject/units");
-const lodash_1 = __importDefault(require("lodash"));
+const common_1 = require("@zerodao/common");
 function selectFixture(chainId) {
     switch (chainId) {
         case "42161":
-            return FIXTURES.ARBITRUM;
+            return common_1.FIXTURES.ARBITRUM;
         case "43114":
-            return FIXTURES.AVALANCHE;
+            return common_1.FIXTURES.AVALANCHE;
         case "137":
-            return FIXTURES.MATIC;
+            return common_1.FIXTURES.MATIC;
         case "10":
-            return FIXTURES.OPTIMISM;
+            return common_1.FIXTURES.OPTIMISM;
         default:
-            return FIXTURES.ETHEREUM;
+            return common_1.FIXTURES.ETHEREUM;
     }
 }
 exports.selectFixture = selectFixture;
