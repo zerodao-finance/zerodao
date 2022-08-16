@@ -16,5 +16,8 @@
   "devDependencies": {
     "@types/node": "^18.6.2"
   },
-  "gitHead": "37fda294fbda1515d1c3319af263043c0a104998"
+  "gitHead": "2da88969a46db075dcfdf1a08a383707db863601",
+  "publishConfig": {
+    "access": "public"
+  }
 }
