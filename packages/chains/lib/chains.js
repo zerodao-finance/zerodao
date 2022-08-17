@@ -199,6 +199,10 @@ const getProvider = (transferRequest) => {
             network: "mainnet",
             provider: ethersProvider
         });
+    return new exports.RENVM_PROVIDERS[chain_key]({
+        provider: ethersProvider,
+        network: "mainnet",
+    });
 };
 exports.getProvider = getProvider;
 //# sourceMappingURL=chains.js.map

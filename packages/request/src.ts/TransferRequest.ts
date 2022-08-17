@@ -134,7 +134,7 @@ export class TransferRequest extends Request {
       )
     );
     return new (RenVMChain as any)({
-      network: renVMChainToAssetName(RenVMChain),
+      network: 'mainnet'
     });
   }
   _getRemoteChainName() {

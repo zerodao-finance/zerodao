@@ -251,4 +251,8 @@ export const getProvider: ({ contractAddress: string }) => EthereumBaseChain =
                 network: "mainnet",
                 provider: ethersProvider
             });
+        return new RENVM_PROVIDERS[chain_key]({
+          provider: ethersProvider,
+          network: "mainnet",
+        });
     };

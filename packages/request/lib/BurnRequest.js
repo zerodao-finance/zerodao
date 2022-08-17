@@ -137,7 +137,7 @@ function getDomain(request) {
         }
         return {
             name: "USD Coin",
-            version: "2",
+            version: chainId === 43114 ? "1" : "2",
             chainId: String(chainId),
             verifyingContract: request.asset,
         };
@@ -150,7 +150,7 @@ function getDomain(request) {
     };
 }
 function getMessage(request) {
-    if (isUSDC(request.asset)) {
+    if (isUSDC(request.asset) && request.getChainId() !== 43114) {
         return {
             owner: request.owner,
             spender: request.contractAddress,

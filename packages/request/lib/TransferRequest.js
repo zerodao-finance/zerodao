@@ -99,7 +99,7 @@ class TransferRequest extends Request_1.Request {
             ethers_1.ethers.utils.getAddress(address) ===
                 ethers_1.ethers.utils.getAddress(this.asset)))));
         return new RenVMChain({
-            network: renVMChainToAssetName(RenVMChain),
+            network: 'mainnet'
         });
     }
     _getRemoteChainName() {
