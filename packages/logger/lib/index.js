@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logger = exports.createLogger = void 0;
+const util_1 = __importDefault(require("util"));
 require("setimmediate");
 const winston_1 = require("winston");
 Object.defineProperty(exports, "Logger", { enumerable: true, get: function () { return winston_1.Logger; } });
@@ -24,19 +28,20 @@ const customColors = {
     silly: 'magenta',
     custom: 'blue',
 };
-const createLogger = (userType) => {
+const customFormatter = ({ level, message, label, timestamp }) => {
+    return `${label}|${timestamp}|${level}|${typeof message === 'string' ? message : util_1.default.inspect(message, { colors: true, depth: 15 })}`;
+};
+const createLogger = (proc) => {
     (0, winston_1.addColors)(customColors);
     const logger = (0, winston_1.createLogger)({
         defaultMeta: {
-            service: userType ?? "zero.user",
+            service: proc || 'zerodao'
         },
         levels: customLevels,
         transports: [new winston_1.transports.Console({
                 level: 'verbose',
-                format: winston_1.format.combine(winston_1.format.colorize({
-                    all: true,
-                }), winston_1.format.splat(), winston_1.format.simple())
-            })],
+                format: winston_1.format.combine(winston_1.format.label({ label: proc }), winston_1.format.timestamp(), winston_1.format.printf(customFormatter))
+            })]
     });
     return logger;
 };
