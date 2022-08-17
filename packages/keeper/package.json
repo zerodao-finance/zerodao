@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/keeper",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "zerop2p redis backed keeper process in kubernetes",
   "main": "lib/keeper.js",
   "repository": "https://github.com/zerodao-finance/zero-keeper",
