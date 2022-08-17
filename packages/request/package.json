@@ -19,6 +19,7 @@
     "@ethersproject/solidity": "^5.6.1",
     "@renproject/chains": "^3.4.2",
     "@renproject/chains-ethereum": "^2.5.13",
+    "@renproject/chains-solana": "^3.4.4",
     "@renproject/interfaces": "^2.6.0",
     "@renproject/ren": "^3.4.2",
     "@zerodao/buffer": "^0.3.3",
