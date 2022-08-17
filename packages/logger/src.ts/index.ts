@@ -38,7 +38,7 @@ const createLogger = (userType?: UserTypes) => {
     },
     levels: customLevels,
     transports: [new transports.Console({
-      level: 'custom',
+      level: 'verbose',
       format: format.combine(
         format.colorize({
           all:true,

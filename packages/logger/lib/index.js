@@ -32,7 +32,7 @@ const createLogger = (userType) => {
         },
         levels: customLevels,
         transports: [new winston_1.transports.Console({
-                level: 'custom',
+                level: 'verbose',
                 format: winston_1.format.combine(winston_1.format.colorize({
                     all: true,
                 }), winston_1.format.splat(), winston_1.format.simple())

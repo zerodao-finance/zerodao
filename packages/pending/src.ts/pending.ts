@@ -8,7 +8,7 @@ import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
 import { Redis } from "ioredis";
 import { hexlify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
-import constants from "@ethersproject/constants";
+import { AddressZero } from "@ethersproject/constants";
 import { TransferRequestV2, TransferRequest } from "@zerodao/request";
 import { Logger } from "@zerodao/logger";
 const { getUTXOs } = BTCHandler;
@@ -18,7 +18,7 @@ const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === '0x' ? Buffer.fro
 
 const cache = {};
 const VAULT_DEPLOYMENTS = {
-  [ constants.AddressZero ]: 1
+  [ AddressZero ]: 1
 };
 const getGateway = async (request) => {
   const { nonce } = request;

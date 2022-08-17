@@ -10,14 +10,14 @@ const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
 const ZECHandler_1 = require("send-crypto/build/main/handlers/ZEC/ZECHandler");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
-const constants_1 = __importDefault(require("@ethersproject/constants"));
+const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
 const { getUTXOs } = BTCHandler_1.BTCHandler;
 const { getUTXOs: getZcashUTXOs } = ZECHandler_1.ZECHandler;
 const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === '0x' ? buffer_1.Buffer.from((0, bytes_1.hexlify)(hex).substr(2), 'hex').toString('utf8').substr(0, 1) === 't' : hex.substr(0, 2) === 'zs' || hex.substr(0, 1) === 't')(buffer_1.Buffer.isBuffer(hex) ? '0x' + hex.toString('hex') : hex);
 const cache = {};
 const VAULT_DEPLOYMENTS = {
-    [constants_1.default.AddressZero]: 1
+    [constants_1.AddressZero]: 1
 };
 const getGateway = async (request) => {
     const { nonce } = request;
