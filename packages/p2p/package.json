@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/p2p",
-  "version": "0.3.7",
+  "version": "0.3.9",
   "description": "zerop2p implementation",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -15,7 +15,7 @@
     "@ethersproject/bytes": "^5.6.1",
     "@noble/ed25519": "^1.6.0",
     "@zerodao/buffer": "^0.3.3",
-    "@zerodao/logger": "^0.3.7",
+    "@zerodao/logger": "^0.3.9",
     "base64url": "^3.0.1",
     "buffer": "^6.0.3",
     "cryptico-js": "^1.1.0",
