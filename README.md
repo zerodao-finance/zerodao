@@ -1,149 +1,119 @@
-# zero-protocol
+# zerodao
 
-Project repository for the complete zeroDAO software library and production contracts.
+Project repository for the zeroDAO codebase, including the production contracts.
 
-## Usage
+## SDK
 
-In a frontend application this library can be used to initialize a connection to the libp2p network consisting of zeroDAO keepers and users. To run a cross-chain script, it is necessary to construct a `ZeroUser` instance, connect it to libp2p, then publish signed `TransferRequest` objects using its API. A TransferRequest is meant to be extended depending on the API of the underwriter contract that is meant to forward it. It is acceptable to use the TrivialUnderwriter contract provided with this repository to initialize an underwriter that delegates keeper permission to its owner, and has no special behavior. The SDK includes a `TrivialUnderwriterTransferRequest` subclass of the `TransferRequest` class which exposes `loan(signer)` `repay(signer)` and `fallbackMint(signer)` async methods to be used by an instance of `ZeroKeeper`
-
-The complete API specification is a WIP.
-
-### ZeroUser
-
-`async ZeroUser#conn.start()`
-
-Connects to libp2p. Must be called to begin discovering keepers or publishing.
-
-(Will be deprecated in future releases -- Deprecation will not be a breaking change)
-
-Example: 
-
-```js
-import { createZeroUser, createZeroConnection } from "zero-protocol/dist/lib/zero";
-const zeroUser = createZeroUser(await createZeroConnection('/dns4/lourdehaufen.dynv6.net/tcp/443/wss/p2p-webrtc-star/'));
-await zeroUser.conn.start();
+To install to a browser application
+```sh
+yarn add @zerodao/sdk
 ```
 
+The primary exports encountered in the library can be accessed and used as follows:
 
-`async function ZeroUser#subscribeKeepers()`
+### ZeroP2P
 
-Begins listening for keepers to be discovered on the libp2p socket.
-
-Example:
+A ZeroP2P instance can be used as an argument to Request#publish to broadcast any one of the derived Request classes
 
 ```js
 
-zeroUser.subscribeKeepers();
-zeroUser.on('keeper', (address) => { console.log('keeper discovered with address ' + address) });
+import { ZeroP2P } from "@zerodao/sdk";
+import { Wallet } from "@ethersproject/wallet";
+
+(async () => {
+  const signer = Wallet.createRandom();
+  const peer = await ZeroP2P.fromPassword({
+    signer,
+    multiaddr: 'mainnet',
+    password: await signer.getAddress()
+  }); // deterministic libp2p key generation -- only run one peer with the same multiaddr
+  await peer.start();
+  await peer.subscribeKeepers(); // keepers announce themselves and their multiaddr is stored in the peer._keepers Array
+})().catch(console.error);
 
 ```
 
+### Request
 
-
-`async function ZeroUser#publishTransferRequest(transferRequest)`
-
-
-Publishes a TransferRequest object. Ensure that you have called `await transferRequest.sign(signer)`
+Abstract class used to derive different types of broadcasts in the protocol. Currently, only TransferRequest and BurnRequest are used. Cannot be instantiated.
 
 ```js
 
-await zeroUser.publishTransferRequest(transferRequest)
+import { CONTROLLER_DEPLOYMENTS, Request } from "@zerodao/sdk";
+
+const ethereumControllerAddress = Object.keys(CONTROLLER_DEPLOYMENTS).find((contractAddress) => CONTROLLER_DEPLOYMENTS[contractAddress] === 'Ethereum');
+
+Request.addressToChainId(ethereumControllerAddress) // 1
 
 ```
-
-
 
 ### TransferRequest
 
+Primary class for bridging BTC or ZEC to a host EVM network. Accepts a simple configuration object as an input to its constructor and exposes some methods useful for broadcasting to zeroDAO keepers.
 
-A TransferRequest object is the primary object through which the client will script asset transfers.
+```js
+import { FIXTURES, DEPLOYMENTS, TransferRequest, ZeroP2P } from "@zerodao/sdk";
+import { Wallet } from "@ethersproject/wallet";
+import { parseUnits } from "@ethersproject/units";
+import { AddressZero } from "@ethersproject/constants";
+import { AbiCoder } from "@ethersproject/abi";
+const coder = new AbiCoder();
 
-`TransferRequest.prototype.constructor`
+(async () => {
+  const wallet = Wallet.createRandom(); // get a signer object any way necessary
+  const peer = await ZeroP2P.fromPassword({
+    signer,
+    multiaddr: 'mainnet',
+    password: await signer.getAddress()
+  });
+  const chainId = 1;
+  const contractAddress = DEPLOYMENTS[chainId].mainnet.contracts.BadgerBridgeZeroController.address;
+  const request = new TransferRequest({
+    asset: FIXTURES.ETHEREUM.renBTC, // or use renZEC on mainnet
+    amount: parseUnits('1', 18) // 1 ETH
+    module: AddressZero, // bridge to ETH
+    to: await signer.getAddress(),
+    data: coder.encode(['uint256'], [ getMinOutForTrade() ]), // ETH module accepts minOut for swapping to ETH, to prevent slippage
+    underwriter: contractAddress,
+    contractAddress
+  });
+  console.log(await request.toGatewayAddress());
+  await request.publish(peer).toPromise();
+})().catch(console.error);
+    
+### BurnRequest
+
+Primary class for releasing funds as BTC or ZEC 
 
 ```js
 
-import deployments from 'zero-protocol/deployments/deployments';
+import { FIXTURES, DEPLOYMENTS, TransferRequest, ZeroP2P } from "@zerodao/sdk";
+import { Wallet } from "@ethersproject/wallet";
+import { parseUnits } from "@ethersproject/units";
+import { MaxUint256 } from "@ethersproject/constants";
+import { AbiCoder } from "@ethersproject/abi";
+const coder = new AbiCoder();
 
-const CHAIN_ID = 42161; // Arbitrum
-const NETWORK_NAME = 'arbitrum';
-const IS_TESTNET = false;
-
-const transferRequest = new TransferRequest({
-  amount: ethers.utils.parseUnits('0.0015', 8), // transfer 0.0015 BTC
-  asset: RENBTC_ADDRESS, // can be any RenVM asset, not just renBTC
-  module: deployments[CHAIN_ID][NETWORK_NAME].contracts.ArbitrumConvert.address, // use the ArbitrumConvert module from zero-protocol/contracts/modules/ArbitrumConvert.sol
-  nonce: ethers.utils.hexlify(ethers.utils.randomBytes(32)),
-  pNonce: ethers.utils.hexlify(ethers.utils.randomBytes(32)), // nonce and pNonce must be unique every time, there is no special meaning to them,
-  data: '0x' // arbitrary data passed as an argument to the module
-});
-
-const mint = await transferRequest.submitToRenVM(IS_TESTNET); // returns the same object returned by ren-js lockAndMint, no side effects if both keeper and user submit
-console.log(mint.depositAddress); // logs the BTC address to which someone must send the EXACT BTC specified in the TransferRequest
-const deposit = await new Promise((resolve) => mint.on('deposit', resolve));
-
-
-const confirmed = await deposit.confirmed();
-confirmed.on('deposit', (currentConfirmations, totalNeeded) => {
-  console.log(currentConfirmations + '/' + totalNeeded + ' confirmations seen');
-});
-
-const signed = await deposit.signed();
-signed.on('status', (status) => {
-  if (status === 'signed') console.log('RenVM has produced signature');
-});
-
-
-```
-
-
-`function TransferRequest#fallbackMint(signer)`
-
-Use this function only if a keeper has not successfully initiated a loan associated with the TransferRequest but confirmations have been seen by RenVM and there is a signature. The user who signed the TransferRequest will receive RenBTC and no scripting will occur.
-
-Example:
-
-```js
-
-await transferRequest.fallbackMint(signer);
-
-
-```
-
-
-### Development Environment
-
-For development, you can construct a mock keeper with fixtures provided in the SDK and it will not require an active libp2p connection. A helper function to mutate the runtime environment hosting the zeroDAO SDK is provided and will overwrite the prototype methods of the ZeroUser and TransferRequest classes so a ZeroUser will always communicate publishTransferRequest calls to all mock keepers in the environment, instead of publishing to libp2p. TransferRequest methods are overridden to simulate a rapidly confirming cross-chain transfer, without needing to send live funds.
-
-Currently supported networks are Polygon and Arbitrum.
-
-
-To use these mocks, it is necessary to first run either
-
-```shell
-
-yarn node:arbitrum
-
-```
-
-Or
-
-```shell
-
-yarn node:polygon
-
-```
-
-Depending on the network you are targeting.
-
-This will initialize a hardhat node on http://localhost:8545 with overrides in the hardhat VM that will mock RenVM gateway contracts in the forked network.
-
-In the client application, to enable mocks you use the code
-
-```js
-
-import { createMockKeeper, enableGlobalMockRuntime } from "zero-protocol/lib/mock";
-
-await createMockKeeper();
-await enableGlobalMockRuntime()
+(async () => {
+  const signer = Wallet.createRandom(); // get a signer object any way necessary
+  const peer = await ZeroP2P.fromPassword({
+    signer,
+    multiaddr: 'mainnet',
+    password: await signer.getAddress()
+  });
+  const chainId = 1;
+  const contractAddress = DEPLOYMENTS[chainId].mainnet.contracts.BadgerBridgeZeroController.address;
+  const request = new BurnRequest({
+    asset: FIXTURES.ETHEREUM.WBTC, // or use renZEC on mainnet
+    owner: await signer.getAddress(),
+    amount: parseUnits('1', 8), // 1 WBTC
+    data: coder.encode(['uint256'], [ getMinOutForTrade() ]), // WBTC module accepts minOut for swapping to WBTC, to prevent slippage
+    contractAddress,
+    deadline: MaxUint256 // set an expiry time for ERC20Permit message
+  });
+  if (await request.needsApproval()) await (await request.approve()).wait();
+  await request.sign(signer);
+  await request.publish(peer).toPromise();
+})().catch(console.error);
 
 ```
