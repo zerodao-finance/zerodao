@@ -3,6 +3,7 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "module": "commonjs",
+      "resolveJsonModule": true,
       "moduleResolution": "node",
       "target": "es2020",
       "noImplicitAny": false,

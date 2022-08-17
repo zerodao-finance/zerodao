@@ -1,3 +1,3 @@
 'use strict';
 
-require('../lib/index').runKeeper();
+require('../lib').runKeeper();

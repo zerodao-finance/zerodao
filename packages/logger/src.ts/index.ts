@@ -1,3 +1,4 @@
+import util from 'util';
 import 'setimmediate';
 import {
   createLogger as createWinstonLogger,
@@ -6,7 +7,6 @@ import {
   format,
   addColors
 } from "winston";
-import { UserTypes } from "./types";
 
 const customLevels = {
   error: 0,
@@ -30,23 +30,25 @@ const customColors = {
   custom: 'blue',
 }
 
-const createLogger = (userType?: UserTypes) => {
+const customFormatter = ({ level, message, label, timestamp }) => {
+  return `${label}|${timestamp}|${level}|${typeof message === 'string' ? message : util.inspect(message, {colors: true, depth: 15 })}`;
+};
+
+const createLogger = (proc?: string) => {
   addColors(customColors);
   const logger = createWinstonLogger({
     defaultMeta: {
-      service: userType ?? "zero.user",
+     service: proc || 'zerodao'
     },
     levels: customLevels,
     transports: [new transports.Console({
-      level: 'custom',
+      level: 'verbose',
       format: format.combine(
-        format.colorize({
-          all:true,
-        }),
-        format.splat(),
-        format.simple(),
+        format.label({ label: proc }),
+	format.timestamp(),
+	format.printf(customFormatter)
       )
-      })],
+    })]
   });
 
   return logger;

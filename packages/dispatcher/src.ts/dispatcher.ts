@@ -1,13 +1,14 @@
 'use strict';
 
 import util from "util";
-import gasnow from "ethers-gasnow";
 import { Redis } from "ioredis";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { BigNumberish } from "@ethersproject/bignumber";
-import polygongastracker from "ethers-polygongastracker";
+import polygongastracker = require("ethers-polygongastracker");
 import { makePrivateSigner } from "ethers-flashbots";
 import { Logger, createLogger } from "@zerodao/logger";
+import { Signer } from "@ethersproject/abstract-signer";
+const gasnow = require("ethers-gasnow");
 
 const packageJson = require('../package');
 
@@ -50,6 +51,12 @@ export class Dispatcher {
   public logger: Logger;
   public signer: Signer;
   public redis: Redis;
+  public signers: {
+    [chainId: string]: Signer
+  };
+  public providers: {
+    [chainId: string]: Provider
+  };
   static RPC_ENDPOINTS = RPC_ENDPOINTS;
   static ERROR_TIMEOUT = ERROR_TIMEOUT;
   constructor({
@@ -65,13 +72,13 @@ export class Dispatcher {
       signer
     });
     if (!this.logger) this.logger = createLogger(packageJson.name);
-    this.providers = Object.entries(this.constructor.RPC_ENDPOINTS).reduce((r, [ key, value ]) => {
-      const provider = r[key] = new JsonRpcProvider(value);
-      if (key == 1) provider.getGasPrice = gasnow.createGetGasPrice('rapid');
-      else if (key == 137) fixGetFeeData(provider);
+    this.providers = Object.entries((this.constructor as any).RPC_ENDPOINTS).reduce((r, [ key, value ]) => {
+      const provider = r[key] = new JsonRpcProvider(value as any);
+      if (Number(key) === 1) provider.getGasPrice = gasnow.createGetGasPrice('rapid');
+      else if (Number(key) === 137) fixGetFeeData(provider);
       return r;
     }, {});
-    this.signers = Object.entries(this.constructor.RPC_ENDPOINTS).reduce((r, [ key, value ]) => {
+    this.signers = Object.entries((this.constructor as any).RPC_ENDPOINTS).reduce((r, [ key, value ]) => {
       r[key] = (NO_FLASHBOTS[key] ? (v) => v : (v) => makePrivateSigner({ signer: v, getMaxBlockNumber: async (signer) => ((await signer.provider.getBlockNumber()) + 10000) }))(signer.connect(this.makeProvider(key)));
       return r;
     }, {});

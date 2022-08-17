@@ -25,10 +25,11 @@ import { Signer } from "@ethersproject/abstract-signer";
 
 import { createLogger, Logger } from "@zerodao/logger";
 import { fromBufferToJSON } from "@zerodao/buffer";
+import packageJson = require('../package.json');
 
 
 const returnOp = (v) => v;
-const logger = createLogger();
+const logger = createLogger(packageJson.name);
 
 
 globalObject.Buffer = globalObject.Buffer || Buffer;

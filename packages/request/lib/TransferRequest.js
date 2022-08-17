@@ -142,7 +142,7 @@ class TransferRequest extends Request_1.Request {
             return this._mint;
         const eth = (0, chains_2.getProvider)(this);
         const renVM = this._getRenVM();
-        const result = renVM.gateway({
+        const result = renVM.withChains(eth).gateway({
             asset: this._getRemoteChainName(),
             from: this._getRemoteChain().GatewayAddress(),
             to: eth.Contract(this._getContractParams()),
