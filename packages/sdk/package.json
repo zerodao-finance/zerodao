@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/sdk",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -15,10 +15,10 @@
     "@zerodao/chains": "^0.3.5",
     "@zerodao/common": "^0.3.3",
     "@zerodao/compute": "^0.3.5",
-    "@zerodao/logger": "^0.3.5",
-    "@zerodao/p2p": "^0.3.5",
+    "@zerodao/logger": "^0.3.6",
+    "@zerodao/p2p": "^0.3.6",
     "@zerodao/protocol": "^0.3.3",
-    "@zerodao/request": "^0.3.5",
+    "@zerodao/request": "^0.3.6",
     "@zerodao/utils": "^0.3.4",
     "typescript": "^4.7.4"
   },
