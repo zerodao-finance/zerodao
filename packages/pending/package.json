@@ -24,7 +24,7 @@
     "ioredis": "^5.0.5",
     "send-crypto": "^0.2.37"
   },
-  "gitHead": "252cda13aab56d411cf4f02b7f45cdb14ee1af58",
+  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
   "publishConfig": {
     "access": "public"
   }
