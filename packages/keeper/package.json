@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/keeper",
-  "version": "0.3.5",
+  "version": "0.3.8",
   "description": "zerop2p redis backed keeper process in kubernetes",
   "main": "lib/keeper.js",
   "repository": "https://github.com/zerodao-finance/zero-keeper",
@@ -19,10 +19,10 @@
     "@ethersproject/providers": "^5.6.2",
     "@ethersproject/wallet": "^5.6.2",
     "@noble/ed25519": "^1.6.0",
-    "@zerodao/chains": "^0.3.5",
-    "@zerodao/logger": "^0.3.5",
-    "@zerodao/p2p": "^0.3.5",
-    "@zerodao/request": "^0.3.5",
+    "@zerodao/chains": "^0.3.8",
+    "@zerodao/logger": "^0.3.7",
+    "@zerodao/p2p": "^0.3.7",
+    "@zerodao/request": "^0.3.8",
     "base64url": "^3.0.1",
     "buffer": "^6.0.3",
     "cryptico-js": "^1.1.0",
@@ -49,7 +49,7 @@
     "cross-env": "^7.0.3",
     "ioredis": "^5.0.4"
   },
-  "gitHead": "252cda13aab56d411cf4f02b7f45cdb14ee1af58",
+  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
   "publishConfig": {
     "access": "public"
   }

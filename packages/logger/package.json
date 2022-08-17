@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/logger",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "description": "zerodao SDK logger exports",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -12,6 +12,7 @@
     "format": "yarn prettier --write ."
   },
   "dependencies": {
+    "path": "^0.12.7",
     "setimmediate": "^1.0.5",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
@@ -21,7 +22,7 @@
     "cross-env": "^7.0.3",
     "prettier": "^2.7.1"
   },
-  "gitHead": "252cda13aab56d411cf4f02b7f45cdb14ee1af58",
+  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
   "publishConfig": {
     "access": "public"
   }
