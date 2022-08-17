@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/pending",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "scripts": {
     "start": "cross-env node bin/pending",
     "build": "tsc"
@@ -19,8 +19,8 @@
     "@ethersproject/address": "^5.6.1",
     "@ethersproject/bytes": "^5.6.1",
     "@ethersproject/constants": "^5.6.1",
-    "@zerodao/logger": "^0.3.6",
-    "@zerodao/request": "^0.3.6",
+    "@zerodao/logger": "^0.3.7",
+    "@zerodao/request": "^0.3.7",
     "ioredis": "^5.0.5",
     "send-crypto": "^0.2.37"
   },
