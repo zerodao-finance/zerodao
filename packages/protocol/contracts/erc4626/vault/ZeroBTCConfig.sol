@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 
 import "./ZeroBTCCache.sol";
 import "../utils/Math.sol";
+import { IStrategy } from "../../interfaces/IStrategy.sol";
 
 abstract contract ZeroBTCConfig is ZeroBTCCache {
   using ModuleStateCoder for ModuleState;
@@ -99,5 +100,14 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
 
   function removeModule(address module) external onlyGovernance nonReentrant {
     _moduleFees[module] = DefaultModuleState;
+  }
+
+  function callStrategy() external onlyGovernance {
+    (GlobalState state, ) = _getUpdatedGlobalState();
+    (bool success, bytes memory data) = _strategy.delegatecall(
+      abi.encodeWithSelector(IStrategy.manage.selector, state)
+    );
+    (state) = abi.decode(data, (GlobalState));
+    _state = state;
   }
 }
