@@ -14,8 +14,8 @@
   "dependencies": {
     "@ethersproject/bytes": "^5.6.1",
     "@noble/ed25519": "^1.6.0",
-    "@zerodao/logger": "^0.3.4",
     "@zerodao/buffer": "^0.3.3",
+    "@zerodao/logger": "^0.3.5",
     "base64url": "^3.0.1",
     "buffer": "^6.0.3",
     "cryptico-js": "^1.1.0",
