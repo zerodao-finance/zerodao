@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeCompute = exports.makeQuoter = exports.applyRatio = exports.keeperReward = void 0;
+exports.makeCompute = exports.makeQuoter = exports.getChainNameFixture = exports.applyRatio = exports.keeperReward = void 0;
 const units_1 = require("@ethersproject/units");
 const solidity_1 = require("@ethersproject/solidity");
 const contracts_1 = require("@ethersproject/contracts");
@@ -37,10 +37,19 @@ function returnChainDetails(CHAINID) {
         chainId: Number(CHAINID)
     };
 }
+const getChainNameFixture = (chainName) => {
+    switch (chainName) {
+        case 'POLYGON':
+            return 'MATIC';
+        default:
+            return chainName;
+    }
+};
+exports.getChainNameFixture = getChainNameFixture;
 function makeQuoter(CHAIN = "1", provider) {
     const chain = returnChainDetails(CHAIN);
     console.log(chain);
-    const renCrv = new contracts_1.Contract(common_1.FIXTURES[chain.name]["Curve_Ren"], [
+    const renCrv = new contracts_1.Contract(common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)]["Curve_Ren"], [
         "function get_dy(int128, int128, uint256) view returns (uint256)",
         "function get_dy_underlying(int128, int128, uint256) view returns (uint256)",
     ], chain.provider);
@@ -132,11 +141,11 @@ function makeQuoter(CHAIN = "1", provider) {
             let output = null;
             try {
                 output = await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address", "uint24", "address"], [
-                    common_1.FIXTURES[chain.name].USDC,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].USDC,
                     500,
-                    common_1.FIXTURES[chain.name].wETH,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].wETH,
                     500,
-                    common_1.FIXTURES[chain.name].WBTC,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].WBTC,
                 ]), amount);
             }
             catch (e) {
@@ -156,11 +165,11 @@ function makeQuoter(CHAIN = "1", provider) {
             else {
                 const wbtcOut = await getWbtcQuote(true, amount);
                 return await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address", "uint24", "address"], [
-                    common_1.FIXTURES[chain.name].WBTC,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].WBTC,
                     500,
-                    common_1.FIXTURES[chain.name].wETH,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].wETH,
                     500,
-                    common_1.FIXTURES[chain.name].USDC,
+                    common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].USDC,
                 ]), wbtcOut);
             }
         }
@@ -181,22 +190,23 @@ function makeQuoter(CHAIN = "1", provider) {
             return await getAVAXQuote(false, amount);
         }
         else {
+            const convertedFixtureName = (0, exports.getChainNameFixture)(chain.name);
             const path = [
-                common_1.FIXTURES[chain.name].wNative,
+                common_1.FIXTURES[convertedFixtureName].wNative,
                 500,
-                common_1.FIXTURES[chain.name].wETH,
+                common_1.FIXTURES[convertedFixtureName].wETH,
                 500,
-                common_1.FIXTURES[chain.name].WBTC,
+                common_1.FIXTURES[convertedFixtureName].WBTC,
             ];
-            path.splice(2, chain.name !== "MATIC" ? 2 : 0);
-            const output = await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"].concat(chain.name === "MATIC" ? ["uint24", "address"] : []), path), amount);
+            path.splice(2, convertedFixtureName !== "MATIC" ? 2 : 0);
+            const output = await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"].concat(convertedFixtureName === "MATIC" ? ["uint24", "address"] : []), path), amount);
             const result = await getWbtcQuote(false, output);
             return result;
         }
     };
     // only for matic
     const wNativeToUSDC = async (amount) => {
-        return await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"], [common_1.FIXTURES[chain.name].wNative, 500, common_1.FIXTURES[chain.name].USDC]), amount);
+        return await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"], [common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].wNative, 500, common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].USDC]), amount);
     };
     const ETHToRenZEC = async (amount) => {
         return await getRenZECETHQuote(false, amount);
@@ -210,15 +220,15 @@ function makeQuoter(CHAIN = "1", provider) {
         }
         else {
             const path = [
-                common_1.FIXTURES[chain.name].WBTC,
+                common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].WBTC,
                 500,
-                common_1.FIXTURES[chain.name].wETH,
+                common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].wETH,
                 500,
-                common_1.FIXTURES[chain.name].wNative,
+                common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)].wNative,
             ];
-            path.splice(2, chain.name !== "MATIC" ? 2 : 0);
+            path.splice(2, (0, exports.getChainNameFixture)(chain.name) !== "MATIC" ? 2 : 0);
             const wbtcOut = await getWbtcQuote(true, amount);
-            const quote = await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"].concat(chain.name === "MATIC" ? ["uint24", "address"] : []), path), wbtcOut);
+            const quote = await quoter.quoteExactInput((0, solidity_1.pack)(["address", "uint24", "address"].concat((0, exports.getChainNameFixture)(chain.name) === "MATIC" ? ["uint24", "address"] : []), path), wbtcOut);
             return quote;
         }
     };
@@ -289,11 +299,11 @@ function makeCompute(CHAIN = "1") {
             }
         }
         switch (module) {
-            case common_1.FIXTURES[quotes.chain.name].USDC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC:
                 return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
-            case common_1.FIXTURES[quotes.chain.name].WBTC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].WBTC:
                 return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
-            case common_1.FIXTURES[quotes.chain.name].renBTC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].renBTC:
                 return await deductMintFee(amount, primaryToken);
             case constants_1.AddressZero:
                 return await quotes.renBTCToETH(await deductMintFee(amount, primaryToken));
