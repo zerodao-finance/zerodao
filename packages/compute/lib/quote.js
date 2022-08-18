@@ -75,6 +75,18 @@ function makeQuoter(CHAIN = "1", provider) {
             return (0, units_1.parseUnits)(price, 8);
         }
     };
+    // direction ? renbtc -> usdt : usdt -> renbtc
+    const getUSDTQuote = async (direction, amount) => {
+        const tricrypto = new contracts_1.Contract(common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)]["tricrypto"], ["function get_dy(uint256, uint256, uint256) view returns (uint256)"], chain.provider);
+        if (direction) {
+            const wbtcOut = await getWbtcQuote(direction, amount);
+            return await tricrypto.get_dy(1, 0, amount);
+        }
+        else {
+            const wbtcAmount = await tricrypto.get_dy(0, 1, amount);
+            return await getWbtcQuote(direction, wbtcAmount);
+        }
+    };
     // direction ? renbtc -> avax : avax -> renbtc
     const getAVAXQuote = async (direction, amount) => {
         const WBTC = new JOE.Token(JOE.ChainId.AVALANCHE, common_1.FIXTURES.AVALANCHE.WBTC, 8);
@@ -245,6 +257,7 @@ function makeQuoter(CHAIN = "1", provider) {
         toUSDC,
         ETHtoRenBTC,
         chain,
+        getUSDTQuote,
     };
 }
 exports.makeQuoter = makeQuoter;
@@ -305,6 +318,8 @@ function makeCompute(CHAIN = "1") {
                 return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].renBTC:
                 return await deductMintFee(amount, primaryToken);
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDT:
+                return await quotes.getUSDTQuote(true, await deductMintFee(amount, primaryToken));
             case constants_1.AddressZero:
                 return await quotes.renBTCToETH(await deductMintFee(amount, primaryToken));
             default:
@@ -356,12 +371,14 @@ function makeCompute(CHAIN = "1") {
             }
         }
         switch (asset) {
-            case common_1.FIXTURES[quotes.chain.name].WBTC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].WBTC:
                 return await quotes.getWbtcQuote(false, amount);
-            case common_1.FIXTURES[quotes.chain.name].renBTC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].renBTC:
                 return amount;
-            case common_1.FIXTURES[quotes.chain.name].USDC:
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC:
                 return await quotes.fromUSDC(amount);
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDT:
+                return await quotes.getUSDTQuote(false, amount);
             case constants_1.AddressZero:
                 return await quotes.ETHtoRenBTC(amount);
             default:

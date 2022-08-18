@@ -20,6 +20,7 @@ export declare function makeQuoter(CHAIN?: string, provider?: any): {
         uniswapName: any;
         chainId: number;
     };
+    getUSDTQuote: (direction: any, amount: any) => Promise<any>;
 };
 export declare function makeCompute(CHAIN?: string): {
     computeTransferOutput: ({ module, amount, primaryToken }: {

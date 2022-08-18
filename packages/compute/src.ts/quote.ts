@@ -106,6 +106,22 @@ export function makeQuoter(CHAIN = "1", provider?) {
     }
   };
 
+  // direction ? renbtc -> usdt : usdt -> renbtc
+  const getUSDTQuote = async (direction, amount) => {
+    const tricrypto = new Contract(
+      FIXTURES[getChainNameFixture(chain.name)]["tricrypto"],
+      ["function get_dy(uint256, uint256, uint256) view returns (uint256)"],
+      chain.provider
+    );
+    if (direction) {
+      const wbtcOut = await getWbtcQuote(direction, amount);
+      return await tricrypto.get_dy(1, 0, amount);
+    } else {
+      const wbtcAmount = await tricrypto.get_dy(0, 1, amount);
+      return await getWbtcQuote(direction, wbtcAmount);
+    }
+  };
+
   // direction ? renbtc -> avax : avax -> renbtc
   const getAVAXQuote = async (direction, amount) => {
     const WBTC = new JOE.Token(
@@ -358,6 +374,7 @@ export function makeQuoter(CHAIN = "1", provider?) {
     toUSDC,
     ETHtoRenBTC,
     chain,
+    getUSDTQuote,
   };
 };
 
@@ -431,6 +448,8 @@ export function makeCompute(CHAIN = "1") {
         return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
       case FIXTURES[getChainNameFixture(quotes.chain.name)].renBTC:
         return await deductMintFee(amount, primaryToken);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDT:
+        return await quotes.getUSDTQuote(true, await deductMintFee(amount, primaryToken));
       case AddressZero:
         return await quotes.renBTCToETH(
           await deductMintFee(amount, primaryToken)
@@ -506,12 +525,14 @@ export function makeCompute(CHAIN = "1") {
       }
     }
     switch (asset) {
-      case FIXTURES[quotes.chain.name].WBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].WBTC:
         return await quotes.getWbtcQuote(false, amount);
-      case FIXTURES[quotes.chain.name].renBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].renBTC:
         return amount;
-      case FIXTURES[quotes.chain.name].USDC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC:
         return await quotes.fromUSDC(amount);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDT:
+        return await quotes.getUSDTQuote(false, amount);
       case AddressZero:
         return await quotes.ETHtoRenBTC(amount);
       default:
