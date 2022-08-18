@@ -17,6 +17,7 @@
     "@ethersproject/contracts": "^5.6.1",
     "@ethersproject/random": "^5.6.1",
     "@ethersproject/solidity": "^5.6.1",
+    "@renproject/chains": "^3.4.4",
     "@renproject/ren": "^3.4.4",
     "@zerodao/buffer": "^0.3.3",
     "@zerodao/chains": "^0.3.11",
