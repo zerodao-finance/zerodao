@@ -24,8 +24,7 @@ export abstract class Request {
         Object.keys(deployments[v]).find((network) =>
           Object.keys(deployments[v][network].contracts).find(
             (contract) =>
-              deployments[v][network].contracts[contract].address ===
-              this.contractAddress
+              ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) &&  deployments[v][network].contracts[contract].address === this.contractAddress
           )
         )
       ) ||

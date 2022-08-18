@@ -154,7 +154,6 @@ exports.RENVM_PROVIDERS = {
     Optimism: chains_1.Optimism,
 };
 exports.providerFromChainId = (0, utils_1.cachedFrom)((chainId) => {
-    console.log("CHAINID", chainId);
     const chainIdNumber = Number(chainId);
     const chain = exports.CHAINS[chainIdNumber];
     const name = chain.chainName.toLowerCase();

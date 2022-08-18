@@ -3584,6 +3584,14 @@
     "@renproject/chains-terra" "^3.4.4"
     "@renproject/utils" "^3.4.4"
 
+"@renproject/interfaces@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@renproject/interfaces/-/interfaces-2.6.0.tgz#270da3724279b7d49e98bc95d22c86138557290a"
+  integrity sha512-4VNh1r9c82XV3DIcNwvYL3+n/2b6P9nwXvIOE/P8WQU35RsKzJIkIRXv6skDdYzNjX60wXbTgWGHTJ8DdIA6Ng==
+  dependencies:
+    "@types/node" ">=10"
+    bignumber.js "^9.0.1"
+
 "@renproject/provider@^3.4.4":
   version "3.4.4"
   resolved "https://registry.yarnpkg.com/@renproject/provider/-/provider-3.4.4.tgz#199845cfeee4d490a6c1eebeb36dc06146d84eb1"
@@ -4627,7 +4635,7 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@>=12.12.47", "@types/node@>=13.7.0", "@types/node@^18.6.2":
+"@types/node@*", "@types/node@>=10", "@types/node@>=12.12.47", "@types/node@>=13.7.0", "@types/node@^18.6.2":
   version "18.7.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.6.tgz#31743bc5772b6ac223845e18c3fc26f042713c83"
   integrity sha512-EdxgKRXgYsNITy5mjjXjVE/CS8YENSdhiagGrLqjG0pvA2owgJ6i4l7wy/PFZGC0B1/H20lWKN7ONVDNYDZm7A==

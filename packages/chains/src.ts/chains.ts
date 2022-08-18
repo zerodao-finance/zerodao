@@ -204,7 +204,6 @@ export const RENVM_PROVIDERS = {
 
 
 export const providerFromChainId = cachedFrom((chainId) => {
-  console.log("CHAINID", chainId);
   const chainIdNumber = Number(chainId);
   const chain = CHAINS[chainIdNumber];
   const name = chain.chainName.toLowerCase();
