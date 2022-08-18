@@ -16,6 +16,7 @@ import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 contract BTCVaultTest is Test {
   address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
   address constant gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
+  address constant zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;
@@ -100,7 +101,12 @@ contract BTCVaultTest is Test {
 
   function testMockGatewayLogic() public {
     bytes memory sig;
-    IGateway(gateway).mint(bytes32(0x0), 100000.000, bytes32(0x0), sig);
-    console.log("balance", IERC20(renbtc).balanceOf(address(this)));
+    IGateway(gateway).mint(bytes32(0x0), 1000000.000, bytes32(0x0), sig);
+    assertFalse(IERC20(renbtc).balanceOf(address(this)) == 0);
+  }
+
+  function testZeroLoan() public {
+    bytes memory data;
+    vault.loan(address(module), zerowallet, 1000.000, 1, data);
   }
 }
