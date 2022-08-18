@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn build && cross-env node dist/test",
-    "prepare": "cd ../.. && husky install packages/sdk.husky"
+    "prepare": "cd ../.. && husky install packages/sdk/.husky"
   },
   "dependencies": {
     "@zerodao/chains": "^0.3.15",
