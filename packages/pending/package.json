@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/pending",
-  "version": "0.3.12",
+  "version": "0.3.14",
   "scripts": {
     "start": "cross-env node bin/pending",
     "build": "tsc"
@@ -20,11 +20,11 @@
     "@ethersproject/bytes": "^5.6.1",
     "@ethersproject/constants": "^5.6.1",
     "@zerodao/logger": "^0.3.9",
-    "@zerodao/request": "^0.3.12",
+    "@zerodao/request": "^0.3.14",
     "ioredis": "^5.0.5",
     "send-crypto": "^0.2.37"
   },
-  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
+  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
   "publishConfig": {
     "access": "public"
   }

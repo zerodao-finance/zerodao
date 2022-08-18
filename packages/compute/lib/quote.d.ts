@@ -1,6 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 export declare const keeperReward: BigNumber;
 export declare function applyRatio(amount: any, ratio: any): BigNumber;
+export declare const getChainNameFixture: (chainName: any) => any;
 export declare function makeQuoter(CHAIN?: string, provider?: any): {
     fromUSDC: (amount: any) => Promise<any>;
     getAVAXQuote: (direction: any, amount: any) => Promise<any>;
@@ -19,6 +20,7 @@ export declare function makeQuoter(CHAIN?: string, provider?: any): {
         uniswapName: any;
         chainId: number;
     };
+    getUSDTQuote: (direction: any, amount: any) => Promise<any>;
 };
 export declare function makeCompute(CHAIN?: string): {
     computeTransferOutput: ({ module, amount, primaryToken }: {

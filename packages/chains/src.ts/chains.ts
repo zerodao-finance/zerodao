@@ -177,7 +177,7 @@ export const CONTROLLER_DEPLOYMENTS = {
         require("@zerodao/protocol/deployments/mainnet/BadgerBridgeZeroController").address
     )]: "Ethereum",
     [getAddress(
-        require('@zerodao/protocol/deployments/mainnet/RenZECController').address
+      require("@zerodao/protocol/deployments/mainnet/RenZECController").address
     )]: "Ethereum",
     [getAddress(
         require("@zerodao/protocol/deployments/optimism/BadgerBridgeZeroController").address

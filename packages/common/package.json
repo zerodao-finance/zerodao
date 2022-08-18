@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/common",
-  "version": "0.3.12",
+  "version": "0.3.14",
   "description": "zerodao utils",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -28,7 +28,7 @@
     "ethers": "^5.6.9",
     "hardhat-deploy-ethers": "^0.3.0-beta.13"
   },
-  "gitHead": "252cda13aab56d411cf4f02b7f45cdb14ee1af58",
+  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
   "publishConfig": {
     "access": "public"
   }

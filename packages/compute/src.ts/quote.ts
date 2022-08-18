@@ -43,11 +43,20 @@ function returnChainDetails(CHAINID) {
   };
 }
 
+export const getChainNameFixture = (chainName) => {
+  switch(chainName) {
+    case 'POLYGON':
+      return 'MATIC';
+    default:
+      return chainName;
+  }
+}
+
 export function makeQuoter(CHAIN = "1", provider?) {
   const chain = returnChainDetails(CHAIN);
   console.log(chain);
   const renCrv = new Contract(
-    FIXTURES[chain.name]["Curve_Ren"],
+    FIXTURES[getChainNameFixture(chain.name)]["Curve_Ren"],
     [
       "function get_dy(int128, int128, uint256) view returns (uint256)",
       "function get_dy_underlying(int128, int128, uint256) view returns (uint256)",
@@ -94,6 +103,22 @@ export function makeQuoter(CHAIN = "1", provider?) {
       );
       const price = trade.outputAmount.toExact();
       return parseUnits(price, 8);
+    }
+  };
+
+  // direction ? renbtc -> usdt : usdt -> renbtc
+  const getUSDTQuote = async (direction, amount) => {
+    const tricrypto = new Contract(
+      FIXTURES[getChainNameFixture(chain.name)]["tricrypto"],
+      ["function get_dy(uint256, uint256, uint256) view returns (uint256)"],
+      chain.provider
+    );
+    if (direction) {
+      const wbtcOut = await getWbtcQuote(direction, amount);
+      return await tricrypto.get_dy(1, 0, amount);
+    } else {
+      const wbtcAmount = await tricrypto.get_dy(0, 1, amount);
+      return await getWbtcQuote(direction, wbtcAmount);
     }
   };
 
@@ -210,11 +235,11 @@ export function makeQuoter(CHAIN = "1", provider?) {
           pack(
             ["address", "uint24", "address", "uint24", "address"],
             [
-              FIXTURES[chain.name].USDC,
+              FIXTURES[getChainNameFixture(chain.name)].USDC,
               500,
-              FIXTURES[chain.name].wETH,
+              FIXTURES[getChainNameFixture(chain.name)].wETH,
               500,
-              FIXTURES[chain.name].WBTC,
+              FIXTURES[getChainNameFixture(chain.name)].WBTC,
             ]
           ),
           amount
@@ -239,11 +264,11 @@ export function makeQuoter(CHAIN = "1", provider?) {
           pack(
             ["address", "uint24", "address", "uint24", "address"],
             [
-              FIXTURES[chain.name].WBTC,
+              FIXTURES[getChainNameFixture(chain.name)].WBTC,
               500,
-              FIXTURES[chain.name].wETH,
+              FIXTURES[getChainNameFixture(chain.name)].wETH,
               500,
-              FIXTURES[chain.name].USDC,
+              FIXTURES[getChainNameFixture(chain.name)].USDC,
             ]
           ),
           wbtcOut
@@ -268,18 +293,19 @@ export function makeQuoter(CHAIN = "1", provider?) {
     if (chain.name === "AVALANCHE") {
       return await getAVAXQuote(false, amount);
     } else {
+      const convertedFixtureName = getChainNameFixture(chain.name);
       const path = [
-        FIXTURES[chain.name].wNative,
+        FIXTURES[convertedFixtureName].wNative,
         500,
-        FIXTURES[chain.name].wETH,
+        FIXTURES[convertedFixtureName].wETH,
         500,
-        FIXTURES[chain.name].WBTC,
+        FIXTURES[convertedFixtureName].WBTC,
       ];
-      path.splice(2, chain.name !== "MATIC" ? 2 : 0);
+      path.splice(2, convertedFixtureName !== "MATIC" ? 2 : 0);
       const output = await quoter.quoteExactInput(
         pack(
           ["address", "uint24", "address"].concat(
-            chain.name === "MATIC" ? ["uint24", "address"] : []
+            convertedFixtureName === "MATIC" ? ["uint24", "address"] : []
           ),
           path
         ),
@@ -295,7 +321,7 @@ export function makeQuoter(CHAIN = "1", provider?) {
     return await quoter.quoteExactInput(
       pack(
         ["address", "uint24", "address"],
-        [FIXTURES[chain.name].wNative, 500, FIXTURES[chain.name].USDC]
+        [FIXTURES[getChainNameFixture(chain.name)].wNative, 500, FIXTURES[getChainNameFixture(chain.name)].USDC]
       ),
       amount
     );
@@ -314,19 +340,19 @@ export function makeQuoter(CHAIN = "1", provider?) {
       return await getAVAXQuote(true, amount);
     } else {
       const path = [
-        FIXTURES[chain.name].WBTC,
+        FIXTURES[getChainNameFixture(chain.name)].WBTC,
         500,
-        FIXTURES[chain.name].wETH,
+        FIXTURES[getChainNameFixture(chain.name)].wETH,
         500,
-        FIXTURES[chain.name].wNative,
+        FIXTURES[getChainNameFixture(chain.name)].wNative,
       ];
 
-      path.splice(2, chain.name !== "MATIC" ? 2 : 0);
+      path.splice(2, getChainNameFixture(chain.name) !== "MATIC" ? 2 : 0);
       const wbtcOut = await getWbtcQuote(true, amount);
       const quote = await quoter.quoteExactInput(
         pack(
           ["address", "uint24", "address"].concat(
-            chain.name === "MATIC" ? ["uint24", "address"] : []
+            getChainNameFixture(chain.name) === "MATIC" ? ["uint24", "address"] : []
           ),
           path
         ),
@@ -348,6 +374,7 @@ export function makeQuoter(CHAIN = "1", provider?) {
     toUSDC,
     ETHtoRenBTC,
     chain,
+    getUSDTQuote,
   };
 };
 
@@ -415,12 +442,14 @@ export function makeCompute(CHAIN = "1") {
       }
     }
     switch (module) {
-      case FIXTURES[quotes.chain.name].USDC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC:
         return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
-      case FIXTURES[quotes.chain.name].WBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].WBTC:
         return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
-      case FIXTURES[quotes.chain.name].renBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].renBTC:
         return await deductMintFee(amount, primaryToken);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDT:
+        return await quotes.getUSDTQuote(true, await deductMintFee(amount, primaryToken));
       case AddressZero:
         return await quotes.renBTCToETH(
           await deductMintFee(amount, primaryToken)
@@ -496,12 +525,14 @@ export function makeCompute(CHAIN = "1") {
       }
     }
     switch (asset) {
-      case FIXTURES[quotes.chain.name].WBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].WBTC:
         return await quotes.getWbtcQuote(false, amount);
-      case FIXTURES[quotes.chain.name].renBTC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].renBTC:
         return amount;
-      case FIXTURES[quotes.chain.name].USDC:
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC:
         return await quotes.fromUSDC(amount);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDT:
+        return await quotes.getUSDTQuote(false, amount);
       case AddressZero:
         return await quotes.ETHtoRenBTC(amount);
       default:

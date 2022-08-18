@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/request",
-  "version": "0.3.12",
+  "version": "0.3.14",
   "description": "zerodao sdk sub-package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
@@ -21,8 +21,8 @@
     "@renproject/interfaces": "^2.6.0",
     "@renproject/ren": "^3.4.4",
     "@zerodao/buffer": "^0.3.3",
-    "@zerodao/chains": "^0.3.12",
-    "@zerodao/common": "^0.3.12",
+    "@zerodao/chains": "^0.3.14",
+    "@zerodao/common": "^0.3.14",
     "@zerodao/p2p": "^0.3.9",
     "@zerodao/protocol": "^0.3.12",
     "@zerodao/utils": "^0.3.4",
@@ -33,7 +33,7 @@
     "build": "tsc",
     "test": "node lib/TransferRequestV2.js"
   },
-  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
+  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
   "publishConfig": {
     "access": "public"
   }

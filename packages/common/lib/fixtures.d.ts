@@ -51,6 +51,7 @@ export declare const FIXTURES: {
         safeProxyFactory: string;
         multiSend: string;
         safeMasterCopy: string;
+        tricrypto: string;
     };
     AVALANCHE: {
         AVAX: string;
