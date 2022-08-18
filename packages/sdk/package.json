@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn build && cross-env node dist/test",
-    "prepare": "cd .. && husky install sdk/.husky"
+    "prepare": "cd ../.. && husky install packages/sdk.husky"
   },
   "dependencies": {
     "@zerodao/chains": "^0.3.13",
@@ -34,7 +34,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1"
   },
-  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
+  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
   "publicConfig": {
     "access": "public"
   },

@@ -19,7 +19,7 @@
     "ioredis": "^5.0.5",
     "typescript": "^4.7.4"
   },
-  "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
+  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
   "publicConfig": {
     "access": "public"
   }
