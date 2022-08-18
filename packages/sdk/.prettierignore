@@ -1,0 +1,5 @@
+build
+node_modules
+.github
+.eslintrc.js
+.prettierrc.js
