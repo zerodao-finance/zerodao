@@ -90,6 +90,7 @@ class PendingProcess {
                 }
             }
             catch (error) {
+                console.error(error);
                 return this.logger.error(error);
             }
             await this.timeout(1000);

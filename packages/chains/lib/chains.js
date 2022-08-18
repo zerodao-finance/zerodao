@@ -135,6 +135,7 @@ exports.CONTROLLER_DEPLOYMENTS = {
     [(0, address_1.getAddress)(require("@zerodao/protocol/deployments/avalanche/BadgerBridgeZeroController").address)]: "Avalanche",
     [(0, address_1.getAddress)(require("@zerodao/protocol/deployments/matic/BadgerBridgeZeroController").address)]: "Polygon",
     [(0, address_1.getAddress)(require("@zerodao/protocol/deployments/mainnet/BadgerBridgeZeroController").address)]: "Ethereum",
+    [(0, address_1.getAddress)(require('@zerodao/protocol/deployments/mainnet/RenZECController').address)]: "Ethereum",
     [(0, address_1.getAddress)(require("@zerodao/protocol/deployments/optimism/BadgerBridgeZeroController").address)]: "Optimism",
 };
 exports.RPC_ENDPOINTS = {
