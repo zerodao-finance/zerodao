@@ -4,7 +4,6 @@ pragma solidity >=0.8.13;
 import "./ZeroBTCCache.sol";
 import { DefaultLoanRecord } from "../utils/LoanRecordCoder.sol";
 import "../utils/FixedPointMathLib.sol";
-import "forge-std/console.sol";
 
 uint256 constant ReceiveLoanError_selector = 0x83f44e2200000000000000000000000000000000000000000000000000000000;
 uint256 constant RepayLoanError_selector = 0x0ccaea8800000000000000000000000000000000000000000000000000000000;

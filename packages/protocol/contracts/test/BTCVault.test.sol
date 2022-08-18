@@ -80,6 +80,8 @@ contract BTCVaultTest is Test {
     proxy = ZeroBTC(payable(address(_proxy)));
     address _vault = deployVault(address(proxy), converter);
     admin.upgrade(_proxy, _vault);
+    proxy = ZeroBTC(payable(address(_vault)));
+    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, address(this));
   }
 
   function setUp() public {
@@ -101,12 +103,12 @@ contract BTCVaultTest is Test {
 
   function testMockGatewayLogic() public {
     bytes memory sig;
-    IGateway(gateway).mint(bytes32(0x0), 1000000.000, bytes32(0x0), sig);
+    IGateway(gateway).mint(bytes32(0x0), 1000000000, bytes32(0x0), sig);
     assertFalse(IERC20(renbtc).balanceOf(address(this)) == 0);
   }
 
   function testZeroLoan() public {
     bytes memory data;
-    vault.loan(address(module), zerowallet, 1000.000, 1, data);
+    vault.loan(address(module), zerowallet, 1000000, 1, data);
   }
 }
