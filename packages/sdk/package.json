@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/sdk",
-  "version": "0.3.8",
+  "version": "0.3.12",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -9,24 +9,41 @@
   "private": false,
   "scripts": {
     "build": "tsc",
-    "test": "yarn build && cross-env node dist/test"
+    "test": "yarn build && cross-env node dist/test",
+    "prepare": "cd .. && husky install sdk/.husky"
   },
   "dependencies": {
-    "@zerodao/chains": "^0.3.8",
-    "@zerodao/common": "^0.3.8",
-    "@zerodao/compute": "^0.3.8",
-    "@zerodao/logger": "^0.3.7",
-    "@zerodao/p2p": "^0.3.7",
-    "@zerodao/protocol": "^0.3.3",
-    "@zerodao/request": "^0.3.8",
+    "@zerodao/chains": "^0.3.12",
+    "@zerodao/common": "^0.3.12",
+    "@zerodao/compute": "^0.3.12",
+    "@zerodao/logger": "^0.3.9",
+    "@zerodao/p2p": "^0.3.9",
+    "@zerodao/protocol": "^0.3.12",
+    "@zerodao/request": "^0.3.12",
     "@zerodao/utils": "^0.3.4",
     "typescript": "^4.7.4"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1"
   },
   "gitHead": "e349c3c113e719f737bf56f389ba3c97dcf32d75",
   "publicConfig": {
     "access": "public"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx, jsx}": [
+      "eslint --quiet --fix"
+    ],
+    "*.{json,md,html,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
   }
 }
