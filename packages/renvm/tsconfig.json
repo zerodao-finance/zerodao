@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2020",
+        "noImplicitAny": false,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "outDir": "./lib",
+        "declaration": true,
+        "types": [
+            "node"
+        ],
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "strictPropertyInitialization": true,
+        "alwaysStrict": true,
+        "strictFunctionTypes": true,
+        "declarationMap": true
+    },
+    "include": [
+        "./test/**/*",
+        "src.ts/**/*"
+    ],
+    
+}
