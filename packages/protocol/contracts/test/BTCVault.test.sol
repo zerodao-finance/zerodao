@@ -109,6 +109,7 @@ contract BTCVaultTest is Test {
 
   function testZeroLoan() public {
     bytes memory data;
+    vault.deposit(10000000, address(this));
     vault.loan(address(module), zerowallet, 1000000, 1, data);
   }
 }

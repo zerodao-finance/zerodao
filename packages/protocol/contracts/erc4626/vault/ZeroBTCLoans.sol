@@ -402,7 +402,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     if (!oldRecord.isNull()) {
       revert LoanIdNotUnique(loanId);
     }
-
+    console.log(_balanceOf[lender], shares);
     // Reduce lender's balance to lock shares for their debt
     _balanceOf[lender] -= shares;
 
