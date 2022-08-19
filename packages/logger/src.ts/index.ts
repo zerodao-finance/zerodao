@@ -1,5 +1,5 @@
-import util from 'util';
-import 'setimmediate';
+import util from "util";
+import "setimmediate";
 import {
   createLogger as createWinstonLogger,
   transports,
@@ -16,39 +16,46 @@ const customLevels = {
   debug: 4,
   verbose: 5,
   silly: 6,
-  custom: 7,
+  custom: 7
 };
 
 const customColors = {
-  error: 'red',
-  warn: 'yellow',
-  data: 'grey',
-  info: 'green',
-  debug: 'red',
-  verbose: 'cyan',
-  silly: 'magenta',
-  custom: 'blue',
-}
+  error: "red",
+  warn: "yellow",
+  data: "grey",
+  info: "green",
+  debug: "red",
+  verbose: "cyan",
+  silly: "magenta",
+  custom: "blue"
+};
 
 const customFormatter = ({ level, message, label, timestamp }) => {
-  return `${label}|${timestamp}|${level}|${typeof message === 'string' ? message : util.inspect(message, {colors: true, depth: 15 })}`;
+  return `${label}|${timestamp}|${level}|${
+    typeof message === "string"
+      ? message
+      : util.inspect(message, { colors: true, depth: 15 })
+  }`;
 };
 
 const createLogger = (proc?: string) => {
   addColors(customColors);
   const logger = createWinstonLogger({
     defaultMeta: {
-     service: proc || 'zerodao'
+      service: proc || "zerodao"
     },
     levels: customLevels,
-    transports: [new transports.Console({
-      level: 'verbose',
-      format: format.combine(
-        format.label({ label: proc }),
-	format.timestamp(),
-	format.printf(customFormatter)
-      )
-    })]
+    format: format.combine(format.errors({ stack: true }), format.json()),
+    transports: [
+      new transports.Console({
+        level: "verbose",
+        format: format.combine(
+          format.label({ label: proc }),
+          format.timestamp(),
+          format.printf(customFormatter)
+        )
+      })
+    ]
   });
 
   return logger;
