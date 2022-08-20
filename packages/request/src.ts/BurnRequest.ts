@@ -282,6 +282,7 @@ export class BurnRequest extends Request {
       this.isNative() ? { value: this.amount } : {}
     );
     remoteTxMap.set(this, tx.wait());
+    return tx;
   }
   serialize(): Buffer {
     return Buffer.from(
