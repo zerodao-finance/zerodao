@@ -28,7 +28,7 @@ export declare class BurnRequest extends Request {
         amount: BigNumberish;
         contractAddress: string;
     });
-    sendTransaction(signer: any): Promise<void>;
+    sendTransaction(signer: any): Promise<any>;
     serialize(): Buffer;
     isNative(): boolean;
     toEIP712(): {

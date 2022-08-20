@@ -220,6 +220,7 @@ class BurnRequest extends Request_1.Request {
         ], signer);
         const tx = await contract.burnApproved(constants_1.AddressZero, this.asset, this.isNative() ? "0" : this.amount, BurnRequest.minOutFromData(this.data), this.destination, this.isNative() ? { value: this.amount } : {});
         remoteTxMap.set(this, tx.wait());
+        return tx;
     }
     serialize() {
         return Buffer.from(JSON.stringify((0, lodash_1.mapValues)({

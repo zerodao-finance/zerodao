@@ -80,6 +80,8 @@ const coder = new AbiCoder();
   console.log(await request.toGatewayAddress());
   await request.publish(peer).toPromise();
 })().catch(console.error);
+
+```
     
 ### BurnRequest
 
