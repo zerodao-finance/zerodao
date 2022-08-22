@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 
 import "./ZeroBTCCache.sol";
 import { DefaultLoanRecord } from "../utils/LoanRecordCoder.sol";
+import { BaseModule } from "../BaseModule.sol";
 import "../utils/FixedPointMathLib.sol";
 
 uint256 constant ReceiveLoanError_selector = 0x83f44e2200000000000000000000000000000000000000000000000000000000;
@@ -245,8 +246,12 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     bytes memory data
   ) internal RestoreFourWordsBefore(data) {
     console.log("inside execution");
-    _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
-    assembly {
+    // _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
+    (bool success, bytes memory data) = module.delegatecall(
+      abi.encodeWithSelector(bytes4(bytes32(ReceiveLoan_selector)), borrower, borrowAmount, loanId, data)
+    );
+    require(success, "!module");
+    /* assembly {
       let startPtr := sub(data, ModuleCall_data_length_offset)
       // Size of data + (selector, borrower, borrowAmount, loanId, data_offset, data_length)
       let calldataLength := add(mload(data), ModuleCall_calldata_baseLength)
@@ -270,7 +275,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
         // Revert with ReceiveLoanError
         revert(sub(startPtr, 0x20), add(calldataLength, 0x20))
       }
-    }
+    } */
   }
 
   function _executeRepayLoan(
