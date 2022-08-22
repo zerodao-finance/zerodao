@@ -74,19 +74,17 @@ contract MemoryRestoration {
     }
   }
 
-  modifier RestoreFiveWordsBefore(bytes memory data) {
+  modifier RestoreFourWordsBefore(bytes memory data) {
     uint256 cachedValue1;
     uint256 cachedValue2;
     uint256 cachedValue3;
     uint256 cachedValue4;
-    uint256 cachedValue5;
     console.log("restoring");
     assembly {
       cachedValue1 := mload(sub(data, 0x20))
       cachedValue2 := mload(sub(data, 0x40))
       cachedValue3 := mload(sub(data, 0x60))
       cachedValue4 := mload(sub(data, 0x80))
-      cachedValue5 := mload(sub(data, 0xa0))
     }
     console.log("restored");
     _;
@@ -95,7 +93,6 @@ contract MemoryRestoration {
       mstore(sub(data, 0x40), cachedValue2)
       mstore(sub(data, 0x60), cachedValue3)
       mstore(sub(data, 0x80), cachedValue4)
-      mstore(sub(data, 0xa0), cachedValue5)
     }
   }
 

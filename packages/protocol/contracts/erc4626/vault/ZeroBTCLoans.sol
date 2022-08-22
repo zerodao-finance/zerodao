@@ -234,6 +234,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       // Write data offset
       mstore(add(startPtr, ModuleCall_data_head_offset), ModuleCall_data_offset)
     }
+    console.log("data prepared");
   }
 
   function _executeReceiveLoan(
@@ -242,7 +243,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 loanId,
     uint256 borrowAmount,
     bytes memory data
-  ) internal RestoreFiveWordsBefore(data) {
+  ) internal RestoreFourWordsBefore(data) {
     console.log("inside execution");
     _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
     assembly {
@@ -278,7 +279,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 loanId,
     uint256 repaidAmount,
     bytes memory data
-  ) internal RestoreFiveWordsBefore(data) returns (uint256 collateralToUnlock) {
+  ) internal RestoreFourWordsBefore(data) returns (uint256 collateralToUnlock) {
     _prepareModuleCalldata(RepayLoan_selector, borrower, loanId, repaidAmount, data);
     assembly {
       let startPtr := sub(data, ModuleCall_data_length_offset)
