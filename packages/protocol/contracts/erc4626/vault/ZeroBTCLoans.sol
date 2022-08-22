@@ -76,9 +76,12 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     console.log("borrowed");
 
     (ModuleType moduleType, uint256 ethRefundForLoanGas) = moduleState.getLoanParams();
+    console.log("params prepared", uint256(moduleType));
     if (uint256(moduleType) > 0) {
+      console.log("executing receive loan");
       // Execute module interaction
       _executeReceiveLoan(module, borrower, loanId, actualBorrowAmount, data);
+      console.log("loan executed");
     } else {
       // If module does not override loan behavior,
       asset.safeTransfer(borrower, actualBorrowAmount);
@@ -216,7 +219,8 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 loanId,
     uint256 amount,
     bytes memory data
-  ) internal pure {
+  ) internal view {
+    console.log("preparing call data");
     assembly {
       let startPtr := sub(data, ModuleCall_data_length_offset)
       // Write function selector
@@ -239,6 +243,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 borrowAmount,
     bytes memory data
   ) internal RestoreFiveWordsBefore(data) {
+    console.log("inside execution");
     _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
     assembly {
       let startPtr := sub(data, ModuleCall_data_length_offset)

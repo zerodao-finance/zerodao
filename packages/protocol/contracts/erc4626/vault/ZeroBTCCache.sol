@@ -144,7 +144,7 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
     uint256 borrowAmount
   )
     internal
-    view
+    pure
     returns (
       uint256 actualBorrowAmount,
       uint256 lenderDebt,
@@ -152,12 +152,9 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
     )
   {
     (uint256 renFees, uint256 zeroFees) = _calculateRenAndZeroFees(state, borrowAmount);
-    console.log("borrow amount:", borrowAmount);
-    console.log(renFees);
     uint256 btcFeeForRepayGas;
     (btcFeeForLoanGas, btcFeeForRepayGas) = moduleState.getBitcoinGasFees();
 
-    console.log(lenderDebt, zeroFees, btcFeeForLoanGas, btcFeeForRepayGas);
     // Lender is responsible for actualBorrowAmount, renFees, zeroFees, loan refund
     // and estimated repay refund.
     lenderDebt = borrowAmount - renFees;

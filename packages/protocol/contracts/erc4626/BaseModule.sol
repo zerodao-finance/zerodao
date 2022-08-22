@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13;
 
 import { FixedPointMathLib } from "./utils/FixedPointMathLib.sol";
+import { console2 as console } from "forge-std/console2.sol";
 
 /**
  * @notice Base contract that must be inherited by all modules.
@@ -46,11 +47,7 @@ abstract contract BaseModule {
     uint256 repaidAmount,
     uint256 loanId,
     bytes calldata data
-  )
-    external
-    virtual
-    returns (uint256 collateralToUnlock, uint256 gasCostEther)
-  {
+  ) external virtual returns (uint256 collateralToUnlock, uint256 gasCostEther) {
     // Get gas price in ETH
     gasCostEther = this.maxRepayGas() * getGasPrice();
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
@@ -78,17 +75,13 @@ abstract contract BaseModule {
     uint256 loanId,
     bytes calldata data
   ) external virtual returns (uint256 collateralToLock, uint256 gasCostEther) {
+    console.log("received loan");
     // Get gas price in ETH
     gasCostEther = this.maxLoanGas() * getGasPrice();
     // Get gas price in `asset`
     uint256 gasCostAsset = gasCostEther.mulDivUp(getEthPrice(), 1e18);
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
-    collateralToLock = _receiveLoan(
-      borrower,
-      borrowAmount - gasCostAsset,
-      loanId,
-      data
-    );
+    collateralToLock = _receiveLoan(borrower, borrowAmount - gasCostAsset, loanId, data);
   }
 
   /* ---- Override These In Child ---- */
@@ -143,13 +136,7 @@ abstract contract BaseModule {
 contract ABC {
   function x(uint256 a) external pure {
     assembly {
-      a := or(
-        shr(96, a),
-        or(
-          shr(96, a),
-          or(shr(96, a), or(shr(96, a), or(shr(96, a), shr(96, a))))
-        )
-      )
+      a := or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), shr(96, a))))))
     }
   }
 }

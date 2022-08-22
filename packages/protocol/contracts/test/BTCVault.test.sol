@@ -99,11 +99,12 @@ contract BTCVaultTest is Test {
     vm.etch(gateway, mockGateway.code);
     assertEq0(gateway.code, mockGateway.code);
     gateway.call(abi.encodeWithSignature("setToken(address)", renbtc));
+    bytes memory sig;
+    IGateway(gateway).mint(bytes32(0x0), 1000000000, bytes32(0x0), sig);
+    IERC20(renbtc).approve(address(vault), ~uint256(1) << 2);
   }
 
   function testMockGatewayLogic() public {
-    bytes memory sig;
-    IGateway(gateway).mint(bytes32(0x0), 1000000000, bytes32(0x0), sig);
     assertFalse(IERC20(renbtc).balanceOf(address(this)) == 0);
   }
 
