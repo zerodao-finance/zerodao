@@ -127,6 +127,18 @@ function makeQuoter(CHAIN = "1", provider) {
             return await crvUSD.calc_withdraw_one_coin(av3usdAmount, 1);
         }
     };
+    // direction ? renbtc -> usdc : usdc -> renbtc
+    const getUSDCNativeQuote = async (direction, amount) => {
+        const usdcpool = new contracts_1.Contract(common_1.FIXTURES.AVALANCHE.USDC_POOL, ["function get_dy(int128, int128, uint256) view returns (uint256)"], chain.provider);
+        if (direction) {
+            const usdcAmount = await getUsdcQuoteAVAX(direction, amount);
+            return await usdcpool.get_dy(0, 1, amount);
+        }
+        else {
+            const usdcnativeAmount = await usdcpool.get_dy(1, 0, amount);
+            return await getUsdcQuoteAVAX(direction, usdcnativeAmount);
+        }
+    };
     const getRenBTCForOneETHPrice = async () => {
         if (chain.name === "AVALANCHE") {
             return await getAVAXQuote(false, (0, units_1.parseEther)("1"));
