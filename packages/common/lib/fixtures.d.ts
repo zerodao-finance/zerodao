@@ -64,6 +64,8 @@ export declare const FIXTURES: {
         Curve_TriCryptoTwo: string;
         Router: string;
         btcGateway: string;
+        USDC_NATIVE: string;
+        USDC_POOL: string;
     };
     OPTIMISM: {
         USDC: string;

@@ -158,8 +158,7 @@ contract BadgerBridgeZeroControllerMatic is EIP712Upgradeable {
 
   function quote() internal {
     bytes memory path = abi.encodePacked(wmatic, wethMaticFee, weth, wethWbtcFee, wbtc);
-    uint256 amountOut = IQuoter(quoter).quoteExactInput(path, 1 ether);
-    renbtcForOneETHPrice = ICurveInt128(renCrv).get_dy_underlying(1, 0, amountOut);
+    renbtcForOneETHPrice = IQuoter(quoter).quoteExactInput(path, 1 ether);
   }
 
   function renBTCtoETH(
@@ -215,11 +214,16 @@ contract BadgerBridgeZeroControllerMatic is EIP712Upgradeable {
   function toETH() internal returns (uint256 amountOut) {
     uint256 wbtcStart = IERC20(wbtc).balanceOf(address(this));
 
-    uint256 amountStart = address(this).balance;
-    (bool success, ) = tricrypto.call(
-      abi.encodeWithSelector(ICurveETHUInt256.exchange.selector, 1, 2, wbtcStart, 0, true)
-    );
-    amountOut = address(this).balance.sub(amountStart);
+    bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, weth, wethMaticFee, wmatic);
+    ISwapRouter.ExactInputParams memory params = ISwapRouter.ExactInputParams({
+      recipient: address(this),
+      deadline: block.timestamp + 1,
+      amountIn: wbtcStart,
+      amountOutMinimum: 1,
+      path: path
+    });
+    amountOut = ISwapRouter(routerv3).exactInput(params);
+    IWETH9(wmatic).withdraw(amountOut);
   }
 
   receive() external payable {
@@ -234,10 +238,13 @@ contract BadgerBridgeZeroControllerMatic is EIP712Upgradeable {
     if (balance > ETH_RESERVE) {
       uint256 output = balance - ETH_RESERVE;
       uint256 toGovernance = applyRatio(output, governanceFee);
+      bool success;
       address payable governancePayable = address(uint160(governance));
-      governancePayable.transfer(toGovernance);
+      (success, ) = governancePayable.call{ value: toGovernance, gas: gasleft() }("");
+      require(success, "error sending to governance");
       address payable strategistPayable = address(uint160(strategist));
-      strategistPayable.transfer(output.sub(toGovernance));
+      (success, ) = strategistPayable.call{ value: output.sub(toGovernance), gas: gasleft() }("");
+      require(success, "error sending to strategist");
     }
   }
 
