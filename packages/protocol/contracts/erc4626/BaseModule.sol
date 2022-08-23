@@ -27,6 +27,21 @@ abstract contract BaseModule {
     _moduleSlot = uint256(keccak256(abi.encode(address(this)))) - 1;
   }
 
+  /// @notice Returns the maximum amount of gas that will be used by
+  /// a burn call. This should simply be a constant set in the
+  /// inheriting contract.
+  function maxBurnGas() public virtual returns (uint256);
+
+  /// @notice Returns the maximum amount of gas that will be used by
+  /// a burn call. This should simply be a constant set in the
+  /// inheriting contract.
+  function maxLoanGas() public virtual returns (uint256);
+
+  /// @notice Returns the maximum amount of gas that will be used by
+  /// a burn call. This should simply be a constant set in the
+  /// inheriting contract.
+  function maxRepayGas() public virtual returns (uint256);
+
   /**
    * @notice Repays a loan.
    *
@@ -49,7 +64,7 @@ abstract contract BaseModule {
     bytes calldata data
   ) external virtual returns (uint256 collateralToUnlock, uint256 gasCostEther) {
     // Get gas price in ETH
-    gasCostEther = this.maxRepayGas() * getGasPrice();
+    gasCostEther = maxRepayGas() * getGasPrice();
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
     collateralToUnlock = _repayLoan(borrower, repaidAmount, loanId, data);
   }
@@ -77,7 +92,7 @@ abstract contract BaseModule {
   ) external virtual returns (uint256 collateralToLock, uint256 gasCostEther) {
     console.log("received loan");
     // Get gas price in ETH
-    gasCostEther = this.maxLoanGas() * getGasPrice();
+    gasCostEther = maxLoanGas() * getGasPrice();
     // Get gas price in `asset`
     uint256 gasCostAsset = gasCostEther.mulDivUp(getEthPrice(), 1e18);
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
@@ -104,21 +119,6 @@ abstract contract BaseModule {
     uint256 loanId,
     bytes calldata data
   ) internal virtual returns (uint256 collateralToUnlock);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxBurnGas() external virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxLoanGas() external virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxRepayGas() external virtual returns (uint256);
 
   /* ---- Leave Empty For Now ---- */
 

@@ -13,9 +13,9 @@ import { IWETH } from "../../interfaces/IWETH.sol";
 contract ConvertUSDCMainnet is BaseConvert {
   using SafeMath for *;
   using SafeERC20 for IERC20;
-  uint256 public constant override maxBurnGas = 0;
-  uint256 public constant override maxLoanGas = 0;
-  uint256 public constant override maxRepayGas = 0;
+  uint256 constant _maxBurnGas = 10000;
+  uint256 constant _maxLoanGas = 10000;
+  uint256 constant _maxRepayGas = 10000;
 
   IRenCrvArbitrum constant renCrv = IRenCrvArbitrum(0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb);
   address constant wbtc = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
@@ -26,6 +26,18 @@ contract ConvertUSDCMainnet is BaseConvert {
   ISwapRouter constant routerV3 = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
   constructor(address asset) BaseConvert(asset) {}
+
+  function maxBurnGas() public override returns (uint256) {
+    return _maxBurnGas;
+  }
+
+  function maxRepayGas() public override returns (uint256) {
+    return _maxLoanGas;
+  }
+
+  function maxLoanGas() public override returns (uint256) {
+    return _maxRepayGas;
+  }
 
   function swap(bytes32 ptr) internal override returns (uint256 amountOut) {
     ConvertLocals memory locals;

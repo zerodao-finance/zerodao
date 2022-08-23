@@ -11,12 +11,24 @@ import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 contract ConvertWBTCMainnet is BaseConvert {
   using SafeMath for *;
   using SafeERC20 for IERC20;
-  uint256 public constant override maxBurnGas = 0;
-  uint256 public constant override maxLoanGas = 0;
-  uint256 public constant override maxRepayGas = 0;
+  uint256 constant _maxBurnGas = 10000;
+  uint256 constant _maxLoanGas = 10000;
+  uint256 constant _maxRepayGas = 10000;
 
   ICurveInt128 constant renCrv = ICurveInt128(0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
   IERC20 constant wbtc = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
+
+  function maxBurnGas() public override returns (uint256) {
+    return _maxBurnGas;
+  }
+
+  function maxRepayGas() public override returns (uint256) {
+    return _maxLoanGas;
+  }
+
+  function maxLoanGas() public override returns (uint256) {
+    return _maxRepayGas;
+  }
 
   constructor(address asset) BaseConvert(asset) {}
 
