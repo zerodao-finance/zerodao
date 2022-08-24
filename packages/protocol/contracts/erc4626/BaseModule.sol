@@ -27,6 +27,8 @@ abstract contract BaseModule {
     _moduleSlot = uint256(keccak256(abi.encode(address(this)))) - 1;
   }
 
+  function initialize() external virtual {}
+
   /// @notice Returns the maximum amount of gas that will be used by
   /// a burn call. This should simply be a constant set in the
   /// inheriting contract.
@@ -95,14 +97,22 @@ abstract contract BaseModule {
     gasCostEther = maxLoanGas() * getGasPrice();
     // Get gas price in `asset`
     uint256 gasCostAsset = gasCostEther.mulDivUp(getEthPrice(), 1e18);
+    console.log(gasCostAsset);
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
     collateralToLock = _receiveLoan(borrower, borrowAmount - gasCostAsset, loanId, data);
   }
 
-  /* ---- Override These In Child ---- */
-  function swap(bytes32) internal virtual returns (uint256 amountOut);
+  struct ConvertLocals {
+    address borrower;
+    uint256 minOut;
+    uint256 amount;
+    uint256 nonce;
+  }
 
-  function swapBack(bytes32) internal virtual returns (uint256 amountOut);
+  /* ---- Override These In Child ---- */
+  function swap(ConvertLocals memory) internal virtual returns (uint256 amountOut);
+
+  function swapBack(ConvertLocals memory) internal virtual returns (uint256 amountOut);
 
   function transfer(address to, uint256 amount) internal virtual;
 

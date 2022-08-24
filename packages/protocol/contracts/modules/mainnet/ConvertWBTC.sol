@@ -18,6 +18,12 @@ contract ConvertWBTCMainnet is BaseConvert {
   ICurveInt128 constant renCrv = ICurveInt128(0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
   IERC20 constant wbtc = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
+  constructor(address asset) BaseConvert(asset) {}
+
+  function initialize() public override {
+    IERC20(asset).approve(address(renCrv), ~uint256(1) << 2);
+  }
+
   function maxBurnGas() public override returns (uint256) {
     return _maxBurnGas;
   }
@@ -30,17 +36,11 @@ contract ConvertWBTCMainnet is BaseConvert {
     return _maxRepayGas;
   }
 
-  constructor(address asset) BaseConvert(asset) {}
-
-  function swap(bytes32 ptr) internal override returns (uint256 amountOut) {
-    ConvertLocals memory locals;
-    assembly {
-      locals := ptr
-    }
+  function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     amountOut = renCrv.exchange(0, 1, locals.amount, 1);
   }
 
-  function swapBack(bytes32) internal override returns (uint256 amountOut) {
+  function swapBack(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     //no-op
   }
 

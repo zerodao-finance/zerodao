@@ -38,11 +38,7 @@ contract ConvertUSDCArbitrum is BaseConvert {
     return _maxRepayGas;
   }
 
-  function swap(bytes32 ptr) internal override returns (uint256 amountOut) {
-    ConvertLocals memory locals;
-    assembly {
-      locals := ptr
-    }
+  function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     uint256 wbtcAmountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));
     bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, weth, usdcWethFee, usdc);
     ISwapRouter.ExactInputParams memory params = ISwapRouter.ExactInputParams({
@@ -55,7 +51,7 @@ contract ConvertUSDCArbitrum is BaseConvert {
     amountOut = routerV3.exactInput(params);
   }
 
-  function swapBack(bytes32) internal override returns (uint256 amountOut) {
+  function swapBack(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     //no-op
   }
 

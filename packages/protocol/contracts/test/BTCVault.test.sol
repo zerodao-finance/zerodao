@@ -17,6 +17,7 @@ contract BTCVaultTest is Test {
   address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
   address constant gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
   address constant zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
+  address constant rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;

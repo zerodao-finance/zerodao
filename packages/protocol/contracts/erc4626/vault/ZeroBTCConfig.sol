@@ -95,6 +95,9 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
       block.timestamp
     );
 
+    // delegatecall initialize on the module
+    (bool success, ) = module.delegatecall(abi.encodeWithSelector(IZeroModule.initialize.selector));
+
     emit ModuleStateUpdated(module, moduleType, loanGasE4, repayGasE4);
   }
 

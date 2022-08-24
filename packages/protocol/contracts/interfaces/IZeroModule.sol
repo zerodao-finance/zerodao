@@ -2,6 +2,8 @@
 pragma solidity >=0.6.0;
 
 interface IZeroModule {
+  function initialize() external;
+
   function repayLoan(
     address _to,
     address _asset,
