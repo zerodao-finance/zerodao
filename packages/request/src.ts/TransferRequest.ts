@@ -195,8 +195,9 @@ export class TransferRequest extends Request {
         resolve(tx);
       });
     });
+    /*
     await deposit.in.wait();
-
+   */
     await deposit.renVM.submit();
     await deposit.renVM.wait();
 

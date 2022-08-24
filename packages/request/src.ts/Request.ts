@@ -4,6 +4,7 @@ import lp from "it-length-prefixed";
 import pipe from "it-pipe";
 import { PublishEventEmitter } from "./PublishEventEmitter";
 import deployments from "@zerodao/protocol";
+import { getAddress } from "@ethersproject/address";
 
 export abstract class Request {
   static addressToChainId(address) {
@@ -24,7 +25,7 @@ export abstract class Request {
         Object.keys(deployments[v]).find((network) =>
           Object.keys(deployments[v][network].contracts).find(
             (contract) =>
-              ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) &&  deployments[v][network].contracts[contract].address === this.contractAddress
+              ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) &&  getAddress(deployments[v][network].contracts[contract].address) === getAddress(this.contractAddress)
           )
         )
       ) ||
