@@ -8,6 +8,9 @@ const generatePayload = (method: string, params?: unknown) => ({
     params,
 });
 const payload = generatePayload("ren_queryTx", request);
+
+// request is called with provider
+
 const response = axios.post("https://rpc.renproject.io", payload, 120000);
 
 // asset = BTC or ZEC
