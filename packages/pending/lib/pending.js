@@ -7,13 +7,17 @@ exports.PendingProcess = void 0;
 const util_1 = __importDefault(require("util"));
 const buffer_1 = require("buffer");
 const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
-const ZECHandler_1 = require("send-crypto/build/main/handlers/ZEC/ZECHandler");
+const chains_bitcoin_1 = require("@renproject/chains-bitcoin");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
 const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
 const { getUTXOs } = BTCHandler_1.BTCHandler;
-const { getUTXOs: getZcashUTXOs } = ZECHandler_1.ZECHandler;
+const getZcashUTXOs = async (testnet, { confirmations, address }) => {
+    const zcash = new chains_bitcoin_1.Zcash({ network: Boolean(testnet) ? 'testnet' : 'mainnet' });
+    const utxos = await zcash.api.fetchUTXOs(address);
+    return utxos.filter((v) => v.height !== null);
+};
 const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === '0x' ? buffer_1.Buffer.from((0, bytes_1.hexlify)(hex).substr(2), 'hex').toString('utf8').substr(0, 1) === 't' : hex.substr(0, 2) === 'zs' || hex.substr(0, 1) === 't')(buffer_1.Buffer.isBuffer(hex) ? '0x' + hex.toString('hex') : hex);
 const cache = {};
 const VAULT_DEPLOYMENTS = {

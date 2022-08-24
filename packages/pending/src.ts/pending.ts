@@ -4,7 +4,7 @@ import util from "util";
 import { Buffer } from "buffer";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 
-import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
+import { Zcash } from "@renproject/chains-bitcoin";
 import { Redis } from "ioredis";
 import { hexlify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
@@ -12,7 +12,16 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransferRequestV2, TransferRequest } from "@zerodao/request";
 import { Logger } from "@zerodao/logger";
 const { getUTXOs } = BTCHandler;
-const { getUTXOs: getZcashUTXOs } = ZECHandler;
+
+
+const getZcashUTXOs = async (testnet, {
+  confirmations,
+  address
+}) => {
+  const zcash = new Zcash({ network: Boolean(testnet) ? 'testnet' : 'mainnet' });
+  const utxos = await zcash.api.fetchUTXOs(address);
+  return utxos.filter((v) => v.height !== null);
+};
 
 const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === '0x' ? Buffer.from(hexlify(hex).substr(2), 'hex').toString('utf8').substr(0, 1) === 't' : hex.substr(0, 2) === 'zs' || hex.substr(0, 1) === 't')(Buffer.isBuffer(hex) ? '0x' + hex.toString('hex') : hex);
 
