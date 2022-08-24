@@ -154,25 +154,17 @@ class TransferRequest extends Request_1.Request {
     async waitForSignature() {
         if (this._queryTxResult)
             return this._queryTxResult;
-        console.log('waiting for signature');
         const mint = await this.submitToRenVM();
-        console.log('submitted to RenVM');
         const deposit = await new Promise((resolve) => {
             mint.on("transaction", (tx) => {
                 resolve(tx);
             });
         });
-        console.log('transaction seen');
         /*
         await deposit.in.wait();
        */
-        console.log('deposit.in.wait(): skipped');
-        console.log(deposit.queryTxResult);
         await deposit.renVM.submit();
-        console.log('deposit.renVM.submit()');
-        console.log(deposit.queryTxResult);
         await deposit.renVM.wait();
-        console.log('deposit.renVM.wait()');
         const queryTx = deposit.queryTxResult.tx;
         const { amount, sig: signature } = queryTx.out;
         const { nhash, phash } = queryTx.in;
