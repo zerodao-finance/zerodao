@@ -9,6 +9,7 @@ const it_length_prefixed_1 = __importDefault(require("it-length-prefixed"));
 const it_pipe_1 = __importDefault(require("it-pipe"));
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
 const protocol_1 = __importDefault(require("@zerodao/protocol"));
+const address_1 = require("@ethersproject/address");
 class Request {
     static addressToChainId(address) {
         return this.prototype.getChainId.call({
@@ -22,7 +23,7 @@ class Request {
         throw new Error("Serialize must be implemented");
     }
     getChainId() {
-        return Number(Object.keys(protocol_1.default).find((v) => Object.keys(protocol_1.default[v]).find((network) => Object.keys(protocol_1.default[v][network].contracts).find((contract) => ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) && protocol_1.default[v][network].contracts[contract].address === this.contractAddress))) ||
+        return Number(Object.keys(protocol_1.default).find((v) => Object.keys(protocol_1.default[v]).find((network) => Object.keys(protocol_1.default[v][network].contracts).find((contract) => ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) && (0, address_1.getAddress)(protocol_1.default[v][network].contracts[contract].address) === (0, address_1.getAddress)(this.contractAddress)))) ||
             (() => {
                 throw Error("Request#getChainId(): no contract found at " + this.contractAddress);
             })());

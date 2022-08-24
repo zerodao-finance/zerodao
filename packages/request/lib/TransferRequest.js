@@ -160,7 +160,9 @@ class TransferRequest extends Request_1.Request {
                 resolve(tx);
             });
         });
+        /*
         await deposit.in.wait();
+       */
         await deposit.renVM.submit();
         await deposit.renVM.wait();
         const queryTx = deposit.queryTxResult.tx;
