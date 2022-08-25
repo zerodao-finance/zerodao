@@ -19,7 +19,7 @@ import UNISWAP = require("@uniswap/sdk");
 import { Route } from "@uniswap/sdk";
 import { providerFromChainId, CHAINS, NAME_CHAIN, getChainName } from "@zerodao/chains";
 import { AddressZero } from "@ethersproject/constants";
-import ethers from "ethers";
+import { utils } from "ethers";
 
 export const keeperReward = parseEther("0.001");
 
@@ -357,12 +357,14 @@ export function makeQuoter(CHAIN = "1", provider?) {
   const wethToTokenQuote = async (direction, token, amount) => {
     const path = [FIXTURES[chain.name].wETH, 500, token];
     const quote = await quoter.quoteExactInput(
-      ethers.utils.solidityPack(
+      utils.solidityPack(
         ["address", "uint24", "address"],
         direction ? path : path.reverse()
       ),
       amount
     );
+
+    return quote;
   };
 
   // direction ? renzec -> usdc : usdc -> renzec
@@ -378,6 +380,25 @@ export function makeQuoter(CHAIN = "1", provider?) {
       const _amount = await wethToTokenQuote(
         direction,
         FIXTURES[chain.name].USDC,
+        amount
+      );
+      return await ETHToRenZEC(_amount);
+    }
+  };
+
+  // direction ? renzec -> usdt : usdt -> renzec
+  const getRenZECUSDTQuote = async (direction, amount) => {
+    if (direction) {
+      const _amount = await renZECToETH(amount);
+      return await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDT,
+        _amount
+      );
+    } else {
+      const _amount = await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDT,
         amount
       );
       return await ETHToRenZEC(_amount);
@@ -420,6 +441,8 @@ export function makeQuoter(CHAIN = "1", provider?) {
     renBTCToETH,
     ETHToRenZEC,
     renZECToETH,
+    getRenZECUSDCQuote,
+    getRenZECUSDTQuote,
     toUSDC,
     ETHtoRenBTC,
     chain,
@@ -485,6 +508,10 @@ export function makeCompute(CHAIN = "1") {
           return await quotes.renZECToETH(
             await deductMintFee(amount, primaryToken)
           );
+        case FIXTURES["ETHEREUM"].USDC:
+          return await quotes.getRenZECUSDCQuote(true, amount);
+        case FIXTURES["ETHEREUM"].USDT:
+          return await quotes.getRenZECUSDTQuote(true, amount);
         default:
           console.error("no asset found for getConvertedAmount:" + module);
           return BigNumber.from("0");
@@ -568,6 +595,10 @@ export function makeCompute(CHAIN = "1") {
           return amount;
         case FIXTURES["ETHEREUM"].ETH:
           return await quotes.ETHToRenZEC(amount);
+        case FIXTURES["ETHEREUM"].USDC:
+          return await quotes.getRenZECUSDCQuote(false, amount);
+        case FIXTURES["ETHEREUM"].USDT:
+          return await quotes.getRenZECUSDTQuote(false, amount);
         default:
           console.error("no asset found for getConvertedAmount:" + asset);
           return amount;
