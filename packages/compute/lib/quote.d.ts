@@ -15,6 +15,7 @@ export declare function makeQuoter(CHAIN?: string, provider?: any): {
     getRenZECUSDCQuote: (direction: any, amount: any) => Promise<any>;
     getRenZECUSDTQuote: (direction: any, amount: any) => Promise<any>;
     toUSDC: (amount: any) => Promise<any>;
+    getUSDCNativeQuote: (direction: any, amount: any) => Promise<any>;
     ETHtoRenBTC: (amount: any) => Promise<any>;
     chain: {
         provider: any;

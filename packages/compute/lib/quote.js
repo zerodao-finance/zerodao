@@ -298,6 +298,7 @@ function makeQuoter(CHAIN = "1", provider) {
         getRenZECUSDCQuote,
         getRenZECUSDTQuote,
         toUSDC,
+        getUSDCNativeQuote,
         ETHtoRenBTC,
         chain,
         getUSDTQuote,
@@ -360,6 +361,10 @@ function makeCompute(CHAIN = "1") {
         }
         switch (module) {
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC:
+                return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC_NATIVE:
+                return await quotes.getUSDCNativeQuote(true, await deductMintFee(amount, primaryToken));
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC_POOL:
                 return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].WBTC:
                 return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
@@ -427,6 +432,10 @@ function makeCompute(CHAIN = "1") {
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].renBTC:
                 return amount;
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC:
+                return await quotes.fromUSDC(amount);
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC_NATIVE:
+                return await quotes.getUSDCNativeQuote(false, amount);
+            case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDC_POOL:
                 return await quotes.fromUSDC(amount);
             case common_1.FIXTURES[(0, exports.getChainNameFixture)(quotes.chain.name)].USDT:
                 return await quotes.getUSDTQuote(false, amount);
