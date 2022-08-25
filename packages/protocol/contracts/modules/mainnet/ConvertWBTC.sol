@@ -7,6 +7,7 @@ import { ICurveInt128 } from "../../interfaces/CurvePools/ICurveInt128.sol";
 import { SafeMath } from "@openzeppelin/contracts-new/utils/math/SafeMath.sol";
 import { SafeERC20 } from "@openzeppelin/contracts-new/token/ERC20/utils/SafeERC20.sol";
 import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
+import { console2 as console } from "forge-std/console2.sol";
 
 contract ConvertWBTCMainnet is BaseConvert {
   using SafeMath for *;
@@ -15,7 +16,7 @@ contract ConvertWBTCMainnet is BaseConvert {
   uint256 constant _maxLoanGas = 10000;
   uint256 constant _maxRepayGas = 10000;
 
-  ICurveInt128 constant renCrv = ICurveInt128(0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
+  address constant renCrv = (0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
   IERC20 constant wbtc = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
   constructor(address asset) BaseConvert(asset) {}
@@ -37,7 +38,10 @@ contract ConvertWBTCMainnet is BaseConvert {
   }
 
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
-    amountOut = renCrv.exchange(0, 1, locals.amount, 1);
+    amountOut = wbtc.balanceOf(address(this));
+    (bool success, ) = renCrv.call(abi.encodeWithSelector(ICurveInt128.exchange.selector, 0, 1, locals.amount, 1));
+    require(success, "!curve swap");
+    amountOut = wbtc.balanceOf(address(this)) - amountOut;
   }
 
   function swapBack(ConvertLocals memory locals) internal override returns (uint256 amountOut) {

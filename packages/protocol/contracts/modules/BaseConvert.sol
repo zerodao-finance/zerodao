@@ -20,7 +20,9 @@ abstract contract BaseConvert is BaseModule {
     if (data.length > 0) (locals.minOut) = abi.decode(data, (uint256));
     console.log("swapping");
     collateralIssued = swap(locals);
+    console.log("swapped");
     transfer(borrower, amount);
+    console.log("transferred");
   }
 
   function _repayLoan(

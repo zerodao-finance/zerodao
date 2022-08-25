@@ -103,6 +103,7 @@ contract BTCVaultTest is Test {
     bytes memory sig;
     IGateway(gateway).mint(bytes32(0x0), 1000000000, bytes32(0x0), sig);
     IERC20(renbtc).approve(address(vault), ~uint256(1) << 2);
+    vm.deal(address(vault), 10 ether);
   }
 
   function testMockGatewayLogic() public {
