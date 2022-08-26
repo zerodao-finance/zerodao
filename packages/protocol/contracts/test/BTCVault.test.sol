@@ -33,7 +33,7 @@ contract BTCVaultTest is Test {
     return
       address(
         new ZeroBTC(
-          IGatewayRegistry(0xe4b679400F0f267212D5D812B95f58C83243EE71),
+          IGatewayRegistry(0xf36666C230Fa12333579b9Bd6196CB634D6BC506),
           IChainlinkOracle(0xdeb288F737066589598e9214E782fa5A8eD689e8),
           IChainlinkOracle(0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C),
           IRenBtcEthConverter(address(0x0)),
@@ -51,7 +51,7 @@ contract BTCVaultTest is Test {
   function deployVault(address proxy, address converter) internal returns (address _vault) {
     _vault = address(
       new ZeroBTC(
-        IGatewayRegistry(0xe4b679400F0f267212D5D812B95f58C83243EE71),
+        IGatewayRegistry(0xf36666C230Fa12333579b9Bd6196CB634D6BC506),
         IChainlinkOracle(0xdeb288F737066589598e9214E782fa5A8eD689e8),
         IChainlinkOracle(0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C),
         IRenBtcEthConverter(address(converter)),
@@ -114,5 +114,7 @@ contract BTCVaultTest is Test {
     bytes memory data;
     vault.deposit(10000000, address(this));
     vault.loan(address(module), zerowallet, 1000000, 1, data);
+    bytes memory sig;
+    vault.repay(address(module), zerowallet, 1000000, 1, data, address(this), bytes32(0), sig);
   }
 }

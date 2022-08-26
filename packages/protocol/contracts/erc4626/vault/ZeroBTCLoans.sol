@@ -114,8 +114,11 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
 
     bytes32 pHash = _deriveLoanPHash(data);
+    console.log("phash derived");
+    console.log(address(_getGateway()));
     uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
 
+    console.log("minted");
     ModuleType moduleType = moduleState.getModuleType();
 
     uint256 loanId = _deriveLoanId(lender, pHash);
