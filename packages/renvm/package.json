@@ -1,0 +1,23 @@
+{
+    "name": "@zerodao/renvm",
+    "version": "0.3.17",
+    "description": "RenVM SDK subpackage",
+    "main": "lib/index.js",
+    "repository": "https://github.com/zerodao-finance/zerodao",
+    "author": "Z DAO LLC",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+      "typescript": "^4.8.2"
+
+    },
+    "scripts": {
+        "build": "tsc",
+        "test": "node lib/TransferRequestV2.js"
+      },
+      "publishConfig": {
+        "access": "public"
+      }
+}
+
+  
