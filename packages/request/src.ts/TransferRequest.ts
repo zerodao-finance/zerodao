@@ -172,6 +172,20 @@ export class TransferRequest extends Request {
       withRenParams: true,
     };
   }
+  async getExplorer() {
+    const eth = getProvider(this);
+    const renVM = this._getRenVM();
+    const result = renVM.withChains(eth).gateway({
+      asset: this._getRemoteChainName(),
+      from: this._getRemoteChain().GatewayAddress(),
+      to: eth.Contract(this._getContractParams()),
+      //@ts-ignore
+      nonce: arrayify(this.nonce),
+    });
+    const tx = explorer(eth, this._getRemoteChainName, this._getRemoteChain(), eth, this._getRemoteChain().GatewayAddress(), eth.Contract(this._getContractParams()), arrayify(this.nonce))
+
+    return result;
+  }
   async submitToRenVM(): Promise<Gateway> {
     if (this._mint) return this._mint;
     const eth = getProvider(this);
