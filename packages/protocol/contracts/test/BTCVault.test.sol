@@ -91,7 +91,7 @@ contract BTCVaultTest is Test {
     (vault, ) = initializeProxy(address(converter));
 
     module = new ConvertWBTC(renbtc);
-    vault.addModule(address(module), ModuleType.LoanOverride, 250, 250);
+    vault.addModule(address(module), ModuleType.LoanOverride, 181e3, 82e3);
     bytes memory bytecode = (vm.getCode("MockGatewayLogicV1.sol"));
     address mockGateway;
     assembly {

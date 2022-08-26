@@ -64,7 +64,6 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
 
     uint256 loanId = _deriveLoanId(msg.sender, _deriveLoanPHash(data));
 
-    console.log(loanId);
     (uint256 actualBorrowAmount, uint256 lenderDebt, uint256 btcFeeForLoanGas) = _calculateLoanFees(
       state,
       moduleState,

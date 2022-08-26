@@ -4,6 +4,7 @@ pragma solidity >=0.8.13;
 import "./ZeroBTCCache.sol";
 import "../utils/Math.sol";
 import { IStrategy } from "../../interfaces/IStrategy.sol";
+import { console2 as console } from "forge-std/console2.sol";
 
 abstract contract ZeroBTCConfig is ZeroBTCCache {
   using ModuleStateCoder for ModuleState;
@@ -72,6 +73,8 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
     uint256 loanGasE4 = loanGas.uncheckedDivUpE4();
     uint256 repayGasE4 = repayGas.uncheckedDivUpE4();
 
+    console.log(loanGasE4, repayGasE4);
+
     // Get updated global state, with cache refreshed if it had expired
     (GlobalState state, ) = _getUpdatedGlobalState();
 
@@ -82,6 +85,8 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
       uint256 btcFeeForLoanGas,
       uint256 btcFeeForRepayGas
     ) = _calculateModuleGasFees(state, loanGasE4, repayGasE4);
+
+    console.log(ethRefundForLoanGas, btcFeeForLoanGas);
 
     // Write the module data to storage
     _moduleFees[module] = ModuleStateCoder.encode(
