@@ -11,40 +11,86 @@ const utils_2 = require("@renproject/utils");
 const gatewayAddress_1 = require("./gatewayAddress");
 const gHash_1 = require("./gHash");
 const processDeposit_1 = require("./processDeposit");
-const explorer = async (provider, asset, fromChain, toChain, from, to, nonce) => {
+const bignumber_js_1 = __importDefault(require("bignumber.js"));
+const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, amount) => {
     // provider = type EthereumBaseChain
     // asset = "BTC or ZEC"
     // fromChain Bitcoin or Zcash class
     // from = { chain = "BTC" | "ZEC", type = "gatewayAddress" }
     // to = to Object
     //nonce = arrayified nonce
+    const bigAmount = new bignumber_js_1.default(amount);
     const timeout = 120000;
-    const blockStatePayload = await generatePayload("ren_queryBlockState", asset);
+    const blockStatePayload = await generatePayload("ren_queryBlockState", {
+        asset
+    });
     const resp = await axios_1.default.post("https://rpc.renproject.io", blockStatePayload, { timeout });
     const { state } = resp.data.result;
-    const getBlockState = await (0, exports.memoize)(utils_1.pack.unmarshal.unmarshalTypedPackValue(state));
+    const getBlockState = await (0, exports.memoize)(() => utils_1.pack.unmarshal.unmarshalTypedPackValue(state));
     const blockState = await getBlockState();
     const shardKey = blockState[asset].shards[0].pubKey;
+    /* becomes {
+              gPubKey: utils.toURLBase64(pubKey),
+          }
+          then shard in gateway
+          then params.shard in gatewayTransaction
+          in gatewayTransaction:
+          gPubKey = utils.fromBase64(params.shard.gPubKey)
+          then params.gpubkey in RenVMCrossChainTxSubmitter
+          gpubkey = utils.toURLBase64(params.gpubkey)
+          then to RenVMTxSubmitter:
+          tx.in.gpubkey
+          passed this way to generateTransactionHash
+          */
     let gHash = await (0, gHash_1.getGatewayHash)(provider, asset, to, provider.network, to.chain, nonce);
     //  const address = getGatewayAddress("BTC", { chain: "Bitcoin", type: "gatewayAddress"}, shardKey, gHash);
-    const gatewayAddress = await (0, gatewayAddress_1.getGatewayAddress)(from, asset, from, shardKey, gHash);
+    const gatewayAddress = await (0, gatewayAddress_1.getGatewayAddress)(fromChain, asset, from, shardKey, gHash);
     // fetchTxs
     const chain = fromChain.network.selector;
-    const txs = await axios_1.default.get(`https://blockstream.info/api/address/${gatewayAddress}/txs`);
-    const results = txs.map(tx => (0, processDeposit_1.processDeposit)(fromChain, toChain, {
-        chain: chain,
-        txid: utils_2.utils.toURLBase64(utils_2.utils.fromHex(tx.txid).reverse()),
-        txHash: tx.txid,
-        txindex: tx.txindex,
-        explorerLink: fromChain.transactionExplorerLink({
-            txHash: tx.txid
-        }) || "",
-        asset,
-        amount: tx.amount
-    }, asset, to, { shardKey }, nonce));
-    results.map(result => console.log(result));
+    const resps = await axios_1.default.get(`https://blockstream.info/api/address/${gatewayAddress}/txs`);
+    const response = resps.data;
+    const received = [];
+    let latestBlock;
+    for (const tx of response) {
+        latestBlock = latestBlock || new bignumber_js_1.default(await fetchHeight());
+        for (let i = 0; i < tx.vout.length; i++) {
+            const vout = tx.vout[i];
+            received.push({
+                txid: tx.txid,
+                amount: vout.value.toString(),
+                txindex: i.toString(),
+                height: tx.status.confirmed ? tx.status.block_height.toString() : null
+            });
+        }
+    }
+    const results = received.map(tx => {
+        try {
+            (0, processDeposit_1.processDeposit)(fromChain, toChain, {
+                chain: chain,
+                txid: utils_2.utils.toURLBase64(utils_2.utils.fromHex(tx.txid).reverse()),
+                txHash: tx.txid,
+                txindex: tx.txindex,
+                explorerLink: fromChain.transactionExplorerLink({
+                    txHash: tx.txid
+                }) || "",
+                asset,
+                amount: tx.amount
+            }, asset, to, shardKey, nonce, bigAmount);
+        }
+        catch (error) { }
+    });
+    return results;
 };
 exports.explorer = explorer;
+const fetchHeight = async () => {
+    const response = await axios_1.default.get(getAPIUrl(`/blocks/tip/height`), {
+        timeout: 30000
+    });
+    return response.data.toString();
+};
+const getAPIUrl = (path) => {
+    return `https://blockstream.info/api${path}`;
+};
 const generatePayload = (method, params) => ({
     id: 1,
     jsonrpc: "2.0",

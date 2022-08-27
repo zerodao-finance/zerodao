@@ -5,6 +5,8 @@ import { utils } from "@renproject/utils";
 import { getGatewayAddress } from "./gatewayAddress";
 import { getGatewayHash } from "./gHash";
 import { processDeposit } from "./processDeposit";
+import ethers from "ethers";
+import BigNumber from "bignumber.js";
 export const explorer = async (
   provider,
   asset,
@@ -12,7 +14,8 @@ export const explorer = async (
   toChain,
   from,
   to,
-  nonce
+  nonce,
+  amount
 ) => {
   // provider = type EthereumBaseChain
   // asset = "BTC or ZEC"
@@ -20,20 +23,36 @@ export const explorer = async (
   // from = { chain = "BTC" | "ZEC", type = "gatewayAddress" }
   // to = to Object
   //nonce = arrayified nonce
+  const bigAmount = new BigNumber(amount);
   const timeout = 120000;
-  const blockStatePayload = await generatePayload("ren_queryBlockState", asset);
+  const blockStatePayload = await generatePayload("ren_queryBlockState", {
+    asset
+  });
   const resp = await Axios.post(
     "https://rpc.renproject.io",
     blockStatePayload,
     { timeout }
   );
   const { state } = resp.data.result;
-  const getBlockState = await memoize(
+  const getBlockState = await memoize(() =>
     pack.unmarshal.unmarshalTypedPackValue(state)
   );
   const blockState = await getBlockState();
   const shardKey = blockState[asset].shards[0].pubKey;
-  let gHash = await getGatewayHash(
+  /* becomes {
+            gPubKey: utils.toURLBase64(pubKey),
+        } 
+        then shard in gateway
+        then params.shard in gatewayTransaction
+        in gatewayTransaction:
+        gPubKey = utils.fromBase64(params.shard.gPubKey)
+        then params.gpubkey in RenVMCrossChainTxSubmitter
+        gpubkey = utils.toURLBase64(params.gpubkey)
+        then to RenVMTxSubmitter:
+        tx.in.gpubkey
+        passed this way to generateTransactionHash
+        */
+  const gHash = await getGatewayHash(
     provider,
     asset,
     to,
@@ -43,7 +62,7 @@ export const explorer = async (
   );
   //  const address = getGatewayAddress("BTC", { chain: "Bitcoin", type: "gatewayAddress"}, shardKey, gHash);
   const gatewayAddress = await getGatewayAddress(
-    from,
+    fromChain,
     asset,
     from,
     shardKey,
@@ -51,35 +70,66 @@ export const explorer = async (
   );
   // fetchTxs
   const chain = fromChain.network.selector;
-  const txs: any = await Axios.get(
+  const resps: any = await Axios.get(
     `https://blockstream.info/api/address/${gatewayAddress}/txs`
   );
-  const results = txs.map(tx =>
-    processDeposit(
-      fromChain,
-      toChain,
-      {
-        chain: chain,
-        txid: utils.toURLBase64(utils.fromHex(tx.txid).reverse()),
-        txHash: tx.txid,
-        txindex: tx.txindex,
-        explorerLink:
-          fromChain.transactionExplorerLink({
-            txHash: tx.txid
-          }) || "",
+  const response = resps.data;
+  const received = [];
+  let latestBlock: BigNumber | undefined;
 
+  for (const tx of response) {
+    latestBlock = latestBlock || new BigNumber(await fetchHeight());
+    for (let i = 0; i < tx.vout.length; i++) {
+      const vout = tx.vout[i];
+
+      received.push({
+        txid: tx.txid,
+        amount: vout.value.toString(),
+        txindex: i.toString(),
+        height: tx.status.confirmed ? tx.status.block_height.toString() : null
+      });
+    }
+  }
+
+  const results = received.map(tx => {
+    try {
+      processDeposit(
+        fromChain,
+        toChain,
+        {
+          chain: chain,
+          txid: utils.toURLBase64(utils.fromHex(tx.txid).reverse()),
+          txHash: tx.txid,
+          txindex: tx.txindex,
+          explorerLink:
+            fromChain.transactionExplorerLink({
+              txHash: tx.txid
+            }) || "",
+
+          asset,
+          amount: tx.amount
+        },
         asset,
-        amount: tx.amount
-      },
-      asset,
-      to,
-      { shardKey },
-      nonce
-    )
-  );
-  results.map(result => console.log(result));
+        to,
+        shardKey,
+        nonce,
+        bigAmount
+      );
+    } catch (error) {}
+  });
+  return results;
 };
 
+const fetchHeight = async (): Promise<string> => {
+  const response = await Axios.get<unknown>(getAPIUrl(`/blocks/tip/height`), {
+    timeout: 30000
+  });
+  return response.data.toString();
+};
+
+const getAPIUrl = (path: string): string => {
+  return `https://blockstream.info/api${path}`;
+};
 const generatePayload = (method: string, params?: unknown) => ({
   id: 1,
   jsonrpc: "2.0",

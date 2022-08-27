@@ -16,8 +16,10 @@ export const processDeposit = async (
   asset,
   to,
   shard,
-  _nonce
+  _nonce,
+  amount
 ) => {
+  const newAmount = new BigNumber(inputTx.amount);
   const nonce = utils.toURLBase64(
     // Check if the deposit has an associated nonce. This will
     // be true for contract-based inputs.
@@ -34,13 +36,13 @@ export const processDeposit = async (
     toChain
   });
 
-  let payload = await toChain.getOutputPayload(
+  const payload = await toChain.getOutputPayload(
     asset,
     inputType,
     outputType,
     to
   );
-  const nonceBytes: Uint8Array =
+  const nonceBytes =
     typeof nonce === "string"
       ? utils.fromBase64(nonce)
       : utils.toNBytes(nonce || 0, 32);
@@ -50,7 +52,7 @@ export const processDeposit = async (
     utils.fromBase64(inputTx.txid),
     inputTx.txindex
   );
-  const gPubKey = utils.fromBase64(shard);
+  const gPubKey = utils.toURLBase64(shard);
   const pHash = generatePHash(payload.payload);
   const sHash = generateSHash(`${asset}/to${to.chain}`);
   const gHash = generateGHash(pHash, sHash, payload.toBytes, nonceBytes);
@@ -60,7 +62,7 @@ export const processDeposit = async (
     method: "ren_queryConfig",
     params: {}
   };
-  const timeout = 1200000;
+  const timeout = 120000;
   const queryConfig = utils.memoize(async () => {
     const response = await axios.post<JSONRPCResponse<any>>(
       "https://rpc.renproject.io",
@@ -71,24 +73,31 @@ export const processDeposit = async (
   });
   const RenVMConfig = await queryConfig();
   const config = RenVMConfig.network;
-  return await getPack(
-    selector,
-    {
-      txid: utils.fromBase64(inputTx.txid),
-      txindex: new BigNumber(inputTx.txindex),
-      amount: new BigNumber(inputTx.amount),
-      payload: payload.payload,
-      phash: pHash,
-      to: payload.to,
-      nonce: nonceBytes,
-      nhash: nHash,
-      gpubkey: gPubKey,
-      ghash: gHash
-    },
-    config
-  );
+  const result =
+    amount.c[0] == newAmount.c[0]
+      ? await getPack(
+          selector,
+          {
+            txid: utils.fromBase64(inputTx.txid),
+            txindex: new BigNumber(inputTx.txindex),
+            amount: new BigNumber(inputTx.amount),
+            payload: payload.payload,
+            phash: pHash,
+            to: payload.to,
+            nonce: nonceBytes,
+            nhash: nHash,
+            gpubkey: gPubKey,
+            ghash: gHash
+          },
+          config,
+          inputTx.txHash
+        )
+      : "";
+  return result;
 };
-export const getPack = async (selector, params, config) => {
+export const getPack = async (selector, params, config, txHash) => {
+  //  console.log(params.payload);
+  // console.log(utils.toURLBase64(params.payload))
   return await sendToRPC(
     {
       selector,
@@ -103,20 +112,23 @@ export const getPack = async (selector, params, config) => {
           to: params.to,
           nonce: utils.toURLBase64(params.nonce),
           nhash: utils.toURLBase64(params.nhash),
-          gpubkey: utils.toURLBase64(params.gpubkey),
+          gpubkey: params.gpubkey,
           ghash: utils.toURLBase64(params.ghash)
         }
       }
     },
+    txHash,
     config
   );
 };
-export const sendToRPC = async (params, config?) => {
+export const sendToRPC = async (params, txHash, config?) => {
   const version = "1";
+  // console.log(params.selector)
+  // console.log(params.in)
   const hash = utils.toURLBase64(
     generateTransactionHash(version, params.selector, params.in)
   );
-
+  const array = generateTransactionHash(version, params.selector, params.in);
   const postPayload = {
     id: 1,
     jsonrpc: "2.0",
@@ -133,10 +145,13 @@ export const sendToRPC = async (params, config?) => {
     return response.data.result;
   });
   const txResponse = await queryTx();
-  return {
-    tx: unmarshalRenVMTransaction(txResponse.tx),
-    txStatus: txResponse.txStatus
-  };
+  console.log(txResponse);
+  return txResponse.tx
+    ? {
+        tx: unmarshalRenVMTransaction(txResponse.tx),
+        txStatus: txResponse.txStatus
+      }
+    : "";
 };
 export type JSONRPCResponse<T> =
   | {
