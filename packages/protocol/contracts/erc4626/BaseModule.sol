@@ -31,21 +31,6 @@ abstract contract BaseModule is ZeroBTCStorage {
     moduleState = _moduleFees[_moduleSlot];
   }
 
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxBurnGas() public virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxLoanGas() public virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxRepayGas() public virtual returns (uint256);
-
   /**
    * @notice Repays a loan.
    *

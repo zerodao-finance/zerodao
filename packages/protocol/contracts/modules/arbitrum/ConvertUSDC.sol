@@ -26,18 +26,6 @@ contract ConvertUSDCArbitrum is BaseConvert {
 
   constructor(address asset) BaseConvert(asset) {}
 
-  function maxBurnGas() public override returns (uint256) {
-    return _maxBurnGas;
-  }
-
-  function maxRepayGas() public override returns (uint256) {
-    return _maxLoanGas;
-  }
-
-  function maxLoanGas() public override returns (uint256) {
-    return _maxRepayGas;
-  }
-
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     uint256 wbtcAmountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));
     bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, weth, usdcWethFee, usdc);

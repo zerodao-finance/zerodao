@@ -4,6 +4,8 @@ import "forge-std/console.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import { ConvertWBTCMainnet as ConvertWBTC } from "../modules/mainnet/ConvertWBTC.sol";
+import { ConvertUSDCMainnet as ConvertUSDC } from "../modules/mainnet/ConvertUSDC.sol";
+import { ConvertNativeMainnet as ConvertETH } from "../modules/mainnet/ConvertNative.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
@@ -21,7 +23,9 @@ contract BTCVaultTest is Test {
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;
-  ConvertWBTC module;
+  ConvertWBTC moduleWBTC;
+  ConvertUSDC moduleUSDC;
+  ConvertETH moduleETH;
 
   constructor() {}
 
@@ -90,8 +94,12 @@ contract BTCVaultTest is Test {
     RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
     (vault, ) = initializeProxy(address(converter));
 
-    module = new ConvertWBTC(renbtc);
-    vault.addModule(address(module), ModuleType.LoanOverride, 181e3, 82e3);
+    moduleWBTC = new ConvertWBTC(renbtc);
+    moduleUSDC = new ConvertUSDC(renbtc);
+    moduleETH = new ConvertETH(renbtc);
+    vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
+    vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 181e3, 82e3);
+    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 181e3, 82e3);
     bytes memory bytecode = (vm.getCode("MockGatewayLogicV1.sol"));
     address mockGateway;
     assembly {
@@ -110,11 +118,23 @@ contract BTCVaultTest is Test {
     assertFalse(IERC20(renbtc).balanceOf(address(this)) == 0);
   }
 
-  function testZeroLoan() public {
+  function zeroLoan(address module) public {
     bytes memory data;
     vault.deposit(10000000, address(this));
     vault.loan(address(module), zerowallet, 1000000, 1, data);
     bytes memory sig;
     vault.repay(address(module), zerowallet, 1000000, 1, data, address(this), bytes32(0), sig);
+  }
+
+  function testZeroLoanWBTC() public {
+    zeroLoan(address(moduleWBTC));
+  }
+
+  function testZeroLoanUSDC() public {
+    zeroLoan(address(moduleUSDC));
+  }
+
+  function testZeroLoanETH() public {
+    zeroLoan(address(moduleETH));
   }
 }

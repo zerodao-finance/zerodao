@@ -3,7 +3,6 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import { BaseModule } from "../erc4626/BaseModule.sol";
-import { console2 as console } from "forge-std/console2.sol";
 
 abstract contract BaseConvert is BaseModule {
   constructor(address asset) BaseModule(asset) {}
@@ -18,11 +17,8 @@ abstract contract BaseConvert is BaseModule {
     locals.borrower = borrower;
     locals.amount = amount;
     if (data.length > 0) (locals.minOut) = abi.decode(data, (uint256));
-    console.log("swapping");
     collateralIssued = swap(locals);
-    console.log("swapped");
     transfer(borrower, amount);
-    console.log("transferred");
   }
 
   function _repayLoan(

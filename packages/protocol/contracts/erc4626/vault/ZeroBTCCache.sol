@@ -3,7 +3,6 @@ pragma solidity >=0.8.13;
 
 import "./ZeroBTCBase.sol";
 import "../utils/Math.sol";
-import { console2 as console } from "forge-std/console2.sol";
 
 abstract contract ZeroBTCCache is ZeroBTCBase {
   using ModuleStateCoder for ModuleState;

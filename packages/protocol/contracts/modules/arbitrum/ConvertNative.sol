@@ -10,7 +10,7 @@ import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import { IWETH } from "../../interfaces/IWETH.sol";
 
-contract ConvertUSDCMainnet is BaseConvert {
+contract ConvertNativeArbitrum is BaseConvert {
   using SafeMath for *;
   using SafeERC20 for IERC20;
   uint256 constant _maxBurnGas = 10000;
@@ -26,18 +26,6 @@ contract ConvertUSDCMainnet is BaseConvert {
   ISwapRouter constant routerV3 = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
   constructor(address asset) BaseConvert(asset) {}
-
-  function maxBurnGas() public override returns (uint256) {
-    return _maxBurnGas;
-  }
-
-  function maxRepayGas() public override returns (uint256) {
-    return _maxLoanGas;
-  }
-
-  function maxLoanGas() public override returns (uint256) {
-    return _maxRepayGas;
-  }
 
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     uint256 wbtcAmountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));

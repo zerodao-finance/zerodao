@@ -20,18 +20,6 @@ contract ConvertWBTCArbitrum is BaseConvert {
 
   constructor(address asset) BaseConvert(asset) {}
 
-  function maxBurnGas() public override returns (uint256) {
-    return _maxBurnGas;
-  }
-
-  function maxRepayGas() public override returns (uint256) {
-    return _maxLoanGas;
-  }
-
-  function maxLoanGas() public override returns (uint256) {
-    return _maxRepayGas;
-  }
-
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     amountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));
   }

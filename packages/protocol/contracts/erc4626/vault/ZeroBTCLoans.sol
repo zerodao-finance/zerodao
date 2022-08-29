@@ -70,18 +70,13 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       borrowAmount
     );
 
-    console.log(actualBorrowAmount);
     // Store loan information and lock lender's shares
     _borrowFrom(uint256(loanId), msg.sender, borrower, actualBorrowAmount, lenderDebt, btcFeeForLoanGas);
-    console.log("borrowed");
 
     (ModuleType moduleType, uint256 ethRefundForLoanGas) = moduleState.getLoanParams();
-    console.log("params prepared", uint256(moduleType));
     if (uint256(moduleType) > 0) {
-      console.log("executing receive loan");
       // Execute module interaction
       _executeReceiveLoan(module, borrower, loanId, actualBorrowAmount, data);
-      console.log("loan executed");
     } else {
       // If module does not override loan behavior,
       asset.safeTransfer(borrower, actualBorrowAmount);
@@ -113,11 +108,8 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
 
     bytes32 pHash = _deriveLoanPHash(data);
-    console.log("phash derived");
-    console.log(address(_getGateway()));
     uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
 
-    console.log("minted");
     ModuleType moduleType = moduleState.getModuleType();
 
     uint256 loanId = _deriveLoanId(lender, pHash);
@@ -223,7 +215,6 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 amount,
     bytes memory data
   ) internal view {
-    console.log("preparing call data");
     assembly {
       let startPtr := sub(data, ModuleCall_data_length_offset)
       // Write function selector
@@ -237,7 +228,6 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       // Write data offset
       mstore(add(startPtr, ModuleCall_data_head_offset), ModuleCall_data_offset)
     }
-    console.log("data prepared");
   }
 
   function _executeReceiveLoan(
@@ -247,7 +237,6 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 borrowAmount,
     bytes memory data
   ) internal RestoreFourWordsBefore(data) {
-    console.log("inside execution");
     // _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
     (bool success, bytes memory data) = module.delegatecall(
       abi.encodeWithSelector(bytes4(bytes32(ReceiveLoan_selector)), borrower, borrowAmount, loanId, data)
@@ -415,7 +404,6 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     if (!oldRecord.isNull()) {
       revert LoanIdNotUnique(loanId);
     }
-    console.log(_balanceOf[lender], shares);
     // Reduce lender's balance to lock shares for their debt
     _balanceOf[lender] -= shares;
 

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.13;
-import { console2 as console } from "forge-std/console2.sol";
 
 contract MemoryRestoration {
   modifier RestoreOneWord(uint256 slot1) {
@@ -79,14 +78,12 @@ contract MemoryRestoration {
     uint256 cachedValue2;
     uint256 cachedValue3;
     uint256 cachedValue4;
-    console.log("restoring");
     assembly {
       cachedValue1 := mload(sub(data, 0x20))
       cachedValue2 := mload(sub(data, 0x40))
       cachedValue3 := mload(sub(data, 0x60))
       cachedValue4 := mload(sub(data, 0x80))
     }
-    console.log("restored");
     _;
     assembly {
       mstore(sub(data, 0x20), cachedValue1)
