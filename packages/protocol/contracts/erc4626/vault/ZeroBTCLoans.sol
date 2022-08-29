@@ -4,6 +4,7 @@ pragma solidity >=0.8.13;
 import "./ZeroBTCCache.sol";
 import { DefaultLoanRecord } from "../utils/LoanRecordCoder.sol";
 import { BaseModule } from "../BaseModule.sol";
+import { console2 as console } from "forge-std/console2.sol";
 import "../utils/FixedPointMathLib.sol";
 
 uint256 constant ReceiveLoanError_selector = 0x83f44e2200000000000000000000000000000000000000000000000000000000;
@@ -208,27 +209,36 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
                           Module Interactions
   //////////////////////////////////////////////////////////////*/
 
-  function _prepareModuleCalldata(
-    uint256 selector,
-    address borrower,
-    uint256 loanId,
-    uint256 amount,
-    bytes memory data
-  ) internal view {
-    assembly {
-      let startPtr := sub(data, ModuleCall_data_length_offset)
-      // Write function selector
-      mstore(startPtr, selector)
-      // Write borrower
-      mstore(add(startPtr, ModuleCall_borrower_offset), borrower)
-      // Write borrowAmount or repaidAmount
-      mstore(add(startPtr, ModuleCall_amount_offset), amount)
-      // Write loanId
-      mstore(add(startPtr, ModuleCall_loanId_offset), loanId)
-      // Write data offset
-      mstore(add(startPtr, ModuleCall_data_head_offset), ModuleCall_data_offset)
-    }
-  }
+  // function _prepareModuleCalldata(
+  //   uint256 selector,
+  //   address borrower,
+  //   uint256 amount,
+  //   uint256 loanId,
+  //   bytes memory data
+  // ) internal view {
+  //   bytes32 startptr;
+  //   bytes32 datalocation;
+  //   console.log(amount);
+  //   assembly {
+  //     let startPtr := sub(data, ModuleCall_data_offset)
+  //     startptr := startPtr
+  //     // Write function selector
+  //     mstore(startPtr, selector)
+  //     // Write borrower
+  //     mstore(add(startPtr, ModuleCall_borrower_offset), amount)
+  //     datalocation := mload(add(startPtr, ModuleCall_amount_offset))
+  //   }
+  //   console.logBytes32(datalocation);
+  //   assembly {
+  //     let startPtr := sub(data, ModuleCall_data_offset)
+  //     // Write borrowAmount or repaidAmount
+  //     mstore(add(startPtr, ModuleCall_amount_offset), amount)
+  //     // Write loanId
+  //     mstore(add(startPtr, ModuleCall_loanId_offset), loanId)
+  //     // Write data offset
+  //     mstore(add(startPtr, ModuleCall_data_head_offset), ModuleCall_data_length_offset)
+  //   }
+  // }
 
   function _executeReceiveLoan(
     address module,
@@ -236,14 +246,14 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 loanId,
     uint256 borrowAmount,
     bytes memory data
-  ) internal RestoreFourWordsBefore(data) {
-    // _prepareModuleCalldata(ReceiveLoan_selector, borrower, loanId, borrowAmount, data);
-    (bool success, bytes memory data) = module.delegatecall(
+  ) internal {
+    // _prepareModuleCalldata(ReceiveLoan_selector, borrower, borrowAmount, loanId, data);
+    (bool success, ) = module.delegatecall(
       abi.encodeWithSelector(bytes4(bytes32(ReceiveLoan_selector)), borrower, borrowAmount, loanId, data)
     );
     require(success, "!module");
     /* assembly {
-      let startPtr := sub(data, ModuleCall_data_length_offset)
+      let startPtr := sub(data, ModuleCall_data_offset)
       // Size of data + (selector, borrower, borrowAmount, loanId, data_offset, data_length)
       let calldataLength := add(mload(data), ModuleCall_calldata_baseLength)
       // Delegatecall module
@@ -266,7 +276,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
         // Revert with ReceiveLoanError
         revert(sub(startPtr, 0x20), add(calldataLength, 0x20))
       }
-    } */
+    }*/
   }
 
   function _executeRepayLoan(
@@ -275,10 +285,15 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 loanId,
     uint256 repaidAmount,
     bytes memory data
-  ) internal RestoreFourWordsBefore(data) returns (uint256 collateralToUnlock) {
-    _prepareModuleCalldata(RepayLoan_selector, borrower, loanId, repaidAmount, data);
-    assembly {
-      let startPtr := sub(data, ModuleCall_data_length_offset)
+  ) internal returns (uint256 collateralToUnlock) {
+    // _prepareModuleCalldata(RepayLoan_selector, borrower, repaidAmount, loanId, data);
+    (bool success, bytes memory _data) = module.delegatecall(
+      abi.encodeWithSelector(bytes4(bytes32(RepayLoan_selector)), borrower, repaidAmount, loanId, data)
+    );
+    require(success, "!module");
+    (collateralToUnlock) = abi.decode(_data, (uint256));
+    /* assembly {
+      let startPtr := sub(data, ModuleCall_data_offset)
       // Size of data + (selector, borrower, borrowAmount, loanId, data_offset, data_length)
       let calldataLength := add(mload(data), ModuleCall_calldata_baseLength)
       // Delegatecall module
@@ -302,7 +317,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
         revert(sub(startPtr, 0x20), add(calldataLength, 0x20))
       }
       collateralToUnlock := mload(0)
-    }
+    } */
   }
 
   /*//////////////////////////////////////////////////////////////
