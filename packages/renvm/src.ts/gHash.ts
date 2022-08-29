@@ -43,3 +43,29 @@ export const getGatewayHash = async (
   const gHash = generateGHash(pHash, sHash, payload.toBytes, _nonce);
   return gHash;
 };
+
+export const getPayloadHash = async (provider, asset, toObject, network) => {
+  const EVMParams = await provider.getEVMParams(
+    asset,
+    "lock",
+    "mint",
+    "mint",
+    {}
+  );
+  const getPayloadHandler = (payloadType: string): PayloadHandler<any> => {
+    switch (payloadType) {
+      case "contract":
+        return contractPayloadHandler;
+    }
+  };
+  const payload = await contractPayloadHandler.getPayload({
+    network,
+    signer: null,
+    payload: toObject,
+    evmParams: EVMParams,
+    getPayloadHandler
+  });
+  const pHash = generatePHash(payload.payload);
+
+  return pHash;
+};

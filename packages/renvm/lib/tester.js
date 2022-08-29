@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const request_1 = require("../../request");
+const utils_1 = require("@renproject/utils");
 (async () => {
     let req = await new request_1.TransferRequest({
         to: "0xd612D8729a39c9Ad011Af1b48011A0260Ef37B06",
@@ -15,5 +16,27 @@ const request_1 = require("../../request");
     });
     const results = await req.getRenTx();
     results.map(result => console.log(result));
+    const getNonce = async (nonce) => {
+        const nonceBytes = typeof nonce === "string"
+            ? utils_1.utils.fromBase64(nonce)
+            : utils_1.utils.toNBytes(nonce || 0, 32);
+        return nonceBytes;
+    };
+    /*  const paramsAlo = {
+       amount: "12500000000",
+       ghash: "IQKXAq4tgk3VOwVPaXFZ2_EQo1tAp7RO9PBmjID1ZmQ",
+       gpubkey: "A6Auk8-MR7JQB1sK9h-W69EDdsCqp2NRSOiJyytRyWkn",
+       nhash: "SOguzsPz8_UJ-mCd-0JqKaNgLOmhf2EKiaQISlpBvfk",
+       nonce: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEisfg",
+       payload:
+         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAABsE_oSAVGsH0OCK61818Q8-zr39AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQlRDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+       phash: "X8vBrH1RiD19ovYfl9-H8tAkY-hK3xS-bSBqo-2DvLk",
+       to: "32666B64e9fD0F44916E1378Efb2CFa3B3B96e80",
+      // txid: "dsyooQhZ8vleJGXclhDHnCh1TlJ5pFmWLpzf7XphtDs",
+       txid:"bFfLZQeNWB-rZi8LtaCNDZq9seKK_LzyqHL3Na2w4PU",
+       txindex: "0"
+     };
+     const result = await getPack("BTC/toEthereum", paramsAlo);
+     console.log(result); */
 })();
 //# sourceMappingURL=tester.js.map

@@ -17,7 +17,9 @@ export const processDeposit = async (
   to,
   shard,
   _nonce,
-  amount
+  amount,
+  gHash,
+  pHash
 ) => {
   const newAmount = new BigNumber(inputTx.amount);
   const nonce = utils.toURLBase64(
@@ -46,16 +48,15 @@ export const processDeposit = async (
     typeof nonce === "string"
       ? utils.fromBase64(nonce)
       : utils.toNBytes(nonce || 0, 32);
-
   const nHash = generateNHash(
     nonceBytes,
     utils.fromBase64(inputTx.txid),
     inputTx.txindex
   );
   const gPubKey = utils.toURLBase64(shard);
-  const pHash = generatePHash(payload.payload);
+  // const pHash = generatePHash(payload.payload);
   const sHash = generateSHash(`${asset}/to${to.chain}`);
-  const gHash = generateGHash(pHash, sHash, payload.toBytes, nonceBytes);
+  // const gHash = generateGHash(pHash, sHash, payload.toBytes, nonceBytes);
   const postPayload = {
     id: 1,
     jsonrpc: "2.0",
@@ -89,16 +90,15 @@ export const processDeposit = async (
             gpubkey: gPubKey,
             ghash: gHash
           },
-          config,
-          inputTx.txHash
+          config
         )
       : "";
   return result;
 };
-export const getPack = async (selector, params, config, txHash) => {
+export const getPack = async (selector, params, config?) => {
   //  console.log(params.payload);
   // console.log(utils.toURLBase64(params.payload))
-  return await sendToRPC(
+  /* return await sendToRPC(
     {
       selector,
       in: {
@@ -117,22 +117,45 @@ export const getPack = async (selector, params, config, txHash) => {
         }
       }
     },
-    txHash,
+    config
+  ); */
+  return await sendToRPC(
+    {
+      selector,
+      in: {
+        t: crossChainParamsType,
+        v: {
+          txid: params.txid,
+          txindex: params.txindex,
+          amount: params.amount,
+          payload: params.payload,
+          phash: params.phash,
+          to: params.to,
+          nonce: params.nonce,
+          nhash: params.nhash,
+          gpubkey: params.gpubkey,
+          ghash: params.ghash
+        }
+      }
+    },
     config
   );
 };
-export const sendToRPC = async (params, txHash, config?) => {
+export const sendToRPC = async (params, config?) => {
   const version = "1";
   // console.log(params.selector)
   // console.log(params.in)
-  const hash = utils.toURLBase64(
+  //const hash = generateTransactionHash(version, params.selector, params.in)
+  /* const hash = utils.toURLBase64(
     generateTransactionHash(version, params.selector, params.in)
-  );
-  const array = generateTransactionHash(version, params.selector, params.in);
+  ); */
+  const hash = params.in.v.txid;
+  // const array = generateTransactionHash(version, params.selector, params.in);
   const postPayload = {
     id: 1,
     jsonrpc: "2.0",
     method: "ren_queryTx",
+    // params: { hash } 
     params: { hash }
   };
   const timeout = 120000;
@@ -153,6 +176,7 @@ export const sendToRPC = async (params, txHash, config?) => {
       }
     : "";
 };
+
 export type JSONRPCResponse<T> =
   | {
       jsonrpc: string;

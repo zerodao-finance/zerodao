@@ -3,7 +3,7 @@ import { OrderedMap, Record } from "immutable";
 import { pack } from "@renproject/utils";
 import { utils } from "@renproject/utils";
 import { getGatewayAddress } from "./gatewayAddress";
-import { getGatewayHash } from "./gHash";
+import { getGatewayHash, getPayloadHash } from "./gHash";
 import { processDeposit } from "./processDeposit";
 import ethers from "ethers";
 import BigNumber from "bignumber.js";
@@ -60,6 +60,7 @@ export const explorer = async (
     to.chain,
     nonce
   );
+  const pHash = await getPayloadHash(provider, asset, to, provider.network);
   //  const address = getGatewayAddress("BTC", { chain: "Bitcoin", type: "gatewayAddress"}, shardKey, gHash);
   const gatewayAddress = await getGatewayAddress(
     fromChain,
@@ -76,12 +77,12 @@ export const explorer = async (
   const response = resps.data;
   const received = [];
   let latestBlock: BigNumber | undefined;
-
   for (const tx of response) {
     latestBlock = latestBlock || new BigNumber(await fetchHeight());
     for (let i = 0; i < tx.vout.length; i++) {
       const vout = tx.vout[i];
-
+      console.log(tx);
+      return;
       received.push({
         txid: tx.txid,
         amount: vout.value.toString(),
@@ -113,7 +114,9 @@ export const explorer = async (
         to,
         shardKey,
         nonce,
-        bigAmount
+        bigAmount,
+        gHash,
+        pHash
       );
     } catch (error) {}
   });

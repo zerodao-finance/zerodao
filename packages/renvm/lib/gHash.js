@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGatewayHash = void 0;
+exports.getPayloadHash = exports.getGatewayHash = void 0;
 const evmContractPayload_1 = require("./payload/evmContractPayload");
 const utils_1 = require("@renproject/utils");
 const utils_2 = require("@renproject/utils");
@@ -30,4 +30,23 @@ const getGatewayHash = async (provider, asset, toObject, network, chain, nonce) 
     return gHash;
 };
 exports.getGatewayHash = getGatewayHash;
+const getPayloadHash = async (provider, asset, toObject, network) => {
+    const EVMParams = await provider.getEVMParams(asset, "lock", "mint", "mint", {});
+    const getPayloadHandler = (payloadType) => {
+        switch (payloadType) {
+            case "contract":
+                return evmContractPayload_1.contractPayloadHandler;
+        }
+    };
+    const payload = await evmContractPayload_1.contractPayloadHandler.getPayload({
+        network,
+        signer: null,
+        payload: toObject,
+        evmParams: EVMParams,
+        getPayloadHandler
+    });
+    const pHash = (0, utils_1.generatePHash)(payload.payload);
+    return pHash;
+};
+exports.getPayloadHash = getPayloadHash;
 //# sourceMappingURL=gHash.js.map

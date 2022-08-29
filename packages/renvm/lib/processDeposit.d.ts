@@ -1,4 +1,4 @@
-export declare const processDeposit: (fromChain: any, toChain: any, inputTx: any, asset: any, to: any, shard: any, _nonce: any, amount: any) => Promise<"" | {
+export declare const processDeposit: (fromChain: any, toChain: any, inputTx: any, asset: any, to: any, shard: any, _nonce: any, amount: any, gHash: any, pHash: any) => Promise<"" | {
     tx: {
         version: number;
         hash: any;
@@ -8,7 +8,7 @@ export declare const processDeposit: (fromChain: any, toChain: any, inputTx: any
     };
     txStatus: any;
 }>;
-export declare const getPack: (selector: any, params: any, config: any, txHash: any) => Promise<"" | {
+export declare const getPack: (selector: any, params: any, config?: any) => Promise<"" | {
     tx: {
         version: number;
         hash: any;
@@ -18,7 +18,7 @@ export declare const getPack: (selector: any, params: any, config: any, txHash: 
     };
     txStatus: any;
 }>;
-export declare const sendToRPC: (params: any, txHash: any, config?: any) => Promise<"" | {
+export declare const sendToRPC: (params: any, config?: any) => Promise<"" | {
     tx: {
         version: number;
         hash: any;

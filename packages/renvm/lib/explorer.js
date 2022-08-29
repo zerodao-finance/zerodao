@@ -42,7 +42,8 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
           tx.in.gpubkey
           passed this way to generateTransactionHash
           */
-    let gHash = await (0, gHash_1.getGatewayHash)(provider, asset, to, provider.network, to.chain, nonce);
+    const gHash = await (0, gHash_1.getGatewayHash)(provider, asset, to, provider.network, to.chain, nonce);
+    const pHash = await (0, gHash_1.getPayloadHash)(provider, asset, to, provider.network);
     //  const address = getGatewayAddress("BTC", { chain: "Bitcoin", type: "gatewayAddress"}, shardKey, gHash);
     const gatewayAddress = await (0, gatewayAddress_1.getGatewayAddress)(fromChain, asset, from, shardKey, gHash);
     // fetchTxs
@@ -55,6 +56,8 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
         latestBlock = latestBlock || new bignumber_js_1.default(await fetchHeight());
         for (let i = 0; i < tx.vout.length; i++) {
             const vout = tx.vout[i];
+            console.log(tx);
+            return;
             received.push({
                 txid: tx.txid,
                 amount: vout.value.toString(),
@@ -75,7 +78,7 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
                 }) || "",
                 asset,
                 amount: tx.amount
-            }, asset, to, shardKey, nonce, bigAmount);
+            }, asset, to, shardKey, nonce, bigAmount, gHash, pHash);
         }
         catch (error) { }
     });

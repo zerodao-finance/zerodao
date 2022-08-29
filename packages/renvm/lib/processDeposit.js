@@ -11,7 +11,7 @@ const provider_1 = require("@renproject/provider");
 const bignumber_js_1 = require("bignumber.js");
 const axios_1 = __importDefault(require("axios"));
 const unmarshal_1 = require("./utils/unmarshal");
-const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _nonce, amount) => {
+const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _nonce, amount, gHash, pHash) => {
     const newAmount = new bignumber_js_1.BigNumber(inputTx.amount);
     const nonce = utils_1.utils.toURLBase64(
     // Check if the deposit has an associated nonce. This will
@@ -33,9 +33,9 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
         : utils_1.utils.toNBytes(nonce || 0, 32);
     const nHash = (0, utils_1.generateNHash)(nonceBytes, utils_1.utils.fromBase64(inputTx.txid), inputTx.txindex);
     const gPubKey = utils_1.utils.toURLBase64(shard);
-    const pHash = (0, utils_1.generatePHash)(payload.payload);
+    // const pHash = generatePHash(payload.payload);
     const sHash = (0, utils_2.generateSHash)(`${asset}/to${to.chain}`);
-    const gHash = (0, utils_2.generateGHash)(pHash, sHash, payload.toBytes, nonceBytes);
+    // const gHash = generateGHash(pHash, sHash, payload.toBytes, nonceBytes);
     const postPayload = {
         id: 1,
         jsonrpc: "2.0",
@@ -61,44 +61,70 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
             nhash: nHash,
             gpubkey: gPubKey,
             ghash: gHash
-        }, config, inputTx.txHash)
+        }, config)
         : "";
     return result;
 };
 exports.processDeposit = processDeposit;
-const getPack = async (selector, params, config, txHash) => {
+const getPack = async (selector, params, config) => {
     //  console.log(params.payload);
     // console.log(utils.toURLBase64(params.payload))
+    /* return await sendToRPC(
+      {
+        selector,
+        in: {
+          t: crossChainParamsType,
+          v: {
+            txid: utils.toURLBase64(params.txid),
+            txindex: params.txindex.toFixed(),
+            amount: params.amount.toFixed(),
+            payload: utils.toURLBase64(params.payload),
+            phash: utils.toURLBase64(params.phash),
+            to: params.to,
+            nonce: utils.toURLBase64(params.nonce),
+            nhash: utils.toURLBase64(params.nhash),
+            gpubkey: params.gpubkey,
+            ghash: utils.toURLBase64(params.ghash)
+          }
+        }
+      },
+      config
+    ); */
     return await (0, exports.sendToRPC)({
         selector,
         in: {
             t: provider_1.crossChainParamsType,
             v: {
-                txid: utils_1.utils.toURLBase64(params.txid),
-                txindex: params.txindex.toFixed(),
-                amount: params.amount.toFixed(),
-                payload: utils_1.utils.toURLBase64(params.payload),
-                phash: utils_1.utils.toURLBase64(params.phash),
+                txid: params.txid,
+                txindex: params.txindex,
+                amount: params.amount,
+                payload: params.payload,
+                phash: params.phash,
                 to: params.to,
-                nonce: utils_1.utils.toURLBase64(params.nonce),
-                nhash: utils_1.utils.toURLBase64(params.nhash),
+                nonce: params.nonce,
+                nhash: params.nhash,
                 gpubkey: params.gpubkey,
-                ghash: utils_1.utils.toURLBase64(params.ghash)
+                ghash: params.ghash
             }
         }
-    }, txHash, config);
+    }, config);
 };
 exports.getPack = getPack;
-const sendToRPC = async (params, txHash, config) => {
+const sendToRPC = async (params, config) => {
     const version = "1";
     // console.log(params.selector)
     // console.log(params.in)
-    const hash = utils_1.utils.toURLBase64((0, utils_2.generateTransactionHash)(version, params.selector, params.in));
-    const array = (0, utils_2.generateTransactionHash)(version, params.selector, params.in);
+    //const hash = generateTransactionHash(version, params.selector, params.in)
+    /* const hash = utils.toURLBase64(
+      generateTransactionHash(version, params.selector, params.in)
+    ); */
+    const hash = params.in.v.txid;
+    // const array = generateTransactionHash(version, params.selector, params.in);
     const postPayload = {
         id: 1,
         jsonrpc: "2.0",
         method: "ren_queryTx",
+        // params: { hash } 
         params: { hash }
     };
     const timeout = 120000;
@@ -108,7 +134,6 @@ const sendToRPC = async (params, txHash, config) => {
     });
     const txResponse = await queryTx();
     console.log(txResponse);
-    return;
     return txResponse.tx
         ? {
             tx: (0, unmarshal_1.unmarshalRenVMTransaction)(txResponse.tx),
