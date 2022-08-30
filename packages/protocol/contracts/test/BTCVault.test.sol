@@ -20,6 +20,7 @@ contract BTCVaultTest is Test {
   address constant gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
   address constant zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
   address constant rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
+  address moduleDummy;
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;
@@ -95,6 +96,7 @@ contract BTCVaultTest is Test {
     (vault, ) = initializeProxy(address(converter));
 
     moduleWBTC = new ConvertWBTC(renbtc);
+    moduleDummy = address(new ConvertWBTC(renbtc));
     moduleUSDC = new ConvertUSDC(renbtc);
     moduleETH = new ConvertETH(renbtc);
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
@@ -124,6 +126,12 @@ contract BTCVaultTest is Test {
     vault.loan(address(module), zerowallet, 1000000, 1, data);
     bytes memory sig;
     vault.repay(address(module), zerowallet, 1000000, 1, data, address(this), bytes32(0), sig);
+  }
+
+  function testModuleTypes() public {
+    vault.addModule(moduleDummy, ModuleType.LoanAndRepayOverride, 1000, 1000);
+    vault.removeModule(moduleDummy);
+    vault.addModule(address(0x0), ModuleType.Null, 1000, 1000);
   }
 
   function testZeroLoanWBTC() public {
