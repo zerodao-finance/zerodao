@@ -17,6 +17,8 @@ import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 
 contract BTCVaultTest is Test {
   address constant renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
+  address constant wbtc = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
+  address constant usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
   address constant gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
   address constant zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
   address constant rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
@@ -118,11 +120,30 @@ contract BTCVaultTest is Test {
     vault.deposit(10000000, address(this));
   }
 
+  function getBalance(address module) public returns (uint256) {
+    if (module == address(moduleWBTC)) {
+      return IERC20(wbtc).balanceOf(zerowallet);
+    } else if (module == address(moduleUSDC)) {
+      return IERC20(usdc).balanceOf(zerowallet);
+    } else if (module == address(moduleETH)) {
+      return zerowallet.balance;
+    } else {
+      return IERC20(renbtc).balanceOf(zerowallet);
+    }
+  }
+
+  modifier checkBalance(address module) {
+    uint256 balance = getBalance(module);
+    _;
+    require(getBalance(module) > balance, "tokens not generated");
+    console.log("tokens generated", getBalance(module) - balance);
+  }
+
   function testMockGatewayLogic() public {
     assertFalse(IERC20(renbtc).balanceOf(address(this)) == 0);
   }
 
-  function zeroLoan(address module) public {
+  function zeroLoan(address module) public checkBalance(module) {
     bytes memory data;
     vault.loan(address(module), zerowallet, 1000000, 1, data);
     bytes memory sig;
