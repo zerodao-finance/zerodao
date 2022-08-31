@@ -130,6 +130,7 @@ export const sendToRPC = async (params, config?) => {
   
   
   console.log(hash)
+  return;
   // const array = generateTransactionHash(version, params.selector, params.in);
   const postPayload = {
     id: 1,

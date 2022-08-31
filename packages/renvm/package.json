@@ -10,8 +10,10 @@
     "dependencies": {
       "typescript": "^4.8.2",
       "@renproject/chains": "^3.4.4",
-      "@renproject/utils": "3.4.4",
-      "@renproject/provider": "3.4.4"
+      "@renproject/utils": "^3.4.4",
+      "@renproject/provider": "^3.4.4",
+      "bignumber.js": "9.1.0",
+      "axios": "^0.27.2"
     },
     "scripts": {
         "build": "tsc",
