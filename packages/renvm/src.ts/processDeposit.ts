@@ -127,6 +127,8 @@ export const sendToRPC = async (params, config?) => {
   const hash = utils.toURLBase64(
     generateTransactionHash(version, params.selector, params.in)
   );
+  
+  
   console.log(hash)
   // const array = generateTransactionHash(version, params.selector, params.in);
   const postPayload = {

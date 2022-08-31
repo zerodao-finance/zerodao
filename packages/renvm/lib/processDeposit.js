@@ -86,8 +86,7 @@ const getPack = async (selector, params, config) => {
         },
     };
     console.log(pack);
-    return;
-    ;
+    (0, exports.sendToRPC)(pack);
 };
 exports.getPack = getPack;
 const sendToRPC = async (params, config) => {
