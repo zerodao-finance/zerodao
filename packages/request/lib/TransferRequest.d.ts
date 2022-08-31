@@ -15,6 +15,7 @@ export declare class TransferRequest extends Request {
     contractAddress: string;
     protected _queryTxResult: any;
     protected _mint: any;
+    protected _deposit: any;
     static get PROTOCOL(): string;
     constructor(params: {
         module: string;
@@ -48,6 +49,8 @@ export declare class TransferRequest extends Request {
         withRenParams: boolean;
     };
     submitToRenVM(): Promise<Gateway>;
+    waitForDeposit(): Promise<any>;
+    getTransactionHash(): Promise<any>;
     waitForSignature(): Promise<any>;
     toGatewayAddress(): Promise<string>;
     fallbackMint(signer: any): Promise<any>;

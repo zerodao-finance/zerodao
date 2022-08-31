@@ -151,15 +151,21 @@ class TransferRequest extends Request_1.Request {
         });
         return result;
     }
+    async waitForDeposit() {
+        if (this._deposit)
+            return this._deposit;
+        const mint = await this.submitToRenVM();
+        return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
+    }
+    async getTransactionHash() {
+        const deposit = await this.waitForDeposit();
+        return deposit.renVM.tx.hash;
+    }
     async waitForSignature() {
         if (this._queryTxResult)
             return this._queryTxResult;
         const mint = await this.submitToRenVM();
-        const deposit = await new Promise((resolve) => {
-            mint.on("transaction", (tx) => {
-                resolve(tx);
-            });
-        });
+        const deposit = await this.waitForDeposit();
         /*
         await deposit.in.wait();
        */

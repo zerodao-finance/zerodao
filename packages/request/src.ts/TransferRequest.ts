@@ -41,6 +41,7 @@ export class TransferRequest extends Request {
   public contractAddress: string;
   protected _queryTxResult: any;
   protected _mint: any;
+  protected _deposit: any;
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
   }
@@ -186,15 +187,19 @@ export class TransferRequest extends Request {
 
     return result;
   }
-
+  async waitForDeposit() {
+    if (this._deposit) return this._deposit;
+    const mint = await this.submitToRenVM();
+    return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
+  }
+  async getTransactionHash() {
+    const deposit = await this.waitForDeposit();
+    return deposit.renVM.tx.hash;
+  }
   async waitForSignature() {
     if (this._queryTxResult) return this._queryTxResult;
     const mint = await this.submitToRenVM();
-    const deposit: GatewayTransaction<any> = await new Promise((resolve) => {
-      mint.on("transaction", (tx) => {
-        resolve(tx);
-      });
-    });
+    const deposit = await this.waitForDeposit();
     /*
     await deposit.in.wait();
    */
