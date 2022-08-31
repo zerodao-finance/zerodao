@@ -25,8 +25,8 @@
     "@zerodao/common": "^0.3.15",
     "@zerodao/protocol": "^0.3.12",
     "@zerodao/utils": "^0.3.4",
-    "it-length-prefixed": "^8.0.2",
-    "it-pipe": "^2.0.4",
+    "it-length-prefixed": "^5.0.3",
+    "it-pipe": "1.1.0",
     "send-crypto": "^0.2.37"
   },
   "devDependencies": {

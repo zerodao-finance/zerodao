@@ -7213,13 +7213,6 @@ builtins@^5.0.0:
   dependencies:
     semver "^7.0.0"
 
-byte-access@^1.0.0, byte-access@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/byte-access/-/byte-access-1.0.1.tgz#84badd99be3671c03f0dd6a039a9c963983724af"
-  integrity sha512-GKYa+lvxnzhgHWj9X+LCsQ4s2/C5uvib573eAOiQKywXMkzFFErY2+yQdzmdE5iWVpmqecsRx3bOtOY4/1eINw==
-  dependencies:
-    uint8arraylist "^2.0.0"
-
 byte-size@^7.0.0:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/byte-size/-/byte-size-7.0.1.tgz#b1daf3386de7ab9d706b941a748dbfc71130dee3"
@@ -14379,7 +14372,7 @@ it-handshake@^2.0.0:
     it-reader "^3.0.0"
     p-defer "^3.0.0"
 
-it-length-prefixed@^5.0.0, it-length-prefixed@^5.0.2:
+it-length-prefixed@^5.0.0, it-length-prefixed@^5.0.2, it-length-prefixed@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/it-length-prefixed/-/it-length-prefixed-5.0.3.tgz#77fbd99b89aa6cdd79fad62c962423b413db7045"
   integrity sha512-b+jDHLcnOnPDQN79ronmzF5jeBjdJsy0ce2O6i6X4J5tnaO8Fd146ZA/tMbzaLlKnTpXa0eKtofpYhumXGENeg==
@@ -14387,17 +14380,6 @@ it-length-prefixed@^5.0.0, it-length-prefixed@^5.0.2:
     bl "^5.0.0"
     buffer "^6.0.3"
     varint "^6.0.0"
-
-it-length-prefixed@^8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/it-length-prefixed/-/it-length-prefixed-8.0.2.tgz#03ae750e582661744b6272abe18cd1b17f9ffffc"
-  integrity sha512-qYCGZ6lTaI6lcuTXUrJmVpE6clq63ULrkq1FGTxHrzexjB2cCrS/CZ5HCRDZ5IRPw33tSDUDK91S7X5S64dPyQ==
-  dependencies:
-    err-code "^3.0.1"
-    it-stream-types "^1.0.4"
-    uint8-varint "^1.0.1"
-    uint8arraylist "^2.0.0"
-    uint8arrays "^3.0.0"
 
 it-length@^1.0.3:
   version "1.0.4"
@@ -14409,7 +14391,7 @@ it-map@^1.0.4, it-map@^1.0.5:
   resolved "https://registry.yarnpkg.com/it-map/-/it-map-1.0.6.tgz#6aa547e363eedcf8d4f69d8484b450bc13c9882c"
   integrity sha512-XT4/RM6UHIFG9IobGlQPFQUrlEKkU4eBUFG3qhWhfAdh1JfF2x11ShCrKCdmZ0OiZppPfoLuzcfA4cey6q3UAQ==
 
-it-merge@^1.0.0, it-merge@^1.0.1, it-merge@^1.0.3, it-merge@^1.0.4:
+it-merge@^1.0.0, it-merge@^1.0.1, it-merge@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/it-merge/-/it-merge-1.0.4.tgz#81c8d427b389b1cd039c25015edb804cd1a60545"
   integrity sha512-DcL6GksTD2HQ7+5/q3JznXaLNfwjyG3/bObaF98da+oHfUiPmdo64oJlT9J8R8G5sJRU7thwaY5zxoAKCn7FJw==
@@ -14439,19 +14421,10 @@ it-pb-rpc@^0.1.9:
     it-handshake "^2.0.0"
     it-length-prefixed "^5.0.2"
 
-it-pipe@^1.0.1, it-pipe@^1.1.0:
+it-pipe@1.1.0, it-pipe@^1.0.1, it-pipe@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/it-pipe/-/it-pipe-1.1.0.tgz#f5964c6bb785dd776f11a62d1e75964787ab95ce"
   integrity sha512-lF0/3qTVeth13TOnHVs0BTFaziwQF7m5Gg+E6JV0BXcLKutC92YjSi7bASgkPOXaLEb+YvNZrPorGMBIJvZfxg==
-
-it-pipe@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/it-pipe/-/it-pipe-2.0.4.tgz#fa72c2fdb3c7a467ff21d109e746ebfadfe9c749"
-  integrity sha512-lK0BV0egwfc64DFJva+0Jh1z8UxwmYBpAHDwq21s0OenRCaEDIntx/iOyWH/jg5efBU6Xa8igzmOqm2CPPNDgg==
-  dependencies:
-    it-merge "^1.0.4"
-    it-pushable "^3.1.0"
-    it-stream-types "^1.0.3"
 
 it-pushable@^1.4.0, it-pushable@^1.4.1, it-pushable@^1.4.2:
   version "1.4.2"
@@ -14459,11 +14432,6 @@ it-pushable@^1.4.0, it-pushable@^1.4.1, it-pushable@^1.4.2:
   integrity sha512-vVPu0CGRsTI8eCfhMknA7KIBqqGFolbRx+1mbQ6XuZ7YCz995Qj7L4XUviwClFunisDq96FdxzF5FnAbw15afg==
   dependencies:
     fast-fifo "^1.0.0"
-
-it-pushable@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/it-pushable/-/it-pushable-3.1.0.tgz#2fba7aaca189595e64e042ac947c6748ece2eb6b"
-  integrity sha512-sEAdT86u6aIWvLkH4hlOmgvHpRyUOUG22HD365H+Dh67zYpaPdILmT4Om7Wjdb+m/SjEB81z3nYCoIrgVYpOFA==
 
 it-reader@^3.0.0:
   version "3.0.0"
@@ -14478,11 +14446,6 @@ it-sort@^1.0.1:
   integrity sha512-c+C48cP7XMMebB9irLrJs2EmpLILId8NYSojqAqN8etE8ienx0azBgaKvZHYH1DkerqIul0Fl2FqISu2BZgTEQ==
   dependencies:
     it-all "^1.0.6"
-
-it-stream-types@^1.0.3, it-stream-types@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/it-stream-types/-/it-stream-types-1.0.4.tgz#6e66a11abfd98abab4894c30da15829a0a56bb43"
-  integrity sha512-0F3CqTIcIHwtnmIgqd03a7sw8BegAmE32N2w7anIGdALea4oAN4ltqPgDMZ7zn4XPLZifXEZlBXSzgg64L1Ebw==
 
 it-take@^1.0.0, it-take@^1.0.1, it-take@^1.0.2:
   version "1.0.2"
@@ -16410,14 +16373,6 @@ long@^5.0.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/long/-/long-5.2.0.tgz#2696dadf4b4da2ce3f6f6b89186085d94d52fd61"
   integrity sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==
-
-longbits@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/longbits/-/longbits-1.1.0.tgz#d6a7b2411dead1cf4b79ee4586816e65c7356ab9"
-  integrity sha512-22U2exkkYy7sr7nuQJYx2NEZ2kEMsC69+BxM5h8auLvkVIJa+LwAB5mFIExnuW2dFuYXFOWsFMKXjaWiq/htYQ==
-  dependencies:
-    byte-access "^1.0.1"
-    uint8arraylist "^2.0.0"
 
 looper@^2.0.0:
   version "2.0.0"
@@ -23431,23 +23386,6 @@ uglify-js@^3.1.4:
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.0.tgz#55bd6e9d19ce5eef0d5ad17cd1f587d85b180a85"
   integrity sha512-aTeNPVmgIMPpm1cxXr2Q/nEbvkmV8yq66F3om7X3P/cvOXQ0TMQ64Wk63iyT1gPlmdmGzjGpyLh1f3y8MZWXGg==
 
-uint8-varint@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/uint8-varint/-/uint8-varint-1.0.3.tgz#9877e77eb38eee5b47fd8444ed5a38409f879dd6"
-  integrity sha512-ESs/P/AYPy2wWZCT2V6Tg7RPqA6jzlhJbdsNPFvbDeIrDxj12dwTcm0rD9yFlnmgEf6vRBCZrP3d0SiRTcPwSQ==
-  dependencies:
-    byte-access "^1.0.0"
-    longbits "^1.1.0"
-    uint8arraylist "^2.0.0"
-    uint8arrays "^3.1.0"
-
-uint8arraylist@^2.0.0:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/uint8arraylist/-/uint8arraylist-2.3.2.tgz#d301f6cb570828b456ef09655c0a4d3b0929ef06"
-  integrity sha512-4ybc/jixmtGhUrebJ0bzB95TjEbskWxBKBRrAozw7P6WcAcZdPMYSLdDuNoEEGo/Cwe+0TNic9CXzWUWzy1quw==
-  dependencies:
-    uint8arrays "^3.1.0"
-
 uint8arrays@1.1.0, uint8arrays@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-1.1.0.tgz#d034aa65399a9fd213a1579e323f0b29f67d0ed2"
@@ -23463,7 +23401,7 @@ uint8arrays@^2.0.5:
   dependencies:
     multiformats "^9.4.2"
 
-uint8arrays@^3.0.0, uint8arrays@^3.1.0:
+uint8arrays@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-3.1.0.tgz#8186b8eafce68f28bd29bd29d683a311778901e2"
   integrity sha512-ei5rfKtoRO8OyOIor2Rz5fhzjThwIHJZ3uyDPnDHTXbP0aMQ1RN/6AI5B5d9dBxJOU+BvOAk7ZQ1xphsX8Lrog==
