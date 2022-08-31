@@ -13,7 +13,8 @@
     },
     "scripts": {
         "build": "tsc",
-        "test": "node lib/TransferRequestV2.js"
+        "test": "node lib/TransferRequestV2.js",
+        "testing": "node testing.js"
       },
       "publishConfig": {
         "access": "public"
