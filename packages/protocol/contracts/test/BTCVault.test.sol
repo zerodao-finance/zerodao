@@ -102,6 +102,7 @@ contract BTCVaultTest is Test {
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 181e3, 82e3);
+    vault.addModule(address(0x0), ModuleType.Null, 1000, 1000);
     bytes memory bytecode = (vm.getCode("MockGatewayLogicV1.sol"));
     address mockGateway;
     assembly {
@@ -114,6 +115,7 @@ contract BTCVaultTest is Test {
     IGateway(gateway).mint(bytes32(0x0), 1000000000, bytes32(0x0), sig);
     IERC20(renbtc).approve(address(vault), ~uint256(1) << 2);
     vm.deal(address(vault), 10 ether);
+    vault.deposit(10000000, address(this));
   }
 
   function testMockGatewayLogic() public {
@@ -122,7 +124,6 @@ contract BTCVaultTest is Test {
 
   function zeroLoan(address module) public {
     bytes memory data;
-    vault.deposit(10000000, address(this));
     vault.loan(address(module), zerowallet, 1000000, 1, data);
     bytes memory sig;
     vault.repay(address(module), zerowallet, 1000000, 1, data, address(this), bytes32(0), sig);
@@ -131,7 +132,10 @@ contract BTCVaultTest is Test {
   function testModuleTypes() public {
     vault.addModule(moduleDummy, ModuleType.LoanAndRepayOverride, 1000, 1000);
     vault.removeModule(moduleDummy);
-    vault.addModule(address(0x0), ModuleType.Null, 1000, 1000);
+  }
+
+  function testZeroLoanRenBTC() public {
+    zeroLoan(address(0x0));
   }
 
   function testZeroLoanWBTC() public {
@@ -144,5 +148,12 @@ contract BTCVaultTest is Test {
 
   function testZeroLoanETH() public {
     zeroLoan(address(moduleETH));
+  }
+
+  function testExpiry() public {
+    bytes memory data;
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+    vm.warp(block.timestamp + 3601);
+    vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
   }
 }
