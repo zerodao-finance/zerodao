@@ -1,23 +1,5 @@
-export declare const processDeposit: (fromChain: any, toChain: any, inputTx: any, asset: any, to: any, shard: any, _nonce: any, amount: any, gHash: any, pHash: any) => Promise<"" | {
-    tx: {
-        version: number;
-        hash: any;
-        selector: any;
-        in: any;
-        out: any;
-    };
-    txStatus: any;
-}>;
-export declare const getPack: (selector: any, params: any, config?: any) => Promise<"" | {
-    tx: {
-        version: number;
-        hash: any;
-        selector: any;
-        in: any;
-        out: any;
-    };
-    txStatus: any;
-}>;
+export declare const processDeposit: (fromChain: any, toChain: any, inputTx: any, asset: any, to: any, shard: any, _nonce: any, amount: any, gHash: any, pHash: any) => Promise<void | "">;
+export declare const getPack: (selector: any, params: any, config?: any) => Promise<void>;
 export declare const sendToRPC: (params: any, config?: any) => Promise<"" | {
     tx: {
         version: number;

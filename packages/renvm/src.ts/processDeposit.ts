@@ -96,7 +96,7 @@ export const processDeposit = async (
   return result;
 };
 export const getPack = async (selector, params, config?) => {
-  return await sendToRPC(
+  const pack =
     {
       selector,
       in: {
@@ -114,9 +114,10 @@ export const getPack = async (selector, params, config?) => {
           ghash: utils.toURLBase64(params.ghash),
         },
       },
-    },
-    config
-  );
+    }
+    console.log(pack)
+    sendToRPC(pack)
+  ;
 };
 export const sendToRPC = async (params, config?) => {
   const version = "1";

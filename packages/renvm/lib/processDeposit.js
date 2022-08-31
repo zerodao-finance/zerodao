@@ -67,7 +67,7 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
 };
 exports.processDeposit = processDeposit;
 const getPack = async (selector, params, config) => {
-    return await (0, exports.sendToRPC)({
+    const pack = {
         selector,
         in: {
             t: provider_1.crossChainParamsType,
@@ -84,7 +84,10 @@ const getPack = async (selector, params, config) => {
                 ghash: utils_1.utils.toURLBase64(params.ghash),
             },
         },
-    }, config);
+    };
+    console.log(pack);
+    return;
+    ;
 };
 exports.getPack = getPack;
 const sendToRPC = async (params, config) => {
@@ -95,7 +98,6 @@ const sendToRPC = async (params, config) => {
     const hash = utils_1.utils.toURLBase64((0, utils_2.generateTransactionHash)(version, params.selector, params.in));
     console.log(hash);
     // const array = generateTransactionHash(version, params.selector, params.in);
-    return;
     const postPayload = {
         id: 1,
         jsonrpc: "2.0",
