@@ -1,0 +1,7 @@
+const zeroWebhookMiddleware = () => {
+
+}
+
+export {
+  zeroWebhookMiddleware
+}
