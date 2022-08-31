@@ -26,7 +26,7 @@ export const explorer = async (
   const bigAmount = new BigNumber(amount);
   const timeout = 120000;
   const blockStatePayload = await generatePayload("ren_queryBlockState", {
-    asset
+    asset,
   });
   const resp = await Axios.post(
     "https://rpc.renproject.io",
@@ -81,18 +81,16 @@ export const explorer = async (
     latestBlock = latestBlock || new BigNumber(await fetchHeight());
     for (let i = 0; i < tx.vout.length; i++) {
       const vout = tx.vout[i];
-      console.log(tx);
-      return;
       received.push({
         txid: tx.txid,
         amount: vout.value.toString(),
         txindex: i.toString(),
-        height: tx.status.confirmed ? tx.status.block_height.toString() : null
+        height: tx.status.confirmed ? tx.status.block_height.toString() : null,
       });
     }
   }
 
-  const results = received.map(tx => {
+  const results = received.map((tx) => {
     try {
       processDeposit(
         fromChain,
@@ -104,11 +102,11 @@ export const explorer = async (
           txindex: tx.txindex,
           explorerLink:
             fromChain.transactionExplorerLink({
-              txHash: tx.txid
+              txHash: tx.txid,
             }) || "",
 
           asset,
-          amount: tx.amount
+          amount: tx.amount,
         },
         asset,
         to,
@@ -125,7 +123,7 @@ export const explorer = async (
 
 const fetchHeight = async (): Promise<string> => {
   const response = await Axios.get<unknown>(getAPIUrl(`/blocks/tip/height`), {
-    timeout: 30000
+    timeout: 30000,
   });
   return response.data.toString();
 };
@@ -137,7 +135,7 @@ const generatePayload = (method: string, params?: unknown) => ({
   id: 1,
   jsonrpc: "2.0",
   method,
-  params
+  params,
 });
 
 // used to create shard from asset
@@ -145,7 +143,7 @@ export const memoize = <Params extends unknown[], Result>(
   fn: (...params: Params) => Promise<Result>,
   { expiry = (5 * sleep.MINUTES) as number | false, entryLimit = 100 } = {
     expiry: (5 * sleep.MINUTES) as number | false,
-    entryLimit: 100
+    entryLimit: 100,
   }
 ): ((...params: Params) => Promise<Result>) => {
   interface CacheRecordInner {
@@ -157,7 +155,7 @@ export const memoize = <Params extends unknown[], Result>(
   const CacheRecord = Record<CacheRecordInner>({
     timestamp: 0,
     paramKey: null as never,
-    result: null as never
+    result: null as never,
   });
 
   let cacheMap = OrderedMap<string, Record<CacheRecordInner>>();
@@ -182,7 +180,7 @@ export const memoize = <Params extends unknown[], Result>(
         CacheRecord({
           timestamp: Date.now() / 1000,
           paramKey,
-          result
+          result,
         })
       );
       if (cacheMap.size > entryLimit) {
@@ -195,7 +193,7 @@ export const memoize = <Params extends unknown[], Result>(
 };
 
 export const sleep = async (ms: number): Promise<void> => {
-  return new Promise<void>(resolve => {
+  return new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
   });
 };

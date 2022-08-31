@@ -22,7 +22,7 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
     const bigAmount = new bignumber_js_1.default(amount);
     const timeout = 120000;
     const blockStatePayload = await generatePayload("ren_queryBlockState", {
-        asset
+        asset,
     });
     const resp = await axios_1.default.post("https://rpc.renproject.io", blockStatePayload, { timeout });
     const { state } = resp.data.result;
@@ -56,17 +56,15 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
         latestBlock = latestBlock || new bignumber_js_1.default(await fetchHeight());
         for (let i = 0; i < tx.vout.length; i++) {
             const vout = tx.vout[i];
-            console.log(tx);
-            return;
             received.push({
                 txid: tx.txid,
                 amount: vout.value.toString(),
                 txindex: i.toString(),
-                height: tx.status.confirmed ? tx.status.block_height.toString() : null
+                height: tx.status.confirmed ? tx.status.block_height.toString() : null,
             });
         }
     }
-    const results = received.map(tx => {
+    const results = received.map((tx) => {
         try {
             (0, processDeposit_1.processDeposit)(fromChain, toChain, {
                 chain: chain,
@@ -74,10 +72,10 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
                 txHash: tx.txid,
                 txindex: tx.txindex,
                 explorerLink: fromChain.transactionExplorerLink({
-                    txHash: tx.txid
+                    txHash: tx.txid,
                 }) || "",
                 asset,
-                amount: tx.amount
+                amount: tx.amount,
             }, asset, to, shardKey, nonce, bigAmount, gHash, pHash);
         }
         catch (error) { }
@@ -87,7 +85,7 @@ const explorer = async (provider, asset, fromChain, toChain, from, to, nonce, am
 exports.explorer = explorer;
 const fetchHeight = async () => {
     const response = await axios_1.default.get(getAPIUrl(`/blocks/tip/height`), {
-        timeout: 30000
+        timeout: 30000,
     });
     return response.data.toString();
 };
@@ -98,17 +96,17 @@ const generatePayload = (method, params) => ({
     id: 1,
     jsonrpc: "2.0",
     method,
-    params
+    params,
 });
 // used to create shard from asset
 const memoize = (fn, { expiry = (5 * exports.sleep.MINUTES), entryLimit = 100 } = {
     expiry: (5 * exports.sleep.MINUTES),
-    entryLimit: 100
+    entryLimit: 100,
 }) => {
     const CacheRecord = (0, immutable_1.Record)({
         timestamp: 0,
         paramKey: null,
-        result: null
+        result: null,
     });
     let cacheMap = (0, immutable_1.OrderedMap)();
     return async (...params) => {
@@ -127,7 +125,7 @@ const memoize = (fn, { expiry = (5 * exports.sleep.MINUTES), entryLimit = 100 } 
             cacheMap = cacheMap.set(paramKey, CacheRecord({
                 timestamp: Date.now() / 1000,
                 paramKey,
-                result
+                result,
             }));
             if (cacheMap.size > entryLimit) {
                 cacheMap = cacheMap.slice(-entryLimit);
@@ -138,7 +136,7 @@ const memoize = (fn, { expiry = (5 * exports.sleep.MINUTES), entryLimit = 100 } 
 };
 exports.memoize = memoize;
 const sleep = async (ms) => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
 };

@@ -31,7 +31,7 @@ export const getGatewayHash = async (
     signer: null,
     payload: toObject,
     evmParams: EVMParams,
-    getPayloadHandler
+    getPayloadHandler,
   });
   const pHash = generatePHash(payload.payload);
   const sHash = generateSHash(`${asset}/to${chain}`);
@@ -63,7 +63,7 @@ export const getPayloadHash = async (provider, asset, toObject, network) => {
     signer: null,
     payload: toObject,
     evmParams: EVMParams,
-    getPayloadHandler
+    getPayloadHandler,
   });
   const pHash = generatePHash(payload.payload);
 

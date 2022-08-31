@@ -7,7 +7,7 @@ import {
   BitcoinNetworkConfig,
   BitcoinNetworkConfigMap,
   BitcoinNetworkInput,
-  isBitcoinNetworkConfig
+  isBitcoinNetworkConfig,
 } from "@renproject/chains";
 
 export const addressToBytes = (address: string): Uint8Array => {
@@ -17,7 +17,7 @@ export const addressToBytes = (address: string): Uint8Array => {
     const [type, ...words] = bech32.decode(address).words;
     return utils.concat([
       new Uint8Array([type]),
-      new Uint8Array(bech32.fromWords(words))
+      new Uint8Array(bech32.fromWords(words)),
     ]);
   } catch (error) {
     try {
@@ -35,7 +35,7 @@ export const StandardBitcoinExplorer = (
   address: (address: string) =>
     `${baseUrl.replace(/\/$/, "")}/address/${address}`,
   transaction: (transaction: string) =>
-    `${baseUrl.replace(/\/$/, "")}/tx/${transaction || ""}`
+    `${baseUrl.replace(/\/$/, "")}/tx/${transaction || ""}`,
 });
 
 export const SoChainExplorer = (
@@ -46,7 +46,7 @@ export const SoChainExplorer = (
   address: (address: string) =>
     `https://sochain.com/address/${chainId}/${address}`,
   transaction: (transaction: string) =>
-    `https://sochain.com/tx/${chainId}/${transaction}`
+    `https://sochain.com/tx/${chainId}/${transaction}`,
 });
 
 export const resolveBitcoinNetworkConfig = (
@@ -64,7 +64,9 @@ export const resolveBitcoinNetworkConfig = (
     throw new Error(
       `Unsupported network '${String(
         renNetwork
-          ? typeof renNetwork === "string" ? renNetwork : renNetwork.selector
+          ? typeof renNetwork === "string"
+            ? renNetwork
+            : renNetwork.selector
           : renNetwork
       )}'. Valid options are 'mainnet', 'testnet' or a BitcoinNetworkConfig object.`
     );

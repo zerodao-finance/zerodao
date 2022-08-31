@@ -35,7 +35,9 @@ var EVMParam;
 })(EVMParam = exports.EVMParam || (exports.EVMParam = {}));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isEVMParam = (value) => Object.values(EVMParam).indexOf(value) >= 0;
-const replaceRenParam = async (value, evmParams) => {
+const replaceRenParam = async (value, evmParams
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+) => {
     let valueOrParam = isEVMParam(value) ? evmParams[value] : value;
     if (typeof valueOrParam === "function") {
         valueOrParam = await valueOrParam();

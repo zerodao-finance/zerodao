@@ -8,8 +8,8 @@
     "license": "MIT",
     "private": false,
     "dependencies": {
-      "typescript": "^4.8.2"
-
+      "typescript": "^4.8.2",
+      "@renproject/chains": "^3.4.4"
     },
     "scripts": {
         "build": "tsc",

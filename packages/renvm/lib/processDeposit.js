@@ -25,7 +25,7 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
     const { inputType, outputType, selector } = await (0, inputAndOutputTypes_1.getInputAndOutputTypes)({
         asset,
         fromChain,
-        toChain
+        toChain,
     });
     const payload = await toChain.getOutputPayload(asset, inputType, outputType, to);
     const nonceBytes = typeof nonce === "string"
@@ -40,7 +40,7 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
         id: 1,
         jsonrpc: "2.0",
         method: "ren_queryConfig",
-        params: {}
+        params: {},
     };
     const timeout = 120000;
     const queryConfig = utils_1.utils.memoize(async () => {
@@ -60,53 +60,30 @@ const processDeposit = async (fromChain, toChain, inputTx, asset, to, shard, _no
             nonce: nonceBytes,
             nhash: nHash,
             gpubkey: gPubKey,
-            ghash: gHash
+            ghash: gHash,
         }, config)
         : "";
     return result;
 };
 exports.processDeposit = processDeposit;
 const getPack = async (selector, params, config) => {
-    //  console.log(params.payload);
-    // console.log(utils.toURLBase64(params.payload))
-    /* return await sendToRPC(
-      {
-        selector,
-        in: {
-          t: crossChainParamsType,
-          v: {
-            txid: utils.toURLBase64(params.txid),
-            txindex: params.txindex.toFixed(),
-            amount: params.amount.toFixed(),
-            payload: utils.toURLBase64(params.payload),
-            phash: utils.toURLBase64(params.phash),
-            to: params.to,
-            nonce: utils.toURLBase64(params.nonce),
-            nhash: utils.toURLBase64(params.nhash),
-            gpubkey: params.gpubkey,
-            ghash: utils.toURLBase64(params.ghash)
-          }
-        }
-      },
-      config
-    ); */
     return await (0, exports.sendToRPC)({
         selector,
         in: {
             t: provider_1.crossChainParamsType,
             v: {
-                txid: params.txid,
-                txindex: params.txindex,
-                amount: params.amount,
-                payload: params.payload,
-                phash: params.phash,
+                txid: utils_1.utils.toURLBase64(params.txid),
+                txindex: params.txindex.toFixed(),
+                amount: params.amount.toFixed(),
+                payload: utils_1.utils.toURLBase64(params.payload),
+                phash: utils_1.utils.toURLBase64(params.phash),
                 to: params.to,
-                nonce: params.nonce,
-                nhash: params.nhash,
+                nonce: utils_1.utils.toURLBase64(params.nonce),
+                nhash: utils_1.utils.toURLBase64(params.nhash),
                 gpubkey: params.gpubkey,
-                ghash: params.ghash
-            }
-        }
+                ghash: utils_1.utils.toURLBase64(params.ghash),
+            },
+        },
     }, config);
 };
 exports.getPack = getPack;
@@ -115,17 +92,15 @@ const sendToRPC = async (params, config) => {
     // console.log(params.selector)
     // console.log(params.in)
     //const hash = generateTransactionHash(version, params.selector, params.in)
-    /* const hash = utils.toURLBase64(
-      generateTransactionHash(version, params.selector, params.in)
-    ); */
-    const hash = params.in.v.txid;
+    const hash = utils_1.utils.toURLBase64((0, utils_2.generateTransactionHash)(version, params.selector, params.in));
+    console.log(hash);
     // const array = generateTransactionHash(version, params.selector, params.in);
+    return;
     const postPayload = {
         id: 1,
         jsonrpc: "2.0",
         method: "ren_queryTx",
-        // params: { hash } 
-        params: { hash }
+        params: { hash },
     };
     const timeout = 120000;
     const queryTx = await utils_1.utils.memoize(async () => {
@@ -137,7 +112,7 @@ const sendToRPC = async (params, config) => {
     return txResponse.tx
         ? {
             tx: (0, unmarshal_1.unmarshalRenVMTransaction)(txResponse.tx),
-            txStatus: txResponse.txStatus
+            txStatus: txResponse.txStatus,
         }
         : "";
 };

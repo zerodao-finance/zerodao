@@ -16,7 +16,7 @@ const addressToBytes = (address) => {
         const [type, ...words] = bech32_1.bech32.decode(address).words;
         return utils_1.utils.concat([
             new Uint8Array([type]),
-            new Uint8Array(bech32_1.bech32.fromWords(words))
+            new Uint8Array(bech32_1.bech32.fromWords(words)),
         ]);
     }
     catch (error) {
@@ -32,13 +32,13 @@ exports.addressToBytes = addressToBytes;
 const StandardBitcoinExplorer = (baseUrl) => ({
     url: baseUrl,
     address: (address) => `${baseUrl.replace(/\/$/, "")}/address/${address}`,
-    transaction: (transaction) => `${baseUrl.replace(/\/$/, "")}/tx/${transaction || ""}`
+    transaction: (transaction) => `${baseUrl.replace(/\/$/, "")}/tx/${transaction || ""}`,
 });
 exports.StandardBitcoinExplorer = StandardBitcoinExplorer;
 const SoChainExplorer = (chainPath, chainId) => ({
     url: `https://sochain.com/${chainPath}`,
     address: (address) => `https://sochain.com/address/${chainId}/${address}`,
-    transaction: (transaction) => `https://sochain.com/tx/${chainId}/${transaction}`
+    transaction: (transaction) => `https://sochain.com/tx/${chainId}/${transaction}`,
 });
 exports.SoChainExplorer = SoChainExplorer;
 const resolveBitcoinNetworkConfig = (configMap, renNetwork) => {
@@ -51,7 +51,9 @@ const resolveBitcoinNetworkConfig = (configMap, renNetwork) => {
     }
     if (!networkConfig) {
         throw new Error(`Unsupported network '${String(renNetwork
-            ? typeof renNetwork === "string" ? renNetwork : renNetwork.selector
+            ? typeof renNetwork === "string"
+                ? renNetwork
+                : renNetwork.selector
             : renNetwork)}'. Valid options are 'mainnet', 'testnet' or a BitcoinNetworkConfig object.`);
     }
     return networkConfig;
