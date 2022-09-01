@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "cross-env node bin/index",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "yarn nice-repl"
   },
   "description": "Webhook",
   "main": "lib/index.js",
