@@ -1,20 +1,21 @@
 "use strict";
 
+import { Buffer } from 'buffer';
 import axios from 'axios';
-import util from "util";
-import { Buffer } from "buffer";
 const redis = new (require('ioredis'))();
 import { Signer } from "@ethersproject/abstract-signer";
 import { keccak256 } from "@ethersproject/keccak256";
+import { Request } from "@zerodao/request";
+import { recoverAddress } from '@ethersproject/transactions';
+import bodyparser from "body-parser";
 
 const hashWebhookMessage = (serialized: any) => keccak256(['/zero/1.1.0/webhook', serialized ]);
 
-const serialize = (obj: any) => {
-  let serialized = '';
-  Object.keys(obj).forEach(function(key) {
-    serialized += encodeURIComponent(key).replace(/%20/g, '+') + '=' + encodeURIComponent(obj[key]).replace(/%20/g, '+') + '&';
-  });
-  return serialized.slice(0, -1);
+const zeroWebhookMiddleware = () => {
+  return (req, res, next, end) => {
+    req.signerAddress = recoverAddress(hashWebhookMessage(req.body.serialized), req.body.signature);
+    req.deserialized = JSON.parse(Buffer.from(req.body.serialized.substr(2), 'hex').toString('utf8'));
+  }
 }
 
 export class ZeroWebhook {
@@ -31,9 +32,9 @@ export class ZeroWebhook {
 
     }
   }
-
+  
   async send(request: Request)  {
-    const serialized = '0x' + serialize(request).toString();
+    const serialized = '0x' + request.serialize().toString('hex');
     await axios.post(this.baseUrl, {
       data: serialized,
       signature: await this.signer.signMessage(hashWebhookMessage(serialized))

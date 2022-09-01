@@ -1,7 +1,0 @@
-const zeroWebhookMiddleware = () => {
-
-}
-
-export {
-  zeroWebhookMiddleware
-}
