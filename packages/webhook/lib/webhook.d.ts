@@ -1,6 +1,6 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { Request } from "@zerodao/request";
-export declare const zeroWebhookMiddleware: () => (req: any, res: any, next: any, end: any) => void;
+export declare const hashWebhookMessage: (serialized: any) => string;
 export declare class ZeroWebhook {
     signer: Signer;
     baseUrl: string;
@@ -8,6 +8,5 @@ export declare class ZeroWebhook {
         signer: any;
         baseUrl: any;
     });
-    run(): Promise<void>;
     send(request: Request): Promise<void>;
 }
