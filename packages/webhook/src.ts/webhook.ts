@@ -11,7 +11,7 @@ import bodyparser from "body-parser";
 
 const hashWebhookMessage = (serialized: any) => keccak256(['/zero/1.1.0/webhook', serialized ]);
 
-const zeroWebhookMiddleware = () => {
+export const zeroWebhookMiddleware = () => {
   return (req, res, next, end) => {
     req.signerAddress = recoverAddress(hashWebhookMessage(req.body.serialized), req.body.signature);
     req.deserialized = JSON.parse(Buffer.from(req.body.serialized.substr(2), 'hex').toString('utf8'));

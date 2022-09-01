@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ZeroWebhook = void 0;
+exports.ZeroWebhook = exports.zeroWebhookMiddleware = void 0;
 const buffer_1 = require("buffer");
 const axios_1 = __importDefault(require("axios"));
 const redis = new (require('ioredis'))();
@@ -14,8 +14,10 @@ const zeroWebhookMiddleware = () => {
     return (req, res, next, end) => {
         req.signerAddress = (0, transactions_1.recoverAddress)(hashWebhookMessage(req.body.serialized), req.body.signature);
         req.deserialized = JSON.parse(buffer_1.Buffer.from(req.body.serialized.substr(2), 'hex').toString('utf8'));
+        next();
     };
 };
+exports.zeroWebhookMiddleware = zeroWebhookMiddleware;
 class ZeroWebhook {
     constructor({ signer, baseUrl }) {
         this.signer = signer;
