@@ -1,7 +1,6 @@
 "use strict";
 
 import axios from 'axios';
-const redis = new (require('ioredis'))();
 import { Signer } from "@ethersproject/abstract-signer";
 import { keccak256 } from "@ethersproject/keccak256";
 import { Request } from "@zerodao/request";
@@ -14,13 +13,6 @@ export class ZeroWebhook {
   constructor({ signer, baseUrl }) {
     this.signer = signer;
     this.baseUrl = baseUrl;
-  }
-
-  async run() {
-    // process first item in list
-    for (let i = 0; i < await redis.llen('/zero/watch'); i++) {
-
-    }
   }
   
   async send(request: Request)  {
