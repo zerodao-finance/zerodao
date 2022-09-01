@@ -13,6 +13,7 @@
   "private": false,
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "nice-repl": "^0.1.2",
     "typescript": "^4.7.4"
   },
   "dependencies": {
@@ -21,7 +22,9 @@
     "@ethersproject/bytes": "^5.6.1",
     "@ethersproject/constants": "^5.6.1",
     "@ethersproject/keccak256": "^5.7.0",
+    "@ethersproject/solidity": "^5.7.0",
     "@ethersproject/transactions": "^5.7.0",
+    "@ethersproject/wallet": "^5.7.0",
     "@types/body-parser": "^1.19.2",
     "@zerodao/request": "^0.3.20",
     "axios": "^0.27.2",

@@ -2,10 +2,10 @@
 
 import axios from 'axios';
 import { Signer } from "@ethersproject/abstract-signer";
-import { keccak256 } from "@ethersproject/keccak256";
 import { Request } from "@zerodao/request";
+import { keccak256 } from '@ethersproject/solidity'
 
-export const hashWebhookMessage = (serialized: any) => keccak256(['/zero/1.1.0/webhook', serialized ]);
+export const hashWebhookMessage = (serialized: any) => keccak256(['string', 'bytes'], ['/zero/1.1.0/webhook', serialized ])
 
 export class ZeroWebhook {
   public signer: Signer;
@@ -20,6 +20,10 @@ export class ZeroWebhook {
     await axios.post(this.baseUrl, {
       data: serialized,
       signature: await this.signer.signMessage(hashWebhookMessage(serialized))
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
   }
 }
