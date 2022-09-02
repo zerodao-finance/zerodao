@@ -16,7 +16,8 @@ class ZeroWebhook {
     }
     async send(request) {
         const serialized = "0x" + request.serialize().toString("hex");
-        return await axios_1.default.post(this.baseUrl, {
+        this.logger.debug('sending to webhook ...');
+        const result = await axios_1.default.post(this.baseUrl, {
             data: serialized,
             signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized)),
         }, {
@@ -24,6 +25,8 @@ class ZeroWebhook {
                 "Content-Type": "application/json",
             },
         });
+        this.logger.debug('notified webhook');
+        return result;
     }
 }
 exports.ZeroWebhook = ZeroWebhook;

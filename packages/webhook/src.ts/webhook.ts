@@ -28,7 +28,8 @@ export class ZeroWebhook {
 
   async send(request: Request) {
     const serialized = "0x" + request.serialize().toString("hex");
-    return await axios.post(
+    this.logger.debug('sending to webhook ...');
+    const result = await axios.post(
       this.baseUrl,
       {
         data: serialized,
@@ -42,5 +43,7 @@ export class ZeroWebhook {
         },
       }
     );
+    this.logger.debug('notified webhook');
+    return result;
   }
 }
