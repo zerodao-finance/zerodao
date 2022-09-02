@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/compute",
-  "version": "0.3.15",
+  "version": "0.3.21",
   "description": "zerodao sdk package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
@@ -18,9 +18,9 @@
     "@renproject/ren": "^3.4.4",
     "@traderjoe-xyz/sdk": "^2.0.1",
     "@uniswap/sdk": "^3.0.3",
-    "@zerodao/chains": "^0.3.15",
-    "@zerodao/common": "^0.3.15",
-    "@zerodao/utils": "^0.3.4",
+    "@zerodao/chains": "^0.3.21",
+    "@zerodao/common": "^0.3.21",
+    "@zerodao/utils": "^0.3.21",
     "ethers": "5.6.9",
     "typescript": "^4.7.4"
   },
