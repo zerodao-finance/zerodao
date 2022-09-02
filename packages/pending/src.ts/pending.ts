@@ -122,12 +122,8 @@ export class PendingProcess {
           );
 
 	  if (this.webhook) {
-            try {
-              const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
-              await this.webhook.send(request);
-	    } catch (e) {
-              this.logger.error(e);
-	    }
+            const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
+            this.webhook.send(request).catch((err) => this.logger.error(err));
 	  }
           const removed = await this.redis.lrem("/zero/pending", 1, item);
           if (removed) i--;

@@ -43,11 +43,7 @@ async function handleEvent(data) {
 	  logger,
 	  baseUrl: process.env.WEBHOOK_BASEURL
 	});
-	try {
-       	  await webhook.send(new BurnRequest(request));
-	} catch (e) {
-          logger.error(e);
-	}
+       	webhook.send(new BurnRequest(request)).catch((err) => this.logger.error(err));
       }
       await redis.lpush(
         "/zero/dispatch",

@@ -96,13 +96,8 @@ class PendingProcess {
                         transferRequest,
                     }));
                     if (this.webhook) {
-                        try {
-                            const request = VAULT_DEPLOYMENTS[(0, address_1.getAddress)(transferRequest.contractAddress)] ? new request_1.TransferRequestV2(transferRequest) : new request_1.TransferRequest(transferRequest);
-                            await this.webhook.send(request);
-                        }
-                        catch (e) {
-                            this.logger.error(e);
-                        }
+                        const request = VAULT_DEPLOYMENTS[(0, address_1.getAddress)(transferRequest.contractAddress)] ? new request_1.TransferRequestV2(transferRequest) : new request_1.TransferRequest(transferRequest);
+                        this.webhook.send(request).catch((err) => this.logger.error(err));
                     }
                     const removed = await this.redis.lrem("/zero/pending", 1, item);
                     if (removed)
