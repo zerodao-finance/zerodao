@@ -51,8 +51,7 @@ class PendingProcess {
         this.logger = logger;
         this.webhook = process.env.WEBHOOK_BASEURL ? new webhook_1.ZeroWebhook({
             signer: process.env.WALLET ? new wallet_1.Wallet(process.env.WALLET) : wallet_1.Wallet.createRandom(),
-            baseUrl: process.env.WEBHOOK_BASEURL,
-            logger
+            baseUrl: process.env.WEBHOOK_BASEURL
         }) : null;
     }
     async runLoop() {
@@ -97,7 +96,7 @@ class PendingProcess {
                     }));
                     if (this.webhook) {
                         const request = VAULT_DEPLOYMENTS[(0, address_1.getAddress)(transferRequest.contractAddress)] ? new request_1.TransferRequestV2(transferRequest) : new request_1.TransferRequest(transferRequest);
-                        this.webhook.send(request).catch((err) => this.logger.error(err));
+                        this.webhook.send('/transaction?type=mint', request).catch((err) => this.logger.error(err));
                     }
                     const removed = await this.redis.lrem("/zero/pending", 1, item);
                     if (removed)

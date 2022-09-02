@@ -40,10 +40,9 @@ async function handleEvent(data) {
       if (process.env.WEBHOOK_BASEURL) {
         const webhook = new ZeroWebhook({
           signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
-	  logger,
 	  baseUrl: process.env.WEBHOOK_BASEURL
 	});
-       	webhook.send(new BurnRequest(request)).catch((err) => this.logger.error(err));
+       	webhook.send('/transaction?type=burn', new BurnRequest(request)).catch((err) => this.logger.error(err));
       }
       await redis.lpush(
         "/zero/dispatch",
