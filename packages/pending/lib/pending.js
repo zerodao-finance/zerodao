@@ -7,11 +7,13 @@ exports.PendingProcess = void 0;
 const util_1 = __importDefault(require("util"));
 const buffer_1 = require("buffer");
 const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
+const wallet_1 = require("@ethersproject/wallet");
 const chains_bitcoin_1 = require("@renproject/chains-bitcoin");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
 const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
+const webhook_1 = require("@zerodao/webhook");
 const { getUTXOs } = BTCHandler_1.BTCHandler;
 const getZcashUTXOs = async (testnet, { confirmations, address }) => {
     const zcash = new chains_bitcoin_1.Zcash({ network: Boolean(testnet) ? 'testnet' : 'mainnet' });
@@ -88,6 +90,16 @@ class PendingProcess {
                         blockNumber,
                         transferRequest,
                     }));
+                    if (process.env.WALLET) {
+                        const signer = new wallet_1.Wallet(process.env.WALLET);
+                        const txType = transferRequest.to === constants_1.AddressZero ? 'burn' : 'mint';
+                        const webhookClient = new webhook_1.ZeroWebhook({
+                            baseUrl: `https://explorer.zerodao.com/api/transaction?type=${txType}`,
+                            signer: signer,
+                            logger: this.logger
+                        });
+                        await webhookClient.send(transferRequest);
+                    }
                     const removed = await this.redis.lrem("/zero/pending", 1, item);
                     if (removed)
                         i--;
