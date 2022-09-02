@@ -9,20 +9,31 @@ const solidity_1 = require("@ethersproject/solidity");
 const hashWebhookMessage = (serialized) => (0, solidity_1.keccak256)(['string', 'bytes'], ['/zero/1.1.0/webhook', serialized]);
 exports.hashWebhookMessage = hashWebhookMessage;
 class ZeroWebhook {
-    constructor({ signer, baseUrl }) {
+    constructor({ signer, baseUrl, logger }) {
         this.signer = signer;
         this.baseUrl = baseUrl;
+        this.logger = logger;
     }
     async send(request) {
-        const serialized = '0x' + request.serialize().toString('hex');
-        await axios_1.default.post(this.baseUrl, {
-            data: serialized,
-            signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized))
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            const serialized = '0x' + request.serialize().toString('hex');
+            await axios_1.default.post(this.baseUrl, {
+                data: serialized,
+                signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized))
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+        catch (err) {
+            if (this.logger) {
+                this.logger.debug(`Webhook Error: ${err}`);
             }
-        });
+            else {
+                console.error(err);
+            }
+        }
     }
 }
 exports.ZeroWebhook = ZeroWebhook;
