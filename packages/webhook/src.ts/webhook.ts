@@ -5,7 +5,10 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { Wallet } from "@ethersproject/wallet";
 import { Request } from "@zerodao/request";
 import { keccak256 } from "@ethersproject/solidity";
-import { Logger } from "@zerodao/logger";
+import { createLogger, Logger } from "@zerodao/logger";
+import url from 'url';
+import path from 'path';
+const logger = createLogger(require('../package').name);
 
 export const hashWebhookMessage = (serialized: any) =>
   keccak256(["string", "bytes"], ["/zero/1.1.0/webhook", serialized]);
@@ -13,24 +16,27 @@ export const hashWebhookMessage = (serialized: any) =>
 type IZeroWebhookProps = {
   signer: Signer | Wallet | any;
   baseUrl: string;
-  logger?: Logger;
 };
 
 export class ZeroWebhook {
   public signer: Signer;
   public baseUrl: string;
   public logger: Logger;
-  constructor({ signer, baseUrl, logger }: IZeroWebhookProps) {
+  constructor({ signer, baseUrl }: IZeroWebhookProps) {
     this.signer = signer;
     this.baseUrl = baseUrl;
     this.logger = logger;
   }
 
-  async send(request: Request) {
+  async send(endpoint: string, request: Request) {
     const serialized = "0x" + request.serialize().toString("hex");
-    this.logger.debug('sending to webhook ...');
+    this.logger.debug(endpoint);
+    const parsed = {
+      ...url.parse(this.baseUrl)
+    };
+    parsed.pathname = path.join(parsed.pathname, endpoint);
     const result = await axios.post(
-      this.baseUrl,
+      url.format(parsed),
       {
         data: serialized,
         signature: await this.signer.signMessage(
@@ -43,7 +49,7 @@ export class ZeroWebhook {
         },
       }
     );
-    this.logger.debug('notified webhook');
+    this.logger.debug(result);
     return result;
   }
 }
