@@ -20,6 +20,10 @@ contract ConvertWBTCArbitrum is BaseConvert {
 
   constructor(address asset) BaseConvert(asset) {}
 
+  function initialize() public override {
+    IERC20(asset).approve(address(renCrv), ~uint256(1) << 2);
+  }
+
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     amountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));
   }

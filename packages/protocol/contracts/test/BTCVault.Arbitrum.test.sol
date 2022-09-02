@@ -5,7 +5,7 @@ contract BTCVaultTest is Common {
   constructor() {}
 
   function setUp() public {
-    initiateMainnetFork();
+    initiateArbitrumFork();
     setUpBase();
   }
 

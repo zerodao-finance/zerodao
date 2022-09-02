@@ -26,6 +26,11 @@ contract ConvertUSDCArbitrum is BaseConvert {
 
   constructor(address asset) BaseConvert(asset) {}
 
+  function initialize() public override {
+    IERC20(asset).approve(address(renCrv), ~uint256(1) << 2);
+    IERC20(wbtc).approve(address(routerV3), ~uint256(1) << 2);
+  }
+
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     uint256 wbtcAmountOut = renCrv.exchange(1, 0, locals.amount, 1, address(this));
     bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, weth, usdcWethFee, usdc);

@@ -6,9 +6,12 @@ import "forge-std/console.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
-import { ConvertWBTCMainnet as ConvertWBTC } from "../modules/mainnet/ConvertWBTC.sol";
-import { ConvertUSDCMainnet as ConvertUSDC } from "../modules/mainnet/ConvertUSDC.sol";
-import { ConvertNativeMainnet as ConvertETH } from "../modules/mainnet/ConvertNative.sol";
+import "../modules/mainnet/ConvertWBTC.sol";
+import "../modules/mainnet/ConvertUSDC.sol";
+import "../modules/mainnet/ConvertNative.sol";
+import "../modules/arbitrum/ConvertWBTC.sol";
+import "../modules/arbitrum/ConvertUSDC.sol";
+import "../modules/arbitrum/ConvertNative.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
@@ -48,6 +51,10 @@ contract Common is Test {
     gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
     btcEthOracle = 0xdeb288F737066589598e9214E782fa5A8eD689e8;
     gasPriceOracle = 0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C;
+    moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
+    moduleDummy = address(new ConvertWBTCMainnet(renbtc));
+    moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
+    moduleETH = address(new ConvertNativeMainnet(renbtc));
   }
 
   function initiateArbitrumFork() public {
@@ -58,9 +65,13 @@ contract Common is Test {
     gateway = 0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20;
     zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
     rencrv = 0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb;
-    gatewayRegistry = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
     btcEthOracle = 0xc5a90A6d7e4Af242dA238FFe279e9f2BA0c64B2e;
     gasPriceOracle = address(new BlockGasPriceOracle());
+    moduleWBTC = address(new ConvertWBTCArbitrum(renbtc));
+    moduleDummy = address(new ConvertWBTCArbitrum(renbtc));
+    moduleUSDC = address(new ConvertUSDCArbitrum(renbtc));
+    moduleETH = address(new ConvertNativeArbitrum(renbtc));
   }
 
   function initializeDummy() internal returns (address) {
@@ -123,10 +134,6 @@ contract Common is Test {
     RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
     (vault, ) = initializeProxy(address(converter));
 
-    moduleWBTC = address(new ConvertWBTC(renbtc));
-    moduleDummy = address(new ConvertWBTC(renbtc));
-    moduleUSDC = address(new ConvertUSDC(renbtc));
-    moduleETH = address(new ConvertETH(renbtc));
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
@@ -140,7 +147,7 @@ contract Common is Test {
     assertEq0(gateway.code, mockGateway.code);
     gateway.call(abi.encodeWithSignature("setToken(address)", renbtc));
     bytes memory sig;
-    IGateway(gateway).mint(bytes32(0x0), 10e8, bytes32(0x0), sig);
+    IGateway(gateway).mint(bytes32(0x0), 11e8, bytes32(0x0), sig);
     IERC20(renbtc).approve(address(vault), ~uint256(1) << 2);
     vm.deal(address(vault), 10 ether);
     vault.deposit(10e8, address(this));
