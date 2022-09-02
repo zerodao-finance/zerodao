@@ -61,14 +61,15 @@ const MS_IN_DAY = 86400000
 export class PendingProcess {
   public redis: Redis;
   public logger: Logger;
+  public webhook: ZeroWebhook | null
   constructor({ redis, logger }) {
     this.redis = redis;
     this.logger = logger;
-    this.webhook = process.env.WEBHOOK_BASEURL && new ZeroWebhook({
+    this.webhook = process.env.WEBHOOK_BASEURL ? new ZeroWebhook({
       signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
       baseUrl: process.env.WEBHOOK_BASEURL,
       logger
-    });
+    }) : null;
   }
   async runLoop() {
     while (true) {
@@ -123,7 +124,7 @@ export class PendingProcess {
 	  if (this.webhook) {
             try {
               const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
-              await webhookClient.send(request);
+              await this.webhook.send(request);
 	    } catch (e) {
               this.logger.error(e);
 	    }

@@ -39,7 +39,7 @@ async function handleEvent(data) {
     if (typeof request.destination === "string") {
       if (process.env.WEBHOOK_BASEURL) {
         const webhook = new ZeroWebhook({
-          signer: process.env.WALLET && new Wallet(process.env.WALLET) ? Wallet.createRandom(),
+          signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
 	  logger,
 	  baseUrl: process.env.WEBHOOK_BASEURL
 	});
