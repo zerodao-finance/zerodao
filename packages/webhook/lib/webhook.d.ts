@@ -13,6 +13,6 @@ export declare class ZeroWebhook {
     baseUrl: string;
     logger: Logger;
     constructor({ signer, baseUrl, logger }: IZeroWebhookProps);
-    send(request: Request): Promise<void>;
+    send(request: Request): Promise<import("axios").AxiosResponse<any, any>>;
 }
 export {};

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZeroWebhook = exports.hashWebhookMessage = void 0;
 const axios_1 = __importDefault(require("axios"));
 const solidity_1 = require("@ethersproject/solidity");
-const hashWebhookMessage = (serialized) => (0, solidity_1.keccak256)(['string', 'bytes'], ['/zero/1.1.0/webhook', serialized]);
+const hashWebhookMessage = (serialized) => (0, solidity_1.keccak256)(["string", "bytes"], ["/zero/1.1.0/webhook", serialized]);
 exports.hashWebhookMessage = hashWebhookMessage;
 class ZeroWebhook {
     constructor({ signer, baseUrl, logger }) {
@@ -15,25 +15,15 @@ class ZeroWebhook {
         this.logger = logger;
     }
     async send(request) {
-        try {
-            const serialized = '0x' + request.serialize().toString('hex');
-            await axios_1.default.post(this.baseUrl, {
-                data: serialized,
-                signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized))
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-        catch (err) {
-            if (this.logger) {
-                this.logger.debug(`Webhook Error: ${err}`);
-            }
-            else {
-                console.error(err);
-            }
-        }
+        const serialized = "0x" + request.serialize().toString("hex");
+        return await axios_1.default.post(this.baseUrl, {
+            data: serialized,
+            signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized)),
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
     }
 }
 exports.ZeroWebhook = ZeroWebhook;
