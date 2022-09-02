@@ -10,3 +10,4 @@ dist/deployments/localhost/
 **/.DS_Store
 packages/contracts/out/
 packages/contracts/typechain-types
+.npmrc
