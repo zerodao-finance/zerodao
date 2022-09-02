@@ -6,6 +6,7 @@ import { Wallet } from "@ethersproject/wallet";
 import { ZeroP2P } from "@zerodao/p2p";
 import { CHAINS } from "@zerodao/chains";
 import { Request, BurnRequest } from "@zerodao/request";
+import { ZeroWebhook } from "@zerodao/webhook";
 import { advertiseAsKeeper, handleRequestsV1, handleRequestsV2 } from "./util";
 import Redis from "ioredis";
 const redis = new Redis();
@@ -36,6 +37,18 @@ async function handleEvent(data) {
     const request = JSON.parse(data);
     logger.info(util.inspect(request, { colors: true, depth: 2 }));
     if (typeof request.destination === "string") {
+      if (process.env.WEBHOOK_BASEURL) {
+        const webhook = new ZeroWebhook({
+          signer: process.env.WALLET && new Wallet(process.env.WALLET) ? Wallet.createRandom(),
+	  logger,
+	  baseUrl: process.env.WEBHOOK_BASEURL
+	});
+	try {
+       	  await webhook.send(new BurnRequest(request));
+	} catch (e) {
+          logger.error(e);
+	}
+      }
       await redis.lpush(
         "/zero/dispatch",
         JSON.stringify(

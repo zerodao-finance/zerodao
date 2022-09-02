@@ -64,6 +64,11 @@ export class PendingProcess {
   constructor({ redis, logger }) {
     this.redis = redis;
     this.logger = logger;
+    this.webhook = process.env.WEBHOOK_BASEURL && new ZeroWebhook({
+      signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
+      baseUrl: process.env.WEBHOOK_BASEURL,
+      logger
+    });
   }
   async runLoop() {
     while (true) {
@@ -115,17 +120,14 @@ export class PendingProcess {
             })
           );
 
-          if(process.env.WALLET){
-            const signer = new Wallet(process.env.WALLET);
-            const txType = transferRequest.to === AddressZero ? 'burn' : 'mint'
-            const webhookClient = new ZeroWebhook({
-              baseUrl: `https://explorer.zerodao.com/api/transaction?type=${txType}`,
-              signer: signer,
-              logger: this.logger
-            });
-            await webhookClient.send(transferRequest);
-          }
-
+	  if (this.webhook) {
+            try {
+              const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
+              await webhookClient.send(request);
+	    } catch (e) {
+              this.logger.error(e);
+	    }
+	  }
           const removed = await this.redis.lrem("/zero/pending", 1, item);
           if (removed) i--;
         }
