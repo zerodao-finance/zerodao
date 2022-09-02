@@ -3,13 +3,14 @@
 import util from "util";
 import { Buffer } from "buffer";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
-
+import { Wallet } from "@ethersproject/wallet";
 import { Zcash } from "@renproject/chains-bitcoin";
 import { Redis } from "ioredis";
 import { hexlify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { TransferRequestV2, TransferRequest } from "@zerodao/request";
+import { ZeroWebhook } from "@zerodao/webhook";
 import { Logger } from "@zerodao/logger";
 const { getUTXOs } = BTCHandler;
 
@@ -68,7 +69,7 @@ export class PendingProcess {
     while (true) {
       await this.run();
       await this.timeout(1000);
-    }
+    } 
   }
 
   async run() {
@@ -113,6 +114,18 @@ export class PendingProcess {
               transferRequest,
             })
           );
+
+          if(process.env.WALLET){
+            const signer = new Wallet(process.env.WALLET);
+            const txType = transferRequest.to === AddressZero ? 'burn' : 'mint'
+            const webhookClient = new ZeroWebhook({
+              baseUrl: `https://explorer.zerodao.com/api/transaction?type=${txType}`,
+              signer: signer,
+              logger: this.logger
+            });
+            await webhookClient.send(transferRequest);
+          }
+
           const removed = await this.redis.lrem("/zero/pending", 1, item);
           if (removed) i--;
         }
