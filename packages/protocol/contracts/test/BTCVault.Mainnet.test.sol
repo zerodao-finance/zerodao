@@ -1,7 +1,7 @@
 pragma solidity ^0.8.15;
 import "./Common.sol";
 
-contract BTCVaultTest is Common {
+contract BTCVaultTestMainnet is Common {
   constructor() {}
 
   function setUp() public {

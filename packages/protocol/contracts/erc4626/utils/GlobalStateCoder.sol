@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "./CoderConstants.sol";
+import './CoderConstants.sol';
 
 // ============================== NOTICE ==============================
 // This library was automatically generated with stackpacker.
@@ -24,7 +24,8 @@ import "./CoderConstants.sol";
 // }
 type GlobalState is uint256;
 
-GlobalState constant DefaultGlobalState = GlobalState.wrap(0);
+GlobalState constant DefaultGlobalState = GlobalState
+  .wrap(0);
 
 library GlobalStateCoder {
   /*//////////////////////////////////////////////////////////////
@@ -49,46 +50,79 @@ library GlobalStateCoder {
     )
   {
     assembly {
-      zeroBorrowFeeBips := shr(GlobalState_zeroBorrowFeeBips_bitsAfter, encoded)
+      zeroBorrowFeeBips := shr(
+        GlobalState_zeroBorrowFeeBips_bitsAfter,
+        encoded
+      )
       renBorrowFeeBips := and(
         MaxUint11,
-        shr(GlobalState_renBorrowFeeBips_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeBips_bitsAfter,
+          encoded
+        )
       )
       zeroFeeShareBips := and(
         MaxUint13,
-        shr(GlobalState_zeroFeeShareBips_bitsAfter, encoded)
+        shr(
+          GlobalState_zeroFeeShareBips_bitsAfter,
+          encoded
+        )
       )
       zeroBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_zeroBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_zeroBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
       renBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_renBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
       satoshiPerEth := and(
         MaxUint30,
-        shr(GlobalState_satoshiPerEth_bitsAfter, encoded)
+        shr(
+          GlobalState_satoshiPerEth_bitsAfter,
+          encoded
+        )
       )
       gweiPerGas := and(
         MaxUint16,
-        shr(GlobalState_gweiPerGas_bitsAfter, encoded)
+        shr(
+          GlobalState_gweiPerGas_bitsAfter,
+          encoded
+        )
       )
       lastUpdateTimestamp := and(
         MaxUint32,
-        shr(GlobalState_lastUpdateTimestamp_bitsAfter, encoded)
+        shr(
+          GlobalState_lastUpdateTimestamp_bitsAfter,
+          encoded
+        )
       )
       totalBitcoinBorrowed := and(
         MaxUint40,
-        shr(GlobalState_totalBitcoinBorrowed_bitsAfter, encoded)
+        shr(
+          GlobalState_totalBitcoinBorrowed_bitsAfter,
+          encoded
+        )
       )
       unburnedGasReserveShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedGasReserveShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedGasReserveShares_bitsAfter,
+          encoded
+        )
       )
       unburnedZeroFeeShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedZeroFeeShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedZeroFeeShares_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -116,12 +150,24 @@ library GlobalStateCoder {
             or(
               gt(gweiPerGas, MaxUint16),
               or(
-                gt(lastUpdateTimestamp, MaxUint32),
+                gt(
+                  lastUpdateTimestamp,
+                  MaxUint32
+                ),
                 or(
-                  gt(totalBitcoinBorrowed, MaxUint40),
+                  gt(
+                    totalBitcoinBorrowed,
+                    MaxUint40
+                  ),
                   or(
-                    gt(unburnedGasReserveShares, MaxUint28),
-                    gt(unburnedZeroFeeShares, MaxUint28)
+                    gt(
+                      unburnedGasReserveShares,
+                      MaxUint28
+                    ),
+                    gt(
+                      unburnedZeroFeeShares,
+                      MaxUint28
+                    )
                   )
                 )
               )
@@ -130,15 +176,27 @@ library GlobalStateCoder {
         )
       ) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       encoded := or(
-        shl(GlobalState_zeroBorrowFeeBips_bitsAfter, zeroBorrowFeeBips),
+        shl(
+          GlobalState_zeroBorrowFeeBips_bitsAfter,
+          zeroBorrowFeeBips
+        ),
         or(
-          shl(GlobalState_renBorrowFeeBips_bitsAfter, renBorrowFeeBips),
+          shl(
+            GlobalState_renBorrowFeeBips_bitsAfter,
+            renBorrowFeeBips
+          ),
           or(
-            shl(GlobalState_zeroFeeShareBips_bitsAfter, zeroFeeShareBips),
+            shl(
+              GlobalState_zeroFeeShareBips_bitsAfter,
+              zeroFeeShareBips
+            ),
             or(
               shl(
                 GlobalState_zeroBorrowFeeStatic_bitsAfter,
@@ -150,9 +208,15 @@ library GlobalStateCoder {
                   renBorrowFeeStatic
                 ),
                 or(
-                  shl(GlobalState_satoshiPerEth_bitsAfter, satoshiPerEth),
+                  shl(
+                    GlobalState_satoshiPerEth_bitsAfter,
+                    satoshiPerEth
+                  ),
                   or(
-                    shl(GlobalState_gweiPerGas_bitsAfter, gweiPerGas),
+                    shl(
+                      GlobalState_gweiPerGas_bitsAfter,
+                      gweiPerGas
+                    ),
                     or(
                       shl(
                         GlobalState_lastUpdateTimestamp_bitsAfter,
@@ -189,20 +253,25 @@ library GlobalStateCoder {
                    GlobalState LoanInfo coders
 //////////////////////////////////////////////////////////////*/
 
-  function setLoanInfo(GlobalState old, uint256 totalBitcoinBorrowed)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setLoanInfo(
+    GlobalState old,
+    uint256 totalBitcoinBorrowed
+  ) internal pure returns (GlobalState updated) {
     assembly {
       if gt(totalBitcoinBorrowed, MaxUint40) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
         and(old, GlobalState_LoanInfo_maskOut),
-        shl(GlobalState_totalBitcoinBorrowed_bitsAfter, totalBitcoinBorrowed)
+        shl(
+          GlobalState_totalBitcoinBorrowed_bitsAfter,
+          totalBitcoinBorrowed
+        )
       )
     }
   }
@@ -215,7 +284,10 @@ library GlobalStateCoder {
     assembly {
       totalBitcoinBorrowed := and(
         MaxUint40,
-        shr(GlobalState_totalBitcoinBorrowed_bitsAfter, encoded)
+        shr(
+          GlobalState_totalBitcoinBorrowed_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -237,21 +309,33 @@ library GlobalStateCoder {
         gt(renBorrowFeeStatic, MaxUint23)
       ) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
         and(old, GlobalState_Fees_maskOut),
         or(
-          shl(GlobalState_zeroBorrowFeeBips_bitsAfter, zeroBorrowFeeBips),
+          shl(
+            GlobalState_zeroBorrowFeeBips_bitsAfter,
+            zeroBorrowFeeBips
+          ),
           or(
-            shl(GlobalState_renBorrowFeeBips_bitsAfter, renBorrowFeeBips),
+            shl(
+              GlobalState_renBorrowFeeBips_bitsAfter,
+              renBorrowFeeBips
+            ),
             or(
               shl(
                 GlobalState_zeroBorrowFeeStatic_bitsAfter,
                 zeroBorrowFeeStatic
               ),
-              shl(GlobalState_renBorrowFeeStatic_bitsAfter, renBorrowFeeStatic)
+              shl(
+                GlobalState_renBorrowFeeStatic_bitsAfter,
+                renBorrowFeeStatic
+              )
             )
           )
         )
@@ -270,18 +354,30 @@ library GlobalStateCoder {
     )
   {
     assembly {
-      zeroBorrowFeeBips := shr(GlobalState_zeroBorrowFeeBips_bitsAfter, encoded)
+      zeroBorrowFeeBips := shr(
+        GlobalState_zeroBorrowFeeBips_bitsAfter,
+        encoded
+      )
       renBorrowFeeBips := and(
         MaxUint11,
-        shr(GlobalState_renBorrowFeeBips_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeBips_bitsAfter,
+          encoded
+        )
       )
       zeroBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_zeroBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_zeroBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
       renBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_renBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -299,19 +395,34 @@ library GlobalStateCoder {
     assembly {
       if or(
         gt(satoshiPerEth, MaxUint30),
-        or(gt(gweiPerGas, MaxUint16), gt(lastUpdateTimestamp, MaxUint32))
+        or(
+          gt(gweiPerGas, MaxUint16),
+          gt(lastUpdateTimestamp, MaxUint32)
+        )
       ) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
         and(old, GlobalState_Cached_maskOut),
         or(
-          shl(GlobalState_satoshiPerEth_bitsAfter, satoshiPerEth),
+          shl(
+            GlobalState_satoshiPerEth_bitsAfter,
+            satoshiPerEth
+          ),
           or(
-            shl(GlobalState_gweiPerGas_bitsAfter, gweiPerGas),
-            shl(GlobalState_lastUpdateTimestamp_bitsAfter, lastUpdateTimestamp)
+            shl(
+              GlobalState_gweiPerGas_bitsAfter,
+              gweiPerGas
+            ),
+            shl(
+              GlobalState_lastUpdateTimestamp_bitsAfter,
+              lastUpdateTimestamp
+            )
           )
         )
       )
@@ -328,34 +439,60 @@ library GlobalStateCoder {
     uint256 gweiPerGas
   ) internal pure returns (GlobalState updated) {
     assembly {
-      if or(gt(satoshiPerEth, MaxUint30), gt(gweiPerGas, MaxUint16)) {
+      if or(
+        gt(satoshiPerEth, MaxUint30),
+        gt(gweiPerGas, MaxUint16)
+      ) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_ParamsForModuleFees_maskOut),
+        and(
+          old,
+          GlobalState_ParamsForModuleFees_maskOut
+        ),
         or(
-          shl(GlobalState_satoshiPerEth_bitsAfter, satoshiPerEth),
-          shl(GlobalState_gweiPerGas_bitsAfter, gweiPerGas)
+          shl(
+            GlobalState_satoshiPerEth_bitsAfter,
+            satoshiPerEth
+          ),
+          shl(
+            GlobalState_gweiPerGas_bitsAfter,
+            gweiPerGas
+          )
         )
       )
     }
   }
 
-  function getParamsForModuleFees(GlobalState encoded)
+  function getParamsForModuleFees(
+    GlobalState encoded
+  )
     internal
     pure
-    returns (uint256 satoshiPerEth, uint256 gweiPerGas)
+    returns (
+      uint256 satoshiPerEth,
+      uint256 gweiPerGas
+    )
   {
     assembly {
       satoshiPerEth := and(
         MaxUint30,
-        shr(GlobalState_satoshiPerEth_bitsAfter, encoded)
+        shr(
+          GlobalState_satoshiPerEth_bitsAfter,
+          encoded
+        )
       )
       gweiPerGas := and(
         MaxUint16,
-        shr(GlobalState_gweiPerGas_bitsAfter, encoded)
+        shr(
+          GlobalState_gweiPerGas_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -375,11 +512,17 @@ library GlobalStateCoder {
         gt(unburnedZeroFeeShares, MaxUint28)
       ) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_UnburnedShares_maskOut),
+        and(
+          old,
+          GlobalState_UnburnedShares_maskOut
+        ),
         or(
           shl(
             GlobalState_unburnedGasReserveShares_bitsAfter,
@@ -397,16 +540,25 @@ library GlobalStateCoder {
   function getUnburnedShares(GlobalState encoded)
     internal
     pure
-    returns (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares)
+    returns (
+      uint256 unburnedGasReserveShares,
+      uint256 unburnedZeroFeeShares
+    )
   {
     assembly {
       unburnedGasReserveShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedGasReserveShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedGasReserveShares_bitsAfter,
+          encoded
+        )
       )
       unburnedZeroFeeShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedZeroFeeShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedZeroFeeShares_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -415,25 +567,35 @@ library GlobalStateCoder {
               GlobalState.zeroBorrowFeeBips coders
 //////////////////////////////////////////////////////////////*/
 
-  function getZeroBorrowFeeBips(GlobalState encoded)
+  function getZeroBorrowFeeBips(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 zeroBorrowFeeBips)
   {
     assembly {
-      zeroBorrowFeeBips := shr(GlobalState_zeroBorrowFeeBips_bitsAfter, encoded)
+      zeroBorrowFeeBips := shr(
+        GlobalState_zeroBorrowFeeBips_bitsAfter,
+        encoded
+      )
     }
   }
 
-  function setZeroBorrowFeeBips(GlobalState old, uint256 zeroBorrowFeeBips)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setZeroBorrowFeeBips(
+    GlobalState old,
+    uint256 zeroBorrowFeeBips
+  ) internal pure returns (GlobalState updated) {
     assembly {
       updated := or(
-        and(old, GlobalState_zeroBorrowFeeBips_maskOut),
-        shl(GlobalState_zeroBorrowFeeBips_bitsAfter, zeroBorrowFeeBips)
+        and(
+          old,
+          GlobalState_zeroBorrowFeeBips_maskOut
+        ),
+        shl(
+          GlobalState_zeroBorrowFeeBips_bitsAfter,
+          zeroBorrowFeeBips
+        )
       )
     }
   }
@@ -442,7 +604,9 @@ library GlobalStateCoder {
                GlobalState.renBorrowFeeBips coders
 //////////////////////////////////////////////////////////////*/
 
-  function getRenBorrowFeeBips(GlobalState encoded)
+  function getRenBorrowFeeBips(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 renBorrowFeeBips)
@@ -450,20 +614,28 @@ library GlobalStateCoder {
     assembly {
       renBorrowFeeBips := and(
         MaxUint11,
-        shr(GlobalState_renBorrowFeeBips_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeBips_bitsAfter,
+          encoded
+        )
       )
     }
   }
 
-  function setRenBorrowFeeBips(GlobalState old, uint256 renBorrowFeeBips)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setRenBorrowFeeBips(
+    GlobalState old,
+    uint256 renBorrowFeeBips
+  ) internal pure returns (GlobalState updated) {
     assembly {
       updated := or(
-        and(old, GlobalState_renBorrowFeeBips_maskOut),
-        shl(GlobalState_renBorrowFeeBips_bitsAfter, renBorrowFeeBips)
+        and(
+          old,
+          GlobalState_renBorrowFeeBips_maskOut
+        ),
+        shl(
+          GlobalState_renBorrowFeeBips_bitsAfter,
+          renBorrowFeeBips
+        )
       )
     }
   }
@@ -472,7 +644,9 @@ library GlobalStateCoder {
                GlobalState.zeroFeeShareBips coders
 //////////////////////////////////////////////////////////////*/
 
-  function getZeroFeeShareBips(GlobalState encoded)
+  function getZeroFeeShareBips(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 zeroFeeShareBips)
@@ -480,20 +654,28 @@ library GlobalStateCoder {
     assembly {
       zeroFeeShareBips := and(
         MaxUint13,
-        shr(GlobalState_zeroFeeShareBips_bitsAfter, encoded)
+        shr(
+          GlobalState_zeroFeeShareBips_bitsAfter,
+          encoded
+        )
       )
     }
   }
 
-  function setZeroFeeShareBips(GlobalState old, uint256 zeroFeeShareBips)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setZeroFeeShareBips(
+    GlobalState old,
+    uint256 zeroFeeShareBips
+  ) internal pure returns (GlobalState updated) {
     assembly {
       updated := or(
-        and(old, GlobalState_zeroFeeShareBips_maskOut),
-        shl(GlobalState_zeroFeeShareBips_bitsAfter, zeroFeeShareBips)
+        and(
+          old,
+          GlobalState_zeroFeeShareBips_maskOut
+        ),
+        shl(
+          GlobalState_zeroFeeShareBips_bitsAfter,
+          zeroFeeShareBips
+        )
       )
     }
   }
@@ -502,7 +684,9 @@ library GlobalStateCoder {
              GlobalState.zeroBorrowFeeStatic coders
 //////////////////////////////////////////////////////////////*/
 
-  function getZeroBorrowFeeStatic(GlobalState encoded)
+  function getZeroBorrowFeeStatic(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 zeroBorrowFeeStatic)
@@ -510,25 +694,36 @@ library GlobalStateCoder {
     assembly {
       zeroBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_zeroBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_zeroBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
     }
   }
 
-  function setZeroBorrowFeeStatic(GlobalState old, uint256 zeroBorrowFeeStatic)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setZeroBorrowFeeStatic(
+    GlobalState old,
+    uint256 zeroBorrowFeeStatic
+  ) internal pure returns (GlobalState updated) {
     assembly {
       if gt(zeroBorrowFeeStatic, MaxUint23) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_zeroBorrowFeeStatic_maskOut),
-        shl(GlobalState_zeroBorrowFeeStatic_bitsAfter, zeroBorrowFeeStatic)
+        and(
+          old,
+          GlobalState_zeroBorrowFeeStatic_maskOut
+        ),
+        shl(
+          GlobalState_zeroBorrowFeeStatic_bitsAfter,
+          zeroBorrowFeeStatic
+        )
       )
     }
   }
@@ -537,7 +732,9 @@ library GlobalStateCoder {
               GlobalState.renBorrowFeeStatic coders
 //////////////////////////////////////////////////////////////*/
 
-  function getRenBorrowFeeStatic(GlobalState encoded)
+  function getRenBorrowFeeStatic(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 renBorrowFeeStatic)
@@ -545,25 +742,36 @@ library GlobalStateCoder {
     assembly {
       renBorrowFeeStatic := and(
         MaxUint23,
-        shr(GlobalState_renBorrowFeeStatic_bitsAfter, encoded)
+        shr(
+          GlobalState_renBorrowFeeStatic_bitsAfter,
+          encoded
+        )
       )
     }
   }
 
-  function setRenBorrowFeeStatic(GlobalState old, uint256 renBorrowFeeStatic)
-    internal
-    pure
-    returns (GlobalState updated)
-  {
+  function setRenBorrowFeeStatic(
+    GlobalState old,
+    uint256 renBorrowFeeStatic
+  ) internal pure returns (GlobalState updated) {
     assembly {
       if gt(renBorrowFeeStatic, MaxUint23) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_renBorrowFeeStatic_maskOut),
-        shl(GlobalState_renBorrowFeeStatic_bitsAfter, renBorrowFeeStatic)
+        and(
+          old,
+          GlobalState_renBorrowFeeStatic_maskOut
+        ),
+        shl(
+          GlobalState_renBorrowFeeStatic_bitsAfter,
+          renBorrowFeeStatic
+        )
       )
     }
   }
@@ -580,7 +788,10 @@ library GlobalStateCoder {
     assembly {
       satoshiPerEth := and(
         MaxUint30,
-        shr(GlobalState_satoshiPerEth_bitsAfter, encoded)
+        shr(
+          GlobalState_satoshiPerEth_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -597,7 +808,10 @@ library GlobalStateCoder {
     assembly {
       gweiPerGas := and(
         MaxUint16,
-        shr(GlobalState_gweiPerGas_bitsAfter, encoded)
+        shr(
+          GlobalState_gweiPerGas_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -606,7 +820,9 @@ library GlobalStateCoder {
              GlobalState.lastUpdateTimestamp coders
 //////////////////////////////////////////////////////////////*/
 
-  function getLastUpdateTimestamp(GlobalState encoded)
+  function getLastUpdateTimestamp(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 lastUpdateTimestamp)
@@ -614,7 +830,10 @@ library GlobalStateCoder {
     assembly {
       lastUpdateTimestamp := and(
         MaxUint32,
-        shr(GlobalState_lastUpdateTimestamp_bitsAfter, encoded)
+        shr(
+          GlobalState_lastUpdateTimestamp_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -623,7 +842,9 @@ library GlobalStateCoder {
              GlobalState.totalBitcoinBorrowed coders
 //////////////////////////////////////////////////////////////*/
 
-  function getTotalBitcoinBorrowed(GlobalState encoded)
+  function getTotalBitcoinBorrowed(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 totalBitcoinBorrowed)
@@ -631,7 +852,10 @@ library GlobalStateCoder {
     assembly {
       totalBitcoinBorrowed := and(
         MaxUint40,
-        shr(GlobalState_totalBitcoinBorrowed_bitsAfter, encoded)
+        shr(
+          GlobalState_totalBitcoinBorrowed_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -643,12 +867,21 @@ library GlobalStateCoder {
     assembly {
       if gt(totalBitcoinBorrowed, MaxUint40) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_totalBitcoinBorrowed_maskOut),
-        shl(GlobalState_totalBitcoinBorrowed_bitsAfter, totalBitcoinBorrowed)
+        and(
+          old,
+          GlobalState_totalBitcoinBorrowed_maskOut
+        ),
+        shl(
+          GlobalState_totalBitcoinBorrowed_bitsAfter,
+          totalBitcoinBorrowed
+        )
       )
     }
   }
@@ -657,7 +890,9 @@ library GlobalStateCoder {
            GlobalState.unburnedGasReserveShares coders
 //////////////////////////////////////////////////////////////*/
 
-  function getUnburnedGasReserveShares(GlobalState encoded)
+  function getUnburnedGasReserveShares(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 unburnedGasReserveShares)
@@ -665,7 +900,10 @@ library GlobalStateCoder {
     assembly {
       unburnedGasReserveShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedGasReserveShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedGasReserveShares_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -677,11 +915,17 @@ library GlobalStateCoder {
     assembly {
       if gt(unburnedGasReserveShares, MaxUint28) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_unburnedGasReserveShares_maskOut),
+        and(
+          old,
+          GlobalState_unburnedGasReserveShares_maskOut
+        ),
         shl(
           GlobalState_unburnedGasReserveShares_bitsAfter,
           unburnedGasReserveShares
@@ -694,7 +938,9 @@ library GlobalStateCoder {
             GlobalState.unburnedZeroFeeShares coders
 //////////////////////////////////////////////////////////////*/
 
-  function getUnburnedZeroFeeShares(GlobalState encoded)
+  function getUnburnedZeroFeeShares(
+    GlobalState encoded
+  )
     internal
     pure
     returns (uint256 unburnedZeroFeeShares)
@@ -702,7 +948,10 @@ library GlobalStateCoder {
     assembly {
       unburnedZeroFeeShares := and(
         MaxUint28,
-        shr(GlobalState_unburnedZeroFeeShares_bitsAfter, encoded)
+        shr(
+          GlobalState_unburnedZeroFeeShares_bitsAfter,
+          encoded
+        )
       )
     }
   }
@@ -714,12 +963,21 @@ library GlobalStateCoder {
     assembly {
       if gt(unburnedZeroFeeShares, MaxUint28) {
         mstore(0, Panic_error_signature)
-        mstore(Panic_error_offset, Panic_arithmetic)
+        mstore(
+          Panic_error_offset,
+          Panic_arithmetic
+        )
         revert(0, Panic_error_length)
       }
       updated := or(
-        and(old, GlobalState_unburnedZeroFeeShares_maskOut),
-        shl(GlobalState_unburnedZeroFeeShares_bitsAfter, unburnedZeroFeeShares)
+        and(
+          old,
+          GlobalState_unburnedZeroFeeShares_maskOut
+        ),
+        shl(
+          GlobalState_unburnedZeroFeeShares_bitsAfter,
+          unburnedZeroFeeShares
+        )
       )
     }
   }
@@ -738,7 +996,11 @@ library GlobalStateCoder {
     }
   }
 
-  function isNull(GlobalState a) internal pure returns (bool _isNull) {
+  function isNull(GlobalState a)
+    internal
+    pure
+    returns (bool _isNull)
+  {
     _isNull = equals(a, DefaultGlobalState);
   }
 }

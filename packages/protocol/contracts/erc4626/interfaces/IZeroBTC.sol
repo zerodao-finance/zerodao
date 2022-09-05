@@ -73,6 +73,7 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips,
     address strategy
   ) external;
 
@@ -186,7 +187,13 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
 
   event GlobalStateCacheUpdated(uint256 satoshiPerEth, uint256 getGweiPerGas);
 
-  event FeeSharesMinted(uint256 gasReserveFees, uint256 gasReserveShares, uint256 zeroFees, uint256 zeroFeeShares);
+  event FeeSharesMinted(
+    uint256 gasReserveFees,
+    uint256 gasReserveShares,
+    uint256 zeroFees,
+    uint256 keeperFees,
+    uint256 zeroFeeShares
+  );
 
   event FeeSharesBurned(uint256 gasReserveFees, uint256 gasReserveShares, uint256 zeroFees, uint256 zeroFeeShares);
 }

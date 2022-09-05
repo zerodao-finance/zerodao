@@ -81,6 +81,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips,
     address strategy
   ) external override {
     if (_governance != address(0)) {
@@ -98,6 +99,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     _strategy = strategy;
     // Set initial global state
     _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic);
+    _state = _state.setZeroFeeShareBips(zeroBorrowFeeBips);
   }
 
   /*//////////////////////////////////////////////////////////////

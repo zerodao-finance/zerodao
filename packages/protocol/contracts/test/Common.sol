@@ -8,10 +8,10 @@ import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import "../modules/mainnet/ConvertWBTC.sol";
 import "../modules/mainnet/ConvertUSDC.sol";
-import "../modules/mainnet/ConvertNative.sol";
+import { ConvertNativeMainnet } from "../modules/mainnet/ConvertNative.sol";
 import "../modules/arbitrum/ConvertWBTC.sol";
 import "../modules/arbitrum/ConvertUSDC.sol";
-import "../modules/arbitrum/ConvertNative.sol";
+import { ConvertNativeArbitrum } from "../modules/arbitrum/ConvertNative.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
@@ -121,13 +121,13 @@ contract Common is Test {
     TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
       dummy,
       address(admin),
-      abi.encodeWithSelector(ZeroBTCBase.initialize.selector, address(this), 200, 200, 200, 200, address(this))
+      abi.encodeWithSelector(ZeroBTCBase.initialize.selector, address(this), 200, 200, 200, 200, 200, address(this))
     );
     proxy = ZeroBTC(payable(address(_proxy)));
     address _vault = deployVault(address(proxy), converter);
     admin.upgrade(_proxy, _vault);
     proxy = ZeroBTC(payable(address(_vault)));
-    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, address(this));
+    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, address(this));
   }
 
   function setUpBase() public {
@@ -155,12 +155,16 @@ contract Common is Test {
 
   function getBalance(address module) public returns (uint256) {
     if (module == address(moduleWBTC)) {
+      console.log("wbtc");
       return IERC20(wbtc).balanceOf(zerowallet);
     } else if (module == address(moduleUSDC)) {
+      console.log("usdc");
       return IERC20(usdc).balanceOf(zerowallet);
     } else if (module == address(moduleETH)) {
+      console.log("eth");
       return zerowallet.balance;
     } else {
+      console.log("renbtc");
       return IERC20(renbtc).balanceOf(zerowallet);
     }
   }

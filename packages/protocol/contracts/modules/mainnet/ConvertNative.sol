@@ -9,6 +9,7 @@ import { SafeERC20 } from "@openzeppelin/contracts-new/token/ERC20/utils/SafeERC
 import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import { IWETH } from "../../interfaces/IWETH.sol";
+import { console2 as console } from "forge-std/console2.sol";
 
 contract ConvertNativeMainnet is BaseConvert {
   using SafeMath for *;
@@ -37,7 +38,7 @@ contract ConvertNativeMainnet is BaseConvert {
     (bool success, ) = renCrv.call(abi.encodeWithSelector(ICurveInt128.exchange.selector, 0, 1, locals.amount, 1));
     require(success, "!curve wbtc");
     wbtcAmountOut = IERC20(wbtc).balanceOf(address(this)) - wbtcAmountOut;
-    bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, address(weth));
+    bytes memory path = abi.encodePacked(wbtc, wethWbtcFee, weth);
     ISwapRouter.ExactInputParams memory params = ISwapRouter.ExactInputParams({
       recipient: address(this),
       deadline: block.timestamp + 1,
@@ -56,5 +57,6 @@ contract ConvertNativeMainnet is BaseConvert {
   function transfer(address _to, uint256 amount) internal override {
     address payable to = payable(_to);
     to.transfer(amount);
+    console.log(amount);
   }
 }

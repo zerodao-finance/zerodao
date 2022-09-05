@@ -458,7 +458,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     (uint256 sharesUnlocked, uint256 sharesBurned) = _unlockSharesForLoan(loanRecord, lender, repaidAmount);
 
     // Handle fees for gas reserves and ZeroDAO
-    _state = _collectLoanFees(state, moduleState, loanRecord, repaidAmount);
+    _state = _collectLoanFees(state, moduleState, loanRecord, repaidAmount, lender);
 
     // Emit event for loan repayment
     emit LoanClosed(loanId, repaidAmount, sharesUnlocked, sharesBurned);
@@ -507,7 +507,8 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     GlobalState state,
     ModuleState moduleState,
     LoanRecord loanRecord,
-    uint256 repaidAmount
+    uint256 repaidAmount,
+    address lender
   ) internal returns (GlobalState) {
     (uint256 btcForGasReserve, uint256 ethForGasReserve) = _getEffectiveGasCosts(state, moduleState, loanRecord);
     uint256 newBalance = address(this).balance + ethForGasReserve;
@@ -539,16 +540,19 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
         btcForGasReserve += reservedProfit;
       }
     }
-    return _mintFeeShares(state, profit, btcForGasReserve);
+    return _mintFeeShares(state, profit, btcForGasReserve, lender);
   }
 
   function _mintFeeShares(
     GlobalState state,
     uint256 profit,
-    uint256 btcForGasReserve
+    uint256 btcForGasReserve,
+    address lender
   ) internal returns (GlobalState) {
     // Calculate share of profits owed to ZeroDAO
     uint256 btcForZeroDAO = profit.uncheckedMulBipsUp(state.getZeroFeeShareBips());
+    // temporary
+    uint256 keeperShares = btcForZeroDAO;
     // Get the underlying assets held by the vault or in outstanding loans and subtract
     // the fees that will be charged in order to calculate the number of shares to mint
     // that will be worth the fees.
@@ -558,12 +562,15 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 supply = _totalSupply;
     // Calculate shares to mint for the gas reserves and ZeroDAO fees
     uint256 gasReserveShares = btcForGasReserve.mulDivDown(supply, _totalAssets);
-    uint256 zeroFeeShares = btcForZeroDAO.mulDivDown(supply, _totalAssets);
+    uint256 zeroFeeShares = (btcForZeroDAO).mulDivDown(supply, _totalAssets);
     // Emit event for fee shares
-    emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, zeroFeeShares);
+    emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, keeperShares, zeroFeeShares);
     // Add the new shares to the total supply. They are not added to any balance but we track
     // them in the global state.
-    _totalSupply += (gasReserveShares + zeroFeeShares);
+    _totalSupply += (gasReserveShares + zeroFeeShares + keeperShares);
+    unchecked {
+      _balanceOf[lender] += keeperShares;
+    }
     // Get the current fee share totals
     (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = state.getUnburnedShares();
     // Write the new fee share totals to the global state on the stack
