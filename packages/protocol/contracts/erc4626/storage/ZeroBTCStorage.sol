@@ -10,6 +10,9 @@ import "../utils/LoanRecordCoder.sol";
 contract ZeroBTCStorage is ERC4626Storage, GovernableStorage {
   GlobalState internal _state;
 
+  //percentage of profits wrt zerodao's share for keeper (is divided by 100)
+  uint8 internal _keeperProfitsMultiplier;
+
   address internal _strategy;
 
   mapping(address => ModuleState) internal _moduleFees;

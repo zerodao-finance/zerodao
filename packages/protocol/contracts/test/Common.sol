@@ -121,13 +121,23 @@ contract Common is Test {
     TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
       dummy,
       address(admin),
-      abi.encodeWithSelector(ZeroBTCBase.initialize.selector, address(this), 200, 200, 200, 200, 200, address(this))
+      abi.encodeWithSelector(
+        ZeroBTCBase.initialize.selector,
+        address(this),
+        200,
+        200,
+        200,
+        200,
+        200,
+        100,
+        address(this)
+      )
     );
     proxy = ZeroBTC(payable(address(_proxy)));
     address _vault = deployVault(address(proxy), converter);
     admin.upgrade(_proxy, _vault);
     proxy = ZeroBTC(payable(address(_vault)));
-    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, address(this));
+    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, 100, address(this));
   }
 
   function setUpBase() public {

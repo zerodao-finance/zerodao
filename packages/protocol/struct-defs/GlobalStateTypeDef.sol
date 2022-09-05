@@ -14,7 +14,9 @@ struct GlobalState {
   uint11 renBorrowFeeBips unchecked;
 
   // Fraction of profit
+  // cannot exceed 81.91%
   uint13 zeroFeeShareBips unchecked;
+
 
   // Amount of Bitcoin taken as a fee for Zero (set by governance)
   // Supports fees up to 0.08388607 Bitcoin
