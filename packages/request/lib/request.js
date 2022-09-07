@@ -22,8 +22,7 @@ class Request {
         throw new Error("Serialize must be implemented");
     }
     getChainId() {
-        return Number(Object.keys(protocol_1.default).find((v) => Object.keys(protocol_1.default[v]).find((network) => Object.keys(protocol_1.default[v][network].contracts).find((contract) => protocol_1.default[v][network].contracts[contract].address ===
-            this.contractAddress))) ||
+        return Number(Object.keys(protocol_1.default).find((v) => Object.keys(protocol_1.default[v]).find((network) => Object.keys(protocol_1.default[v][network].contracts).find((contract) => ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) && protocol_1.default[v][network].contracts[contract].address === this.contractAddress))) ||
             (() => {
                 throw Error("Request#getChainId(): no contract found at " + this.contractAddress);
             })());
