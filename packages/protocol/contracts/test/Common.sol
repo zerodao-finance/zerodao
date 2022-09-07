@@ -21,6 +21,7 @@ import "../erc4626/vault/ZeroBTC.sol";
 import "../erc4626/utils/ModuleStateCoder.sol";
 import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
+import { Dummy } from "../util/DummyImpl.sol";
 
 contract Common is Test {
   address renbtc;
@@ -75,22 +76,7 @@ contract Common is Test {
   }
 
   function initializeDummy() internal returns (address) {
-    return
-      address(
-        new ZeroBTC(
-          IGatewayRegistry(gatewayRegistry),
-          IChainlinkOracle(btcEthOracle),
-          IChainlinkOracle(gasPriceOracle),
-          IRenBtcEthConverter(address(0x0)),
-          0,
-          0,
-          0,
-          0,
-          address(0x0),
-          address(0x0),
-          address(0x0)
-        )
-      );
+    return address(new Dummy());
   }
 
   function deployVault(address proxy, address converter) internal returns (address _vault) {
@@ -118,21 +104,8 @@ contract Common is Test {
   function initializeProxy(address converter) internal returns (ZeroBTC proxy, ProxyAdmin admin) {
     admin = new ProxyAdmin();
     address dummy = initializeDummy();
-    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
-      dummy,
-      address(admin),
-      abi.encodeWithSelector(
-        ZeroBTCBase.initialize.selector,
-        address(this),
-        200,
-        200,
-        200,
-        200,
-        200,
-        100,
-        address(this)
-      )
-    );
+    bytes memory _data;
+    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(dummy, address(admin), _data);
     proxy = ZeroBTC(payable(address(_proxy)));
     address _vault = deployVault(address(proxy), converter);
     admin.upgrade(_proxy, _vault);
