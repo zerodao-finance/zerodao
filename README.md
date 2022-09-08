@@ -2,6 +2,21 @@
 
 Project repository for the zeroDAO codebase, including the production contracts.
 
+
+## Publishing to NPM
+
+1. Get access to the zerodao organization on [NPM](https://npmjs.com)
+2. Generate an access token on NPM
+3. Create an `.npmrc` file in the root of this directory
+4. Paste the following in that `.npmrc` file with your generated access token:
+```
+//registry.npmjs.org/:_authToken=<ACCESS-TOKEN>
+access=public
+```
+5. Install [Lerna](https://lerna.js.org/docs/introduction) using `npm i -g lerna`
+6. Lastly, publish your changes to NPM using `lerna publish patch`
+
+
 ## SDK
 
 To install to a browser application
