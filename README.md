@@ -13,7 +13,7 @@ Project repository for the zeroDAO codebase, including the production contracts.
 //registry.npmjs.org/:_authToken=<ACCESS-TOKEN>
 access=public
 ```
-5. Install Lerna using `npm i -g lerna`
+5. Install [Lerna](https://lerna.js.org/docs/introduction) using `npm i -g lerna`
 6. Lastly, publish your changes to NPM using `lerna publish patch`
 
 
