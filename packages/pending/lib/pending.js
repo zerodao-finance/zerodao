@@ -7,11 +7,13 @@ exports.PendingProcess = void 0;
 const util_1 = __importDefault(require("util"));
 const buffer_1 = require("buffer");
 const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
+const wallet_1 = require("@ethersproject/wallet");
 const chains_bitcoin_1 = require("@renproject/chains-bitcoin");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
 const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
+const webhook_1 = require("@zerodao/webhook");
 const { getUTXOs } = BTCHandler_1.BTCHandler;
 const getZcashUTXOs = async (testnet, { confirmations, address }) => {
     const zcash = new chains_bitcoin_1.Zcash({ network: Boolean(testnet) ? 'testnet' : 'mainnet' });
@@ -47,6 +49,10 @@ class PendingProcess {
     constructor({ redis, logger }) {
         this.redis = redis;
         this.logger = logger;
+        this.webhook = process.env.WEBHOOK_BASEURL ? new webhook_1.ZeroWebhook({
+            signer: process.env.WALLET ? new wallet_1.Wallet(process.env.WALLET) : wallet_1.Wallet.createRandom(),
+            baseUrl: process.env.WEBHOOK_BASEURL
+        }) : null;
     }
     async runLoop() {
         while (true) {
@@ -80,6 +86,7 @@ class PendingProcess {
                 if (utxos && utxos.length) {
                     this.logger.info("got UTXO");
                     this.logger.info(util_1.default.inspect(utxos, { colors: true, depth: 15 }));
+                    // const redis = require('ioredis')(process.env.REDIS_URI);
                     const contractAddress = (0, address_1.getAddress)(transferRequest.contractAddress);
                     if (VAULT_DEPLOYMENTS[contractAddress]) {
                         await this.redis.lpush("/zero/dispatch", JSON.stringify(new request_1.TransferRequestV2(transferRequest).buildLoanTransaction()));
@@ -88,6 +95,14 @@ class PendingProcess {
                         blockNumber,
                         transferRequest,
                     }));
+                    // For Explorer API
+                    if (this.webhook) {
+                        const request = VAULT_DEPLOYMENTS[(0, address_1.getAddress)(transferRequest.contractAddress)] ? new request_1.TransferRequestV2(transferRequest) : new request_1.TransferRequest(transferRequest);
+                        this.webhook.send('/transaction?type=mint', request).catch((err) => this.logger.error(err));
+                    }
+                    else {
+                        this.logger.error("Webhook environment variables not setup.");
+                    }
                     const removed = await this.redis.lrem("/zero/pending", 1, item);
                     if (removed)
                         i--;

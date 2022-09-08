@@ -11,6 +11,7 @@ const wallet_1 = require("@ethersproject/wallet");
 const p2p_1 = require("@zerodao/p2p");
 const chains_1 = require("@zerodao/chains");
 const request_1 = require("@zerodao/request");
+const webhook_1 = require("@zerodao/webhook");
 const util_1 = require("./util");
 const ioredis_1 = __importDefault(require("ioredis"));
 const redis = new ioredis_1.default();
@@ -38,6 +39,17 @@ async function handleEvent(data) {
         const request = JSON.parse(data);
         logger.info(util_2.default.inspect(request, { colors: true, depth: 2 }));
         if (typeof request.destination === "string") {
+            // For Explorer API
+            if (process.env.WEBHOOK_BASEURL) {
+                const webhook = new webhook_1.ZeroWebhook({
+                    signer: process.env.WALLET ? new wallet_1.Wallet(process.env.WALLET) : wallet_1.Wallet.createRandom(),
+                    baseUrl: process.env.WEBHOOK_BASEURL
+                });
+                webhook.send('/transaction?type=burn', new request_1.BurnRequest(request)).catch((err) => this.logger.error(err));
+            }
+            else {
+                logger.error("Webhook environment variable not set up.");
+            }
             await redis.lpush("/zero/dispatch", JSON.stringify({
                 to: (0, address_1.getAddress)(request.contractAddress),
                 chainId: request_1.Request.addressToChainId(request.contractAddress),

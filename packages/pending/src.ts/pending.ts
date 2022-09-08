@@ -3,13 +3,14 @@
 import util from "util";
 import { Buffer } from "buffer";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
-
+import { Wallet } from "@ethersproject/wallet";
 import { Zcash } from "@renproject/chains-bitcoin";
 import { Redis } from "ioredis";
 import { hexlify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { TransferRequestV2, TransferRequest } from "@zerodao/request";
+import { ZeroWebhook } from "@zerodao/webhook";
 import { Logger } from "@zerodao/logger";
 const { getUTXOs } = BTCHandler;
 
@@ -60,15 +61,20 @@ const MS_IN_DAY = 86400000
 export class PendingProcess {
   public redis: Redis;
   public logger: Logger;
+  public webhook: ZeroWebhook | null
   constructor({ redis, logger }) {
     this.redis = redis;
     this.logger = logger;
+    this.webhook = process.env.WEBHOOK_BASEURL ? new ZeroWebhook({
+      signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
+      baseUrl: process.env.WEBHOOK_BASEURL
+    }) : null;
   }
   async runLoop() {
     while (true) {
       await this.run();
       await this.timeout(1000);
-    }
+    } 
   }
 
   async run() {
@@ -91,7 +97,7 @@ export class PendingProcess {
         const utxos = isZcashAddress(gateway.gatewayAddress) ? await getZcashUTXOs(false, {
           address: gateway.gatewayAddress,
           confirmations: 1
-	}) : await getUTXOs(false, {
+	      }) : await getUTXOs(false, {
           address: gateway.gatewayAddress,
           confirmations: 1,
         });
@@ -99,7 +105,8 @@ export class PendingProcess {
         if (utxos && utxos.length) {
           this.logger.info("got UTXO");
           this.logger.info(util.inspect(utxos, { colors: true, depth: 15 }));
-          
+          // const redis = require('ioredis')(process.env.REDIS_URI);
+
           const contractAddress = getAddress(transferRequest.contractAddress)
 
           if(VAULT_DEPLOYMENTS[contractAddress]) {
@@ -113,6 +120,15 @@ export class PendingProcess {
               transferRequest,
             })
           );
+          
+          // For Explorer API
+	        if (this.webhook) {
+            const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
+            this.webhook.send('/transaction?type=mint', request).catch((err) => this.logger.error(err));
+	        } else {
+            this.logger.error("Webhook environment variables not setup.")
+          }
+
           const removed = await this.redis.lrem("/zero/pending", 1, item);
           if (removed) i--;
         }
