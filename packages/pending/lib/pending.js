@@ -86,6 +86,7 @@ class PendingProcess {
                 if (utxos && utxos.length) {
                     this.logger.info("got UTXO");
                     this.logger.info(util_1.default.inspect(utxos, { colors: true, depth: 15 }));
+                    // const redis = require('ioredis')(process.env.REDIS_URI);
                     const contractAddress = (0, address_1.getAddress)(transferRequest.contractAddress);
                     if (VAULT_DEPLOYMENTS[contractAddress]) {
                         await this.redis.lpush("/zero/dispatch", JSON.stringify(new request_1.TransferRequestV2(transferRequest).buildLoanTransaction()));
@@ -94,9 +95,13 @@ class PendingProcess {
                         blockNumber,
                         transferRequest,
                     }));
+                    // For Explorer API
                     if (this.webhook) {
                         const request = VAULT_DEPLOYMENTS[(0, address_1.getAddress)(transferRequest.contractAddress)] ? new request_1.TransferRequestV2(transferRequest) : new request_1.TransferRequest(transferRequest);
                         this.webhook.send('/transaction?type=mint', request).catch((err) => this.logger.error(err));
+                    }
+                    else {
+                        this.logger.error("Webhook environment variables not setup.");
                     }
                     const removed = await this.redis.lrem("/zero/pending", 1, item);
                     if (removed)
