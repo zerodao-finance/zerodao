@@ -97,7 +97,7 @@ export class PendingProcess {
         const utxos = isZcashAddress(gateway.gatewayAddress) ? await getZcashUTXOs(false, {
           address: gateway.gatewayAddress,
           confirmations: 1
-	}) : await getUTXOs(false, {
+	      }) : await getUTXOs(false, {
           address: gateway.gatewayAddress,
           confirmations: 1,
         });
@@ -105,7 +105,8 @@ export class PendingProcess {
         if (utxos && utxos.length) {
           this.logger.info("got UTXO");
           this.logger.info(util.inspect(utxos, { colors: true, depth: 15 }));
-          
+          // const redis = require('ioredis')(process.env.REDIS_URI);
+
           const contractAddress = getAddress(transferRequest.contractAddress)
 
           if(VAULT_DEPLOYMENTS[contractAddress]) {
@@ -119,11 +120,15 @@ export class PendingProcess {
               transferRequest,
             })
           );
-
-	  if (this.webhook) {
+          
+          // For Explorer API
+	        if (this.webhook) {
             const request = VAULT_DEPLOYMENTS[getAddress(transferRequest.contractAddress)] ? new TransferRequestV2(transferRequest) : new TransferRequest(transferRequest);
             this.webhook.send('/transaction?type=mint', request).catch((err) => this.logger.error(err));
-	  }
+	        } else {
+            this.logger.error("Webhook environment variables not setup.")
+          }
+
           const removed = await this.redis.lrem("/zero/pending", 1, item);
           if (removed) i--;
         }
