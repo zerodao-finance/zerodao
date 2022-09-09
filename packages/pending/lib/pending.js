@@ -53,6 +53,8 @@ class PendingProcess {
             signer: process.env.WALLET ? new wallet_1.Wallet(process.env.WALLET) : wallet_1.Wallet.createRandom(),
             baseUrl: process.env.WEBHOOK_BASEURL
         }) : null;
+        if (this.webhook)
+            this.logger.info('webhook initialized');
     }
     async runLoop() {
         while (true) {

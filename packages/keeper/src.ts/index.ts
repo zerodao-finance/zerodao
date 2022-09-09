@@ -40,12 +40,16 @@ async function handleEvent(data) {
       // For Explorer API
       if (process.env.WEBHOOK_BASEURL) {
         const webhook = new ZeroWebhook({
-          signer: process.env.WALLET ? new Wallet(process.env.WALLET) : Wallet.createRandom(),
-	        baseUrl: process.env.WEBHOOK_BASEURL
-	      });
-       	webhook.send('/transaction?type=burn', new BurnRequest(request)).catch((err) => this.logger.error(err));
+          signer: process.env.WALLET
+            ? new Wallet(process.env.WALLET)
+            : Wallet.createRandom(),
+          baseUrl: process.env.WEBHOOK_BASEURL,
+        });
+        webhook
+          .send("/transaction?type=burn", new BurnRequest(request))
+          .catch((err) => logger.error(err));
       } else {
-        logger.error("Webhook environment variable not set up.")
+        logger.error("Webhook environment variable not set up.");
       }
 
       await redis.lpush(
