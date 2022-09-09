@@ -15,6 +15,6 @@ var transferRequest = new TransferRequest({
 });
 
 var webhookClient = new ZeroWebhook({
-  baseUrl: 'http://localhost:3000/transaction?type=mint',
+  baseUrl: 'http://localhost:3000',
   signer: Wallet.createRandom()
 });

@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/request",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "description": "zerodao sdk sub-package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
@@ -21,8 +21,8 @@
     "@renproject/interfaces": "^2.6.0",
     "@renproject/ren": "^3.4.4",
     "@zerodao/buffer": "^0.3.21",
-    "@zerodao/chains": "^0.3.21",
-    "@zerodao/common": "^0.3.21",
+    "@zerodao/chains": "^0.3.22",
+    "@zerodao/common": "^0.3.22",
     "@zerodao/protocol": "^0.3.21",
     "@zerodao/utils": "^0.3.21",
     "it-length-prefixed": "^5.0.3",
