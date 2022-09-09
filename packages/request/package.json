@@ -37,7 +37,7 @@
     "build": "tsc",
     "test": "node lib/TransferRequestV2.js"
   },
-  "gitHead": "788906805bf9572c3d5408be4ca1ea02f7fe7e49",
+  "gitHead": "b9a38c5a5fd1463d5a6921e44a5eb6541f9b9f79",
   "publishConfig": {
     "access": "public"
   }
