@@ -27,6 +27,7 @@ export declare class BurnRequest extends Request {
         deadline: BigNumberish;
         amount: BigNumberish;
         contractAddress: string;
+        signature: string;
     });
     sendTransaction(signer: any): Promise<any>;
     serialize(): Buffer;

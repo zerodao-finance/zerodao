@@ -254,6 +254,7 @@ export class BurnRequest extends Request {
     deadline: BigNumberish,
     amount: BigNumberish,
     contractAddress: string,
+    signature: string
   }) {
     super();
     this.asset = o.asset;
@@ -263,6 +264,7 @@ export class BurnRequest extends Request {
     this.deadline = o.deadline;
     this.amount = o.amount;
     this.contractAddress = o.contractAddress;
+    this.signature = o.signature;
   }
   async sendTransaction(signer) {
     const { contractAddress, amount, destination } = this;

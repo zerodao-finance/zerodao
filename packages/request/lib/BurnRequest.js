@@ -202,6 +202,7 @@ class BurnRequest extends Request_1.Request {
         this.deadline = o.deadline;
         this.amount = o.amount;
         this.contractAddress = o.contractAddress;
+        this.signature = o.signature;
     }
     static get PROTOCOL() {
         return "/zero/1.1.0/dispatch";
