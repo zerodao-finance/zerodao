@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/watcher",
-  "version": "0.3.23",
+  "version": "0.3.24",
   "description": "watcher",
   "scripts": {
     "start": "cross-env node bin/watcher",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@zerodao/logger": "^0.3.21",
-    "@zerodao/request": "^0.3.23",
+    "@zerodao/request": "^0.3.24",
     "ioredis": "^5.0.5",
     "typescript": "^4.7.4"
   },
