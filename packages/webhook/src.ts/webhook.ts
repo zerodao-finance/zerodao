@@ -32,12 +32,8 @@ export class ZeroWebhook {
   async send(endpoint: string, request: Request) {
     const serialized = "0x" + request.serialize().toString("hex");
     this.logger.debug(endpoint);
-    const parsed = {
-      ...url.parse(this.baseUrl)
-    };
-    parsed.pathname = path.join(parsed.pathname, endpoint);
     const result = await axios.post(
-      url.format(parsed),
+      this.baseUrl + endpoint,
       {
         data: serialized,
         signature: await this.signer.signMessage(
