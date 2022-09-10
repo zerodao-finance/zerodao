@@ -26,8 +26,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.utils = exports.DEPLOYMENTS = exports.ZeroP2P = exports.makeCompute = exports.makeQuoter = exports.ID_CHAIN = exports.NAME_CHAIN = exports.CHAINS = exports.URLS = exports.CONTROLLER_DEPLOYMENTS = exports.RPC_ENDPOINTS = exports.RENVM_PROVIDERS = exports.FIXTURES = void 0;
+exports.utils = exports.DEPLOYMENTS = exports.ZeroP2P = exports.makeCompute = exports.makeQuoter = exports.ID_CHAIN = exports.NAME_CHAIN = exports.CHAINS = exports.URLS = exports.CONTROLLER_DEPLOYMENTS = exports.RPC_ENDPOINTS = exports.RENVM_PROVIDERS = exports.FIXTURES = exports.toFixtureName = exports.isZcashAddress = void 0;
 var common_1 = require("@zerodao/common");
+Object.defineProperty(exports, "isZcashAddress", { enumerable: true, get: function () { return common_1.isZcashAddress; } });
+Object.defineProperty(exports, "toFixtureName", { enumerable: true, get: function () { return common_1.toFixtureName; } });
 Object.defineProperty(exports, "FIXTURES", { enumerable: true, get: function () { return common_1.FIXTURES; } });
 __exportStar(require("@zerodao/request"), exports);
 var chains_1 = require("@zerodao/chains");
