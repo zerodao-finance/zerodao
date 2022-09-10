@@ -14,8 +14,8 @@ import { Base58 } from "@ethersproject/basex";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
-import { FIXTURES } from "@zerodao/common";
-import { ZeroP2P } from "@zerodao/p2p";
+import { FIXTURES, toFixtureName, getRenAssetName, isZcashAddress } from "@zerodao/common";
+import type { ZeroP2P } from "@zerodao/p2p";
 import { getVanillaProvider, CHAINS } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
@@ -190,29 +190,7 @@ function getMessage(request) {
   };
 }
 
-const isZcashAddress = (hex) =>
-  Buffer.from(hexlify(hex).substr(2), "hex").toString("utf8")[0] === "t";
-
-function getRenAssetName(request) {
-  return isZcashAddress(request.destination) ? "renZEC" : "renBTC";
-}
-
-function toFixtureName(chainId) {
-  switch (chainId) {
-    case 1:
-      return "ETHEREUM";
-    case 137:
-      return "MATIC";
-    case 43114:
-      return "AVALANCHE";
-    case 42161:
-      return "ARBITRUM";
-    case 10:
-      return "OPTIMISM";
-  }
-}
-
-function getRenAsset(request) {
+export function getRenAsset(request) {
   const provider = getVanillaProvider(request);
   const address =
     FIXTURES[toFixtureName(request.getChainId())][getRenAssetName(request)];

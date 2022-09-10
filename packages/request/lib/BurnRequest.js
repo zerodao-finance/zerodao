@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BurnRequest = void 0;
+exports.BurnRequest = exports.getRenAsset = void 0;
 const abi_1 = require("@ethersproject/abi");
 const contracts_1 = require("@ethersproject/contracts");
 const constants_1 = require("@ethersproject/constants");
@@ -167,31 +167,14 @@ function getMessage(request) {
         allowed: "true",
     };
 }
-const isZcashAddress = (hex) => Buffer.from((0, bytes_1.hexlify)(hex).substr(2), "hex").toString("utf8")[0] === "t";
-function getRenAssetName(request) {
-    return isZcashAddress(request.destination) ? "renZEC" : "renBTC";
-}
-function toFixtureName(chainId) {
-    switch (chainId) {
-        case 1:
-            return "ETHEREUM";
-        case 137:
-            return "MATIC";
-        case 43114:
-            return "AVALANCHE";
-        case 42161:
-            return "ARBITRUM";
-        case 10:
-            return "OPTIMISM";
-    }
-}
 function getRenAsset(request) {
     const provider = (0, chains_1.getVanillaProvider)(request);
-    const address = common_1.FIXTURES[toFixtureName(request.getChainId())][getRenAssetName(request)];
+    const address = common_1.FIXTURES[(0, common_1.toFixtureName)(request.getChainId())][(0, common_1.getRenAssetName)(request)];
     return new contracts_1.Contract(address, [
         "event Transfer(address indexed from, address indexed to, uint256 amount)",
     ], provider);
 }
+exports.getRenAsset = getRenAsset;
 class BurnRequest extends Request_1.Request {
     constructor(o) {
         super();
@@ -318,10 +301,10 @@ class BurnRequest extends Request_1.Request {
         return await contract.approve(this.contractAddress, amount);
     }
     getHandlerForDestinationChain() {
-        return isZcashAddress(this.destination) ? ZECHandler_1.ZECHandler : BTCHandler_1.BTCHandler;
+        return (0, common_1.isZcashAddress)(this.destination) ? ZECHandler_1.ZECHandler : BTCHandler_1.BTCHandler;
     }
     getNormalizedDestinationAddress() {
-        if (isZcashAddress(this.destination))
+        if ((0, common_1.isZcashAddress)(this.destination))
             return Buffer.from((0, bytes_1.hexlify)(this.destination).substr(2), "hex").toString("utf8"); // implement zcash encoding here
         const arrayed = Array.from((0, bytes_1.arrayify)(this.destination));
         let address;

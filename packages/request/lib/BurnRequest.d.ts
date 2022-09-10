@@ -1,10 +1,12 @@
 /// <reference types="node" />
+import { Contract } from "@ethersproject/contracts";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
-import { ZeroP2P } from "@zerodao/p2p";
+import type { ZeroP2P } from "@zerodao/p2p";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
+export declare function getRenAsset(request: any): Contract;
 export declare class BurnRequest extends Request {
     asset: string;
     data: string;

@@ -1,4 +1,4 @@
-import { ZeroP2P } from "@zerodao/p2p";
+import type { ZeroP2P } from "@zerodao/p2p";
 import peerId = require("peer-id");
 import lp from "it-length-prefixed";
 import pipe from "it-pipe";
