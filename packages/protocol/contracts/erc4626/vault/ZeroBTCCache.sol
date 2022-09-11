@@ -131,7 +131,7 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
       uint256 renBorrowFeeBips,
       uint256 zeroBorrowFeeStatic,
       uint256 renBorrowFeeStatic
-    ) = state.getFees();
+    ) = state.getBorrowFees();
 
     renFees = renBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(renBorrowFeeBips);
     zeroFees = zeroBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(zeroBorrowFeeBips);

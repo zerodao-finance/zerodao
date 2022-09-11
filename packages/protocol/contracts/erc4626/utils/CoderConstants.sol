@@ -8,6 +8,7 @@ pragma solidity >=0.8.0;
 // result in corrupted reads/writes.
 // ====================================================================
 
+uint256 constant GlobalState_BorrowFees_maskOut = 0x000003ffe000000000007fffffffffffffffffffffffffffffffffffffffffff;
 uint256 constant GlobalState_Cached_maskOut = 0xffffffffffffffffffff80000000000000000001ffffffffffffffffffffffff;
 uint256 constant GlobalState_Fees_maskOut = 0x000000000000000000007fffffffffffffffffffffffffffffffffffffffffff;
 uint256 constant GlobalState_LoanInfo_maskOut = 0xfffffffffffffffffffffffffffffffffffffffe0000000001ffffffffffffff;

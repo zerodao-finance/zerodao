@@ -67,12 +67,25 @@ struct GlobalState {
     totalBitcoinBorrowed;
   }
 
+  // Group used for setting all fees
   group Fees {
+    set;
+
     zeroBorrowFeeBips;
     renBorrowFeeBips;
     zeroBorrowFeeStatic;
     renBorrowFeeStatic;
     zeroFeeShareBips;
+  }
+
+  // Group used for calculating fees on borrow amounts
+  group BorrowFees {
+    get;
+
+    zeroBorrowFeeBips;
+    renBorrowFeeBips;
+    zeroBorrowFeeStatic;
+    renBorrowFeeStatic;
   }
 
   group Cached {

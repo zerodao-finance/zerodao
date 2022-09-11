@@ -306,8 +306,17 @@ library GlobalStateCoder {
   ) internal pure returns (GlobalState updated) {
     assembly {
       if or(
-        gt(zeroBorrowFeeStatic, MaxUint23),
-        gt(renBorrowFeeStatic, MaxUint23)
+        gt(zeroBorrowFeeBips, MaxUint11),
+        or(
+          gt(renBorrowFeeBips, MaxUint11),
+          or(
+            gt(zeroBorrowFeeStatic, MaxUint23),
+            or(
+              gt(renBorrowFeeStatic, MaxUint23),
+              gt(zeroFeeShareBips, MaxUint13)
+            )
+          )
+        )
       ) {
         mstore(0, Panic_error_signature)
         mstore(
@@ -350,15 +359,18 @@ library GlobalStateCoder {
     }
   }
 
-  function getFees(GlobalState encoded)
+  /*//////////////////////////////////////////////////////////////
+                  GlobalState BorrowFees coders
+//////////////////////////////////////////////////////////////*/
+
+  function getBorrowFees(GlobalState encoded)
     internal
     pure
     returns (
       uint256 zeroBorrowFeeBips,
       uint256 renBorrowFeeBips,
       uint256 zeroBorrowFeeStatic,
-      uint256 renBorrowFeeStatic,
-      uint256 zeroFeeShareBips
+      uint256 renBorrowFeeStatic
     )
   {
     assembly {
@@ -384,13 +396,6 @@ library GlobalStateCoder {
         MaxUint23,
         shr(
           GlobalState_renBorrowFeeStatic_bitsAfter,
-          encoded
-        )
-      )
-      zeroFeeShareBips := and(
-        MaxUint13,
-        shr(
-          GlobalState_zeroFeeShareBips_bitsAfter,
           encoded
         )
       )
