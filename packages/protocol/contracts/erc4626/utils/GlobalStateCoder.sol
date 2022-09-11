@@ -301,7 +301,8 @@ library GlobalStateCoder {
     uint256 zeroBorrowFeeBips,
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
-    uint256 renBorrowFeeStatic
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips
   ) internal pure returns (GlobalState updated) {
     assembly {
       if or(
@@ -332,9 +333,15 @@ library GlobalStateCoder {
                 GlobalState_zeroBorrowFeeStatic_bitsAfter,
                 zeroBorrowFeeStatic
               ),
-              shl(
-                GlobalState_renBorrowFeeStatic_bitsAfter,
-                renBorrowFeeStatic
+              or(
+                shl(
+                  GlobalState_renBorrowFeeStatic_bitsAfter,
+                  renBorrowFeeStatic
+                ),
+                shl(
+                  GlobalState_zeroFeeShareBips_bitsAfter,
+                  zeroFeeShareBips
+                )
               )
             )
           )
@@ -350,7 +357,8 @@ library GlobalStateCoder {
       uint256 zeroBorrowFeeBips,
       uint256 renBorrowFeeBips,
       uint256 zeroBorrowFeeStatic,
-      uint256 renBorrowFeeStatic
+      uint256 renBorrowFeeStatic,
+      uint256 zeroFeeShareBips
     )
   {
     assembly {
@@ -376,6 +384,13 @@ library GlobalStateCoder {
         MaxUint23,
         shr(
           GlobalState_renBorrowFeeStatic_bitsAfter,
+          encoded
+        )
+      )
+      zeroFeeShareBips := and(
+        MaxUint13,
+        shr(
+          GlobalState_zeroFeeShareBips_bitsAfter,
           encoded
         )
       )

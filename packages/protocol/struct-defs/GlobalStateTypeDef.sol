@@ -72,6 +72,7 @@ struct GlobalState {
     renBorrowFeeBips;
     zeroBorrowFeeStatic;
     renBorrowFeeStatic;
+    zeroFeeShareBips;
   }
 
   group Cached {
