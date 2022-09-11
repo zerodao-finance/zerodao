@@ -82,7 +82,6 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
     uint256 zeroFeeShareBips,
-    uint8 keeperProfitsMultiplier,
     address strategy
   ) external override {
     if (_governance != address(0)) {
@@ -92,16 +91,12 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     Governable._initialize(initialGovernance);
     // Initialize reentrancy guard mutex
     ReentrancyGuard._initialize();
-    // Ensure fees are valid
-    if (zeroBorrowFeeBips > 2000 || renBorrowFeeBips > 2000 || zeroBorrowFeeBips == 0 || renBorrowFeeBips == 0) {
-      revert InvalidDynamicBorrowFee();
-    }
+
     // Set strategy
     _strategy = strategy;
+
     // Set initial global state
-    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic);
-    _state = _state.setZeroFeeShareBips(zeroBorrowFeeBips);
-    _keeperProfitsMultiplier = keeperProfitsMultiplier;
+    _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -202,5 +197,27 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     if (moduleState.isNull()) {
       revert ModuleDoesNotExist();
     }
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                          Internal Setters
+  //////////////////////////////////////////////////////////////*/
+
+  function _setFees(
+    uint256 zeroBorrowFeeBips,
+    uint256 renBorrowFeeBips,
+    uint256 zeroBorrowFeeStatic,
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips
+  ) internal {
+    if (
+      (zeroBorrowFeeBips | renBorrowFeeBips | zeroFeeShareBips) > 2000 ||
+      zeroBorrowFeeBips == 0 ||
+      renBorrowFeeBips == 0 ||
+      zeroFeeShareBips == 0
+    ) {
+      revert InvalidDynamicBorrowFee();
+    }
+    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
   }
 }
