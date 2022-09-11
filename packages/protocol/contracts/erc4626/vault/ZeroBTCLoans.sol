@@ -549,35 +549,63 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 btcForGasReserve,
     address lender
   ) internal returns (GlobalState) {
-    // Calculate share of profits owed to ZeroDAO
-    uint256 zeroFeeShareBips = state.getZeroFeeShareBips();
-    uint256 btcForZeroDAO = profit.uncheckedMulBipsUp(zeroFeeShareBips);
-    // temporary
-    uint256 keeperBTC = profit.uncheckedMulBipsUpWithMultiplier(zeroFeeShareBips, _keeperProfitsMultiplier);
-    // Get the underlying assets held by the vault or in outstanding loans and subtract
-    // the fees that will be charged in order to calculate the number of shares to mint
-    // that will be worth the fees.
-    uint256 _totalAssets = (ERC4626.totalAssets() + state.getTotalBitcoinBorrowed()) -
-      (btcForGasReserve + btcForZeroDAO + keeperBTC);
+    // @todo Clean up - nested scopes temporary to get around stack too deep
+    uint256 newSupply;
+    uint256 _totalAssets;
+
     // Cache the total supply to avoid extra SLOADs
     uint256 supply = _totalSupply;
-    // Calculate shares to mint for the gas reserves and ZeroDAO fees
-    uint256 gasReserveShares = btcForGasReserve.mulDivDown(supply, _totalAssets);
-    uint256 zeroFeeShares = (btcForZeroDAO).mulDivDown(supply, _totalAssets);
-    uint256 keeperShares = keeperBTC.mulDivDown(supply, _totalAssets);
-    // Emit event for fee shares
-    emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, keeperShares, zeroFeeShares);
+
+    {
+
+      uint256 gasReserveShares;
+      uint256 zeroFeeShares;
+      {
+      // Calculate share of profits owed to ZeroDAO
+      uint256 btcForZeroDAO = profit.uncheckedMulBipsUp(state.getZeroFeeShareBips());
+
+      // Keeper receives profits not allocated for gas reserves or ZeroDAO
+      uint256 btcForKeeper = profit - btcForZeroDAO;
+
+      // Get the underlying assets held by the vault or in outstanding loans and subtract
+      // the fees that will be charged in order to calculate the number of shares to mint
+      // that will be worth the fees.
+      _totalAssets = (ERC4626.totalAssets() + state.getTotalBitcoinBorrowed()) -
+        (btcForGasReserve + btcForZeroDAO + btcForKeeper);
+
+      // Calculate shares to mint for the gas reserves and ZeroDAO fees
+      gasReserveShares = btcForGasReserve.mulDivDown(supply, _totalAssets);
+      zeroFeeShares = (btcForZeroDAO).mulDivDown(supply, _totalAssets);
+      // Emit event for fee shares
+      emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, zeroFeeShares);
+      }
+
+      newSupply = supply + gasReserveShares + zeroFeeShares;
+
+      // Get the current fee share totals
+      (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = state.getUnburnedShares();
+
+      // Write the new fee share totals to the global state on the stack
+      state = state.setUnburnedShares(unburnedGasReserveShares + gasReserveShares, unburnedZeroFeeShares + zeroFeeShares);
+    }
+
+    {
+      uint256 keeperShares = profit.mulDivDown(supply, _totalAssets);
+      // Emit transfer for mint of keeper shares
+      emit Transfer(address(0), lender, keeperShares);
+      newSupply += keeperShares;
+
+      // Add keeper shares to lender's balance
+      unchecked {
+        _balanceOf[lender] += keeperShares;
+      }
+    }
+
     // Add the new shares to the total supply. They are not added to any balance but we track
     // them in the global state.
-    _totalSupply += (gasReserveShares + zeroFeeShares + keeperShares);
-    //add keeper shares to keeper
-    unchecked {
-      _balanceOf[lender] += keeperShares;
-    }
-    // Get the current fee share totals
-    (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = state.getUnburnedShares();
-    // Write the new fee share totals to the global state on the stack
-    return state.setUnburnedShares(unburnedGasReserveShares + gasReserveShares, unburnedZeroFeeShares + zeroFeeShares);
+    _totalSupply = newSupply;
+
+    return state;
   }
 
   function _getEffectiveGasCosts(
