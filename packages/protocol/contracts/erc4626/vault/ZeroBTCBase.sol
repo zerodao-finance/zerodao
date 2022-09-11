@@ -94,13 +94,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     super._initialize();
 
     // Set initial global state
-    _setFees(
-      zeroBorrowFeeBips,
-      renBorrowFeeBips,
-      zeroBorrowFeeStatic,
-      renBorrowFeeStatic,
-      zeroFeeShareBips
-    );
+    _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -222,6 +216,12 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     ) {
       revert InvalidDynamicBorrowFee();
     }
-    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
+    _state = _state.setFees(
+      zeroBorrowFeeBips,
+      renBorrowFeeBips,
+      zeroBorrowFeeStatic,
+      renBorrowFeeStatic,
+      zeroFeeShareBips
+    );
   }
 }
