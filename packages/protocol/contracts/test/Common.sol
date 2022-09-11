@@ -42,7 +42,7 @@ contract Common is Test {
   ZeroBTC vault;
 
   function initiateMainnetFork() public {
-    mainnet = vm.createSelectFork(vm.rpcUrl("mainnet"));
+    // mainnet = vm.createSelectFork(vm.rpcUrl("mainnet"));
     renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
     wbtc = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
     usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
@@ -59,7 +59,7 @@ contract Common is Test {
   }
 
   function initiateArbitrumFork() public {
-    mainnet = vm.createSelectFork(vm.rpcUrl("arbitrum"));
+    // mainnet = vm.createSelectFork(vm.rpcUrl("arbitrum"));
     renbtc = 0xDBf31dF14B66535aF65AaC99C32e9eA844e14501;
     wbtc = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
     usdc = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;
@@ -110,7 +110,7 @@ contract Common is Test {
     address _vault = deployVault(address(proxy), converter);
     admin.upgrade(_proxy, _vault);
     proxy = ZeroBTC(payable(address(_vault)));
-    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, 100, address(this));
+    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, address(this));
   }
 
   function setUpBase() public {
