@@ -23,12 +23,10 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
     uint256 zeroBorrowFeeBips,
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
-    uint256 renBorrowFeeStatic
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips
   ) external onlyGovernance nonReentrant {
-    if (zeroBorrowFeeBips > 2000 || renBorrowFeeBips > 2000 || zeroBorrowFeeBips == 0 || renBorrowFeeBips == 0) {
-      revert InvalidDynamicBorrowFee();
-    }
-    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic);
+    _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
   }
 
   function setModuleGasFees(
