@@ -152,16 +152,19 @@ contract Common is Test {
         IChainlinkOracle(btcEthOracle),
         IChainlinkOracle(gasPriceOracle),
         IRenBtcEthConverter(renBtcConverter),
-        //cachetimetolive
+        // cacheTimeToLive
         DefaultCacheTTL,
-        //maxloanduration
+        // maxLoanDuration
         DefaultMaxLoanDuration,
-        //targetethreserve
+        // targetEthReserve
         DefaultTargetEthReserve,
-        //maxgasprofitsharebips
+        // maxGasProfitShareBips
         DefaultMaxGasProfitShareBips,
+        // zeroFeeRecipient
         address(this),
+        // asset
         renbtc,
+        // proxy
         proxy
       )
     );
