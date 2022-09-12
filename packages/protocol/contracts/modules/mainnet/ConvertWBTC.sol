@@ -27,6 +27,7 @@ contract ConvertWBTCMainnet is BaseConvert {
   function swap(ConvertLocals memory locals) internal override returns (uint256 amountOut) {
     amountOut = wbtc.balanceOf(address(this));
     (bool success, ) = renCrv.call(abi.encodeWithSelector(ICurveInt128.exchange.selector, 0, 1, locals.amount, 1));
+    require(success, "!curve");
     amountOut = wbtc.balanceOf(address(this)) - amountOut;
   }
 

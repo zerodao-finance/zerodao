@@ -83,22 +83,24 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
-    uint256 zeroFeeShareBips,
-    address strategy
+    uint256 zeroFeeShareBips
   ) public payable virtual override {
     if (_governance != address(0)) {
       revert AlreadyInitialized();
     }
     // Initialize governance address
     Governable._initialize(initialGovernance);
-    // Initialize reentrancy guard mutex
-    ReentrancyGuard._initialize();
-
-    // Set strategy
-    _strategy = strategy;
+    // Initialize UpgradeableEIP712 and ReentrancyGuard
+    super._initialize();
 
     // Set initial global state
-    _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
+    _setFees(
+      zeroBorrowFeeBips,
+      renBorrowFeeBips,
+      zeroBorrowFeeStatic,
+      renBorrowFeeStatic,
+      zeroFeeShareBips
+    );
   }
 
   /*//////////////////////////////////////////////////////////////
