@@ -1,7 +1,7 @@
 pragma solidity >=0.8.13;
 
 import "../erc4626/interfaces/IZeroBTC.sol";
-import "./Common.sol";
+import "./Common.test.sol";
 
 contract BTCVaultTestMainnet is Common {
   constructor() {}
