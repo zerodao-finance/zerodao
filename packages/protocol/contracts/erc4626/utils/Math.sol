@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 import "./CoderConstants.sol";
 
 uint256 constant TenThousand = 1e4;
+uint256 constant OneGwei = 1e9;
 uint256 constant OneEth = 1e18;
 
 library Math {
@@ -43,6 +44,13 @@ library Math {
   function uncheckedDivUpE4(uint256 x) internal pure returns (uint256 y) {
     assembly {
       y := add(div(sub(x, 1), TenThousand), 1)
+    }
+  }
+
+  // Equivalent to ceil((x)e-9)
+  function uncheckedDivUpE9(uint256 x) internal pure returns (uint256 y) {
+    assembly {
+      y := add(div(sub(x, 1), OneGwei), 1)
     }
   }
 
