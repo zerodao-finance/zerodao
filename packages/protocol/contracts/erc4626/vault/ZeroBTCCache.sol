@@ -2,7 +2,6 @@
 pragma solidity >=0.8.13;
 
 import "./ZeroBTCBase.sol";
-import "../utils/Math.sol";
 
 abstract contract ZeroBTCCache is ZeroBTCBase {
   using ModuleStateCoder for ModuleState;
@@ -154,8 +153,7 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
     uint256 btcFeeForRepayGas;
     (btcFeeForLoanGas, btcFeeForRepayGas) = moduleState.getBitcoinGasFees();
 
-    // Lender is responsible for actualBorrowAmount, renFees, zeroFees, loan refund
-    // and estimated repay refund.
+    // Lender is responsible for actualBorrowAmount, zeroFees and gas refunds.
     lenderDebt = borrowAmount - renFees;
 
     // Subtract ren, zero and gas fees
