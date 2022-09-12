@@ -15,9 +15,7 @@ import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
 import "./MockBtcEthPriceOracle.sol";
 import "./MockGasPriceOracle.sol";
-// import "../modules/arbitrum/ConvertWBTC.sol";
-// import "../modules/arbitrum/ConvertUSDC.sol";
-// import { ConvertNativeArbitrum } from "../modules/arbitrum/ConvertNative.sol";
+
 
 uint256 constant DefaultCacheTTL = 3600;
 uint256 constant DefaultMaxLoanDuration = 3600;
@@ -188,9 +186,7 @@ contract VaultTestHelpers is Test {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips,
-      // strategy
-      address(this)
+      DefaultZeroFeeShareBips
     );
   }
 
