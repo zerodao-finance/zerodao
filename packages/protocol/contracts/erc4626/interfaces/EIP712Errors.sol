@@ -5,4 +5,6 @@ interface EIP712Errors {
   error InvalidTypeHash();
 
   error InvalidSigner();
+
+  error InvalidVerifyingContract();
 }
