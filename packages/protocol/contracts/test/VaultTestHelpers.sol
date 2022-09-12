@@ -37,7 +37,7 @@ uint256 constant DefaultZeroBorrowFeeStatic = 200;
 uint256 constant DefaultRenBorrowFeeStatic = 200;
 uint256 constant DefaultZeroFeeShareBips = 200;
 
-contract Common is Test {
+contract VaultTestHelpers is Test {
   using Math for uint256;
 
   // Tokens
