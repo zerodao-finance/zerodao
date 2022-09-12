@@ -9,7 +9,6 @@ import { SafeERC20 } from "@openzeppelin/contracts-new/token/ERC20/utils/SafeERC
 import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import { IWETH } from "../../interfaces/IWETH.sol";
-import { console2 as console } from "forge-std/console2.sol";
 
 contract ConvertNativeMainnet is BaseConvert {
   using SafeMath for *;
@@ -57,6 +56,5 @@ contract ConvertNativeMainnet is BaseConvert {
   function transfer(address _to, uint256 amount) internal override {
     address payable to = payable(_to);
     to.transfer(amount);
-    console.log(amount);
   }
 }
