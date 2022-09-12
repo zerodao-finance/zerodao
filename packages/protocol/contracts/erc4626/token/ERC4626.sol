@@ -4,7 +4,7 @@ pragma solidity >=0.8.13;
 import { FixedPointMathLib } from "../utils/FixedPointMathLib.sol";
 import { SafeTransferLib } from "../utils/SafeTransferLib.sol";
 import { ReentrancyGuard } from "../utils/ReentrancyGuard.sol";
-import { ERC2612 } from "./ERC2612.sol";
+import { ERC2612, UpgradeableEIP712 } from "./ERC2612.sol";
 import { ERC4626Storage } from "../storage/ERC4626Storage.sol";
 import "../interfaces/IERC4626.sol";
 
@@ -31,6 +31,11 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     string memory _version
   ) ERC2612(_proxyContract, _name, _symbol, _decimals, _version) {
     asset = _asset;
+  }
+
+  function _initialize() internal virtual override(UpgradeableEIP712, ReentrancyGuard) {
+    UpgradeableEIP712._initialize();
+    ReentrancyGuard._initialize();
   }
 
   /*//////////////////////////////////////////////////////////////
