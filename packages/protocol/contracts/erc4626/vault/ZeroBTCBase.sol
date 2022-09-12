@@ -10,6 +10,7 @@ import "../interfaces/IZeroBTC.sol";
 import "../interfaces/IRenBtcEthConverter.sol";
 import { IGateway, IGatewayRegistry } from "../../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../../interfaces/IChainlinkOracle.sol";
+import "../utils/Math.sol";
 
 uint256 constant OneBitcoin = 1e8;
 
@@ -18,6 +19,7 @@ uint256 constant OneBitcoin = 1e8;
 uint256 constant BtcEthPriceInversionNumerator = 1e26;
 
 abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
+  using Math for uint256;
   using ModuleStateCoder for ModuleState;
   using GlobalStateCoder for GlobalState;
   using LoanRecordCoder for LoanRecord;
@@ -83,7 +85,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 renBorrowFeeStatic,
     uint256 zeroFeeShareBips,
     address strategy
-  ) external payable override {
+  ) public payable virtual override {
     if (_governance != address(0)) {
       revert AlreadyInitialized();
     }
@@ -185,7 +187,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
 
   function _getGweiPerGas() internal view returns (uint256) {
     uint256 gasPrice = _gasPriceOracle.latestAnswer();
-    return gasPrice / 1e9;
+    return gasPrice.uncheckedDivUpE9();
   }
 
   function _getGateway() internal view returns (IGateway gateway) {
