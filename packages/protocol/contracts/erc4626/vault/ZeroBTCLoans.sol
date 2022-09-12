@@ -73,8 +73,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     // Store loan information and lock lender's shares
     _borrowFrom(uint256(loanId), msg.sender, borrower, actualBorrowAmount, lenderDebt, btcFeeForLoanGas);
 
-    (ModuleType moduleType, uint256 ethRefundForLoanGas) = moduleState.getLoanParams();
-    if (uint256(moduleType) > 0) {
+    if (uint256(moduleState.getModuleType()) > 0) {
       // Execute module interaction
       _executeReceiveLoan(module, borrower, loanId, actualBorrowAmount, data);
     } else {
@@ -82,7 +81,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       asset.safeTransfer(borrower, actualBorrowAmount);
     }
 
-    tx.origin.safeTransferETH(ethRefundForLoanGas);
+    tx.origin.safeTransferETH(moduleState.getEthRefundForLoanGas());
   }
 
   /**
@@ -110,10 +109,8 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     bytes32 pHash = _deriveLoanPHash(data);
     uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
 
-    ModuleType moduleType = moduleState.getModuleType();
-
     uint256 loanId = _deriveLoanId(lender, pHash);
-    if (moduleType == ModuleType.LoanAndRepayOverride) {
+    if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
       repaidAmount = _executeRepayLoan(module, borrower, loanId, repaidAmount, data);
     }
     LoanRecord loanRecord = _deleteLoan(loanId);
