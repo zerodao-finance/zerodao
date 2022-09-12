@@ -107,4 +107,25 @@ contract RevertTest is Common {
     address invalidModule = address(new ConvertWBTCMainnet(address(0)));
     vault.addModule(invalidModule, ModuleType.LoanOverride, 100e3, 100e3);
   }
+
+  function testFailOnClosingNotExpiredLoan() public {
+    bytes memory data;
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+    vm.expectRevert();
+    vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
+  }
+
+  function testFailOnRepayingNonExistentLoan() public {
+    bytes memory sig;
+    bytes memory data;
+    vault.repay(address(0x0), zerowallet, 1e6, 1, data, address(this), bytes32(0x0), sig);
+  }
+
+  // function testFailOnRepayingExpiredLoan() public {
+  //   bytes memory data;
+  //   vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+  //   vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
+  //   bytes memory sig;
+  //   vault.repay(address(0x0), zerowallet, 1e6, 1, data, address(this), bytes32(0x0), sig);
+  // }
 }
