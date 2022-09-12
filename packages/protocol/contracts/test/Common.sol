@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8.7 <0.9.0;
+pragma solidity >=0.8.13;
+
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "../erc4626/vault/ZeroBTC.sol";
@@ -22,8 +23,23 @@ import "../erc4626/utils/ModuleStateCoder.sol";
 import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
 import { Dummy } from "../util/DummyImpl.sol";
+import "./MockBtcEthPriceOracle.sol";
+import "./MockGasPriceOracle.sol";
+import "../erc4626/utils/Math.sol";
+
+uint256 constant DefaultCacheTTL = 3600;
+uint256 constant DefaultMaxLoanDuration = 3600;
+uint256 constant DefaultTargetEthReserve = 1 ether;
+uint256 constant DefaultMaxGasProfitShareBips = 200.000;
+uint256 constant DefaultZeroBorrowFeeBips = 200;
+uint256 constant DefaultRenBorrowFeeBips = 200;
+uint256 constant DefaultZeroBorrowFeeStatic = 200;
+uint256 constant DefaultRenBorrowFeeStatic = 200;
+uint256 constant DefaultZeroFeeShareBips = 200;
 
 contract Common is Test {
+  using Math for uint256;
+
   address renbtc;
   address usdc;
   address wbtc;
@@ -40,6 +56,15 @@ contract Common is Test {
   uint256 mainnet;
   uint256 snapshot;
   ZeroBTC vault;
+  address renBtcConverter;
+  ProxyAdmin proxyAdmin;
+  address implementation;
+
+  receive() external payable {}
+
+  /*//////////////////////////////////////////////////////////////
+                    Chain-Specific Initialization
+  //////////////////////////////////////////////////////////////*/
 
   function initiateMainnetFork() public {
     // mainnet = vm.createSelectFork(vm.rpcUrl("mainnet"));
@@ -75,25 +100,52 @@ contract Common is Test {
     moduleETH = address(new ConvertNativeArbitrum(renbtc));
   }
 
-  function initializeDummy() internal returns (address) {
-    return address(new Dummy());
+  /*//////////////////////////////////////////////////////////////
+                         Deployment & Setup
+  //////////////////////////////////////////////////////////////*/
+
+  function setUp() public virtual {
+    proxyAdmin = new ProxyAdmin();
+    RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
+    renBtcConverter = address(converter);
+    initializeProxy();
+    vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
+    vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
+    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
+    vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
+    deployGateway();
+
+    // Give vault ETH for gas refunds
+    vm.deal(address(vault), 10 ether);
+
+    // Deposit 10 BTC
+    deposit(1e9);
+    vm.label(wbtc, "renbtc");
+    vm.label(wbtc, "wbtc");
+    vm.label(usdc, "usdc");
+    vm.label(gateway, "gateway");
+    vm.label(zerowallet, "zerowallet");
+    vm.label(rencrv, "rencrv");
+    vm.label(gatewayRegistry, "gatewayRegistry");
+    vm.label(btcEthOracle, "btcEthOracle");
+    vm.label(gasPriceOracle, "gasPriceOracle");
   }
 
-  function deployVault(address proxy, address converter) internal returns (address _vault) {
-    _vault = address(
+  function deployVaultImplementation(address proxy) internal {
+    implementation = address(
       new ZeroBTC(
         IGatewayRegistry(gatewayRegistry),
         IChainlinkOracle(btcEthOracle),
         IChainlinkOracle(gasPriceOracle),
-        IRenBtcEthConverter(address(converter)),
+        IRenBtcEthConverter(renBtcConverter),
         //cachetimetolive
-        3600,
+        DefaultCacheTTL,
         //maxloanduration
-        3600,
+        DefaultMaxLoanDuration,
         //targetethreserve
-        1 ether,
+        DefaultTargetEthReserve,
         //maxgasprofitsharebips
-        200.000,
+        DefaultMaxGasProfitShareBips,
         address(this),
         renbtc,
         proxy
@@ -101,53 +153,56 @@ contract Common is Test {
     );
   }
 
-  function initializeProxy(address converter) internal returns (ZeroBTC proxy, ProxyAdmin admin) {
-    admin = new ProxyAdmin();
-    address dummy = initializeDummy();
-    bytes memory _data;
-    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(dummy, address(admin), _data);
-    proxy = ZeroBTC(payable(address(_proxy)));
-    address _vault = deployVault(address(proxy), converter);
-    admin.upgrade(_proxy, _vault);
-    proxy = ZeroBTC(payable(address(_vault)));
-    ZeroBTCBase(payable(address(proxy))).initialize(address(this), 200, 200, 200, 200, 200, address(this));
+  function deployProxy() internal {
+    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(address(new Dummy()), address(proxyAdmin), "");
+    deployVaultImplementation(address(_proxy));
+    proxyAdmin.upgrade(_proxy, implementation);
+    vault = ZeroBTC(payable(address(_proxy)));
   }
 
-  function setUpBase() public {
-    RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
-    (vault, ) = initializeProxy(address(converter));
+  function initializeProxy() internal {
+    deployProxy();
+    vault.initialize(
+      address(this),
+      DefaultZeroBorrowFeeBips,
+      DefaultRenBorrowFeeBips,
+      DefaultZeroBorrowFeeStatic,
+      DefaultRenBorrowFeeStatic,
+      DefaultZeroFeeShareBips,
+      address(this)
+    );
+  }
 
-    vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
-    vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
-    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
-    vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
-    bytes memory bytecode = (vm.getCode("MockGatewayLogicV1.sol"));
-    address mockGateway;
-    assembly {
-      mockGateway := create(0, add(bytecode, 0x20), mload(bytecode))
-    }
-    vm.etch(gateway, mockGateway.code);
-    assertEq0(gateway.code, mockGateway.code);
+  function deployGateway() internal {
+    vm.etch(gateway, deployCode("MockGatewayLogicV1.sol").code);
     gateway.call(abi.encodeWithSignature("setToken(address)", renbtc));
-    bytes memory sig;
-    IGateway(gateway).mint(bytes32(0x0), 11e8, bytes32(0x0), sig);
-    IERC20(renbtc).approve(address(vault), ~uint256(1) << 2);
-    vm.deal(address(vault), 10 ether);
-    vault.deposit(10e8, address(this));
   }
 
-  function getBalance(address module) public returns (uint256) {
+  /*//////////////////////////////////////////////////////////////
+                            Token Helpers
+  //////////////////////////////////////////////////////////////*/
+
+  function mintRenBtc(uint256 btcAmount) internal {
+    // Mint asset
+    IGateway(gateway).mint(bytes32(0x0), btcAmount, bytes32(0x0), "");
+  }
+
+  function deposit(uint256 btcAmount) internal {
+    mintRenBtc(btcAmount);
+    // Approve vault to spend asset
+    IERC20(renbtc).approve(address(vault), btcAmount);
+    // Deposit
+    vault.deposit(btcAmount, address(this));
+  }
+
+  function getBalance(address module) public view returns (uint256) {
     if (module == address(moduleWBTC)) {
-      console.log("wbtc");
       return IERC20(wbtc).balanceOf(zerowallet);
     } else if (module == address(moduleUSDC)) {
-      console.log("usdc");
       return IERC20(usdc).balanceOf(zerowallet);
     } else if (module == address(moduleETH)) {
-      console.log("eth");
       return zerowallet.balance;
     } else {
-      console.log("renbtc");
       return IERC20(renbtc).balanceOf(zerowallet);
     }
   }
@@ -156,13 +211,226 @@ contract Common is Test {
     uint256 balance = getBalance(module);
     _;
     require(getBalance(module) > balance, "tokens not generated");
-    console.log("tokens generated", getBalance(module) - balance);
   }
+
+  /*//////////////////////////////////////////////////////////////
+                  Expected & Real Value Derivation
+  //////////////////////////////////////////////////////////////*/
+
+  function getExpectedGasFeeAndBtcPrice() internal view returns (uint256 satoshiPerEth, uint256 gweiPerGas) {
+    if (checkGlobalCacheExpired()) {
+      satoshiPerEth = 1e26 / IChainlinkOracle(btcEthOracle).latestAnswer();
+      gweiPerGas = ((IChainlinkOracle(gasPriceOracle).latestAnswer() - 1) / 1e9) + 1;
+    } else {
+      (, , , , , satoshiPerEth, gweiPerGas, , , , ) = vault.getGlobalState();
+    }
+  }
+
+  function getExpectedModuleFees(address module)
+    internal
+    view
+    returns (
+      uint256 ethRefundForLoanGas,
+      uint256 ethRefundForRepayGas,
+      uint256 btcFeeForLoanGas,
+      uint256 btcFeeForRepayGas
+    )
+  {
+    if (checkGlobalCacheExpired()) {
+      (, uint256 loanGasE4, uint256 repayGasE4, , , , , ) = vault.getModuleState(moduleETH);
+      (uint256 satoshiPerEth, uint256 gweiPerGas) = getExpectedGasFeeAndBtcPrice();
+      uint256 weiPerGas = gweiPerGas * 1 gwei;
+      ethRefundForLoanGas = (loanGasE4 * 10000) * weiPerGas;
+      ethRefundForRepayGas = (repayGasE4 * 10000) * weiPerGas;
+      btcFeeForLoanGas = (ethRefundForLoanGas * satoshiPerEth) / 1e18;
+      btcFeeForRepayGas = (ethRefundForRepayGas * satoshiPerEth) / 1e18;
+    } else {
+      return getModuleFees(module);
+    }
+  }
+
+  function getModuleFees(address module)
+    internal
+    view
+    returns (
+      uint256 ethRefundForLoanGas,
+      uint256 ethRefundForRepayGas,
+      uint256 btcFeeForLoanGas,
+      uint256 btcFeeForRepayGas
+    )
+  {
+    (, , , ethRefundForLoanGas, ethRefundForRepayGas, btcFeeForLoanGas, btcFeeForRepayGas, ) = vault.getModuleState(
+      module
+    );
+  }
+
+  /**
+   * @dev Get loan fees that contract should use on next call - using current cache
+   * or the cache it will have upon a required update.
+   */
+  function getExpectedLoanFees(address module, uint256 borrowAmount)
+    internal
+    view
+    returns (
+      uint256 actualBorrowAmount,
+      uint256 lenderDebt,
+      uint256 btcFeeForLoanGas,
+      uint256 ethRefundForLoanGas
+    )
+  {
+    uint256 renFees = DefaultRenBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(DefaultRenBorrowFeeBips);
+    uint256 zeroFees = DefaultZeroBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(DefaultZeroBorrowFeeBips);
+
+    uint256 btcFeeForRepayGas;
+    (ethRefundForLoanGas, , btcFeeForLoanGas, btcFeeForRepayGas) = getExpectedModuleFees(module);
+
+    lenderDebt = borrowAmount - renFees;
+
+    actualBorrowAmount = lenderDebt - (zeroFees + btcFeeForLoanGas + btcFeeForRepayGas);
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                         Validation Helpers
+  //////////////////////////////////////////////////////////////*/
+
+  function validateModule(
+    address module,
+    ModuleType _moduleType,
+    uint256 gweiPerGas,
+    uint256 satoshiPerEth,
+    uint256 loanGas,
+    uint256 repayGas,
+    uint256 lastUpdate
+  ) internal {
+    {
+      (ModuleType moduleType, , , , , , , ) = vault.getModuleState(module);
+      assertEq(uint256(moduleType), uint256(_moduleType));
+    }
+    {
+      (
+        ,
+        uint256 loanGasE4,
+        uint256 repayGasE4,
+        uint256 ethRefundForLoanGas,
+        uint256 ethRefundForRepayGas,
+        uint256 btcFeeForLoanGas,
+        uint256 btcFeeForRepayGas,
+
+      ) = vault.getModuleState(module);
+      assertEq(loanGasE4, ((loanGas - 1) / 10000) + 1);
+      assertEq(repayGasE4, ((repayGas - 1) / 10000) + 1);
+
+      uint256 weiPerGas = gweiPerGas * 1 gwei;
+      assertEq(ethRefundForLoanGas, (loanGasE4 * 10000) * weiPerGas);
+      assertEq(ethRefundForRepayGas, (repayGasE4 * 10000) * weiPerGas);
+      assertEq(btcFeeForLoanGas, (ethRefundForLoanGas * satoshiPerEth) / 1e18);
+      assertEq(btcFeeForRepayGas, (ethRefundForRepayGas * satoshiPerEth) / 1e18);
+    }
+    {
+      (, , , , , , , uint256 lastUpdateTimestamp) = vault.getModuleState(module);
+      assertEq(lastUpdateTimestamp, lastUpdate);
+    }
+  }
+
+  function validateGlobalCacheUpdatedThisBlock() internal {
+    uint256 newSatoshiPerEth = 1e26 / IChainlinkOracle(btcEthOracle).latestAnswer();
+    uint256 newGweiPerGas = ((IChainlinkOracle(gasPriceOracle).latestAnswer() - 1) / 1e9) + 1;
+    (, , , , , uint256 satoshiPerEth, uint256 gweiPerGas, uint256 _lastUpdateTimestamp, , , ) = vault.getGlobalState();
+    assertEq(_lastUpdateTimestamp, block.timestamp, "Cache not updated this block");
+    assertEq(satoshiPerEth, newSatoshiPerEth, "Cache updated this block with bad satoshiPerEth");
+    assertEq(gweiPerGas, newGweiPerGas, "Cache updated this block with bad gweiPerGas");
+  }
+
+  function checkGlobalCacheExpired() internal view returns (bool shouldUpdate) {
+    (, , , , , , , uint256 lastUpdateTimestamp, , , ) = vault.getGlobalState();
+    shouldUpdate = (block.timestamp - lastUpdateTimestamp) > DefaultCacheTTL;
+  }
+
+  event GlobalStateCacheUpdated(uint256 satoshiPerEth, uint256 getGweiPerGas);
+
+  function validateUpdatesGlobalCache(bytes4 testSelector, bool shouldUpdate) internal {
+    (, , , , , , , uint256 lastUpdateTimestamp, , , ) = vault.getGlobalState();
+    if (shouldUpdate) {
+      (uint256 newSatoshiPerEth, uint256 newGweiPerGas) = getExpectedGasFeeAndBtcPrice();
+      vm.expectEmit(false, false, false, true, address(vault));
+      emit GlobalStateCacheUpdated(newSatoshiPerEth, newGweiPerGas);
+    }
+    address(this).call(abi.encode(testSelector));
+    if (shouldUpdate) {
+      validateGlobalCacheUpdatedThisBlock();
+    } else {
+      (, , , , , , , uint256 newLastUpdateTimestamp, , , ) = vault.getGlobalState();
+      assertEq(lastUpdateTimestamp, newLastUpdateTimestamp, "State updated when it should not have");
+    }
+  }
+
+  function _deriveLoanPHashAndId(
+    address module,
+    address borrower,
+    uint256 borrowAmount,
+    uint256 nonce,
+    bytes memory data
+  ) internal view returns (bytes32 pHash, bytes32 loanId) {
+    pHash = keccak256(abi.encode(address(vault), module, borrower, borrowAmount, nonce, keccak256(data)));
+    loanId = keccak256(abi.encode(address(this), pHash));
+  }
+
 
   function zeroLoan(address module, uint256 amount) public checkBalance(module) {
     bytes memory data;
     vault.loan(address(module), zerowallet, amount, 1, data);
     bytes memory sig;
     vault.repay(address(module), zerowallet, amount, 1, data, address(this), bytes32(0), sig);
+  }
+
+  function testAddModule() external {
+    btcEthOracle = address(new MockBtcEthPriceOracle());
+    gasPriceOracle = address(new MockGasPriceOracle());
+    // 1 eth per btc
+    MockBtcEthPriceOracle(btcEthOracle).setLatestAnswer(1e18);
+    // 1000 wei per gas - should be rounded up to 1 gwei
+    MockGasPriceOracle(gasPriceOracle).setLatestAnswer(1000);
+    initializeProxy();
+    // 1000 gas for loan / repay - should be rounded up to 10000
+    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 1000, 1000);
+    // Validate module's cached and configured state
+    validateModule(moduleETH, ModuleType.LoanOverride, 1, 1e8, 1000, 1000, block.timestamp);
+    // Check against expected final values
+    (, uint256 loanGasE4, , uint256 ethRefundForLoanGas, , uint256 btcFeeForLoanGas, , ) = vault.getModuleState(
+      moduleETH
+    );
+    // Rounded up to 1e4
+    assertEq(loanGasE4, 1, "Incorrect initial loanGasE4");
+    // 1e4 * 1e9
+    assertEq(ethRefundForLoanGas, 1e13, "Incorrect initial ethRefundForLoanGas");
+    // 1 eth = 1 btc, 1e13 wei = 1e3 satoshi
+    assertEq(btcFeeForLoanGas, 1e3, "Incorrect initial btcFeeForLoanGas");
+  }
+  function testLoan() external {
+    uint256 borrowAmount = 1e8;
+    (
+      uint256 expectedActualBorrowAmount,
+      uint256 expectedLenderDebt,
+      uint256 expectedBtcFeeForLoanGas,
+      uint256 expectedEthRefundForLoanGas
+    ) = getExpectedLoanFees(moduleETH, borrowAmount);
+    vm.deal(address(100), 0);
+    vm.prank(address(this), address(100));
+
+    vault.loan(address(moduleETH), zerowallet, borrowAmount, 1, "");
+
+    (, bytes32 loanId) = _deriveLoanPHashAndId(moduleETH, zerowallet, borrowAmount, 1, "");
+    (
+      uint256 sharesLocked,
+      uint256 actualBorrowAmount,
+      uint256 lenderDebt,
+      uint256 btcFeeForLoanGas,
+      uint256 expiry
+    ) = vault.getOutstandingLoan(uint256(loanId));
+    assertEq(actualBorrowAmount, expectedActualBorrowAmount, "loan's actualBorrowAmount did not match expected");
+    assertEq(lenderDebt, expectedLenderDebt, "loan's lenderDebt did not match expected");
+    assertEq(btcFeeForLoanGas, expectedBtcFeeForLoanGas, "loan's btcFeeForLoanGas did not match expected");
+    assertEq(expiry, block.timestamp + DefaultMaxLoanDuration, "loan's expiry did not match expected");
+    assertEq(address(100).balance, expectedEthRefundForLoanGas, "tx.origin did not receive expected refund");
   }
 }
