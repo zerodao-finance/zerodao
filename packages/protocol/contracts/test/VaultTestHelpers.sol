@@ -1,23 +1,20 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity >=0.8.13;
 
 import "forge-std/Test.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
-import "../modules/mainnet/ConvertWBTC.sol";
-import "../modules/mainnet/ConvertUSDC.sol";
+import { ConvertWBTCMainnet } from "../modules/mainnet/ConvertWBTC.sol";
+import { ConvertUSDCMainnet } from "../modules/mainnet/ConvertUSDC.sol";
 import { ConvertNativeMainnet } from "../modules/mainnet/ConvertNative.sol";
+import { RenBtcEthConverterMainnet } from "../util/RenBtcEthConverter.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
-import "../util/RenBtcEthConverter.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
-import "../erc4626/vault/ZeroBTC.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
 import "./MockBtcEthPriceOracle.sol";
 import "./MockGasPriceOracle.sol";
-import "../erc4626/utils/Math.sol";
 // import "../modules/arbitrum/ConvertWBTC.sol";
 // import "../modules/arbitrum/ConvertUSDC.sol";
 // import { ConvertNativeArbitrum } from "../modules/arbitrum/ConvertNative.sol";
@@ -397,63 +394,5 @@ contract VaultTestHelpers is Test {
   ) internal view returns (bytes32 pHash, bytes32 loanId) {
     pHash = keccak256(abi.encode(address(vault), module, borrower, borrowAmount, nonce, keccak256(data)));
     loanId = keccak256(abi.encode(address(this), pHash));
-  }
-
-  function zeroLoan(address module, uint256 amount) public checkBalance(module) {
-    bytes memory data;
-    vault.loan(address(module), zerowallet, amount, 1, data);
-    bytes memory sig;
-    vault.repay(address(module), zerowallet, amount, 1, data, address(this), bytes32(0), sig);
-  }
-
-  function testAddModule() external {
-    btcEthOracle = address(new MockBtcEthPriceOracle());
-    gasPriceOracle = address(new MockGasPriceOracle());
-    // 1 eth per btc
-    MockBtcEthPriceOracle(btcEthOracle).setLatestAnswer(1e18);
-    // 1000 wei per gas - should be rounded up to 1 gwei
-    MockGasPriceOracle(gasPriceOracle).setLatestAnswer(1000);
-    initializeProxy();
-    // 1000 gas for loan / repay - should be rounded up to 10000
-    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 1000, 1000);
-    // Validate module's cached and configured state
-    validateModule(moduleETH, ModuleType.LoanOverride, 1, 1e8, 1000, 1000, block.timestamp);
-    // Check against expected final values
-    (, uint256 loanGasE4, , uint256 ethRefundForLoanGas, , uint256 btcFeeForLoanGas, , ) = vault.getModuleState(
-      moduleETH
-    );
-    // Rounded up to 1e4
-    assertEq(loanGasE4, 1, "Incorrect initial loanGasE4");
-    // 1e4 * 1e9
-    assertEq(ethRefundForLoanGas, 1e13, "Incorrect initial ethRefundForLoanGas");
-    // 1 eth = 1 btc, 1e13 wei = 1e3 satoshi
-    assertEq(btcFeeForLoanGas, 1e3, "Incorrect initial btcFeeForLoanGas");
-  }
-  function testLoan() external {
-    uint256 borrowAmount = 1e8;
-    (
-      uint256 expectedActualBorrowAmount,
-      uint256 expectedLenderDebt,
-      uint256 expectedBtcFeeForLoanGas,
-      uint256 expectedEthRefundForLoanGas
-    ) = getExpectedLoanFees(moduleETH, borrowAmount);
-    vm.deal(address(100), 0);
-    vm.prank(address(this), address(100));
-
-    vault.loan(address(moduleETH), zerowallet, borrowAmount, 1, "");
-
-    (, bytes32 loanId) = _deriveLoanPHashAndId(moduleETH, zerowallet, borrowAmount, 1, "");
-    (
-      uint256 sharesLocked,
-      uint256 actualBorrowAmount,
-      uint256 lenderDebt,
-      uint256 btcFeeForLoanGas,
-      uint256 expiry
-    ) = vault.getOutstandingLoan(uint256(loanId));
-    assertEq(actualBorrowAmount, expectedActualBorrowAmount, "loan's actualBorrowAmount did not match expected");
-    assertEq(lenderDebt, expectedLenderDebt, "loan's lenderDebt did not match expected");
-    assertEq(btcFeeForLoanGas, expectedBtcFeeForLoanGas, "loan's btcFeeForLoanGas did not match expected");
-    assertEq(expiry, block.timestamp + DefaultMaxLoanDuration, "loan's expiry did not match expected");
-    assertEq(address(100).balance, expectedEthRefundForLoanGas, "tx.origin did not receive expected refund");
   }
 }
