@@ -16,19 +16,19 @@ import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
 import "./MockBtcEthPriceOracle.sol";
 import "./MockGasPriceOracle.sol";
 
-
-uint256 constant DefaultCacheTTL = 3600;
-uint256 constant DefaultMaxLoanDuration = 3600;
-uint256 constant DefaultTargetEthReserve = 1 ether;
-uint256 constant DefaultMaxGasProfitShareBips = 200.000;
-uint256 constant DefaultZeroBorrowFeeBips = 200;
-uint256 constant DefaultRenBorrowFeeBips = 200;
-uint256 constant DefaultZeroBorrowFeeStatic = 200;
-uint256 constant DefaultRenBorrowFeeStatic = 200;
-uint256 constant DefaultZeroFeeShareBips = 200;
-
 contract VaultTestHelpers is Test {
   using Math for uint256;
+
+  //initializer values
+  uint256 constant DefaultCacheTTL = 3600;
+  uint256 constant DefaultMaxLoanDuration = 3600;
+  uint256 constant DefaultTargetEthReserve = 1 ether;
+  uint256 constant DefaultMaxGasProfitShareBips = 200.000;
+  uint256 constant DefaultZeroBorrowFeeBips = 200;
+  uint256 constant DefaultRenBorrowFeeBips = 200;
+  uint256 constant DefaultZeroBorrowFeeStatic = 200;
+  uint256 constant DefaultRenBorrowFeeStatic = 200;
+  uint256 constant DefaultZeroFeeShareBips = 200;
 
   // Tokens
   address renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
@@ -63,12 +63,12 @@ contract VaultTestHelpers is Test {
     uint256 nonce = vm.getNonce(deployer) + skip;
     bytes memory data;
 
-    if (nonce == 0x00)          data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(0x80));
-    else if (nonce <= 0x7f)     data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(nonce));
-    else if (nonce <= 0xff)     data = abi.encodePacked(uint8(0xd7), uint8(0x94), deployer, uint8(0x81), uint8(nonce));
-    else if (nonce <= 0xffff)   data = abi.encodePacked(uint8(0xd8), uint8(0x94), deployer, uint8(0x82), uint16(nonce));
+    if (nonce == 0x00) data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(0x80));
+    else if (nonce <= 0x7f) data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(nonce));
+    else if (nonce <= 0xff) data = abi.encodePacked(uint8(0xd7), uint8(0x94), deployer, uint8(0x81), uint8(nonce));
+    else if (nonce <= 0xffff) data = abi.encodePacked(uint8(0xd8), uint8(0x94), deployer, uint8(0x82), uint16(nonce));
     else if (nonce <= 0xffffff) data = abi.encodePacked(uint8(0xd9), uint8(0x94), deployer, uint8(0x83), uint24(nonce));
-    else                         data = abi.encodePacked(uint8(0xda), uint8(0x94), deployer, uint8(0x84), uint32(nonce));
+    else data = abi.encodePacked(uint8(0xda), uint8(0x94), deployer, uint8(0x84), uint32(nonce));
     return address(uint160(uint256(keccak256(data))));
   }
 
@@ -171,14 +171,14 @@ contract VaultTestHelpers is Test {
     );
   }
 
-  function deployProxy() internal {
-    deployVaultImplementation(getDefaultCreateAddress(address(this), 1));
+  function deployProxy(uint256 skip) internal returns (ZeroBTC _vault) {
+    deployVaultImplementation(getDefaultCreateAddress(address(this), skip));
     TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(implementation, address(proxyAdmin), "");
-    vault = ZeroBTC(payable(address(_proxy)));
+    _vault = ZeroBTC(payable(address(_proxy)));
   }
 
   function initializeProxy() internal {
-    deployProxy();
+    vault = deployProxy(1);
     vault.initialize(
       // initialGovernance
       address(this),

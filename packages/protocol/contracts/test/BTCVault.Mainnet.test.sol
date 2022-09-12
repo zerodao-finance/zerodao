@@ -1,9 +1,9 @@
 pragma solidity >=0.8.13;
 
 import "../erc4626/interfaces/IZeroBTC.sol";
-import "./Common.test.sol";
+import "./Reverts.test.sol";
 
-contract BTCVaultTestMainnet is Common {
+contract BTCVaultTestMainnet is RevertTest {
   constructor() {}
 
   function testMockGatewayLogic() public {
