@@ -3,14 +3,32 @@
 pragma solidity ^0.8.15;
 
 import "./Common.test.sol";
+import "./DummyModule.sol";
 
 contract RevertTest is Common {
+  function testFailOnModuleInitialize() public {
+    address invalidModule = address(new DummyModuleInitializeFail(renbtc));
+    vm.expectRevert(bytes("!module"));
+    vault.addModule(invalidModule, ModuleType.LoanOverride, 100e3, 100e3);
+  }
+
+  function testFailOnTransferFromFail() public {
+    vm.expectRevert(bytes("ERC20: transfer amount exceeds balance"));
+    vault.deposit(1e18, address(this));
+  }
+
   function testFailIfSameLoanId() public {
     bytes memory data;
     vault.loan(address(moduleWBTC), zerowallet, 1e8, 1, data);
     // should revert due to the same loanid being generated
-    vm.expectRevert();
+    vm.expectRevert(IZeroBTC.LoanIdNotUnique.selector);
     vault.loan(address(moduleWBTC), zerowallet, 1e8, 1, data);
+  }
+
+  function testFailOnWrongModuleAddress() public {
+    bytes memory data;
+    vm.expectRevert(IZeroBTC.ModuleDoesNotExist.selector);
+    vault.loan(address(this), zerowallet, 1e8, 1, data);
   }
 
   function testFailOnRepayingNonexistentLoan() public {
@@ -103,7 +121,8 @@ contract RevertTest is Common {
     );
   }
 
-  function testFailOnInvalidModule() public {
+  function testFailOnModuleWithWrongAsset() public {
+    //initialize with wrong asset
     address invalidModule = address(new ConvertWBTCMainnet(address(0)));
     vault.addModule(invalidModule, ModuleType.LoanOverride, 100e3, 100e3);
   }
