@@ -3,29 +3,24 @@
 pragma solidity >=0.8.13;
 
 import "forge-std/Test.sol";
-import "forge-std/console.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";
 import "../modules/mainnet/ConvertWBTC.sol";
 import "../modules/mainnet/ConvertUSDC.sol";
 import { ConvertNativeMainnet } from "../modules/mainnet/ConvertNative.sol";
-import "../modules/arbitrum/ConvertWBTC.sol";
-import "../modules/arbitrum/ConvertUSDC.sol";
-import { ConvertNativeArbitrum } from "../modules/arbitrum/ConvertNative.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
-import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
 import "../util/RenBtcEthConverter.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import "../erc4626/vault/ZeroBTC.sol";
-import "../erc4626/utils/ModuleStateCoder.sol";
-import { ZeroBTCBase } from "../erc4626/vault/ZeroBTCBase.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
-import { Dummy } from "../util/DummyImpl.sol";
 import "./MockBtcEthPriceOracle.sol";
 import "./MockGasPriceOracle.sol";
 import "../erc4626/utils/Math.sol";
+// import "../modules/arbitrum/ConvertWBTC.sol";
+// import "../modules/arbitrum/ConvertUSDC.sol";
+// import { ConvertNativeArbitrum } from "../modules/arbitrum/ConvertNative.sol";
 
 uint256 constant DefaultCacheTTL = 3600;
 uint256 constant DefaultMaxLoanDuration = 3600;
@@ -41,18 +36,18 @@ contract VaultTestHelpers is Test {
   using Math for uint256;
 
   // Tokens
-  address renbtc;
-  address usdc;
-  address wbtc;
-  address rencrv;
+  address renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
+  address wbtc = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
+  address usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+  address rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
 
   // Ren addresses
-  address gateway;
+  address gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
   address gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
 
   // Oracles
-  address btcEthOracle;
-  address gasPriceOracle;
+  address btcEthOracle = 0xdeb288F737066589598e9214E782fa5A8eD689e8;
+  address gasPriceOracle = 0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C;
 
   // Zero contracts
   address zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
@@ -88,45 +83,56 @@ contract VaultTestHelpers is Test {
                     Chain-Specific Initialization
   //////////////////////////////////////////////////////////////*/
 
-  function initiateMainnetFork() public {
-    renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
-    wbtc = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
-    usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
-    gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
-    rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
-    btcEthOracle = 0xdeb288F737066589598e9214E782fa5A8eD689e8;
-    gasPriceOracle = 0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C;
-    moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
-    moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
-    moduleETH = address(new ConvertNativeMainnet(renbtc));
-  }
-
-  function initiateArbitrumFork() public {
-    renbtc = 0xDBf31dF14B66535aF65AaC99C32e9eA844e14501;
-    wbtc = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
-    usdc = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;
-    gateway = 0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20;
-    rencrv = 0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb;
-    btcEthOracle = 0xc5a90A6d7e4Af242dA238FFe279e9f2BA0c64B2e;
-    gasPriceOracle = address(new BlockGasPriceOracle());
-    moduleWBTC = address(new ConvertWBTCArbitrum(renbtc));
-    moduleUSDC = address(new ConvertUSDCArbitrum(renbtc));
-    moduleETH = address(new ConvertNativeArbitrum(renbtc));
-  }
+  // function initiateArbitrumFork() public {
+  //   renbtc = 0xDBf31dF14B66535aF65AaC99C32e9eA844e14501;
+  //   wbtc = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
+  //   usdc = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;
+  //   gateway = 0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20;
+  //   rencrv = 0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb;
+  //   btcEthOracle = 0xc5a90A6d7e4Af242dA238FFe279e9f2BA0c64B2e;
+  //   gasPriceOracle = address(new BlockGasPriceOracle());
+  //   moduleWBTC = address(new ConvertWBTCArbitrum(renbtc));
+  //   moduleUSDC = address(new ConvertUSDCArbitrum(renbtc));
+  //   moduleETH = address(new ConvertNativeArbitrum(renbtc));
+  //   // @todo arbitrum version
+  //   renBtcConverter = address(new RenBtcEthConverterMainnet());
+  // }
 
   /*//////////////////////////////////////////////////////////////
                          Deployment & Setup
   //////////////////////////////////////////////////////////////*/
 
+  /**
+   * @dev Should set:
+   * - renbtc
+   * - wbtc
+   * - usdc
+   * - gateway
+   * - rencrv
+   * - btcEthOracle
+   * - gasPriceOracle
+   * - moduleWBTC
+   * - moduleUSDC
+   * - moduleETH
+   * - renBtcConverter
+   */
+  function setUpNetwork() internal virtual {
+    // Mainnet default
+    moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
+    moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
+    moduleETH = address(new ConvertNativeMainnet(renbtc));
+    renBtcConverter = address(new RenBtcEthConverterMainnet());
+  }
+
   function setUp() public virtual {
+    setUpNetwork();
     proxyAdmin = new ProxyAdmin();
-    RenBtcEthConverterMainnet converter = new RenBtcEthConverterMainnet();
-    renBtcConverter = address(converter);
     initializeProxy();
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
     vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
+
     deployGateway();
 
     // Give vault ETH for gas refunds
@@ -179,12 +185,14 @@ contract VaultTestHelpers is Test {
   function initializeProxy() internal {
     deployProxy();
     vault.initialize(
+      // initialGovernance
       address(this),
       DefaultZeroBorrowFeeBips,
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
       DefaultZeroFeeShareBips,
+      // strategy
       address(this)
     );
   }
@@ -390,7 +398,6 @@ contract VaultTestHelpers is Test {
     pHash = keccak256(abi.encode(address(vault), module, borrower, borrowAmount, nonce, keccak256(data)));
     loanId = keccak256(abi.encode(address(this), pHash));
   }
-
 
   function zeroLoan(address module, uint256 amount) public checkBalance(module) {
     bytes memory data;
