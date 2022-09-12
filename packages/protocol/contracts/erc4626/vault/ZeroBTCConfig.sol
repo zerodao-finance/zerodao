@@ -15,10 +15,6 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
                          Governance Actions
   //////////////////////////////////////////////////////////////*/
 
-  function setStrategy(address strategy) external onlyGovernance nonReentrant {
-    _strategy = strategy;
-  }
-
   function setGlobalFees(
     uint256 zeroBorrowFeeBips,
     uint256 renBorrowFeeBips,
@@ -95,20 +91,12 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
 
     // delegatecall initialize on the module
     (bool success, ) = module.delegatecall(abi.encodeWithSelector(IZeroModule.initialize.selector));
+    require(success, "module uninitialized");
 
     emit ModuleStateUpdated(module, moduleType, loanGasE4, repayGasE4);
   }
 
   function removeModule(address module) external onlyGovernance nonReentrant {
     _moduleFees[module] = DefaultModuleState;
-  }
-
-  function callStrategy() external onlyGovernance {
-    (GlobalState state, ) = _getUpdatedGlobalState();
-    (bool success, bytes memory data) = _strategy.delegatecall(
-      abi.encodeWithSelector(IStrategy.manage.selector, state)
-    );
-    (state) = abi.decode(data, (GlobalState));
-    _state = state;
   }
 }

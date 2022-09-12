@@ -74,8 +74,7 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
-    uint256 zeroFeeShareBips,
-    address strategy
+    uint256 zeroFeeShareBips
   ) external payable;
 
   /*//////////////////////////////////////////////////////////////
