@@ -37,4 +37,25 @@ contract ZeroBTC is ZeroBTCBase, ZeroBTCCache, ZeroBTCConfig, ZeroBTCLoans {
       _proxyContract
     )
   {}
+
+  function initialize(
+    address initialGovernance,
+    uint256 zeroBorrowFeeBips,
+    uint256 renBorrowFeeBips,
+    uint256 zeroBorrowFeeStatic,
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips,
+    address strategy
+  ) public payable virtual override {
+    ZeroBTCBase.initialize(
+      initialGovernance,
+      zeroBorrowFeeBips,
+      renBorrowFeeBips,
+      zeroBorrowFeeStatic,
+      renBorrowFeeStatic,
+      zeroFeeShareBips,
+      strategy
+    );
+    _updateGlobalCache(_state);
+  }
 }
