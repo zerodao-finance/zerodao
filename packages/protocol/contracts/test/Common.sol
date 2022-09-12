@@ -40,25 +40,47 @@ uint256 constant DefaultZeroFeeShareBips = 200;
 contract Common is Test {
   using Math for uint256;
 
+  // Tokens
   address renbtc;
   address usdc;
   address wbtc;
   address rencrv;
+
+  // Ren addresses
   address gateway;
-  address zerowallet;
-  address moduleDummy;
-  address moduleWBTC;
-  address moduleUSDC;
-  address gatewayRegistry;
+  address gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
+
+  // Oracles
   address btcEthOracle;
   address gasPriceOracle;
-  address moduleETH;
-  uint256 mainnet;
-  uint256 snapshot;
-  ZeroBTC vault;
+
+  // Zero contracts
+  address zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
   address renBtcConverter;
+  address moduleWBTC;
+  address moduleUSDC;
+  address moduleETH;
+  ZeroBTC vault;
   ProxyAdmin proxyAdmin;
   address implementation;
+
+  /**
+   * @dev Get future address for contract deployed with create
+   * @param deployer address that will deploy the contract
+   * @param skip number of future deployments to skip, e.g. 1 gets second next address
+   */
+  function getDefaultCreateAddress(address deployer, uint256 skip) internal returns (address) {
+    uint256 nonce = vm.getNonce(deployer) + skip;
+    bytes memory data;
+
+    if (nonce == 0x00)          data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(0x80));
+    else if (nonce <= 0x7f)     data = abi.encodePacked(uint8(0xd6), uint8(0x94), deployer, uint8(nonce));
+    else if (nonce <= 0xff)     data = abi.encodePacked(uint8(0xd7), uint8(0x94), deployer, uint8(0x81), uint8(nonce));
+    else if (nonce <= 0xffff)   data = abi.encodePacked(uint8(0xd8), uint8(0x94), deployer, uint8(0x82), uint16(nonce));
+    else if (nonce <= 0xffffff) data = abi.encodePacked(uint8(0xd9), uint8(0x94), deployer, uint8(0x83), uint24(nonce));
+    else                         data = abi.encodePacked(uint8(0xda), uint8(0x94), deployer, uint8(0x84), uint32(nonce));
+    return address(uint160(uint256(keccak256(data))));
+  }
 
   receive() external payable {}
 
@@ -67,35 +89,27 @@ contract Common is Test {
   //////////////////////////////////////////////////////////////*/
 
   function initiateMainnetFork() public {
-    // mainnet = vm.createSelectFork(vm.rpcUrl("mainnet"));
     renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
     wbtc = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
     usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     gateway = 0xe4b679400F0f267212D5D812B95f58C83243EE71;
-    zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
     rencrv = 0x93054188d876f558f4a66B2EF1d97d16eDf0895B;
-    gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
     btcEthOracle = 0xdeb288F737066589598e9214E782fa5A8eD689e8;
     gasPriceOracle = 0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C;
     moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
-    moduleDummy = address(new ConvertWBTCMainnet(renbtc));
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));
   }
 
   function initiateArbitrumFork() public {
-    // mainnet = vm.createSelectFork(vm.rpcUrl("arbitrum"));
     renbtc = 0xDBf31dF14B66535aF65AaC99C32e9eA844e14501;
     wbtc = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
     usdc = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;
     gateway = 0x05Cadbf3128BcB7f2b89F3dD55E5B0a036a49e20;
-    zerowallet = 0x0F4ee9631f4be0a63756515141281A3E2B293Bbe;
     rencrv = 0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb;
-    gatewayRegistry = 0xf36666C230Fa12333579b9Bd6196CB634D6BC506;
     btcEthOracle = 0xc5a90A6d7e4Af242dA238FFe279e9f2BA0c64B2e;
     gasPriceOracle = address(new BlockGasPriceOracle());
     moduleWBTC = address(new ConvertWBTCArbitrum(renbtc));
-    moduleDummy = address(new ConvertWBTCArbitrum(renbtc));
     moduleUSDC = address(new ConvertUSDCArbitrum(renbtc));
     moduleETH = address(new ConvertNativeArbitrum(renbtc));
   }
@@ -154,9 +168,8 @@ contract Common is Test {
   }
 
   function deployProxy() internal {
-    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(address(new Dummy()), address(proxyAdmin), "");
-    deployVaultImplementation(address(_proxy));
-    proxyAdmin.upgrade(_proxy, implementation);
+    deployVaultImplementation(getDefaultCreateAddress(address(this), 1));
+    TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(implementation, address(proxyAdmin), "");
     vault = ZeroBTC(payable(address(_proxy)));
   }
 
