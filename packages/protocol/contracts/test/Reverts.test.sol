@@ -147,6 +147,11 @@ contract RevertTest is Common {
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
   }
 
+  function testRevertOnAddingNullModule() public {
+    vm.expectRevert();
+    vault.addModule(address(this), ModuleType.Null, 100, 100);
+  }
+
   function testRevertOnRepayingNonExistentLoan() public {
     bytes memory sig;
     bytes memory data;
