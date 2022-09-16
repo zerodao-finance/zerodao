@@ -514,7 +514,7 @@ export function makeCompute(CHAIN = "1") {
         case FIXTURES["ETHEREUM"].USDT:
           return await quotes.getRenZECUSDTQuote(true, amount);
         default:
-          console.error("no asset found for getConvertedAmount:" + module);
+          console.error("no asset found for computeTransferOutput:" + module);
           return BigNumber.from("0");
       }
     }
@@ -606,7 +606,8 @@ export function makeCompute(CHAIN = "1") {
         case FIXTURES["ETHEREUM"].USDT:
           return await quotes.getRenZECUSDTQuote(false, amount);
         default:
-          console.error("no asset found for getConvertedAmount:" + asset);
+          console.log("USDC: ", FIXTURES["ETHEREUM"].USDC);
+          console.error("no asset found for getConvertedAmount ZEC:" + asset);
           return amount;
       }
     }
@@ -626,7 +627,7 @@ export function makeCompute(CHAIN = "1") {
       case AddressZero:
         return await quotes.ETHtoRenBTC(amount);
       default:
-        console.error("no asset found for getConvertedAmount:" + asset);
+        console.error("no asset found for getConvertedAmount BTC:" + asset);
         return amount;
     }
   });

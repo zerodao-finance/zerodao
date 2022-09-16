@@ -23,6 +23,8 @@ export declare function selectFixture(chainId: any): {
     Curve_TriCryptoTwo: string;
     Router: string;
     btcGateway: string;
+    USDC_NATIVE: string;
+    USDC_POOL: string;
 } | {
     USDC: string;
     Optimism: string;

@@ -48,7 +48,7 @@ export declare const RENVM_PROVIDERS: {
 export declare const providerFromChainId: (v: any) => any;
 export declare const getVanillaProvider: (request: any) => any;
 export declare const getRenVMChain: (transferRequest: any) => any;
-export declare const getProvider: ({ contractAddress: string }: {
-    contractAddress: any;
+export declare const getProvider: ({ contractAddress }: {
+    contractAddress: string;
 }) => EthereumBaseChain;
 export {};
