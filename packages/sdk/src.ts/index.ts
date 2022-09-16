@@ -1,4 +1,4 @@
-// index file
+// index file v2
 export { isZcashAddress, toFixtureName, FIXTURES } from "@zerodao/common";
 export * from "@zerodao/request";
 export {
