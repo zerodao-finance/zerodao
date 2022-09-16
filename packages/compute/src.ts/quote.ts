@@ -19,6 +19,7 @@ import UNISWAP = require("@uniswap/sdk");
 import { Route } from "@uniswap/sdk";
 import { providerFromChainId, CHAINS, NAME_CHAIN, getChainName } from "@zerodao/chains";
 import { AddressZero } from "@ethersproject/constants";
+import { utils } from "ethers";
 
 export const keeperReward = parseEther("0.001");
 
@@ -44,7 +45,7 @@ function returnChainDetails(CHAINID) {
 }
 
 export const getChainNameFixture = (chainName) => {
-  switch(chainName) {
+  switch (chainName) {
     case 'POLYGON':
       return 'MATIC';
     default:
@@ -141,7 +142,7 @@ export function makeQuoter(CHAIN = "1", provider?) {
         route,
         new JOE.TokenAmount(WBTC, wbtcAmount),
         JOE.TradeType.EXACT_INPUT,
-	chain.chainId
+        chain.chainId
       );
       const price = trade.outputAmount.toExact();
       return parseEther(price);
@@ -151,7 +152,7 @@ export function makeQuoter(CHAIN = "1", provider?) {
         route,
         new JOE.TokenAmount(JOE.WAVAX[JOE.ChainId.AVALANCHE], amount),
         JOE.TradeType.EXACT_INPUT,
-	chain.chainId
+        chain.chainId
       );
       return await getWbtcQuote(
         false,
@@ -197,6 +198,23 @@ export function makeQuoter(CHAIN = "1", provider?) {
         wbtcAmount
       );
       return await crvUSD.calc_withdraw_one_coin(av3usdAmount, 1);
+    }
+  };
+
+  // direction ? renbtc -> usdc : usdc -> renbtc
+  const getUSDCNativeQuote = async (direction, amount) => {
+    const usdcpool = new Contract(
+      FIXTURES.AVALANCHE.USDC_POOL,
+      ["function get_dy(int128, int128, uint256) view returns (uint256)"],
+      chain.provider
+    );
+
+    if (direction) {
+      const usdcAmount = await getUsdcQuoteAVAX(direction, amount);
+      return await usdcpool.get_dy(0, 1, amount);
+    } else {
+      const usdcnativeAmount = await usdcpool.get_dy(1, 0, amount);
+      return await getUsdcQuoteAVAX(direction, usdcnativeAmount);
     }
   };
 
@@ -335,6 +353,58 @@ export function makeQuoter(CHAIN = "1", provider?) {
     return await getRenZECETHQuote(true, amount);
   };
 
+  //direction ? weth -> token : token -> weth
+  const wethToTokenQuote = async (direction, token, amount) => {
+    const path = [FIXTURES[chain.name].wETH, 500, token];
+    const quote = await quoter.quoteExactInput(
+      utils.solidityPack(
+        ["address", "uint24", "address"],
+        direction ? path : path.reverse()
+      ),
+      amount
+    );
+
+    return quote;
+  };
+
+  // direction ? renzec -> usdc : usdc -> renzec
+  const getRenZECUSDCQuote = async (direction, amount) => {
+    if (direction) {
+      const _amount = await renZECToETH(amount);
+      return await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDC,
+        _amount
+      );
+    } else {
+      const _amount = await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDC,
+        amount
+      );
+      return await ETHToRenZEC(_amount);
+    }
+  };
+
+  // direction ? renzec -> usdt : usdt -> renzec
+  const getRenZECUSDTQuote = async (direction, amount) => {
+    if (direction) {
+      const _amount = await renZECToETH(amount);
+      return await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDT,
+        _amount
+      );
+    } else {
+      const _amount = await wethToTokenQuote(
+        direction,
+        FIXTURES[chain.name].USDT,
+        amount
+      );
+      return await ETHToRenZEC(_amount);
+    }
+  };
+
   const renBTCToETH = async (amount) => {
     if (chain.name === "AVALANCHE") {
       return await getAVAXQuote(true, amount);
@@ -371,7 +441,10 @@ export function makeQuoter(CHAIN = "1", provider?) {
     renBTCToETH,
     ETHToRenZEC,
     renZECToETH,
+    getRenZECUSDCQuote,
+    getRenZECUSDTQuote,
     toUSDC,
+    getUSDCNativeQuote,
     ETHtoRenBTC,
     chain,
     getUSDTQuote,
@@ -436,13 +509,22 @@ export function makeCompute(CHAIN = "1") {
           return await quotes.renZECToETH(
             await deductMintFee(amount, primaryToken)
           );
+        case FIXTURES["ETHEREUM"].USDC:
+          return await quotes.getRenZECUSDCQuote(true, amount);
+        case FIXTURES["ETHEREUM"].USDT:
+          return await quotes.getRenZECUSDTQuote(true, amount);
         default:
           console.error("no asset found for getConvertedAmount:" + module);
           return BigNumber.from("0");
       }
     }
+
     switch (module) {
       case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC:
+        return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC_NATIVE:
+        return await quotes.getUSDCNativeQuote(true, await deductMintFee(amount, primaryToken));
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC_POOL:
         return await quotes.toUSDC(await deductMintFee(amount, primaryToken));
       case FIXTURES[getChainNameFixture(quotes.chain.name)].WBTC:
         return await deductMintFee(await quotes.getWbtcQuote(true, amount), 1);
@@ -519,6 +601,10 @@ export function makeCompute(CHAIN = "1") {
           return amount;
         case FIXTURES["ETHEREUM"].ETH:
           return await quotes.ETHToRenZEC(amount);
+        case FIXTURES["ETHEREUM"].USDC:
+          return await quotes.getRenZECUSDCQuote(false, amount);
+        case FIXTURES["ETHEREUM"].USDT:
+          return await quotes.getRenZECUSDTQuote(false, amount);
         default:
           console.error("no asset found for getConvertedAmount:" + asset);
           return amount;
@@ -530,6 +616,10 @@ export function makeCompute(CHAIN = "1") {
       case FIXTURES[getChainNameFixture(quotes.chain.name)].renBTC:
         return amount;
       case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC:
+        return await quotes.fromUSDC(amount);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC_NATIVE:
+        return await quotes.getUSDCNativeQuote(false, amount);
+      case FIXTURES[getChainNameFixture(quotes.chain.name)].USDC_POOL:
         return await quotes.fromUSDC(amount);
       case FIXTURES[getChainNameFixture(quotes.chain.name)].USDT:
         return await quotes.getUSDTQuote(false, amount);

@@ -336,11 +336,15 @@ contract BadgerBridgeZeroController is EIP712Upgradeable {
     if (balance > ETH_RESERVE) {
       uint256 output = balance - ETH_RESERVE;
       uint256 toGovernance = applyRatio(output, governanceFee);
+      bool success;
       address payable governancePayable = address(uint160(governance));
-      governancePayable.transfer(toGovernance);
+      (success, ) = governancePayable.call{ value: toGovernance, gas: gasleft() }("");
+      require(success, "error sending to governance");
       address payable strategistPayable = address(uint160(strategist));
-      strategistPayable.transfer(output.sub(toGovernance));
+      (success, ) = strategistPayable.call{ value: output.sub(toGovernance), gas: gasleft() }("");
+      require(success, "error sending to strategist");
     }
+  }
   }
 
   function computeRenBTCGasFee(uint256 gasCost, uint256 gasPrice) internal view returns (uint256 result) {
