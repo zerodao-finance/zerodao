@@ -240,7 +240,7 @@ export const getRenVMChain = (transferRequest) => {
 }
 
 
-export const getProvider: ({ contractAddress: string }) => EthereumBaseChain =
+export const getProvider: ({ contractAddress }: {contractAddress: string}) => EthereumBaseChain =
     (transferRequest) => {
         const checksummedAddr = getAddress(
             transferRequest.contractAddress

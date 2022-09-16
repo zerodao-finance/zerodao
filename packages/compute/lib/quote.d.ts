@@ -1,5 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
-export declare const keeperReward: import("ethers").BigNumber;
+export declare const keeperReward: BigNumber;
 export declare function applyRatio(amount: any, ratio: any): BigNumber;
 export declare const getChainNameFixture: (chainName: any) => any;
 export declare function makeQuoter(CHAIN?: string, provider?: any): {
@@ -10,8 +10,8 @@ export declare function makeQuoter(CHAIN?: string, provider?: any): {
     wNativeToUSDC: (amount: any) => Promise<any>;
     getWbtcQuote: (direction: any, amount: any) => Promise<any>;
     renBTCToETH: (amount: any) => Promise<any>;
-    ETHToRenZEC: (amount: any) => Promise<import("ethers").BigNumber>;
-    renZECToETH: (amount: any) => Promise<import("ethers").BigNumber>;
+    ETHToRenZEC: (amount: any) => Promise<BigNumber>;
+    renZECToETH: (amount: any) => Promise<BigNumber>;
     getRenZECUSDCQuote: (direction: any, amount: any) => Promise<any>;
     getRenZECUSDTQuote: (direction: any, amount: any) => Promise<any>;
     toUSDC: (amount: any) => Promise<any>;
@@ -40,10 +40,10 @@ export declare function makeCompute(CHAIN?: string): {
         opFee: BigNumber;
         totalFees: any;
     }>;
-    burnFee: import("ethers").BigNumber;
-    mintFee: import("ethers").BigNumber;
-    renVmFeeBurn: import("ethers").BigNumber;
-    renVmFeeMint: import("ethers").BigNumber;
+    burnFee: BigNumber;
+    mintFee: BigNumber;
+    renVmFeeBurn: BigNumber;
+    renVmFeeMint: BigNumber;
     computeRenBTCGasFee: (gasCost: any, gasPrice: any) => Promise<any>;
     getConvertedAmount: (asset: any, amount: any, primaryToken: any) => Promise<any>;
 };
