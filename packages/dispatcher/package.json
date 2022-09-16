@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/dispatcher",
-  "version": "0.3.21",
+  "version": "0.3.31",
   "description": "dispatcher",
   "main": "lib/dispatcher.js",
   "scripts": {
