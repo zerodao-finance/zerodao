@@ -1,4 +1,4 @@
-# Common
+# @zerodao/common
 
 this sub-module is part of the zerodao software development kit (sdk)
 

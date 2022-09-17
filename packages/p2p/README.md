@@ -1,4 +1,4 @@
-# P2P
+# @zerodao/p2p
 
 this sub-module is part of the zerodao software development kit (sdk)
 

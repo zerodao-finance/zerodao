@@ -1,4 +1,4 @@
-# Chains
+# @zerodao/chains
 
 this sub-module is part of the zerodao software development kit (sdk)
 
