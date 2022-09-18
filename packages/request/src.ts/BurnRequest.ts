@@ -20,6 +20,8 @@ import { getVanillaProvider, CHAINS } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
 import { mapValues } from "lodash";
+import { encode } from "@ethersproject/rlp";
+
 
 const coder = new AbiCoder();
 
@@ -218,7 +220,19 @@ export class BurnRequest extends Request {
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
   };
-
+  static get FIELDS(): string [] {
+    return [
+      'asset',
+      'data',
+      'owner',
+      'destination',
+      'deadline',
+      'amount',
+      'asset',
+      'contractAddress',
+      'signature'
+    ]
+  };
   static minOutFromData(data) {
     const [ result ] = coder.decode(["uint256"], data);
     return result;

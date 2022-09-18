@@ -45,19 +45,32 @@ export class TransferRequest extends Request {
   protected _mint: any;
   protected _deposit: any;
 
-  static get FIELDS(): string [] {
-    return [
-      'to',
-      'module',
-      'data',
-      'nonce',
-      'pNonce',
-      'contractAddress',
-      'asset',
-      'underwriter',
-      'amount'
-    ]
-  };
+  static FIELDS = 
+  [
+   'to',
+   'module',
+   'data',
+   'nonce',
+   'pNonce',
+   'contractAddress',
+   'asset',
+   'underwriter',
+   'amount'
+ ]
+
+  // static get FIELDS(): string [] {
+  //   return [
+  //     'to',
+  //     'module',
+  //     'data',
+  //     'nonce',
+  //     'pNonce',
+  //     'contractAddress',
+  //     'asset',
+  //     'underwriter',
+  //     'amount'
+  //   ]
+  // };
 
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
@@ -94,6 +107,7 @@ export class TransferRequest extends Request {
       ? hexlify(params.pNonce)
       : hexlify(randomBytes(32));
     this.contractAddress = params.contractAddress;
+     
   };
 
   buildLoanTransaction() {
@@ -147,6 +161,12 @@ export class TransferRequest extends Request {
   serializeFields(): Buffer {
     return Buffer.from(encode(TransferRequest.FIELDS.map(v => this[v])));
   };
+
+  
+
+  hash(): string {
+    return ethers.utils.keccak256(this.serializeFields());
+  }
 
   _getRemoteChain() {
     const RenVMChain = assetToRenVMChain(

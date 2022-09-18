@@ -10,7 +10,7 @@ export class TransferRequestV2 extends TransferRequest {
   static get PROTOCOL() {
     return "/zero/2.0.0/dispatch";
   };
-
+  
   serialize(): Buffer {
     return Buffer.from(
       JSON.stringify({
