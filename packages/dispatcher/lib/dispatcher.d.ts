@@ -15,10 +15,10 @@ export declare class Dispatcher {
         [chainId: string]: Provider;
     };
     static RPC_ENDPOINTS: {
-        42161: string;
+        42161: string | string[];
         10: string;
-        137: string;
-        1: string;
+        137: string | string[];
+        1: string | string[];
         43114: string;
     };
     static ERROR_TIMEOUT: number;
