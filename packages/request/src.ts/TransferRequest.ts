@@ -159,7 +159,7 @@ export class TransferRequest extends Request {
 
   // TODO: create new serialize function to serialize FIELDS
   serializeFields(): Buffer {
-    return Buffer.from(encode(TransferRequest.FIELDS.map(v => this[v])));
+    return Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v])));
   };
 
   
