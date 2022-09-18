@@ -8,6 +8,7 @@ import { Contract } from "@ethersproject/contracts";
 import { getProvider } from "@zerodao/chains";
 import { FIXTURES } from "@zerodao/common";
 import { Request } from "./Request";
+import { encode } from "@ethersproject/rlp";
 
 const assetToRenVMChain = (assetName) => {
   switch (assetName) {
@@ -39,12 +40,29 @@ export class TransferRequest extends Request {
   public amount: string;
   public data: string;
   public contractAddress: string;
+
   protected _queryTxResult: any;
   protected _mint: any;
   protected _deposit: any;
+
+  static get FIELDS(): string [] {
+    return [
+      'to',
+      'module',
+      'data',
+      'nonce',
+      'pNonce',
+      'contractAddress',
+      'asset',
+      'underwriter',
+      'amount'
+    ]
+  };
+
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
-  }
+  };
+
   constructor(params: {
     module: string;
     to: string;
@@ -76,12 +94,14 @@ export class TransferRequest extends Request {
       ? hexlify(params.pNonce)
       : hexlify(randomBytes(32));
     this.contractAddress = params.contractAddress;
-  }
+  };
+
   buildLoanTransaction() {
     throw Error(
       "TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending"
     );
-  }
+  };
+
   buildRepayTransaction() {
     if (!this._queryTxResult)
       throw Error(
@@ -105,7 +125,8 @@ export class TransferRequest extends Request {
       ]),
       chainId: this.getChainId(),
     };
-  }
+  };
+
   serialize(): Buffer {
     return Buffer.from(
       JSON.stringify({
@@ -120,7 +141,13 @@ export class TransferRequest extends Request {
         underwriter: this.underwriter,
       })
     );
-  }
+  };
+
+  // TODO: create new serialize function to serialize FIELDS
+  serializeFields(): Buffer {
+    return Buffer.from(encode(TransferRequest.FIELDS.map(v => this[v])));
+  };
+
   _getRemoteChain() {
     const RenVMChain = assetToRenVMChain(
       ["renBTC", "renZEC"].find((v) =>
@@ -137,13 +164,16 @@ export class TransferRequest extends Request {
     return new (RenVMChain as any)({
       network: 'mainnet'
     });
-  }
+  };
+
   _getRemoteChainName() {
     return renVMChainToAssetName(this._getRemoteChain().constructor);
-  }
+  };
+
   _getRenVM() {
     return new RenJS("mainnet").withChain(this._getRemoteChain());
-  }
+  };
+
   _getContractParams() {
     return {
       to: this.contractAddress,
@@ -172,7 +202,8 @@ export class TransferRequest extends Request {
       ],
       withRenParams: true,
     };
-  }
+  };
+
   async submitToRenVM(): Promise<Gateway> {
     if (this._mint) return this._mint;
     const eth = getProvider(this);
@@ -186,16 +217,19 @@ export class TransferRequest extends Request {
     });
 
     return result;
-  }
+  };
+
   async waitForDeposit() {
     if (this._deposit) return this._deposit;
     const mint = await this.submitToRenVM();
     return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
-  }
+  };
+
   async getTransactionHash() {
     const deposit = await this.waitForDeposit();
     return deposit.renVM.tx.hash;
-  }
+  };
+
   async waitForSignature() {
     if (this._queryTxResult) return this._queryTxResult;
     const mint = await this.submitToRenVM();
@@ -216,12 +250,13 @@ export class TransferRequest extends Request {
       signature: hexlify(signature),
     });
     return result;
-  }
+  };
 
   async toGatewayAddress(): Promise<string> {
     const mint = await this.submitToRenVM();
     return mint.gatewayAddress;
-  }
+  };
+
   async fallbackMint(signer) {
     if (!this._queryTxResult) await this.waitForSignature();
     const { amount: actualAmount, nHash, signature } = this._queryTxResult;

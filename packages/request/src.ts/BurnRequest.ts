@@ -214,16 +214,20 @@ export class BurnRequest extends Request {
   public nonce: BigNumberish;
   public tokenName: string;
   public signature: string;
+
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
-  }
+  };
+
   static minOutFromData(data) {
     const [ result ] = coder.decode(["uint256"], data);
     return result;
-  }
+  };
+
   static dataFromMinOut(minOut) {
     return coder.encode(['uint256'], [ minOut ]);
-  }
+  };
+
   constructor(o: {
     asset: string,
     data: string,
@@ -263,7 +267,8 @@ export class BurnRequest extends Request {
     );
     remoteTxMap.set(this, tx.wait());
     return tx;
-  }
+  };
+
   serialize(): Buffer {
     return Buffer.from(
       JSON.stringify(mapValues({
@@ -274,13 +279,15 @@ export class BurnRequest extends Request {
         deadline: this.deadline,
         amount: this.amount,
         contractAddress: this.contractAddress,
-	signature: this.signature
+	      signature: this.signature
       }, hexlify))
     );
-  }
+  };
+
   isNative() {
     return this.asset === AddressZero;
-  }
+  };
+
   toEIP712() {
     return {
       types: {
@@ -291,7 +298,8 @@ export class BurnRequest extends Request {
       domain: getDomain(this),
       message: getMessage(this),
     };
-  }
+  };
+
   getExpiry() {
     return keccak256(
       ["address", "uint256", "uint256", "uint256", "bytes", "bytes"],
@@ -304,7 +312,8 @@ export class BurnRequest extends Request {
         this.destination,
       ]
     );
-  }
+  };
+
   async waitForHostTransaction() {
     const receiptPromise = remoteTxMap.get(this);
     if (receiptPromise) return await receiptPromise;
@@ -356,22 +365,27 @@ export class BurnRequest extends Request {
       };
       renAsset.on(filter, listener);
     });
-  }
+  };
+
   supportsERC20Permit() {
     return !(isUSDC(this.asset) && this.getChainId() === 43114 || isWBTC(this.asset) || this.getChainId() === 1 && getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset));
-  }
+  };
+
   async needsApproval() {
     const contract = new Contract(this.asset, ['function allowance(address, address) view returns (uint256)'], getVanillaProvider(this));
     return (await contract.allowance(this.owner, this.contractAddress)).lt(this.amount);
-  }
+  };
+
   async approve(signer, amount?: BigNumberish) {
     if (!amount) amount = MaxUint256;
     const contract = new Contract(this.asset, ['function approve(address, uint256) returns (bool)'], signer);
     return await contract.approve(this.contractAddress, amount);
-  }
+  };
+
   getHandlerForDestinationChain() {
     return isZcashAddress(this.destination) ? ZECHandler : BTCHandler;
-  }
+  };
+
   getNormalizedDestinationAddress() {
     if (isZcashAddress(this.destination))
       return Buffer.from(hexlify(this.destination).substr(2), "hex").toString(
@@ -382,7 +396,8 @@ export class BurnRequest extends Request {
     if (arrayed.length > 40) address = Buffer.from(arrayed).toString("utf8");
     else address = Base58.encode(this.destination);
     return address;
-  }
+  };
+
   async waitForRemoteTransaction() {
     const { length } = await this.getHandlerForDestinationChain().getUTXOs(
       false,
@@ -406,7 +421,8 @@ export class BurnRequest extends Request {
       }
       await new Promise((resolve) => setTimeout(resolve, 3000));
     }
-  }
+  };
+
   async sign(signer) {
     if (this.isNative())
       throw Error("BurnRequest#sign(): can't sign transaction for ETH");
@@ -427,14 +443,16 @@ export class BurnRequest extends Request {
         [await signer.getAddress(), this.toEIP712()]
       ));
     }
-  }
+  };
+
   publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
     if (!this.isNative()) return super.publish(peer);
     else {
       const result = new PublishEventEmitter();
       setTimeout(() => result.emit("finish"), 0);
     }
-  }
+  };
+
   async fetchData() {
     if (getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset)) {
       this.nonce = String(
@@ -481,7 +499,8 @@ export class BurnRequest extends Request {
       this.tokenName = await token.name();
     }
     return this;
-  }
+  };
+
   buildTransaction() {
     return {
       chainId: this.getChainId(),
@@ -498,5 +517,5 @@ export class BurnRequest extends Request {
       ]),
       to: this.contractAddress,
     };
-  }
+  };
 }
