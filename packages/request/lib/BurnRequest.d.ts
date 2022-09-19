@@ -19,6 +19,7 @@ export declare class BurnRequest extends Request {
     tokenName: string;
     signature: string;
     static get PROTOCOL(): string;
+    static get FIELDS(): string[];
     static minOutFromData(data: any): any;
     static dataFromMinOut(minOut: any): string;
     constructor(o: {

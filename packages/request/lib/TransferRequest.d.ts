@@ -16,6 +16,7 @@ export declare class TransferRequest extends Request {
     protected _queryTxResult: any;
     protected _mint: any;
     protected _deposit: any;
+    static get FIELDS(): string[];
     static get PROTOCOL(): string;
     constructor(params: {
         module: string;
@@ -35,6 +36,7 @@ export declare class TransferRequest extends Request {
         chainId: number;
     };
     serialize(): Buffer;
+    hash(): string;
     _getRemoteChain(): any;
     _getRemoteChainName(): "BTC" | "ZEC";
     _getRenVM(): RenJS;

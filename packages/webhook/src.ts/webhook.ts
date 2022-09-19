@@ -7,8 +7,6 @@ import { Request } from "@zerodao/request";
 import { keccak256 } from "@ethersproject/solidity";
 
 import { createLogger, Logger } from "@zerodao/logger";
-import url from 'url';
-import path from 'path';
 const logger = createLogger(require('../package').name);
 
 export const hashWebhookMessage = (serialized: any) =>

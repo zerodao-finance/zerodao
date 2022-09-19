@@ -45,32 +45,21 @@ export class TransferRequest extends Request {
   protected _mint: any;
   protected _deposit: any;
 
-  static FIELDS = 
-  [
-   'to',
-   'module',
-   'data',
-   'nonce',
-   'pNonce',
-   'contractAddress',
-   'asset',
-   'underwriter',
-   'amount'
- ]
+  // static get FIELDS(): string[] { return ['contractAddress', 'owner', 'asset', 'amount', 'deadline', 'data', 'destination', 'signature'] }
 
-  // static get FIELDS(): string [] {
-  //   return [
-  //     'to',
-  //     'module',
-  //     'data',
-  //     'nonce',
-  //     'pNonce',
-  //     'contractAddress',
-  //     'asset',
-  //     'underwriter',
-  //     'amount'
-  //   ]
-  // };
+  static get FIELDS(): string [] {
+    return [
+      'to',
+      'module',
+      'data',
+      'nonce',
+      'pNonce',
+      'contractAddress',
+      'asset',
+      'underwriter',
+      'amount'
+    ]
+  };
 
   static get PROTOCOL() {
     return "/zero/1.1.0/dispatch";
@@ -141,31 +130,32 @@ export class TransferRequest extends Request {
     };
   };
 
-  serialize(): Buffer {
-    return Buffer.from(
-      JSON.stringify({
-        to: this.to,
-        module: this.module,
-        data: this.data,
-        amount: this.amount,
-        nonce: this.nonce,
-        pNonce: this.pNonce,
-        contractAddress: this.contractAddress,
-        asset: this.asset,
-        underwriter: this.underwriter,
-      })
-    );
-  };
+  // serialize(): Buffer {
+  //   return Buffer.from(
+  //     JSON.stringify({
+  //       to: this.to,
+  //       module: this.module,
+  //       data: this.data,
+  //       amount: this.amount,
+  //       nonce: this.nonce,
+  //       pNonce: this.pNonce,
+  //       contractAddress: this.contractAddress,
+  //       asset: this.asset,
+  //       underwriter: this.underwriter,
+  //     })
+  //   );
+  // };
 
-  // TODO: create new serialize function to serialize FIELDS
-  serializeFields(): Buffer {
+  serialize(): Buffer {
+    console.log("\nSerializing");
+    console.log(encode((this.constructor as any).FIELDS.map(v => this[v])))
+    console.log(Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v]))));
+    console.log("\n\n\n");
     return Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v])));
   };
 
-  
-
   hash(): string {
-    return ethers.utils.keccak256(this.serializeFields());
+    return ethers.utils.keccak256(this.serialize());
   }
 
   _getRemoteChain() {
