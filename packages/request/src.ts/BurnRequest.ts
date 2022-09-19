@@ -218,18 +218,17 @@ export class BurnRequest extends Request {
   public signature: string;
 
   static get PROTOCOL() {
-    return "/zero/1.1.0/dispatch";
+    return "/zero/2.1.0/dispatch";
   };
   static get FIELDS(): string [] {
     return [
-      'asset',
-      'data',
-      'owner',
-      'destination',
-      'deadline',
-      'amount',
-      'asset',
       'contractAddress',
+      'owner',
+      'asset',
+      'amount',
+      'deadline',
+      'data',
+      'destination',
       'signature'
     ]
   };
@@ -281,21 +280,6 @@ export class BurnRequest extends Request {
     );
     remoteTxMap.set(this, tx.wait());
     return tx;
-  };
-
-  serialize(): Buffer {
-    return Buffer.from(
-      JSON.stringify(mapValues({
-        asset: this.asset,
-        data: this.data,
-        owner: this.owner,
-        destination: this.destination,
-        deadline: this.deadline,
-        amount: this.amount,
-        contractAddress: this.contractAddress,
-	      signature: this.signature
-      }, hexlify))
-    );
   };
 
   isNative() {

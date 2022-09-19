@@ -47,20 +47,20 @@ export class TransferRequest extends Request {
 
   static get FIELDS(): string [] {
     return [
+      'contractAddress',
       'to',
+      'underwriter',
+      'asset',
+      'amount',
       'module',
-      'data',
       'nonce',
       'pNonce',
-      'contractAddress',
-      'asset',
-      'underwriter',
-      'amount'
+      'data'
     ]
   };
 
   static get PROTOCOL() {
-    return "/zero/1.1.0/dispatch";
+    return "/zero/2.1.0/dispatch";
   };
 
   constructor(params: {
@@ -126,30 +126,6 @@ export class TransferRequest extends Request {
       ]),
       chainId: this.getChainId(),
     };
-  };
-
-  // serialize(): Buffer {
-  //   return Buffer.from(
-  //     JSON.stringify({
-  //       to: this.to,
-  //       module: this.module,
-  //       data: this.data,
-  //       amount: this.amount,
-  //       nonce: this.nonce,
-  //       pNonce: this.pNonce,
-  //       contractAddress: this.contractAddress,
-  //       asset: this.asset,
-  //       underwriter: this.underwriter,
-  //     })
-  //   );
-  // };
-
-  serialize(): Buffer {
-    return Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v])));
-  };
-
-  deserialize(data: Array<any>): Buffer {
-    return Buffer.from(decode(data).reduce((r, v, i) => { r[TransferRequest.FIELDS[i]] = v; return r; }, {}))
   };
 
   hash(): string {

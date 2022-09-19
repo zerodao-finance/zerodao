@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequest = void 0;
 const bytes_1 = require("@ethersproject/bytes");
 const random_1 = require("@ethersproject/random");
-const buffer_1 = require("buffer");
 const ethers_1 = require("ethers");
 const chains_1 = require("@renproject/chains");
 const ren_1 = __importDefault(require("@renproject/ren"));
@@ -14,7 +13,6 @@ const contracts_1 = require("@ethersproject/contracts");
 const chains_2 = require("@zerodao/chains");
 const common_1 = require("@zerodao/common");
 const Request_1 = require("./Request");
-const rlp_1 = require("@ethersproject/rlp");
 const assetToRenVMChain = (assetName) => {
     switch (assetName) {
         case "renBTC":
@@ -56,20 +54,20 @@ class TransferRequest extends Request_1.Request {
     }
     static get FIELDS() {
         return [
+            'contractAddress',
             'to',
+            'underwriter',
+            'asset',
+            'amount',
             'module',
-            'data',
             'nonce',
             'pNonce',
-            'contractAddress',
-            'asset',
-            'underwriter',
-            'amount'
+            'data'
         ];
     }
     ;
     static get PROTOCOL() {
-        return "/zero/1.1.0/dispatch";
+        return "/zero/2.1.0/dispatch";
     }
     ;
     ;
@@ -98,29 +96,6 @@ class TransferRequest extends Request_1.Request {
             ]),
             chainId: this.getChainId(),
         };
-    }
-    ;
-    // serialize(): Buffer {
-    //   return Buffer.from(
-    //     JSON.stringify({
-    //       to: this.to,
-    //       module: this.module,
-    //       data: this.data,
-    //       amount: this.amount,
-    //       nonce: this.nonce,
-    //       pNonce: this.pNonce,
-    //       contractAddress: this.contractAddress,
-    //       asset: this.asset,
-    //       underwriter: this.underwriter,
-    //     })
-    //   );
-    // };
-    serialize() {
-        return buffer_1.Buffer.from((0, rlp_1.encode)(this.constructor.FIELDS.map(v => this[v])));
-    }
-    ;
-    deserialize(data) {
-        return buffer_1.Buffer.from((0, rlp_1.decode)(data).reduce((r, v, i) => { r[TransferRequest.FIELDS[i]] = v; return r; }, {}));
     }
     ;
     hash() {

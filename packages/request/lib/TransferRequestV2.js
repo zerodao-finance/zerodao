@@ -5,20 +5,20 @@ const TransferRequest_1 = require("./TransferRequest");
 const abi_1 = require("@ethersproject/abi");
 class TransferRequestV2 extends TransferRequest_1.TransferRequest {
     static get PROTOCOL() {
-        return "/zero/2.0.0/dispatch";
+        return "/zero/2.1.0/dispatch";
     }
     ;
-    serialize() {
-        return Buffer.from(JSON.stringify({
-            module: this.module,
-            contractAddress: this.contractAddress,
-            borrower: this.to,
-            borrowAmount: this.amount,
-            nonce: this.nonce,
-            loanId: this.pNonce,
-            asset: this.asset,
-            data: this.data,
-        }));
+    static get FIELDS() {
+        return [
+            'contractAddress',
+            'borrower',
+            'asset',
+            'borrowAmount',
+            'module',
+            'loanId',
+            'nonce',
+            'data'
+        ];
     }
     buildLoanTransaction() {
         return {

@@ -15,7 +15,6 @@ const common_1 = require("@zerodao/common");
 const chains_1 = require("@zerodao/chains");
 const Request_1 = require("./Request");
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
-const lodash_1 = require("lodash");
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
 function getDomainStructure(request) {
@@ -188,19 +187,18 @@ class BurnRequest extends Request_1.Request {
         this.signature = o.signature;
     }
     static get PROTOCOL() {
-        return "/zero/1.1.0/dispatch";
+        return "/zero/2.1.0/dispatch";
     }
     ;
     static get FIELDS() {
         return [
-            'asset',
-            'data',
-            'owner',
-            'destination',
-            'deadline',
-            'amount',
-            'asset',
             'contractAddress',
+            'owner',
+            'asset',
+            'amount',
+            'deadline',
+            'data',
+            'destination',
             'signature'
         ];
     }
@@ -222,19 +220,6 @@ class BurnRequest extends Request_1.Request {
         const tx = await contract.burnApproved(constants_1.AddressZero, this.asset, this.isNative() ? "0" : this.amount, BurnRequest.minOutFromData(this.data), this.destination, this.isNative() ? { value: this.amount } : {});
         remoteTxMap.set(this, tx.wait());
         return tx;
-    }
-    ;
-    serialize() {
-        return Buffer.from(JSON.stringify((0, lodash_1.mapValues)({
-            asset: this.asset,
-            data: this.data,
-            owner: this.owner,
-            destination: this.destination,
-            deadline: this.deadline,
-            amount: this.amount,
-            contractAddress: this.contractAddress,
-            signature: this.signature
-        }, bytes_1.hexlify)));
     }
     ;
     isNative() {
