@@ -26,7 +26,7 @@ export abstract class Request {
     return Buffer.from(arrayify(encode((this.constructor as any).FIELDS.map((v) => this[v]))));
   }
   static deserialize(data: BytesLike) : Request {
-    const RequestType = this.constructor as any;
+    const RequestType = this as any;
     return new RequestType(decode(data).reduce((r, v, i) => {
       r[RequestType.FIELDS[i]] = v;
       return r;

@@ -29,7 +29,7 @@ class Request {
         return buffer_1.Buffer.from((0, bytes_1.arrayify)((0, rlp_1.encode)(this.constructor.FIELDS.map((v) => this[v]))));
     }
     static deserialize(data) {
-        const RequestType = this.constructor;
+        const RequestType = this;
         return new RequestType((0, rlp_1.decode)(data).reduce((r, v, i) => {
             r[RequestType.FIELDS[i]] = v;
             return r;
