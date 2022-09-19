@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRequestsV2 = exports.handleRequestsV1 = exports.pipeToString = exports.advertiseAsKeeper = exports.fromJSONtoBuffer = void 0;
+exports.serializeToJSON = exports.handleRequestsV21 = exports.handleRequestsV2 = exports.handleRequestsV1 = exports.pipeToBuffer = exports.pipeToString = exports.advertiseAsKeeper = exports.fromJSONtoBuffer = void 0;
 const bytes_1 = require("@ethersproject/bytes");
 const it_length_prefixed_1 = __importDefault(require("it-length-prefixed"));
 const it_pipe_1 = __importDefault(require("it-pipe"));
@@ -45,6 +45,23 @@ async function pipeToString(stream) {
     });
 }
 exports.pipeToString = pipeToString;
+async function pipeToBuffer(stream) {
+    return await new Promise((resolve, reject) => {
+        (0, it_pipe_1.default)(stream.source, it_length_prefixed_1.default.decode(), async (rawData) => {
+            const buffers = [];
+            try {
+                for await (const msg of rawData) {
+                    buffers.push(msg);
+                }
+            }
+            catch (e) {
+                return reject(e);
+            }
+            resolve(Buffer.concat(buffers));
+        });
+    });
+}
+exports.pipeToBuffer = pipeToBuffer;
 function handleRequestsV1(p2p) {
     p2p.handle("/zero/1.1.0/dispatch", async (duplex) => {
         try {
@@ -67,4 +84,22 @@ function handleRequestsV2(p2p) {
     });
 }
 exports.handleRequestsV2 = handleRequestsV2;
+function handleRequestsV21(p2p) {
+    p2p.handle("/zero/2.1.0/dispatch", async (duplex) => {
+        try {
+            p2p.emit("zero:request:2.1.0", await pipeToBuffer(duplex.stream));
+        }
+        catch (e) {
+            p2p.emit("error", e);
+        }
+    });
+}
+exports.handleRequestsV21 = handleRequestsV21;
+function serializeToJSON(request) {
+    return JSON.stringify(request.constructor.FIELDS.reduce((r, v) => {
+        r[v] = request[v];
+        return r;
+    }, {}));
+}
+exports.serializeToJSON = serializeToJSON;
 //# sourceMappingURL=util.js.map

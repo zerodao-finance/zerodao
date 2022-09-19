@@ -5,9 +5,9 @@ import constants from "@ethersproject/constants";
 import { Wallet } from "@ethersproject/wallet";
 import { ZeroP2P } from "@zerodao/p2p";
 import { CHAINS } from "@zerodao/chains";
-import { Request, BurnRequest } from "@zerodao/request";
+import { deserialize, Request, BurnRequest } from "@zerodao/request";
 import { ZeroWebhook } from "@zerodao/webhook";
-import { advertiseAsKeeper, handleRequestsV1, handleRequestsV2 } from "./util";
+import { advertiseAsKeeper, handleRequestsV1, handleRequestsV2, handleRequestsV21, serializeToJSON } from "./util";
 import Redis from "ioredis";
 const redis = new Redis();
 // const redis = require('ioredis')(process.env.REDIS_URI);
@@ -93,6 +93,7 @@ export const runKeeper = () => {
 
     handleRequestsV1(peer);
     handleRequestsV2(peer);
+    handleRequestsV21(peer);
 
     peer.on("peer:discovery", (peerInfo) => {
       logger.info("peer:discovery");
@@ -106,7 +107,9 @@ export const runKeeper = () => {
     peer.on("zero:request:2.0.0", async (data) => {
       await handleEvent(data);
     });
-
+    peer.on("zero:request:2.1.0", async (data) => {
+      await handleEvent(serializeToJSON(deserialize(data)));
+    });
     peer.on("error", logger.error.bind(logger));
 
     advertiseAsKeeper(peer);

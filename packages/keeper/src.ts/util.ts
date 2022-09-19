@@ -43,6 +43,22 @@ export async function pipeToString(stream) {
   });
 }
 
+export async function pipeToBuffer(stream) {
+  return await new Promise((resolve, reject) => {
+    pipe(stream.source, lp.decode(), async (rawData) => {
+      const buffers = [];
+      try {
+        for await (const msg of rawData) {
+          buffers.push(msg);
+        }
+      } catch (e) {
+        return reject(e);
+      }
+      resolve(Buffer.concat(buffers));
+    });
+  });
+}
+
 export function handleRequestsV1(p2p) {
   p2p.handle("/zero/1.1.0/dispatch", async (duplex) => {
     try {
@@ -61,4 +77,21 @@ export function handleRequestsV2(p2p) {
       p2p.emit("error", e);
     }
   });
+}
+
+export function handleRequestsV21(p2p) {
+  p2p.handle("/zero/2.1.0/dispatch", async (duplex) => {
+    try {
+      p2p.emit("zero:request:2.1.0", await pipeToBuffer(duplex.stream));
+    } catch (e) {
+      p2p.emit("error", e);
+    }
+  });
+}
+
+export function serializeToJSON(request) {
+  return JSON.stringify(request.constructor.FIELDS.reduce((r, v) => {
+    r[v] = request[v];
+    return r;
+  }, {}));
 }

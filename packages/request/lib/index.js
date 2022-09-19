@@ -19,4 +19,5 @@ __exportStar(require("./TransferRequest"), exports);
 __exportStar(require("./TransferRequestV2"), exports);
 __exportStar(require("./BurnRequest"), exports);
 __exportStar(require("./types"), exports);
+__exportStar(require("./deserialize"), exports);
 //# sourceMappingURL=index.js.map

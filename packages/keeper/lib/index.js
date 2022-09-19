@@ -82,6 +82,7 @@ const runKeeper = () => {
         await peer.start();
         (0, util_1.handleRequestsV1)(peer);
         (0, util_1.handleRequestsV2)(peer);
+        (0, util_1.handleRequestsV21)(peer);
         peer.on("peer:discovery", (peerInfo) => {
             logger.info("peer:discovery");
             logger.info(JSON.stringify(peerInfo, null, 2));
@@ -91,6 +92,9 @@ const runKeeper = () => {
         });
         peer.on("zero:request:2.0.0", async (data) => {
             await handleEvent(data);
+        });
+        peer.on("zero:request:2.1.0", async (data) => {
+            await handleEvent((0, util_1.serializeToJSON)((0, request_1.deserialize)(data)));
         });
         peer.on("error", logger.error.bind(logger));
         (0, util_1.advertiseAsKeeper)(peer);
