@@ -18,6 +18,7 @@ import "./MockGasPriceOracle.sol";
 
 contract VaultTestHelpers is Test {
   using Math for uint256;
+  using FixedPointMathLib for uint256;
 
   //initializer values
   uint256 constant DefaultCacheTTL = 3600;
