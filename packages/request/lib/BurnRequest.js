@@ -15,6 +15,7 @@ const common_1 = require("@zerodao/common");
 const chains_1 = require("@zerodao/chains");
 const Request_1 = require("./Request");
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
+const ethers_1 = require("ethers");
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
 function getDomainStructure(request) {
@@ -222,6 +223,9 @@ class BurnRequest extends Request_1.Request {
         return tx;
     }
     ;
+    hash() {
+        return ethers_1.ethers.utils.keccak256(this.serialize());
+    }
     isNative() {
         return this.asset === constants_1.AddressZero;
     }

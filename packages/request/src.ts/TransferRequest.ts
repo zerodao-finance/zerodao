@@ -8,7 +8,6 @@ import { Contract } from "@ethersproject/contracts";
 import { getProvider } from "@zerodao/chains";
 import { FIXTURES } from "@zerodao/common";
 import { Request } from "./Request";
-import { encode, decode } from "@ethersproject/rlp";
 
 const assetToRenVMChain = (assetName) => {
   switch (assetName) {
