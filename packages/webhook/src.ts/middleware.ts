@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
 import { recoverAddress } from '@ethersproject/transactions';
 import { hashWebhookMessage } from './webhook';
-import { deserialize } from '../../request/lib/deserialize'
+import { deserialize } from '@zerodao/request'
 
 export const zeroWebhookMiddleware = (req, res, next) => {
   return async (req, res, next) => {

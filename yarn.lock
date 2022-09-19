@@ -5440,6 +5440,32 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
+"@zerodao/request@^0.3.33":
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/@zerodao/request/-/request-0.3.33.tgz#4d41e2f70d5e438e1d09fa4ec32aefb5a3f77f62"
+  integrity sha512-kZ9hdRtQOYVTAxJgWZmYOwyr6raQTeu7p4nZBTMVPW5vSD5TbNozHc1EXJoEPKYQ1n/H1oTGs/c3ky3306KW7g==
+  dependencies:
+    "@ethersproject/abi" "^5.6.1"
+    "@ethersproject/address" "^5.6.1"
+    "@ethersproject/basex" "^5.6.1"
+    "@ethersproject/bignumber" "^5.6.1"
+    "@ethersproject/bytes" "^5.6.1"
+    "@ethersproject/constants" "^5.6.1"
+    "@ethersproject/contracts" "^5.6.1"
+    "@ethersproject/random" "^5.6.1"
+    "@ethersproject/solidity" "^5.6.1"
+    "@renproject/chains" "^3.4.4"
+    "@renproject/interfaces" "^2.6.0"
+    "@renproject/ren" "^3.4.4"
+    "@zerodao/buffer" "^0.3.32"
+    "@zerodao/chains" "^0.3.32"
+    "@zerodao/common" "^0.3.32"
+    "@zerodao/protocol" "^0.3.32"
+    "@zerodao/utils" "^0.3.32"
+    it-length-prefixed "^5.0.3"
+    it-pipe "1.1.0"
+    send-crypto "^0.2.37"
+
 "@zondax/filecoin-signing-tools@^0.20.1":
   version "0.20.1"
   resolved "https://registry.yarnpkg.com/@zondax/filecoin-signing-tools/-/filecoin-signing-tools-0.20.1.tgz#22c414101607ddb43bdc8100c4cb8ab723862ff3"

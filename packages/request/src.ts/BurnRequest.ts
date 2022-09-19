@@ -16,17 +16,14 @@ import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
 import { FIXTURES, toFixtureName, getRenAssetName, isZcashAddress } from "@zerodao/common";
 import type { ZeroP2P } from "@zerodao/p2p";
-import { getVanillaProvider, CHAINS } from "@zerodao/chains";
+import { getVanillaProvider } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
-import { mapValues } from "lodash";
-import { encode } from "@ethersproject/rlp";
-
+import { ethers } from 'ethers';
 
 const coder = new AbiCoder();
 
 const remoteTxMap = new WeakMap();
-
 
 function getDomainStructure(request) {
   return Number(request.getChainId()) == 137 &&
@@ -281,6 +278,10 @@ export class BurnRequest extends Request {
     remoteTxMap.set(this, tx.wait());
     return tx;
   };
+
+  hash(): string {
+    return ethers.utils.keccak256(this.serialize());
+  }
 
   isNative() {
     return this.asset === AddressZero;

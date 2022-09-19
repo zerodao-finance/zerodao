@@ -32,6 +32,7 @@ export declare class BurnRequest extends Request {
         signature: string;
     });
     sendTransaction(signer: any): Promise<any>;
+    hash(): string;
     isNative(): boolean;
     toEIP712(): {
         types: {
