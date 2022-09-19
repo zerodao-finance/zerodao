@@ -18,6 +18,7 @@ class ZeroWebhook {
     }
     async send(endpoint, request) {
         const serialized = "0x" + request.serialize().toString("hex");
+        console.log("AFTER SERIALIZE:", serialized);
         this.logger.debug(endpoint);
         const result = await axios_1.default.post(this.baseUrl + endpoint, {
             data: serialized,

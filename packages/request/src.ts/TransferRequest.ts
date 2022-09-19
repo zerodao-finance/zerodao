@@ -8,7 +8,7 @@ import { Contract } from "@ethersproject/contracts";
 import { getProvider } from "@zerodao/chains";
 import { FIXTURES } from "@zerodao/common";
 import { Request } from "./Request";
-import { encode } from "@ethersproject/rlp";
+import { encode, decode } from "@ethersproject/rlp";
 
 const assetToRenVMChain = (assetName) => {
   switch (assetName) {
@@ -44,8 +44,6 @@ export class TransferRequest extends Request {
   protected _queryTxResult: any;
   protected _mint: any;
   protected _deposit: any;
-
-  // static get FIELDS(): string[] { return ['contractAddress', 'owner', 'asset', 'amount', 'deadline', 'data', 'destination', 'signature'] }
 
   static get FIELDS(): string [] {
     return [
@@ -147,11 +145,11 @@ export class TransferRequest extends Request {
   // };
 
   serialize(): Buffer {
-    console.log("\nSerializing");
-    console.log(encode((this.constructor as any).FIELDS.map(v => this[v])))
-    console.log(Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v]))));
-    console.log("\n\n\n");
     return Buffer.from(encode((this.constructor as any).FIELDS.map(v => this[v])));
+  };
+
+  deserialize(data: Array<any>): Buffer {
+    return Buffer.from(decode(data).reduce((r, v, i) => { r[TransferRequest.FIELDS[i]] = v; return r; }, {}))
   };
 
   hash(): string {

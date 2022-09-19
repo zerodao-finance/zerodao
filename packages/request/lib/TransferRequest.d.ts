@@ -36,6 +36,7 @@ export declare class TransferRequest extends Request {
         chainId: number;
     };
     serialize(): Buffer;
+    deserialize(data: Array<any>): Buffer;
     hash(): string;
     _getRemoteChain(): any;
     _getRemoteChainName(): "BTC" | "ZEC";

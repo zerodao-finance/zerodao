@@ -54,7 +54,6 @@ class TransferRequest extends Request_1.Request {
             : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
         this.contractAddress = params.contractAddress;
     }
-    // static get FIELDS(): string[] { return ['contractAddress', 'owner', 'asset', 'amount', 'deadline', 'data', 'destination', 'signature'] }
     static get FIELDS() {
         return [
             'to',
@@ -117,11 +116,11 @@ class TransferRequest extends Request_1.Request {
     //   );
     // };
     serialize() {
-        console.log("\nSerializing");
-        console.log((0, rlp_1.encode)(this.constructor.FIELDS.map(v => this[v])));
-        console.log(buffer_1.Buffer.from((0, rlp_1.encode)(this.constructor.FIELDS.map(v => this[v]))));
-        console.log("\n\n\n");
         return buffer_1.Buffer.from((0, rlp_1.encode)(this.constructor.FIELDS.map(v => this[v])));
+    }
+    ;
+    deserialize(data) {
+        return buffer_1.Buffer.from((0, rlp_1.decode)(data).reduce((r, v, i) => { r[TransferRequest.FIELDS[i]] = v; return r; }, {}));
     }
     ;
     hash() {
