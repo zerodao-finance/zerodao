@@ -4,7 +4,6 @@ pragma solidity >=0.8.13;
 import "./VaultTestHelpers.sol";
 
 contract Common is VaultTestHelpers {
-
   /*//////////////////////////////////////////////////////////////
                           Deployment Tests
   //////////////////////////////////////////////////////////////*/
@@ -42,13 +41,19 @@ contract Common is VaultTestHelpers {
       uint256 zeroFeeShareBips,
       uint256 zeroBorrowFeeStatic,
       uint256 renBorrowFeeStatic,
-      /* uint256 satoshiPerEth */,
-      /* uint256 gweiPerGas */,
-      /* uint256 lastUpdateTimestamp */,
-      /* uint256 totalBitcoinBorrowed */,
-      /* uint256 unburnedGasReserveShares */,
+      ,
+      ,
+      ,
+      ,
+      ,
+
+    ) = /* uint256 satoshiPerEth */
+      /* uint256 gweiPerGas */
+      /* uint256 lastUpdateTimestamp */
+      /* uint256 totalBitcoinBorrowed */
+      /* uint256 unburnedGasReserveShares */
       /* uint256 unburnedZeroFeeShares */
-    ) = vault.getGlobalState();
+      vault.getGlobalState();
     assertEq(zeroBorrowFeeBips, DefaultZeroBorrowFeeBips);
     assertEq(renBorrowFeeBips, DefaultRenBorrowFeeBips);
     assertEq(zeroFeeShareBips, DefaultZeroBorrowFeeStatic);
@@ -144,5 +149,10 @@ contract Common is VaultTestHelpers {
     vault.loan(address(0x0), zerowallet, 1000000, 1, data);
     vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
+  }
+
+  function testEarn() public {
+    zeroLoan(address(moduleWBTC), 1e6);
+    vault.earn();
   }
 }
