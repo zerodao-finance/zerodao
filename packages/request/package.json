@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/request",
-  "version": "0.3.32",
+  "version": "0.3.33",
   "description": "zerodao sdk sub-package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
