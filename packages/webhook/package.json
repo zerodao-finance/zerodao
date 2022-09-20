@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/webhook",
-  "version": "0.3.36",
+  "version": "0.3.37",
   "scripts": {
     "start": "cross-env node bin/index",
     "build": "tsc",
@@ -27,12 +27,12 @@
     "@ethersproject/transactions": "^5.7.0",
     "@ethersproject/wallet": "^5.7.0",
     "@types/body-parser": "^1.19.2",
-    "@zerodao/request": "^0.3.34",
+    "@zerodao/request": "^0.3.37",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "b9a38c5a5fd1463d5a6921e44a5eb6541f9b9f79"
+  "gitHead": "77b734f7bb2698d80cdcdf5853fb75d70d9e1617"
 }
