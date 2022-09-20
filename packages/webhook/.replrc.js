@@ -1,4 +1,4 @@
-const { TransferRequest } = require("@zerodao/request");
+const { TransferRequest, BurnRequest } = require("@zerodao/request");
 const { Wallet } = require("@ethersproject/wallet");
 const { ZeroWebhook } = require('./lib/index');
 
@@ -13,6 +13,17 @@ var transferRequest = new TransferRequest({
   asset: "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
   underwriter: "0xa8bd3ffebf92538b3b830dd5b2516a5111db164d"
 });
+
+var burnRequest = new BurnRequest({
+  asset: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+  data: "0x0000000000000000000000000000000000000000000000000000000005710470",
+  owner: "0x435b9aa949c04d9d88286d22eaeb0de8316cd83e",
+  destination: "0x003f46e7281f2ab155dc77c087b23463e93fc79726208d2816",
+  deadline: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  amount: "0x0596926e",
+  contractAddress: "0xa8bd3ffebf92538b3b830dd5b2516a5111db164d",
+  signature: "0x48114299e1de48ba051d6ceafe51166cf9fd4f21359fbca5f0f5bef077be02db1056a641fa0f42c135790986754f8577ef160c9c5971fa07d4d640756e0198591b"
+})
 
 var webhookClient = new ZeroWebhook({
   baseUrl: 'http://localhost:3000',
