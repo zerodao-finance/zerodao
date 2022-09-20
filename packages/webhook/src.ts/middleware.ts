@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer';
 import { recoverAddress } from '@ethersproject/transactions';
 import { hashWebhookMessage } from './webhook';
 import { deserialize } from '@zerodao/request'

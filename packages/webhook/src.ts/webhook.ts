@@ -28,8 +28,7 @@ export class ZeroWebhook {
   }
 
   async send(endpoint: string, request: Request) {
-    const serialized = "0x" + request.serialize().toString("hex");
-    console.log("AFTER SERIALIZE:", serialized);
+    const serialized = "0x" + (request.serialize() ? request.serialize().toString("hex") : '');
     this.logger.debug(endpoint);
     const result = await axios.post(
       this.baseUrl + endpoint,
