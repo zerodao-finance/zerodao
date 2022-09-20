@@ -13,7 +13,7 @@ function deserialize(data) {
     if (decoded.length === 9)
         return TransferRequest_1.TransferRequest.deserialize(data);
     if ((0, bytes_1.arrayify)(decoded[7]).length === 65)
-        return BurnRequest_1.BurnRequest.deserialize(data); // Changed from "decoded" to "data"
+        return BurnRequest_1.BurnRequest.deserialize(data);
     return TransferRequestV2_1.TransferRequestV2.deserialize(data);
 }
 exports.deserialize = deserialize;
