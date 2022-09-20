@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/webhook",
-  "version": "0.3.35",
+  "version": "0.3.36",
   "scripts": {
     "start": "cross-env node bin/index",
     "build": "tsc",
