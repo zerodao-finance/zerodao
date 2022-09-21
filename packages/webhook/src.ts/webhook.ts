@@ -21,6 +21,7 @@ export class ZeroWebhook {
   public signer: Signer;
   public baseUrl: string;
   public logger: Logger;
+  
   constructor({ signer, baseUrl }: IZeroWebhookProps) {
     this.signer = signer;
     this.baseUrl = baseUrl;
