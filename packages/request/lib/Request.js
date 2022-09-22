@@ -42,6 +42,7 @@ class Request {
         const RequestType = this.constructor;
         return RequestType.FIELDS.reduce((r, v) => {
             r[v] = this[v];
+            return r;
         }, {});
     }
     static fromJSON(data) {
