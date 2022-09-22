@@ -33,6 +33,11 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     asset = _asset;
   }
 
+  modifier onlyAuthorized() {
+    require(_authorized[msg.sender], "unauthorized");
+    _;
+  }
+
   function _initialize() internal virtual override(UpgradeableEIP712, ReentrancyGuard) {
     UpgradeableEIP712._initialize();
     ReentrancyGuard._initialize();
@@ -42,7 +47,14 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
                         DEPOSIT/WITHDRAWAL LOGIC
     //////////////////////////////////////////////////////////////*/
 
-  function deposit(uint256 assets, address receiver) public virtual override nonReentrant returns (uint256 shares) {
+  function deposit(uint256 assets, address receiver)
+    public
+    virtual
+    override
+    onlyAuthorized
+    nonReentrant
+    returns (uint256 shares)
+  {
     // Check for rounding error since we round down in previewDeposit.
     if ((shares = previewDeposit(assets)) == 0) {
       revert ZeroShares();
@@ -75,7 +87,7 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     uint256 assets,
     address receiver,
     address owner
-  ) public virtual override nonReentrant returns (uint256 shares) {
+  ) public virtual override onlyAuthorized nonReentrant returns (uint256 shares) {
     shares = previewWithdraw(assets); // No need to check for rounding error, previewWithdraw rounds up.
 
     if (msg.sender != owner) {

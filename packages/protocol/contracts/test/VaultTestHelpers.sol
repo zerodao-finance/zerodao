@@ -128,7 +128,7 @@ contract VaultTestHelpers is Test {
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
     vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
-
+    vault.authorize(address(this));
     deployGateway();
 
     // Give vault ETH for gas refunds

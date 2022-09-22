@@ -90,6 +90,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     }
     // Initialize governance address
     Governable._initialize(initialGovernance);
+    _authorized[initialGovernance] = true;
     // Initialize UpgradeableEIP712 and ReentrancyGuard
     super._initialize();
 
@@ -223,5 +224,13 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
       renBorrowFeeStatic,
       zeroFeeShareBips
     );
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                          External Setters
+  //////////////////////////////////////////////////////////////*/
+
+  function authorize(address user) external onlyGovernance {
+    _authorized[user] = true;
   }
 }
