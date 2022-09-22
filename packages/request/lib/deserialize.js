@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deserialize = void 0;
+exports.fromJSON = exports.fromPlainObject = exports.deserialize = void 0;
 const BurnRequest_1 = require("./BurnRequest");
 const TransferRequest_1 = require("./TransferRequest");
 const TransferRequestV2_1 = require("./TransferRequestV2");
@@ -17,4 +17,17 @@ function deserialize(data) {
     return TransferRequestV2_1.TransferRequestV2.deserialize(data);
 }
 exports.deserialize = deserialize;
+function fromPlainObject(data) {
+    if (data.destination)
+        return new BurnRequest_1.BurnRequest(data);
+    if (data.loanId)
+        return new TransferRequestV2_1.TransferRequestV2(data);
+    return new TransferRequest_1.TransferRequest(data);
+}
+exports.fromPlainObject = fromPlainObject;
+function fromJSON(data) {
+    const parsed = JSON.parse(data);
+    return fromPlainObject(parsed);
+}
+exports.fromJSON = fromJSON;
 //# sourceMappingURL=deserialize.js.map

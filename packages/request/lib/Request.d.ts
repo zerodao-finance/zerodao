@@ -10,6 +10,9 @@ export declare abstract class Request {
     static get FIELDS(): Array<string>;
     serialize(): Buffer;
     static deserialize(data: BytesLike): Request;
+    toJSON(...args: Array<any>): string;
+    toPlainObject(): Object;
+    static fromJSON(data: string): Request;
     getChainId(): number;
     publish(peer: ZeroP2P): Promise<PublishEventEmitter>;
 }

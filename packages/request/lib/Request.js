@@ -35,6 +35,19 @@ class Request {
             return r;
         }, {}));
     }
+    toJSON(...args) {
+        return JSON.stringify(this.toPlainObject(), ...args);
+    }
+    toPlainObject() {
+        const RequestType = this.constructor;
+        return RequestType.FIELDS.reduce((r, v) => {
+            r[v] = this[v];
+        }, {});
+    }
+    static fromJSON(data) {
+        const RequestType = this;
+        return new RequestType(JSON.parse(data));
+    }
     getChainId() {
         return Number(Object.keys(protocol_1.default).find((v) => Object.keys(protocol_1.default[v]).find((network) => Object.keys(protocol_1.default[v][network].contracts).find((contract) => ['BadgerBridgeZeroController', 'RenZECController', 'ZeroBTC'].includes(contract) && (0, address_1.getAddress)(protocol_1.default[v][network].contracts[contract].address) === (0, address_1.getAddress)(this.contractAddress)))) ||
             (() => {

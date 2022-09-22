@@ -32,6 +32,19 @@ export abstract class Request {
       return r;
     }, {}));
   }
+  toJSON(...args: Array<any>): string {
+    return JSON.stringify(this.toPlainObject(), ...args);
+  }
+  toPlainObject(): Object {
+    const RequestType = this.constructor as any;
+    return RequestType.FIELDS.reduce((r, v) => {
+      r[v] = this[v];
+    }, {});
+  }
+  static fromJSON(data: string) : Request {
+    const RequestType = this as any;
+    return new RequestType(JSON.parse(data));
+  }
   getChainId(): number {
     return Number(
       Object.keys(deployments).find((v) =>

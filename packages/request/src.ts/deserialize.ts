@@ -11,3 +11,14 @@ export function deserialize(data: BytesLike) {
   if (arrayify(decoded[7]).length === 65) return BurnRequest.deserialize(data);
   return TransferRequestV2.deserialize(data);
 }
+
+export function fromPlainObject(data: any) {
+  if (data.destination) return new BurnRequest(data);
+  if (data.loanId) return new TransferRequestV2(data);
+  return new TransferRequest(data);
+}
+
+export function fromJSON(data: string) {
+  const parsed = JSON.parse(data);
+  return fromPlainObject(parsed);
+}

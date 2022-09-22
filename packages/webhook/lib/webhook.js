@@ -17,15 +17,12 @@ class ZeroWebhook {
         this.logger = logger;
     }
     async send(endpoint, request) {
-        const serialized = "0x" + (request.serialize() ? request.serialize().toString("hex") : '');
         this.logger.debug(endpoint);
-        const result = await axios_1.default.post(this.baseUrl + endpoint, {
-            data: serialized,
-            signature: await this.signer.signMessage((0, exports.hashWebhookMessage)(serialized)),
-        }, {
+        const result = await axios_1.default.post(this.baseUrl + endpoint, request.toPlainObject(), {
             headers: {
                 "Content-Type": "application/json",
-            },
+                "X-Signature": await this.signer.signMessage((0, exports.hashWebhookMessage)(request.serialize()))
+            }
         });
         this.logger.debug(result);
         return result;
