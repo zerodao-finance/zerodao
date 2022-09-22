@@ -17,6 +17,6 @@ var burnRequest = new BurnRequest(JSON.parse("{\"asset\":\"0xa0b86991c6218b36c1d
 
 
 var webhookClient = new ZeroWebhook({
-  baseUrl: 'http://localhost:3000',
+	baseUrl: 'https://api.zerodao.com',
   signer: Wallet.createRandom()
 });
