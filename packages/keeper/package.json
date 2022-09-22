@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/keeper",
-  "version": "0.3.37",
+  "version": "0.3.38",
   "description": "zerop2p redis backed keeper process in kubernetes",
   "main": "lib/keeper.js",
   "repository": "https://github.com/zerodao-finance/zero-keeper",
@@ -22,7 +22,7 @@
     "@zerodao/chains": "^0.3.37",
     "@zerodao/logger": "^0.3.37",
     "@zerodao/p2p": "^0.3.37",
-    "@zerodao/request": "^0.3.37",
+    "@zerodao/request": "^0.3.38",
     "base64url": "^3.0.1",
     "buffer": "^6.0.3",
     "cryptico-js": "^1.1.0",
