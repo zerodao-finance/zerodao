@@ -136,7 +136,7 @@ contract VaultTestHelpers is Test {
 
     // Deposit 10 BTC
     deposit(1e9);
-    vm.label(wbtc, "renbtc");
+    vm.label(renbtc, "renbtc");
     vm.label(wbtc, "wbtc");
     vm.label(usdc, "usdc");
     vm.label(gateway, "gateway");

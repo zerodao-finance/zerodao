@@ -42,16 +42,14 @@ contract Common is VaultTestHelpers {
       uint256 renBorrowFeeBips,
       uint256 zeroFeeShareBips,
       uint256 zeroBorrowFeeStatic,
-      uint256 renBorrowFeeStatic, /* uint256 satoshiPerEth */ /* uint256 gweiPerGas */ /* uint256 lastUpdateTimestamp */ /* uint256 totalBitcoinBorrowed */
+      uint256 renBorrowFeeStatic, /* uint256 satoshiPerEth */ /* uint256 gweiPerGas */ /* uint256 lastUpdateTimestamp */ /* uint256 totalBitcoinBorrowed */ /* uint256 unburnedGasReserveShares */ /* uint256 unburnedZeroFeeShares */
       ,
       ,
       ,
       ,
       ,
 
-    ) = /* uint256 unburnedGasReserveShares */
-      /* uint256 unburnedZeroFeeShares */
-      vault.getGlobalState();
+    ) = vault.getGlobalState();
     assertEq(zeroBorrowFeeBips, DefaultZeroBorrowFeeBips);
     assertEq(renBorrowFeeBips, DefaultRenBorrowFeeBips);
     assertEq(zeroFeeShareBips, DefaultZeroBorrowFeeStatic);
@@ -151,7 +149,8 @@ contract Common is VaultTestHelpers {
 
   function testEarn() public {
     zeroLoan(address(moduleWBTC), 1e6);
-    (, , , , , , , , , uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = vault.getGlobalState();
+    (, , , , , uint256 satoshiPerEth, , , , uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = vault
+      .getGlobalState();
     uint256 totalFeeShares = unburnedZeroFeeShares + unburnedGasReserveShares;
     uint256 totalFees;
     uint256 currentSupply = vault.totalSupply();
@@ -161,6 +160,8 @@ contract Common is VaultTestHelpers {
     uint256 balance = address(vault).balance;
     vault.earn();
     assertEq(vault.totalSupply(), currentSupply - totalFeeShares);
-    require(address(vault).balance > balance, "assets not converted");
+    uint256 minAmount = (totalFees * 1 ether) / satoshiPerEth;
+    console.log(address(vault).balance - balance, minAmount);
+    require(address(vault).balance - balance >= minAmount, "assets not converted");
   }
 }

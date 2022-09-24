@@ -147,6 +147,15 @@ contract RevertTest is Common {
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
   }
 
+  function testRevertOnUnauthorizedDeposit() public {
+    vm.startPrank(address(100));
+    mintRenBtc(1e6);
+    // Approve vault to spend asset
+    IERC20(renbtc).approve(address(vault), 1e6);
+    vm.expectRevert(bytes("unauthorized"));
+    vault.deposit(1e6, address(100));
+  }
+
   function testRevertOnAddingNullModule() public {
     vm.expectRevert();
     vault.addModule(address(this), ModuleType.Null, 100, 100);

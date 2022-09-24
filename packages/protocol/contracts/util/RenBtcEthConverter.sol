@@ -6,7 +6,6 @@ import "../interfaces/CurvePools/ICurveInt128.sol";
 import "../interfaces/IWETH.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
-import "forge-std/console2.sol";
 
 contract RenBtcEthConverterMainnet {
   ICurveInt128 rencrv = ICurveInt128(0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
@@ -24,11 +23,10 @@ contract RenBtcEthConverterMainnet {
   function convertToEth(uint256 minOut) public returns (uint256 amount) {
     uint256 wbtcAmount = wbtc.balanceOf(address(this));
     (bool success, ) = address(rencrv).call(
-      abi.encodeWithSelector(rencrv.exchange.selector, 0, 1, renbtc.balanceOf(address(this)), 1)
+      abi.encodeWithSelector(rencrv.exchange.selector, 0, 1, renbtc.balanceOf(address(this)), minOut)
     );
     require(success, "!curve");
     wbtcAmount = wbtc.balanceOf(address(this)) - wbtcAmount;
-    console2.log(wbtcAmount);
     bytes memory path = abi.encodePacked(wbtc, uint24(500), weth);
     ISwapRouter.ExactInputParams memory params = ISwapRouter.ExactInputParams({
       recipient: address(this),
@@ -38,7 +36,6 @@ contract RenBtcEthConverterMainnet {
       path: path
     });
     amount = router.exactInput(params);
-    console2.log(weth.balanceOf(address(this)), amount);
     weth.withdraw(amount);
     address payable sender = payable(msg.sender);
     sender.transfer(amount);
