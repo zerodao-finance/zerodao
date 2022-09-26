@@ -63,7 +63,8 @@ contract RevertTest is Common {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
   }
 
@@ -77,7 +78,8 @@ contract RevertTest is Common {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
     vm.expectRevert(IZeroBTC.InvalidDynamicBorrowFee.selector);
     _vault.initialize(
@@ -87,7 +89,8 @@ contract RevertTest is Common {
       0,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
     vm.expectRevert(IZeroBTC.InvalidDynamicBorrowFee.selector);
     _vault.initialize(
@@ -97,7 +100,8 @@ contract RevertTest is Common {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      0
+      0,
+      address(this)
     );
 
     vm.expectRevert(IZeroBTC.InvalidDynamicBorrowFee.selector);
@@ -108,7 +112,8 @@ contract RevertTest is Common {
       2001,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
     vm.expectRevert(IZeroBTC.InvalidDynamicBorrowFee.selector);
     _vault.initialize(
@@ -118,7 +123,8 @@ contract RevertTest is Common {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
     vm.expectRevert(IZeroBTC.InvalidDynamicBorrowFee.selector);
     _vault.initialize(
@@ -128,7 +134,8 @@ contract RevertTest is Common {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      2001
+      2001,
+      address(this)
     );
   }
 
@@ -153,6 +160,12 @@ contract RevertTest is Common {
     // Approve vault to spend asset
     IERC20(renbtc).approve(address(vault), 1e6);
     vm.expectRevert(bytes("unauthorized"));
+    vault.deposit(1e6, address(100));
+    vm.stopPrank();
+    address[] memory _a = new address[](1);
+    _a[0] = address(100);
+    vault.setAuthorizedUsers(_a);
+    vm.startPrank(address(100));
     vault.deposit(1e6, address(100));
   }
 

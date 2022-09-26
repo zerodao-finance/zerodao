@@ -99,4 +99,20 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
   function removeModule(address module) external onlyGovernance nonReentrant {
     _moduleFees[module] = DefaultModuleState;
   }
+
+  function setHarvesters(address[] memory users) external onlyGovernance nonReentrant {
+    for (uint256 i = 0; i < users.length; i++) _isHarvester[users[i]] = true;
+  }
+
+  function removeHarvesters(address[] memory users) external onlyGovernance nonReentrant {
+    for (uint256 i = 0; i < users.length; i++) _isHarvester[users[i]] = false;
+  }
+
+  function setAuthorizedUsers(address[] memory users) external onlyGovernance nonReentrant {
+    for (uint256 i = 0; i < users.length; i++) _authorized[users[i]] = true;
+  }
+
+  function removeAuthorizedUsers(address[] memory users) external onlyGovernance nonReentrant {
+    for (uint256 i = 0; i < users.length; i++) _authorized[users[i]] = false;
+  }
 }

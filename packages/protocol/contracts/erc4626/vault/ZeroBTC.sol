@@ -39,7 +39,8 @@ contract ZeroBTC is ZeroBTCBase, ZeroBTCCache, ZeroBTCConfig, ZeroBTCLoans {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
-    uint256 zeroFeeShareBips
+    uint256 zeroFeeShareBips,
+    address initialHarvester
   ) public payable virtual override {
     ZeroBTCBase.initialize(
       initialGovernance,
@@ -47,7 +48,8 @@ contract ZeroBTC is ZeroBTCBase, ZeroBTCCache, ZeroBTCConfig, ZeroBTCLoans {
       renBorrowFeeBips,
       zeroBorrowFeeStatic,
       renBorrowFeeStatic,
-      zeroFeeShareBips
+      zeroFeeShareBips,
+      initialHarvester
     );
     _updateGlobalCache(_state);
   }

@@ -187,7 +187,8 @@ contract VaultTestHelpers is Test {
       DefaultRenBorrowFeeBips,
       DefaultZeroBorrowFeeStatic,
       DefaultRenBorrowFeeStatic,
-      DefaultZeroFeeShareBips
+      DefaultZeroFeeShareBips,
+      address(this)
     );
   }
 

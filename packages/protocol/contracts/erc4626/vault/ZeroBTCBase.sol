@@ -83,7 +83,8 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
-    uint256 zeroFeeShareBips
+    uint256 zeroFeeShareBips,
+    address initialHarvester
   ) public payable virtual override {
     if (_governance != address(0)) {
       revert AlreadyInitialized();
@@ -96,6 +97,9 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
 
     // Set initial global state
     _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
+
+    // set harvester
+    _isHarvester[initialHarvester] = true;
   }
 
   /*//////////////////////////////////////////////////////////////

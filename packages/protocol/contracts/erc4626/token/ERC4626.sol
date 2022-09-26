@@ -87,7 +87,7 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     uint256 assets,
     address receiver,
     address owner
-  ) public virtual override onlyAuthorized nonReentrant returns (uint256 shares) {
+  ) public virtual override nonReentrant returns (uint256 shares) {
     shares = previewWithdraw(assets); // No need to check for rounding error, previewWithdraw rounds up.
 
     if (msg.sender != owner) {

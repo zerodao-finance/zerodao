@@ -27,6 +27,11 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
   using FixedPointMathLib for uint256;
   using Math for uint256;
 
+  modifier onlyHarvester() {
+    require(_isHarvester[msg.sender], "cannot call unless harvester");
+    _;
+  }
+
   /*//////////////////////////////////////////////////////////////
                              Constructor
   //////////////////////////////////////////////////////////////*/
@@ -145,7 +150,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     tx.origin.safeTransferETH(moduleState.getEthRefundForRepayGas());
   }
 
-  function earn() external override nonReentrant {
+  function earn() external override onlyHarvester nonReentrant {
     (GlobalState state, ) = _getUpdatedGlobalState();
     (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = state.getUnburnedShares();
     _state = state.setUnburnedShares(0, 0);
@@ -158,7 +163,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       totalFees = totalFeeShares.mulDivDown(assets, supply);
       _totalSupply = supply - totalFeeShares;
     }
-    uint256 minimumEthOut = (_btcToEth(totalFees, state.getSatoshiPerEth()) * 98) / 100;
+    uint256 minimumEthOut = (_btcToEth(totalFees, state.getSatoshiPerEth()) * 90) / 100;
     asset.safeTransfer(address(_renBtcConverter), totalFees);
     uint256 actualEthOut = _renBtcConverter.convertToEth(minimumEthOut);
     uint256 ethForZero = unburnedZeroFeeShares.mulDivDown(actualEthOut, totalFeeShares);
@@ -554,27 +559,27 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     uint256 supply = _totalSupply;
 
     {
-
       uint256 gasReserveShares;
       uint256 zeroFeeShares;
       {
-      // Calculate share of profits owed to ZeroDAO
-      uint256 btcForZeroDAO = profit.uncheckedMulBipsUp(state.getZeroFeeShareBips());
+        // Calculate share of profits owed to ZeroDAO
+        uint256 btcForZeroDAO = profit.uncheckedMulBipsUp(state.getZeroFeeShareBips());
 
-      // Keeper receives profits not allocated for gas reserves or ZeroDAO
-      uint256 btcForKeeper = profit - btcForZeroDAO;
+        // Keeper receives profits not allocated for gas reserves or ZeroDAO
+        uint256 btcForKeeper = profit - btcForZeroDAO;
 
-      // Get the underlying assets held by the vault or in outstanding loans and subtract
-      // the fees that will be charged in order to calculate the number of shares to mint
-      // that will be worth the fees.
-      _totalAssets = (ERC4626.totalAssets() + state.getTotalBitcoinBorrowed()) -
-        (btcForGasReserve + btcForZeroDAO + btcForKeeper);
+        // Get the underlying assets held by the vault or in outstanding loans and subtract
+        // the fees that will be charged in order to calculate the number of shares to mint
+        // that will be worth the fees.
+        _totalAssets =
+          (ERC4626.totalAssets() + state.getTotalBitcoinBorrowed()) -
+          (btcForGasReserve + btcForZeroDAO + btcForKeeper);
 
-      // Calculate shares to mint for the gas reserves and ZeroDAO fees
-      gasReserveShares = btcForGasReserve.mulDivDown(supply, _totalAssets);
-      zeroFeeShares = (btcForZeroDAO).mulDivDown(supply, _totalAssets);
-      // Emit event for fee shares
-      emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, zeroFeeShares);
+        // Calculate shares to mint for the gas reserves and ZeroDAO fees
+        gasReserveShares = btcForGasReserve.mulDivDown(supply, _totalAssets);
+        zeroFeeShares = (btcForZeroDAO).mulDivDown(supply, _totalAssets);
+        // Emit event for fee shares
+        emit FeeSharesMinted(btcForGasReserve, gasReserveShares, btcForZeroDAO, zeroFeeShares);
       }
 
       newSupply = supply + gasReserveShares + zeroFeeShares;
@@ -583,7 +588,10 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares) = state.getUnburnedShares();
 
       // Write the new fee share totals to the global state on the stack
-      state = state.setUnburnedShares(unburnedGasReserveShares + gasReserveShares, unburnedZeroFeeShares + zeroFeeShares);
+      state = state.setUnburnedShares(
+        unburnedGasReserveShares + gasReserveShares,
+        unburnedZeroFeeShares + zeroFeeShares
+      );
     }
 
     {

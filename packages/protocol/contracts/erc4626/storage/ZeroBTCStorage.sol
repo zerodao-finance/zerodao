@@ -14,4 +14,7 @@ contract ZeroBTCStorage is ERC4626Storage, GovernableStorage {
 
   // Maps loanId => LoanRecord
   mapping(uint256 => LoanRecord) internal _outstandingLoans;
+
+  // maps wallets => whether they can call earn
+  mapping(address => bool) internal _isHarvester;
 }
