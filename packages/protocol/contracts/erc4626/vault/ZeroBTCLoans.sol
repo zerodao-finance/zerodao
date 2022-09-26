@@ -163,7 +163,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       totalFees = totalFeeShares.mulDivDown(assets, supply);
       _totalSupply = supply - totalFeeShares;
     }
-    uint256 minimumEthOut = (_btcToEth(totalFees, state.getSatoshiPerEth()) * 90) / 100;
+    uint256 minimumEthOut = (_btcToEth(totalFees, state.getSatoshiPerEth()) * 98) / 100;
     asset.safeTransfer(address(_renBtcConverter), totalFees);
     uint256 actualEthOut = _renBtcConverter.convertToEth(minimumEthOut);
     uint256 ethForZero = unburnedZeroFeeShares.mulDivDown(actualEthOut, totalFeeShares);

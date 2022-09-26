@@ -22,8 +22,9 @@ contract RenBtcEthConverterMainnet {
 
   function convertToEth(uint256 minOut) public returns (uint256 amount) {
     uint256 wbtcAmount = wbtc.balanceOf(address(this));
+    //minout encoded to 1 because of intermediate call
     (bool success, ) = address(rencrv).call(
-      abi.encodeWithSelector(rencrv.exchange.selector, 0, 1, renbtc.balanceOf(address(this)), minOut)
+      abi.encodeWithSelector(rencrv.exchange.selector, 0, 1, renbtc.balanceOf(address(this)), 1)
     );
     require(success, "!curve");
     wbtcAmount = wbtc.balanceOf(address(this)) - wbtcAmount;

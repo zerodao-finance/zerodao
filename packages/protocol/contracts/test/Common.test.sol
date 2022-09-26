@@ -163,8 +163,8 @@ contract Common is VaultTestHelpers {
     vault.earn();
     vault.earn();
     assertEq(vault.totalSupply(), currentSupply - totalFeeShares);
+    //TODO: fix this
     uint256 minAmount = (((totalFees * 1 ether) / satoshiPerEth) * 90) / 100;
-    console.log(address(vault).balance - balance, minAmount);
     require(address(vault).balance - balance >= minAmount, "assets not converted");
   }
 }
