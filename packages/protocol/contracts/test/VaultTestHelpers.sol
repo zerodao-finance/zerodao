@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13;
 
 import "forge-std/Test.sol";
+import "forge-std/console2.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../interfaces/IChainlinkOracle.sol";

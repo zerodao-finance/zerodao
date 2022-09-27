@@ -167,4 +167,22 @@ contract Common is VaultTestHelpers {
     uint256 minAmount = (((totalFees * 1 ether) / satoshiPerEth) * 90) / 100;
     require(address(vault).balance - balance >= minAmount, "assets not converted");
   }
+
+  function getVaultStats() public returns (uint256 a, uint256 b) {
+    a = vault.totalSupply();
+    b = vault.totalAssets();
+  }
+
+  function testShareRebaseMechanics() public {
+    bytes memory data;
+    (uint256 supplyBefore, uint256 assetsBefore) = getVaultStats();
+    vault.loan(address(0x0), zerowallet, 1e6, 1, data);
+    mintRenBtc(1e6);
+    IERC20(renbtc).approve(address(vault), 1e6);
+    vault.deposit(1e6, address(this));
+    vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
+    vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
+    (uint256 supplyAfter, uint256 assetsAfter) = getVaultStats();
+    console2.log(supplyBefore, supplyAfter, assetsBefore, assetsAfter);
+  }
 }
