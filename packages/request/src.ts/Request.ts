@@ -5,8 +5,12 @@ import pipe from "it-pipe";
 import { PublishEventEmitter } from "./PublishEventEmitter";
 import deployments from "@zerodao/protocol";
 import { getAddress } from "@ethersproject/address";
+import { decode, encode } from "@ethersproject/rlp";
+import { arrayify, BytesLike } from "@ethersproject/bytes";
+import { Buffer } from "buffer";
 
 export abstract class Request {
+  public contractAddress?: string;
   static addressToChainId(address) {
     return this.prototype.getChainId.call({
       contractAddress: address
@@ -15,9 +19,32 @@ export abstract class Request {
   static get PROTOCOL(): string | void {
     throw new Error("static get PROTOCOL() must be implemented");
   }
-  public contractAddress?: string;
+  static get FIELDS(): Array<string> {
+    throw new Error("static get FIELDS() must be implemented");
+  }
   serialize(): Buffer {
-    throw new Error("Serialize must be implemented");
+    return Buffer.from(arrayify(encode((this.constructor as any).FIELDS.map((v) => this[v]))));
+  }
+  static deserialize(data: BytesLike) : Request {
+    const RequestType = this as any;
+    return new RequestType(decode(data).reduce((r, v, i) => {
+      r[RequestType.FIELDS[i]] = v;
+      return r;
+    }, {}));
+  }
+  toJSON(...args: Array<any>): string {
+    return JSON.stringify(this.toPlainObject(), ...args);
+  }
+  toPlainObject(): Object {
+    const RequestType = this.constructor as any;
+    return RequestType.FIELDS.reduce((r, v) => {
+      r[v] = this[v];
+      return r;
+    }, {});
+  }
+  static fromJSON(data: string) : Request {
+    const RequestType = this as any;
+    return new RequestType(JSON.parse(data));
   }
   getChainId(): number {
     return Number(

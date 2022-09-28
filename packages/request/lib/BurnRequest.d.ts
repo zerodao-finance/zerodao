@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Contract } from "@ethersproject/contracts";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
@@ -19,6 +18,7 @@ export declare class BurnRequest extends Request {
     tokenName: string;
     signature: string;
     static get PROTOCOL(): string;
+    static get FIELDS(): string[];
     static minOutFromData(data: any): any;
     static dataFromMinOut(minOut: any): string;
     constructor(o: {
@@ -32,7 +32,7 @@ export declare class BurnRequest extends Request {
         signature: string;
     });
     sendTransaction(signer: any): Promise<any>;
-    serialize(): Buffer;
+    hash(): string;
     isNative(): boolean;
     toEIP712(): {
         types: {

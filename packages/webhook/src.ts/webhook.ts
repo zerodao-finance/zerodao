@@ -7,8 +7,6 @@ import { Request } from "@zerodao/request";
 import { keccak256 } from "@ethersproject/solidity";
 
 import { createLogger, Logger } from "@zerodao/logger";
-import url from 'url';
-import path from 'path';
 const logger = createLogger(require('../package').name);
 
 export const hashWebhookMessage = (serialized: any) =>
@@ -23,6 +21,7 @@ export class ZeroWebhook {
   public signer: Signer;
   public baseUrl: string;
   public logger: Logger;
+  
   constructor({ signer, baseUrl }: IZeroWebhookProps) {
     this.signer = signer;
     this.baseUrl = baseUrl;
@@ -30,20 +29,15 @@ export class ZeroWebhook {
   }
 
   async send(endpoint: string, request: Request) {
-    const serialized = "0x" + request.serialize().toString("hex");
     this.logger.debug(endpoint);
     const result = await axios.post(
       this.baseUrl + endpoint,
-      {
-        data: serialized,
-        signature: await this.signer.signMessage(
-          hashWebhookMessage(serialized)
-        ),
-      },
+      request.toPlainObject(),
       {
         headers: {
           "Content-Type": "application/json",
-        },
+	  "X-Signature": await this.signer.signMessage(hashWebhookMessage(request.serialize()))
+        }
       }
     );
     this.logger.debug(result);

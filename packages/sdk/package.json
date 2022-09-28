@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/sdk",
-  "version": "0.3.32",
+  "version": "0.3.39",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",
@@ -13,14 +13,14 @@
     "prepare": "cd ../.. && husky install packages/sdk/.husky"
   },
   "dependencies": {
-    "@zerodao/chains": "^0.3.32",
-    "@zerodao/common": "^0.3.32",
-    "@zerodao/compute": "^0.3.32",
-    "@zerodao/logger": "^0.3.32",
-    "@zerodao/p2p": "^0.3.32",
-    "@zerodao/protocol": "^0.3.32",
-    "@zerodao/request": "^0.3.32",
-    "@zerodao/utils": "^0.3.32",
+    "@zerodao/chains": "^0.3.37",
+    "@zerodao/common": "^0.3.37",
+    "@zerodao/compute": "^0.3.37",
+    "@zerodao/logger": "^0.3.37",
+    "@zerodao/p2p": "^0.3.37",
+    "@zerodao/protocol": "^0.3.37",
+    "@zerodao/request": "^0.3.39",
+    "@zerodao/utils": "^0.3.37",
     "typescript": "^4.7.4"
   },
   "devDependencies": {

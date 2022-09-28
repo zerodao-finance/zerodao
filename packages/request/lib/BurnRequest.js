@@ -15,7 +15,7 @@ const common_1 = require("@zerodao/common");
 const chains_1 = require("@zerodao/chains");
 const Request_1 = require("./Request");
 const PublishEventEmitter_1 = require("./PublishEventEmitter");
-const lodash_1 = require("lodash");
+const ethers_1 = require("ethers");
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
 function getDomainStructure(request) {
@@ -188,15 +188,31 @@ class BurnRequest extends Request_1.Request {
         this.signature = o.signature;
     }
     static get PROTOCOL() {
-        return "/zero/1.1.0/dispatch";
+        return "/zero/2.1.0/dispatch";
     }
+    ;
+    static get FIELDS() {
+        return [
+            'contractAddress',
+            'owner',
+            'asset',
+            'amount',
+            'deadline',
+            'data',
+            'destination',
+            'signature'
+        ];
+    }
+    ;
     static minOutFromData(data) {
         const [result] = coder.decode(["uint256"], data);
         return result;
     }
+    ;
     static dataFromMinOut(minOut) {
         return coder.encode(['uint256'], [minOut]);
     }
+    ;
     async sendTransaction(signer) {
         const { contractAddress, amount, destination } = this;
         const contract = new contracts_1.Contract(this.contractAddress, [
@@ -206,21 +222,14 @@ class BurnRequest extends Request_1.Request {
         remoteTxMap.set(this, tx.wait());
         return tx;
     }
-    serialize() {
-        return Buffer.from(JSON.stringify((0, lodash_1.mapValues)({
-            asset: this.asset,
-            data: this.data,
-            owner: this.owner,
-            destination: this.destination,
-            deadline: this.deadline,
-            amount: this.amount,
-            contractAddress: this.contractAddress,
-            signature: this.signature
-        }, bytes_1.hexlify)));
+    ;
+    hash() {
+        return ethers_1.ethers.utils.keccak256(this.serialize());
     }
     isNative() {
         return this.asset === constants_1.AddressZero;
     }
+    ;
     toEIP712() {
         return {
             types: {
@@ -232,6 +241,7 @@ class BurnRequest extends Request_1.Request {
             message: getMessage(this),
         };
     }
+    ;
     getExpiry() {
         return (0, solidity_1.keccak256)(["address", "uint256", "uint256", "uint256", "bytes", "bytes"], [
             this.asset,
@@ -242,6 +252,7 @@ class BurnRequest extends Request_1.Request {
             this.destination,
         ]);
     }
+    ;
     async waitForHostTransaction() {
         const receiptPromise = remoteTxMap.get(this);
         if (receiptPromise)
@@ -287,22 +298,27 @@ class BurnRequest extends Request_1.Request {
             renAsset.on(filter, listener);
         });
     }
+    ;
     supportsERC20Permit() {
         return !(isUSDC(this.asset) && this.getChainId() === 43114 || isWBTC(this.asset) || this.getChainId() === 1 && (0, address_1.getAddress)(common_1.FIXTURES.ETHEREUM.USDT) === (0, address_1.getAddress)(this.asset));
     }
+    ;
     async needsApproval() {
         const contract = new contracts_1.Contract(this.asset, ['function allowance(address, address) view returns (uint256)'], (0, chains_1.getVanillaProvider)(this));
         return (await contract.allowance(this.owner, this.contractAddress)).lt(this.amount);
     }
+    ;
     async approve(signer, amount) {
         if (!amount)
             amount = constants_1.MaxUint256;
         const contract = new contracts_1.Contract(this.asset, ['function approve(address, uint256) returns (bool)'], signer);
         return await contract.approve(this.contractAddress, amount);
     }
+    ;
     getHandlerForDestinationChain() {
         return (0, common_1.isZcashAddress)(this.destination) ? ZECHandler_1.ZECHandler : BTCHandler_1.BTCHandler;
     }
+    ;
     getNormalizedDestinationAddress() {
         if ((0, common_1.isZcashAddress)(this.destination))
             return Buffer.from((0, bytes_1.hexlify)(this.destination).substr(2), "hex").toString("utf8"); // implement zcash encoding here
@@ -314,6 +330,7 @@ class BurnRequest extends Request_1.Request {
             address = basex_1.Base58.encode(this.destination);
         return address;
     }
+    ;
     async waitForRemoteTransaction() {
         const { length } = await this.getHandlerForDestinationChain().getUTXOs(false, {
             address: this.getNormalizedDestinationAddress(),
@@ -334,6 +351,7 @@ class BurnRequest extends Request_1.Request {
             await new Promise((resolve) => setTimeout(resolve, 3000));
         }
     }
+    ;
     async sign(signer) {
         if (this.isNative())
             throw Error("BurnRequest#sign(): can't sign transaction for ETH");
@@ -350,6 +368,7 @@ class BurnRequest extends Request_1.Request {
             return (this.signature = await signer.provider.send("eth_signTypedData_v4", [await signer.getAddress(), this.toEIP712()]));
         }
     }
+    ;
     publish(peer) {
         if (!this.isNative())
             return super.publish(peer);
@@ -358,6 +377,7 @@ class BurnRequest extends Request_1.Request {
             setTimeout(() => result.emit("finish"), 0);
         }
     }
+    ;
     async fetchData() {
         if ((0, address_1.getAddress)(common_1.FIXTURES.ETHEREUM.USDT) === (0, address_1.getAddress)(this.asset)) {
             this.nonce = String(await new contracts_1.Contract(this.contractAddress, ["function noncesUsdt(address) view returns (uint256)"], (0, chains_1.getVanillaProvider)(this)).noncesUsdt(this.owner));
@@ -386,6 +406,7 @@ class BurnRequest extends Request_1.Request {
         }
         return this;
     }
+    ;
     buildTransaction() {
         return {
             chainId: this.getChainId(),
@@ -403,6 +424,7 @@ class BurnRequest extends Request_1.Request {
             to: this.contractAddress,
         };
     }
+    ;
 }
 exports.BurnRequest = BurnRequest;
 //# sourceMappingURL=BurnRequest.js.map

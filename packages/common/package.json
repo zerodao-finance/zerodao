@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/common",
-  "version": "0.3.32",
+  "version": "0.3.37",
   "description": "zerodao utils",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",

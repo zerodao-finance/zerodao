@@ -5,9 +5,21 @@ import constants from "@ethersproject/constants";
 import { Wallet } from "@ethersproject/wallet";
 import { ZeroP2P } from "@zerodao/p2p";
 import { CHAINS } from "@zerodao/chains";
-import { Request, BurnRequest } from "@zerodao/request";
+import {
+  deserialize,
+  Request,
+  BurnRequest,
+  TransferRequest,
+  TransferRequestV2,
+} from "@zerodao/request";
 import { ZeroWebhook } from "@zerodao/webhook";
-import { advertiseAsKeeper, handleRequestsV1, handleRequestsV2 } from "./util";
+import {
+  advertiseAsKeeper,
+  handleRequestsV1,
+  handleRequestsV2,
+  handleRequestsV21,
+  serializeToJSON,
+} from "./util";
 import Redis from "ioredis";
 const redis = new Redis();
 // const redis = require('ioredis')(process.env.REDIS_URI);
@@ -36,22 +48,28 @@ async function handleEvent(data) {
   try {
     const request = JSON.parse(data);
     logger.info(util.inspect(request, { colors: true, depth: 2 }));
-    if (typeof request.destination === "string") {
-      // For Explorer API
-      if (process.env.WEBHOOK_BASEURL) {
-        const webhook = new ZeroWebhook({
-          signer: process.env.WALLET
-            ? new Wallet(process.env.WALLET)
-            : Wallet.createRandom(),
-          baseUrl: process.env.WEBHOOK_BASEURL,
-        });
-        webhook
-          .send("/transaction?type=burn", new BurnRequest(request))
-          .catch((err) => logger.error(err));
-      } else {
-        logger.error("Webhook environment variable not set up.");
-      }
-
+    // For Explorer API
+    if (process.env.WEBHOOK_BASEURL) {
+      const webhook = new ZeroWebhook({
+        signer: process.env.WALLET
+          ? new Wallet(process.env.WALLET)
+          : Wallet.createRandom(),
+        baseUrl: process.env.WEBHOOK_BASEURL,
+      });
+      webhook
+        .send(
+          "/transaction?type=" + (request.destination ? "burn" : "mint"),
+          new (request.destination
+            ? BurnRequest
+            : request.loanId
+            ? TransferRequestV2
+            : TransferRequest)(request)
+        )
+        .catch((err) => logger.error(err));
+    } else {
+      logger.error("Webhook environment variable not set up.");
+    }
+    if (request.destination) {
       await redis.lpush(
         "/zero/dispatch",
         JSON.stringify(
@@ -93,6 +111,7 @@ export const runKeeper = () => {
 
     handleRequestsV1(peer);
     handleRequestsV2(peer);
+    handleRequestsV21(peer);
 
     peer.on("peer:discovery", (peerInfo) => {
       logger.info("peer:discovery");
@@ -106,7 +125,9 @@ export const runKeeper = () => {
     peer.on("zero:request:2.0.0", async (data) => {
       await handleEvent(data);
     });
-
+    peer.on("zero:request:2.1.0", async (data) => {
+      await handleEvent(serializeToJSON(deserialize(data)));
+    });
     peer.on("error", logger.error.bind(logger));
 
     advertiseAsKeeper(peer);

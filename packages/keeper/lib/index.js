@@ -38,22 +38,26 @@ async function handleEvent(data) {
     try {
         const request = JSON.parse(data);
         logger.info(util_2.default.inspect(request, { colors: true, depth: 2 }));
-        if (typeof request.destination === "string") {
-            // For Explorer API
-            if (process.env.WEBHOOK_BASEURL) {
-                const webhook = new webhook_1.ZeroWebhook({
-                    signer: process.env.WALLET
-                        ? new wallet_1.Wallet(process.env.WALLET)
-                        : wallet_1.Wallet.createRandom(),
-                    baseUrl: process.env.WEBHOOK_BASEURL,
-                });
-                webhook
-                    .send("/transaction?type=burn", new request_1.BurnRequest(request))
-                    .catch((err) => logger.error(err));
-            }
-            else {
-                logger.error("Webhook environment variable not set up.");
-            }
+        // For Explorer API
+        if (process.env.WEBHOOK_BASEURL) {
+            const webhook = new webhook_1.ZeroWebhook({
+                signer: process.env.WALLET
+                    ? new wallet_1.Wallet(process.env.WALLET)
+                    : wallet_1.Wallet.createRandom(),
+                baseUrl: process.env.WEBHOOK_BASEURL,
+            });
+            webhook
+                .send("/transaction?type=" + (request.destination ? "burn" : "mint"), new (request.destination
+                ? request_1.BurnRequest
+                : request.loanId
+                    ? request_1.TransferRequestV2
+                    : request_1.TransferRequest)(request))
+                .catch((err) => logger.error(err));
+        }
+        else {
+            logger.error("Webhook environment variable not set up.");
+        }
+        if (request.destination) {
             await redis.lpush("/zero/dispatch", JSON.stringify({
                 to: (0, address_1.getAddress)(request.contractAddress),
                 chainId: request_1.Request.addressToChainId(request.contractAddress),
@@ -82,6 +86,7 @@ const runKeeper = () => {
         await peer.start();
         (0, util_1.handleRequestsV1)(peer);
         (0, util_1.handleRequestsV2)(peer);
+        (0, util_1.handleRequestsV21)(peer);
         peer.on("peer:discovery", (peerInfo) => {
             logger.info("peer:discovery");
             logger.info(JSON.stringify(peerInfo, null, 2));
@@ -91,6 +96,9 @@ const runKeeper = () => {
         });
         peer.on("zero:request:2.0.0", async (data) => {
             await handleEvent(data);
+        });
+        peer.on("zero:request:2.1.0", async (data) => {
+            await handleEvent((0, util_1.serializeToJSON)((0, request_1.deserialize)(data)));
         });
         peer.on("error", logger.error.bind(logger));
         (0, util_1.advertiseAsKeeper)(peer);

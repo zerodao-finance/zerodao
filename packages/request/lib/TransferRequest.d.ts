@@ -1,5 +1,3 @@
-/// <reference types="node" />
-import { Buffer } from "buffer";
 import { BigNumberish } from "ethers";
 import RenJS, { Gateway } from "@renproject/ren";
 import { Request } from "./Request";
@@ -16,6 +14,7 @@ export declare class TransferRequest extends Request {
     protected _queryTxResult: any;
     protected _mint: any;
     protected _deposit: any;
+    static get FIELDS(): string[];
     static get PROTOCOL(): string;
     constructor(params: {
         module: string;
@@ -34,7 +33,7 @@ export declare class TransferRequest extends Request {
         data: string;
         chainId: number;
     };
-    serialize(): Buffer;
+    hash(): string;
     _getRemoteChain(): any;
     _getRemoteChainName(): "BTC" | "ZEC";
     _getRenVM(): RenJS;

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequest = void 0;
 const bytes_1 = require("@ethersproject/bytes");
 const random_1 = require("@ethersproject/random");
-const buffer_1 = require("buffer");
 const ethers_1 = require("ethers");
 const chains_1 = require("@renproject/chains");
 const ren_1 = __importDefault(require("@renproject/ren"));
@@ -53,12 +52,29 @@ class TransferRequest extends Request_1.Request {
             : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
         this.contractAddress = params.contractAddress;
     }
-    static get PROTOCOL() {
-        return "/zero/1.1.0/dispatch";
+    static get FIELDS() {
+        return [
+            'contractAddress',
+            'to',
+            'underwriter',
+            'asset',
+            'amount',
+            'module',
+            'nonce',
+            'pNonce',
+            'data'
+        ];
     }
+    ;
+    static get PROTOCOL() {
+        return "/zero/2.1.0/dispatch";
+    }
+    ;
+    ;
     buildLoanTransaction() {
         throw Error("TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending");
     }
+    ;
     buildRepayTransaction() {
         if (!this._queryTxResult)
             throw Error("TransferRequest#buildRepayTransaction(): must call waitForSignature()");
@@ -81,18 +97,9 @@ class TransferRequest extends Request_1.Request {
             chainId: this.getChainId(),
         };
     }
-    serialize() {
-        return buffer_1.Buffer.from(JSON.stringify({
-            to: this.to,
-            module: this.module,
-            data: this.data,
-            amount: this.amount,
-            nonce: this.nonce,
-            pNonce: this.pNonce,
-            contractAddress: this.contractAddress,
-            asset: this.asset,
-            underwriter: this.underwriter,
-        }));
+    ;
+    hash() {
+        return ethers_1.ethers.utils.keccak256(this.serialize());
     }
     _getRemoteChain() {
         const RenVMChain = assetToRenVMChain(["renBTC", "renZEC"].find((v) => Object.values(common_1.FIXTURES).find((network) => Object.entries(network).find(([token, address]) => v === token &&
@@ -102,12 +109,15 @@ class TransferRequest extends Request_1.Request {
             network: 'mainnet'
         });
     }
+    ;
     _getRemoteChainName() {
         return renVMChainToAssetName(this._getRemoteChain().constructor);
     }
+    ;
     _getRenVM() {
         return new ren_1.default("mainnet").withChain(this._getRemoteChain());
     }
+    ;
     _getContractParams() {
         return {
             to: this.contractAddress,
@@ -137,6 +147,7 @@ class TransferRequest extends Request_1.Request {
             withRenParams: true,
         };
     }
+    ;
     async submitToRenVM() {
         if (this._mint)
             return this._mint;
@@ -151,16 +162,19 @@ class TransferRequest extends Request_1.Request {
         });
         return result;
     }
+    ;
     async waitForDeposit() {
         if (this._deposit)
             return this._deposit;
         const mint = await this.submitToRenVM();
         return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
     }
+    ;
     async getTransactionHash() {
         const deposit = await this.waitForDeposit();
         return deposit.renVM.tx.hash;
     }
+    ;
     async waitForSignature() {
         if (this._queryTxResult)
             return this._queryTxResult;
@@ -182,10 +196,12 @@ class TransferRequest extends Request_1.Request {
         });
         return result;
     }
+    ;
     async toGatewayAddress() {
         const mint = await this.submitToRenVM();
         return mint.gatewayAddress;
     }
+    ;
     async fallbackMint(signer) {
         if (!this._queryTxResult)
             await this.waitForSignature();
