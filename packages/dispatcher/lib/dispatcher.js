@@ -11,6 +11,7 @@ const ethers_flashbots_1 = require("ethers-flashbots");
 const logger_1 = require("@zerodao/logger");
 const units_1 = require("@ethersproject/units");
 const chains_1 = require("@zerodao/chains");
+const wait_1 = require("./wait");
 const gasnow = require("ethers-gasnow");
 const packageJson = require("../package");
 const getGasPricePolygon = polygongastracker.createGetGasPrice("rapid");
@@ -29,7 +30,7 @@ const RPC_ENDPOINTS = {
     [42161]: chains_1.ID_CHAIN[42161].rpcUrl,
     [10]: "https://mainnet.optimism.io",
     [137]: chains_1.ID_CHAIN[137].rpcUrl,
-    [1]: chains_1.ID_CHAIN[1].rpcUrl,
+    [1]: "https://rpc.flashbots.net",
     [43114]: "https://api.avax.network/ext/bc/C/rpc",
 };
 const NO_FLASHBOTS = {
@@ -37,7 +38,7 @@ const NO_FLASHBOTS = {
     [137]: true,
     [42161]: true,
     [10]: true,
-    [1]: true,
+    [1]: true
 };
 const ERROR_TIMEOUT = 1000;
 const chainIdToPromise = {};
@@ -119,9 +120,11 @@ class Dispatcher {
                     if ((typeof response === "string" && response.match(EIP838_BYTES)) ||
                         hadError) {
                         this.logger.info("tx simulation failed");
-                        continue;
+                        //continue;
                     }
                     const dispatched = await this.getSigner(tx.chainId).sendTransaction(txObject);
+                    if (tx.chainId === 1)
+                        dispatched.wait = (0, wait_1.makeFlashbotsWait)(dispatched, this.logger); // poll flashbots protect
                     chainIdToPromise[tx.chainId] = dispatched
                         .wait()
                         .catch((err) => this.logger.error(err));

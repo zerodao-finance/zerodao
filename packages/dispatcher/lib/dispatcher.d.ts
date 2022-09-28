@@ -18,7 +18,7 @@ export declare class Dispatcher {
         42161: string | string[];
         10: string;
         137: string | string[];
-        1: string | string[];
+        1: string;
         43114: string;
     };
     static ERROR_TIMEOUT: number;

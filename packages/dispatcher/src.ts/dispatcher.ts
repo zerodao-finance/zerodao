@@ -10,6 +10,7 @@ import { Logger, createLogger } from "@zerodao/logger";
 import { parseUnits } from "@ethersproject/units";
 import { Signer } from "@ethersproject/abstract-signer";
 import { ID_CHAIN } from "@zerodao/chains";
+import { makeFlashbotsWait } from "./wait";
 const gasnow = require("ethers-gasnow");
 
 const packageJson = require("../package");
@@ -34,7 +35,7 @@ const RPC_ENDPOINTS = {
   [10]: "https://mainnet.optimism.io",
   [137]:
     ID_CHAIN[137].rpcUrl,
-  [1]: ID_CHAIN[1].rpcUrl,
+  [1]: "https://rpc.flashbots.net",
   [43114]: "https://api.avax.network/ext/bc/C/rpc",
 };
 
@@ -43,7 +44,7 @@ const NO_FLASHBOTS = {
   [137]: true,
   [42161]: true,
   [10]: true,
-  [1]: true,
+  [1]: true
 };
 
 const ERROR_TIMEOUT = 1000;
@@ -149,11 +150,12 @@ export class Dispatcher {
             hadError
           ) {
             this.logger.info("tx simulation failed");
-	    continue;
+	    //continue;
           }
           const dispatched = await this.getSigner(tx.chainId).sendTransaction(
             txObject
           );
+	  if (tx.chainId === 1) dispatched.wait = makeFlashbotsWait(dispatched, this.logger); // poll flashbots protect
           chainIdToPromise[tx.chainId] = dispatched
             .wait()
             .catch((err) => this.logger.error(err));
