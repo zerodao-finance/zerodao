@@ -31,6 +31,7 @@ contract VaultTestHelpers is Test {
   uint256 constant DefaultZeroBorrowFeeStatic = 200;
   uint256 constant DefaultRenBorrowFeeStatic = 200;
   uint256 constant DefaultZeroFeeShareBips = 200;
+  uint256 constant MaxUintApprove = ~uint256(0) >> 2;
 
   // Tokens
   address renbtc = 0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D;
@@ -55,6 +56,8 @@ contract VaultTestHelpers is Test {
   ZeroBTC vault;
   ProxyAdmin proxyAdmin;
   address implementation;
+
+  uint256 gatewayNonces;
 
   /**
    * @dev Get future address for contract deployed with create
@@ -204,7 +207,7 @@ contract VaultTestHelpers is Test {
 
   function mintRenBtc(uint256 btcAmount) internal {
     // Mint asset
-    IGateway(gateway).mint(bytes32(0x0), btcAmount, bytes32(0x0), "");
+    IGateway(gateway).mint(bytes32(gatewayNonces), btcAmount, bytes32(gatewayNonces++), "");
   }
 
   function deposit(uint256 btcAmount) internal {

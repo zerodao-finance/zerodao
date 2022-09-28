@@ -173,16 +173,38 @@ contract Common is VaultTestHelpers {
     b = vault.totalAssets();
   }
 
-  function testShareRebaseMechanics() public {
+  function approveDeposit(address user) public {
+    address[] memory users = new address[](1);
+    users[0] = user;
+    vault.setAuthorizedUsers(users);
+  }
+
+  function testShareRebalanceMechanics() public {
     bytes memory data;
+    // using a different user
+    approveDeposit(address(100));
+    vm.startPrank(address(100));
+    mintRenBtc(2e6);
+    IERC20(renbtc).approve(address(vault), MaxUintApprove);
+    vault.deposit(1e6, address(100));
+    vm.stopPrank();
+    //back to address(this)
+    uint256 assetsOfLenderBefore = vault.convertToAssets(vault.balanceOf(address(this)));
     (uint256 supplyBefore, uint256 assetsBefore) = getVaultStats();
     vault.loan(address(0x0), zerowallet, 1e6, 1, data);
     mintRenBtc(1e6);
     IERC20(renbtc).approve(address(vault), 1e6);
-    vault.deposit(1e6, address(this));
+    vm.startPrank(address(100));
+    vault.deposit(1e6, address(100));
+    vm.stopPrank();
     vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
+    vault.withdraw(1e6, address(this), address(this));
     (uint256 supplyAfter, uint256 assetsAfter) = getVaultStats();
     console2.log(supplyBefore, supplyAfter, assetsBefore, assetsAfter);
+    uint256 assetsOfLender = vault.convertToAssets(vault.balanceOf(address(this)));
+    uint256 assetsOfSecondDeposit = vault.convertToAssets(vault.balanceOf(address(100)));
+    uint256 totalLoss = assetsOfLenderBefore - assetsOfLender;
+    console2.log(totalLoss, assetsOfSecondDeposit, assetsOfLender + assetsOfSecondDeposit, assetsAfter);
   }
 }
