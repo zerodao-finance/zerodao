@@ -179,6 +179,16 @@ contract Common is VaultTestHelpers {
     vault.setAuthorizedUsers(users);
   }
 
+  function testShareLoss() public {
+    bytes memory data;
+    uint256 assetsOfLenderBefore = vault.convertToAssets(vault.balanceOf(address(this)));
+    vault.loan(address(0x0), zerowallet, 1e6, 1, data);
+    vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
+    vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
+    uint256 assetsOfLender = vault.convertToAssets(vault.balanceOf(address(this)));
+    console.log(assetsOfLenderBefore - assetsOfLender, vault.totalAssets());
+  }
+
   function testShareRebalanceMechanics() public {
     bytes memory data;
     // using a different user
