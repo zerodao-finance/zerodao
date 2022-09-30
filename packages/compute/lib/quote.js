@@ -49,7 +49,6 @@ const getChainNameFixture = (chainName) => {
 exports.getChainNameFixture = getChainNameFixture;
 function makeQuoter(CHAIN = "1", provider) {
     const chain = returnChainDetails(CHAIN);
-    console.log(chain);
     const renCrv = new contracts_1.Contract(common_1.FIXTURES[(0, exports.getChainNameFixture)(chain.name)]["Curve_Ren"], [
         "function get_dy(int128, int128, uint256) view returns (uint256)",
         "function get_dy_underlying(int128, int128, uint256) view returns (uint256)",

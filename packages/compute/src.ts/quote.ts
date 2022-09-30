@@ -55,7 +55,6 @@ export const getChainNameFixture = (chainName) => {
 
 export function makeQuoter(CHAIN = "1", provider?) {
   const chain = returnChainDetails(CHAIN);
-  console.log(chain);
   const renCrv = new Contract(
     FIXTURES[getChainNameFixture(chain.name)]["Curve_Ren"],
     [
