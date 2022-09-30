@@ -14,7 +14,7 @@ const zeroWebhookMiddleware = (req, res, next) => {
         if (!signature || typeof signature !== 'string' || signature.length !== 132)
             req.signerAddress = null;
         else
-            req.signerAddress = (0, transactions_1.recoverAddress)((0, webhook_1.hashWebhookMessage)((0, bytes_1.hexlify)((0, request_1.fromPlainObject)(req.body).serialize())), req.headers['X-Signature']);
+            req.signerAddress = (0, transactions_1.recoverAddress)((0, webhook_1.hashWebhookMessage)((0, bytes_1.hexlify)((0, request_1.fromPlainObject)(req.body).serialize())), signature);
         next();
     };
 };
