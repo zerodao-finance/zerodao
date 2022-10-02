@@ -179,6 +179,8 @@ contract Common is VaultTestHelpers {
     vault.setAuthorizedUsers(users);
   }
 
+  // WIP tests, does not specifically test anything except logs
+
   function testShareLoss() public {
     bytes memory data;
     uint256 assetsOfLenderBefore = vault.convertToAssets(vault.balanceOf(address(this)));
@@ -200,8 +202,11 @@ contract Common is VaultTestHelpers {
     vm.stopPrank();
     //back to address(this)
     uint256 assetsOfLenderBefore = vault.convertToAssets(vault.balanceOf(address(this)));
+    uint256 sharesOfLenderBefore = vault.balanceOf(address(this));
+    uint256 sharesOfAddressBefore = vault.balanceOf(address(100));
     (uint256 supplyBefore, uint256 assetsBefore) = getVaultStats();
     vault.loan(address(0x0), zerowallet, 1e6, 1, data);
+    uint256 assetsOfLenderAfter = vault.convertToAssets(vault.balanceOf(address(this)));
     mintRenBtc(1e6);
     IERC20(renbtc).approve(address(vault), 1e6);
     vm.startPrank(address(100));
@@ -209,12 +214,12 @@ contract Common is VaultTestHelpers {
     vm.stopPrank();
     vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
-    vault.withdraw(1e6, address(this), address(this));
     (uint256 supplyAfter, uint256 assetsAfter) = getVaultStats();
-    console2.log(supplyBefore, supplyAfter, assetsBefore, assetsAfter);
     uint256 assetsOfLender = vault.convertToAssets(vault.balanceOf(address(this)));
     uint256 assetsOfSecondDeposit = vault.convertToAssets(vault.balanceOf(address(100)));
     uint256 totalLoss = assetsOfLenderBefore - assetsOfLender;
-    console2.log(totalLoss, assetsOfSecondDeposit, assetsOfLender + assetsOfSecondDeposit, assetsAfter);
+    require(totalLoss <= 1e6, "loss greater than loan amount");
   }
+
+  function test2OnRebalanceMechanics() public {}
 }
