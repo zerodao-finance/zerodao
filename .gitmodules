@@ -1,0 +1,18 @@
+[submodule "packages/protocol/lib/oz410"]
+	path = packages/protocol/lib/oz410
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/protocol/lib/oz460"]
+	path = packages/protocol/lib/oz460
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/protocol/lib/@openzeppelin/contracts-new"]
+	path = packages/protocol/lib/@openzeppelin/contracts-new
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/protocol/lib/@openzeppelin/contracts"]
+	path = packages/protocol/lib/@openzeppelin/contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/protocol/lib/@uniswap/v3-periphery"]
+	path = packages/protocol/lib/@uniswap/v3-periphery
+	url = https://github.com/uniswap/v3-periphery
+[submodule "packages/protocol/lib/@rari-capital/solmate"]
+	path = packages/protocol/lib/@rari-capital/solmate
+	url = https://github.com/transmissions11/solmate
