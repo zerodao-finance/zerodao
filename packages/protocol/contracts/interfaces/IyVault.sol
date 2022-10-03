@@ -1,6 +1,6 @@
 pragma solidity >=0.6.0 <0.8.0;
 
-import { IERC20 } from "oz410/token/ERC20/IERC20.sol";
+import { IERC20 } from "oz410/contracts/token/ERC20/IERC20.sol";
 
 abstract contract IyVault is IERC20 {
   function pricePerShare() external view virtual returns (uint256);

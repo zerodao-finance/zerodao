@@ -1,15 +1,2 @@
 ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
-@openzeppelin=node_modules/@openzeppelin
-oz410=node_modules/oz410
-oz460=node_modules/oz460
-ozu=node_modules/ozu
-@uniswap/v3-periphery=node_modules/@uniswap/v3-periphery
-@uniswap/v3-core=node_modules/@uniswap/v3-core
-@uniswap/v2-periphery=node_modules/@uniswap/v2-periphery
-@uniswap/v2-core=node_modules/@uniswap/v2-core
-@rari-capital/solmate=node_modules/@rari-capital/solmate
-@gnosis.pm/safe-contracts=node_modules/@gnosis.pm/safe-contracts
-@traderjoe-xyz/core=node_modules/@traderjoe-xyz/core
-
-

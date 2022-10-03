@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 
 import { BaseConvert } from "../BaseConvert.sol";
 import { ICurveInt128 } from "../../interfaces/CurvePools/ICurveInt128.sol";
-import { SafeMath } from "@openzeppelin/contracts-new/utils/math/SafeMath.sol";
-import { SafeERC20 } from "@openzeppelin/contracts-new/token/ERC20/utils/SafeERC20.sol";
-import { IERC20 } from "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
+import { SafeMath } from "@openzeppelin/contracts-new/contracts/utils/math/SafeMath.sol";
+import { SafeERC20 } from "@openzeppelin/contracts-new/contracts/token/ERC20/utils/SafeERC20.sol";
+import { IERC20 } from "@openzeppelin/contracts-new/contracts/token/ERC20/IERC20.sol";
 
 contract ConvertWBTCMainnet is BaseConvert {
   using SafeMath for *;

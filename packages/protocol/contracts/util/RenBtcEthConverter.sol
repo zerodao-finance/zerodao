@@ -5,7 +5,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "../interfaces/CurvePools/ICurveInt128.sol";
 import "../interfaces/IWETH.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-new/contracts/token/ERC20/IERC20.sol";
 
 contract RenBtcEthConverterMainnet {
   ICurveInt128 rencrv = ICurveInt128(0x93054188d876f558f4a66B2EF1d97d16eDf0895B);
