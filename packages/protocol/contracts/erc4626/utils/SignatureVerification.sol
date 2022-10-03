@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13;
 
 import "../EIP712/UpgradeableEIP712.sol";
-import { ECDSA } from "oz460/contracts/utils/cryptography/ECDSA.sol";
+import { ECDSA } from "oz460/utils/cryptography/ECDSA.sol";
 
 bytes constant Permit_typeString = "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)";
 bytes32 constant Permit_typeHash = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;

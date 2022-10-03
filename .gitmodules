@@ -13,3 +13,12 @@
 [submodule "packages/protocol/lib/@uniswap/v3-periphery"]
 	path = packages/protocol/lib/@uniswap/v3-periphery
 	url = https://github.com/uniswap/v3-periphery
+[submodule "packages/protocol/lib/@rari-capital/solmate"]
+	path = packages/protocol/lib/@rari-capital/solmate
+	url = https://github.com/transmissions11/solmate
+[submodule "packages/protocol/lib/@uniswap/v3-core"]
+	path = packages/protocol/lib/@uniswap/v3-core
+	url = https://github.com/uniswap/v3-core
+[submodule "packages/protocol/lib/solmate"]
+	path = packages/protocol/lib/solmate
+	url = https://github.com/transmissions11/solmate
