@@ -182,6 +182,29 @@ contract RevertTest is Common {
     vault.repay(address(0x0), zerowallet, 1e6, 1, data, address(this), bytes32(0x0), sig);
   }
 
+  function testRevertOnWithdrawingLockedShares() public {
+    bytes memory data;
+    // using a different user
+    approveDeposit(address(100));
+    vm.startPrank(address(100));
+    mintRenBtc(2e6);
+    IERC20(renbtc).approve(address(vault), MaxUintApprove);
+    vault.deposit(1e6, address(100));
+    vault.loan(address(0x0), zerowallet, 1e6, 1, data);
+    vault.withdraw(1e6, address(100), address(100));
+  }
+
+  function testRevertOnLoanMoreThanLendersBalance() public {
+    bytes memory data;
+    // using a different user
+    approveDeposit(address(100));
+    vm.startPrank(address(100));
+    mintRenBtc(2e6);
+    IERC20(renbtc).approve(address(vault), MaxUintApprove);
+    vault.deposit(1e6, address(100));
+    vault.loan(address(0x0), zerowallet, 2e6, 1, data);
+  }
+
   //TODO: check if this is intended behavior
   // function testFailOnRepayingExpiredLoan() public {
   //   bytes memory data;
