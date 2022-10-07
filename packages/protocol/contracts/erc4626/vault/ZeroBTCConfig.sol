@@ -112,6 +112,10 @@ abstract contract ZeroBTCConfig is ZeroBTCCache {
     for (uint256 i = 0; i < users.length; i++) _authorized[users[i]] = true;
   }
 
+  function authorize(address user) external onlyGovernance {
+    _authorized[user] = true;
+  }
+
   function removeAuthorizedUsers(address[] memory users) external onlyGovernance nonReentrant {
     for (uint256 i = 0; i < users.length; i++) _authorized[users[i]] = false;
   }
