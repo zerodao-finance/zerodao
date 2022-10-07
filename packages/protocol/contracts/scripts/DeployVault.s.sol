@@ -111,5 +111,10 @@ contract DeployVault is Script {
 
   function run() external {
     uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+    address deployer = vm.addr(deployerKey);
+    vm.startBroadcast(deployerKey);
+    renBtcConverter = address(new RenBtcEthConverterMainnet());
+    proxyAdmin = new ProxyAdmin();
+    initializeProxy(deployer, deployer);
   }
 }
