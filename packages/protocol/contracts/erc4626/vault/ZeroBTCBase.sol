@@ -233,4 +233,8 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
   /*//////////////////////////////////////////////////////////////
                           External Setters
   //////////////////////////////////////////////////////////////*/
+
+  function authorize(address user) external onlyGovernance {
+    _authorized[user] = true;
+  }
 }

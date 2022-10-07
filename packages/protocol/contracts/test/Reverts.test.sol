@@ -191,6 +191,7 @@ contract RevertTest is Common {
     IERC20(renbtc).approve(address(vault), MaxUintApprove);
     vault.deposit(1e6, address(100));
     vault.loan(address(0x0), zerowallet, 1e6, 1, data);
+    vm.expectRevert();
     vault.withdraw(1e6, address(100), address(100));
   }
 
@@ -202,6 +203,7 @@ contract RevertTest is Common {
     mintRenBtc(2e6);
     IERC20(renbtc).approve(address(vault), MaxUintApprove);
     vault.deposit(1e6, address(100));
+    vm.expectRevert();
     vault.loan(address(0x0), zerowallet, 2e6, 1, data);
   }
 

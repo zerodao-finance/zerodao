@@ -45,9 +45,6 @@ contract DeployVault is Script {
   address renBtcConverter;
   address proxyAdmin;
   address implementation;
-  address moduleWBTC;
-  address moduleUSDC;
-  address moduleETH;
 
   /**
    * @dev Get future address for contract deployed with create
@@ -117,15 +114,7 @@ contract DeployVault is Script {
     address deployer = vm.addr(deployerKey);
     vm.startBroadcast(deployerKey);
     renBtcConverter = address(new RenBtcEthConverterMainnet());
-    moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
-    moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
-    moduleETH = address(new ConvertNativeMainnet(renbtc));
-    proxyAdmin = address(new ProxyAdmin());
+    proxyAdmin = new ProxyAdmin();
     initializeProxy(deployer, deployer);
-    vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
-    vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
-    vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
-    vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
-    vault.authorize(deployer);
   }
 }
