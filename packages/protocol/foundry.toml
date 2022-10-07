@@ -9,6 +9,7 @@ allow_paths = [
 via_ir = true
 optimizer = true
 optimizer_runs = 2000
+solc_version = "0.8.15"
 
 [rpc_endpoints]
 mainnet = "https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2"

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8.7 <0.9.0;
+pragma solidity ^0.8.15;
 import "forge-std/Script.sol";
 import "../erc4626/vault/ZeroBTC.sol";
 import { IGateway, IGatewayRegistry } from "../interfaces/IGatewayRegistry.sol";
@@ -114,7 +114,7 @@ contract DeployVault is Script {
     address deployer = vm.addr(deployerKey);
     vm.startBroadcast(deployerKey);
     renBtcConverter = address(new RenBtcEthConverterMainnet());
-    proxyAdmin = new ProxyAdmin();
+    proxyAdmin = address(new ProxyAdmin());
     initializeProxy(deployer, deployer);
   }
 }
