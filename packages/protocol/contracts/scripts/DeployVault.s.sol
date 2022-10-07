@@ -92,14 +92,18 @@ contract DeployVault is Script {
     );
   }
 
-  function deployProxy(uint256 skip) internal returns (ZeroBTC _vault) {
-    deployVaultImplementation(getDefaultCreateAddress(address(this), skip));
+  function deployProxy(address deployer, uint256 skip) internal returns (ZeroBTC _vault) {
+    deployVaultImplementation(getDefaultCreateAddress(deployer, skip));
     TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(implementation, (proxyAdmin), "");
     _vault = ZeroBTC(payable(address(_proxy)));
   }
 
-  function initializeProxy(address initialGovernance, address initialHarvester) internal {
-    vault = deployProxy(1);
+  function initializeProxy(
+    address initialGovernance,
+    address initialHarvester,
+    address deployer
+  ) internal {
+    vault = deployProxy(deployer, 1);
     vault.initialize(
       // initialGovernance
       initialGovernance,
@@ -122,7 +126,7 @@ contract DeployVault is Script {
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));
     proxyAdmin = address(new ProxyAdmin());
-    initializeProxy(deployer, deployer);
+    initializeProxy(deployer, deployer, deployer);
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
