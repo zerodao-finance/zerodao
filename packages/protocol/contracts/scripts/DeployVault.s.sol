@@ -114,9 +114,10 @@ contract DeployVault is Script {
 
   function run() external {
     uint256 deployerKey = vm.envUint("PRIVATE_KEY");
-    address deployer = vm.addr(deployerKey);
+    address deployer = vm.rememberKey(deployerKey);
     vm.startBroadcast(deployerKey);
     renBtcConverter = address(new RenBtcEthConverterMainnet());
+    RenBtcEthConverterMainnet(payable(renBtcConverter)).initialize();
     moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));

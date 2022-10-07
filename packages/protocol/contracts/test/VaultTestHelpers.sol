@@ -122,6 +122,7 @@ contract VaultTestHelpers is Test {
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));
     renBtcConverter = address(new RenBtcEthConverterMainnet());
+    RenBtcEthConverterMainnet(payable(renBtcConverter)).initialize();
   }
 
   function setUp() public virtual {
