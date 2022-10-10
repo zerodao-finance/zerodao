@@ -19,11 +19,11 @@ contract DeployVault is Script {
   uint256 constant DefaultCacheTTL = 3600;
   uint256 constant DefaultMaxLoanDuration = 86400;
   uint256 constant DefaultTargetEthReserve = 1 ether;
-  uint256 constant DefaultMaxGasProfitShareBips = 4000;
+  uint256 constant DefaultMaxGasProfitShareBips = 1000;
   uint256 constant DefaultZeroBorrowFeeBips = 100;
-  uint256 constant DefaultRenBorrowFeeBips = 100;
-  uint256 constant DefaultZeroBorrowFeeStatic = 200;
-  uint256 constant DefaultRenBorrowFeeStatic = 200;
+  uint256 constant DefaultRenBorrowFeeBips = 20;
+  uint256 constant DefaultZeroBorrowFeeStatic = 20000;
+  uint256 constant DefaultRenBorrowFeeStatic = 0;
   uint256 constant DefaultZeroFeeShareBips = 8000;
   uint256 constant MaxUintApprove = ~uint256(0) >> 2;
 
