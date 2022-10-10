@@ -23,14 +23,14 @@ contract VaultTestHelpers is Test {
 
   //initializer values
   uint256 constant DefaultCacheTTL = 3600;
-  uint256 constant DefaultMaxLoanDuration = 86400;
+  uint256 constant DefaultMaxLoanDuration = 3600;
   uint256 constant DefaultTargetEthReserve = 1 ether;
   uint256 constant DefaultMaxGasProfitShareBips = 200.000;
-  uint256 constant DefaultZeroBorrowFeeBips = 1000;
-  uint256 constant DefaultRenBorrowFeeBips = 1000;
+  uint256 constant DefaultZeroBorrowFeeBips = 200;
+  uint256 constant DefaultRenBorrowFeeBips = 200;
   uint256 constant DefaultZeroBorrowFeeStatic = 200;
   uint256 constant DefaultRenBorrowFeeStatic = 200;
-  uint256 constant DefaultZeroFeeShareBips = 80000;
+  uint256 constant DefaultZeroFeeShareBips = 200;
   uint256 constant MaxUintApprove = ~uint256(0) >> 2;
 
   // Tokens

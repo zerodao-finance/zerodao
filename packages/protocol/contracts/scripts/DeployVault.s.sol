@@ -17,14 +17,14 @@ import "forge-std/console2.sol";
 
 contract DeployVault is Script {
   uint256 constant DefaultCacheTTL = 3600;
-  uint256 constant DefaultMaxLoanDuration = 3600;
+  uint256 constant DefaultMaxLoanDuration = 86400;
   uint256 constant DefaultTargetEthReserve = 1 ether;
-  uint256 constant DefaultMaxGasProfitShareBips = 200.000;
-  uint256 constant DefaultZeroBorrowFeeBips = 200;
-  uint256 constant DefaultRenBorrowFeeBips = 200;
+  uint256 constant DefaultMaxGasProfitShareBips = 4000;
+  uint256 constant DefaultZeroBorrowFeeBips = 100;
+  uint256 constant DefaultRenBorrowFeeBips = 100;
   uint256 constant DefaultZeroBorrowFeeStatic = 200;
   uint256 constant DefaultRenBorrowFeeStatic = 200;
-  uint256 constant DefaultZeroFeeShareBips = 200;
+  uint256 constant DefaultZeroFeeShareBips = 8000;
   uint256 constant MaxUintApprove = ~uint256(0) >> 2;
 
   // Tokens
@@ -117,6 +117,7 @@ contract DeployVault is Script {
   }
 
   function run() external {
+    vm.createSelectFork(vm.rpcUrl("mainnet"));
     uint256 deployerKey = vm.envUint("PRIVATE_KEY");
     address deployer = vm.rememberKey(deployerKey);
     vm.startBroadcast(deployerKey);
