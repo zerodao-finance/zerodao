@@ -13,7 +13,6 @@ import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/contrac
 import { ProxyAdmin } from "@openzeppelin/contracts-new/contracts/proxy/transparent/ProxyAdmin.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
-import "forge-std/console2.sol";
 
 contract DeployVault is Script {
   uint256 constant DefaultCacheTTL = 3600;
@@ -122,7 +121,6 @@ contract DeployVault is Script {
     address deployer = vm.rememberKey(deployerKey);
     vm.startBroadcast(deployerKey);
     renBtcConverter = address(new RenBtcEthConverterMainnet());
-    RenBtcEthConverterMainnet(payable(renBtcConverter)).initialize();
     moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));

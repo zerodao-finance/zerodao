@@ -188,7 +188,6 @@ contract Common is VaultTestHelpers {
     vm.warp(block.timestamp + DefaultMaxLoanDuration + 1);
     vault.closeExpiredLoan(address(0x0), zerowallet, 1000000, 1, data, address(this));
     uint256 assetsOfLender = vault.convertToAssets(vault.balanceOf(address(this)));
-    console.log(assetsOfLenderBefore - assetsOfLender, vault.totalAssets());
   }
 
   function testShareRebalanceMechanics() public {
