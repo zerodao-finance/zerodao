@@ -120,10 +120,3 @@ abstract contract BaseModule is ZeroBTCStorage {
   }
 }
 
-contract ABC {
-  function x(uint256 a) external pure {
-    assembly {
-      a := or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), shr(96, a))))))
-    }
-  }
-}
