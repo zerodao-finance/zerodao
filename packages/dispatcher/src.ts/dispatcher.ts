@@ -154,8 +154,16 @@ export class Dispatcher {
             hadError
           ) {
             this.logger.info("tx simulation failed");
+            // Remove if transfer amount exceeds balance
+            // Not certain if exception string or object, so account for both
+            this.logger.info(typeof hadError, hadError)
 	          if(typeof hadError === 'string' && hadError.includes('transfer amount exceeds balance')) {
               await this.redis.lrem("/zero/dispatch", txSerialized, 1);
+            }
+            else if(typeof hadError === 'object'){
+              if(JSON.stringify(hadError).includes('transfer amount exceeds balance')) {
+                await this.redis.lrem("/zero/dispatch", txSerialized, 1);
+              }
             }
           }
           const dispatched = await this.getSigner(tx.chainId)
