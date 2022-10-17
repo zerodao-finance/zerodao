@@ -120,9 +120,12 @@ class Dispatcher {
                     if ((typeof response === "string" && response.match(EIP838_BYTES)) ||
                         hadError) {
                         this.logger.info("tx simulation failed");
-                        //continue;
+                        if (typeof hadError === 'string' && hadError.includes('transfer amount exceeds balance')) {
+                            await this.redis.lrem("/zero/dispatch", txSerialized, 1);
+                        }
                     }
-                    const dispatched = await this.getSigner(tx.chainId).sendTransaction(txObject);
+                    const dispatched = await this.getSigner(tx.chainId)
+                        .sendTransaction(txObject);
                     if (tx.chainId === 1)
                         dispatched.wait = (0, wait_1.makeFlashbotsWait)(dispatched, this.logger); // poll flashbots protect
                     chainIdToPromise[tx.chainId] = dispatched
@@ -138,7 +141,7 @@ class Dispatcher {
             }
             catch (e) {
                 this.logger.error(e);
-                //        await this.redis.rpush('/zero/dispatch', txSerialized)
+                // await this.redis.rpush('/zero/dispatch', txSerialized)
             }
             await this.timeout(1000);
         }
