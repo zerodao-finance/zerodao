@@ -9,7 +9,6 @@
       "noImplicitAny": false,
       "esModuleInterop": true,
       "sourceMap": true,
-      "outDir": "lib",
       "declaration": true,
       "types": [
         "node"
