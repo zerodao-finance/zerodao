@@ -1,18 +1,23 @@
-const path = require('path');
+const path = require("path");
+const webpack = require("webpack");
 module.exports = {
-  entry: './src.ts/index.ts',
-  mode: process.env.NODE_ENV || 'production',
+  entry: "./src.ts/index.ts",
+  mode: process.env.NODE_ENV || "production",
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/,
       },
     ],
   },
+  plugins: [new webpack.ProvidePlugin({ process: "process/browser" })],
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
+    alias: {
+      process: "process/browser",
+    },
     fallback: {
       crypto: require.resolve("crypto-browserify"),
       stream: require.resolve("stream-browserify"),
@@ -24,10 +29,12 @@ module.exports = {
       zlib: require.resolve("browserify-zlib"),
       url: require.resolve("url"),
       buffer: require.resolve("buffer"),
-    }
+    },
   },
   output: {
-    filename: 'p2p.js',
-    path: path.resolve(__dirname, 'lib'),
+    filename: "index.js",
+    path: path.resolve(__dirname, "lib"),
+    libraryTarget: "umd",
+    library: "this",
   },
 };
