@@ -15,6 +15,13 @@ const config = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
+      {
+        test: require.resolve(__dirname, "./node_modules/libp2p/libp2p"),
+        loader: "exports-loader",
+        options: {
+          exports: "Libp2pNode"
+        }
+      }
     ],
   },
   plugins: [new webpack.ProvidePlugin({ process: "process/browser" })],
@@ -33,7 +40,7 @@ const config = {
       fs: false,
       zlib: require.resolve("browserify-zlib"),
       url: require.resolve("url"),
-      buffer: require.resolve("buffer"),
+      buffer: require.resolve("buffer")
     },
   },
   output: {
