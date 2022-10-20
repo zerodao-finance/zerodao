@@ -27,7 +27,7 @@
     "buffer": "^6.0.3",
     "cryptico-js": "^1.1.0",
     "is-browser": "^2.1.0",
-    "libp2p": "^0.36.2",
+    "libp2p": "^0.40.0",
     "libp2p-bootstrap": "^0.14.0",
     "libp2p-crypto": "^0.21.2",
     "libp2p-gossipsub": "^0.13.0",

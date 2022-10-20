@@ -10,7 +10,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "webpack --config webpack.config.cjs",
+    "build": "webpack",
     "test": "yarn build && jest"
   },
   "dependencies": {

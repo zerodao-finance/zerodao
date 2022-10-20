@@ -1,7 +1,12 @@
-import PeerId = require("peer-id");
-import Libp2p = require("libp2p");
+import PeerId from "peer-id";
+import { Libp2pNode as Libp2p } from "libp2p/libp2p";
 import { Signer } from "@ethersproject/abstract-signer";
 import { Logger } from "@zerodao/logger";
+import type { Libp2pOptions } from "libp2p";
+interface ZeroP2POptions extends Libp2pOptions {
+    multiaddr: "dev-mainnet" | "mainnet";
+    signer: any;
+}
 export declare class ZeroP2P extends Libp2p {
     _keepers: Array<string>;
     logger: Logger;
@@ -26,7 +31,8 @@ export declare class ZeroP2P extends Libp2p {
     }): Promise<ZeroP2P>;
     start(): Promise<void>;
     setSigner(signer: any): void;
-    constructor(options: any);
+    constructor(options: ZeroP2POptions);
     subscribeKeepers(): Promise<void>;
     unsubscribeKeepers(): Promise<void>;
 }
+export {};
