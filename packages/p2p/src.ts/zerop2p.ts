@@ -1,30 +1,31 @@
 "use strict";
-import WS = require("libp2p-websockets");
-import Mplex = require("libp2p-mplex");
-import { NOISE } from "libp2p-noise";
-import KadDHT = require("libp2p-kad-dht");
-import Bootstrap = require("libp2p-bootstrap");
-import PeerInfo = require("peer-info");
-import PeerId = require("peer-id");
-import GossipSub = require("libp2p-gossipsub");
-import RelayConstants = require("libp2p/src/circuit/constants");
-import { FaultTolerance } from "libp2p/src/transport-manager";
-import WStar = require("libp2p-webrtc-star");
-import isBrowser = require("is-browser");
+import { mplex } from "@libp2p/mplex";
+import { noise } from "@chainsafe/libp2p-noise";
+import { kadDHT } from "@libp2p/kad-dht";
+import { bootstrap } from "@libp2p/bootstrap";
+import PeerInfo from "peer-info";
+import PeerId from "peer-id";
+import { GossipSub } from "@chainsafe/libp2p-gossipsub";
+import * as RelayConstants from "libp2p/circuit/constants";
+import { FaultTolerance } from "libp2p/transport-manager";
+import { webRTCStar } from "@libp2p/webrtc-star";
+import isBrowser from "is-browser";
 import { hexlify } from "@ethersproject/bytes";
 import { keccak256 } from "@ethersproject/solidity";
-import Libp2p = require("libp2p");
-import crypto from "libp2p-crypto";
-import wrtc = require("wrtc");
-import cryptico = require("cryptico-js");
-import globalObject = require("the-global-object");
+import { Libp2pNode as Libp2p } from "libp2p/libp2p";
+import { validateConfig } from "libp2p/config";
+import crypto from "@libp2p/crypto";
+import wrtc from "wrtc";
+import cryptico from "cryptico-js";
+import globalObject from "the-global-object";
 import { Buffer } from "buffer";
 import { mapValues } from "lodash";
-import base64url = require("base64url");
+import base64url from "base64url";
 import { Signer } from "@ethersproject/abstract-signer";
 
 import { createLogger, Logger } from "@zerodao/logger";
 import { fromBufferToJSON } from "@zerodao/buffer";
+import type { Libp2pInit, Libp2pOptions } from "libp2p";
 
 const returnOp = (v) => v;
 const logger = createLogger("@zerodao/p2p");
@@ -76,6 +77,11 @@ const coerceHexToBuffers = (v) => {
   return v;
 };
 
+interface ZeroP2POptions extends Libp2pOptions {
+  multiaddr: "dev-mainnet" | "mainnet";
+  signer: any;
+}
+
 export class ZeroP2P extends Libp2p {
   public _keepers: Array<string>;
   public logger: Logger;
@@ -100,6 +106,7 @@ export class ZeroP2P extends Libp2p {
   }
   static async fromSeed({ signer, seed, multiaddr }) {
     return new this({
+      //@ts-ignore
       peerId: await this.peerIdFromSeed(seed),
       multiaddr,
       signer,
@@ -114,73 +121,58 @@ export class ZeroP2P extends Libp2p {
   }
   async start() {
     await super.start();
-    await this.pubsub.start();
+    //@ts-ignore
+    this.pubsub.start();
   }
   setSigner(signer) {
     this.signer = signer;
     this.addressPromise = this.signer.getAddress();
   }
-  constructor(options) {
+
+  constructor(options: ZeroP2POptions) {
     const multiaddr = ZeroP2P.fromPresetOrMultiAddr(
       options.multiaddr || "mainnet"
     );
-    super({
-      peerId: options.peerId,
-      connectionManager: {
-        minConnections: 25,
-      },
-      relay: {
-        enabled: true,
-        advertise: {
-          bootDelay: RelayConstants.ADVERTISE_BOOT_DELAY,
-          enabled: false,
-          ttl: RelayConstants.ADVERTISE_TTL,
+    const opts: Libp2pInit = {
+      ...validateConfig({
+        peerId: options.peerId,
+        connectionManager: {
+          minConnections: 25,
         },
-        hop: {
-          enabled: false,
-          active: false,
-        },
-        autoRelay: {
-          enabled: false,
-          maxListeners: 2,
-        },
-      },
-      addresses: {
-        listen: [multiaddr],
-      },
-      modules: {
-        transport: [WStar],
-        streamMuxer: [Mplex],
-        connEncryption: [NOISE],
-        pubsub: GossipSub,
-        peerDiscovery: [Bootstrap],
-        dht: KadDHT,
-      },
-      config: {
-        peerDiscovery: {
-          autoDial: true,
-          [Bootstrap.tag]: {
-            enabled: true,
-            list: [
-              multiaddr + "QmXRimgxFGd8FEFRX8FvyzTG4jJTJ5pwoa3N5YDCrytASu",
-            ],
+        relay: {
+          enabled: true,
+          advertise: {
+            bootDelay: RelayConstants.ADVERTISE_BOOT_DELAY,
+            enabled: false,
+            ttl: RelayConstants.ADVERTISE_TTL,
+          },
+          hop: {
+            enabled: false,
+            active: false,
+          },
+          autoRelay: {
+            enabled: false,
+            maxListeners: 2,
           },
         },
-        transport: {
-          [WStar.prototype[Symbol.toStringTag]]: {
-            wrtc: !isBrowser && wrtc,
-          },
+        addresses: {
+          listen: [multiaddr],
         },
-        dht: {
-          enabled: true,
-          kBucketSize: 20,
-        },
-        pubsub: {
-          enabled: true,
-          emitSelf: false,
-        },
-      },
-    } as any);
+        transports: [webRTCStar()],
+        streamMuxers: [mplex()],
+        connectionEncryption: [noise()],
+        //@ts-ignore
+        pubsub: [() => new GossipSub({ enabled: true, emitSelf: false })],
+        dht: kadDHT({ kBucketSize: 20 }),
+      }),
+      peerDiscovery: [
+        bootstrap({
+          list: [multiaddr + "QmXRimgxFGd8FEFRX8FvyzTG4jJTJ5pwoa3N5YDCrytASu"],
+        }),
+        webRTCStar().discovery,
+      ],
+    };
+    super(opts);
     this._keepers = [];
     this.logger = logger;
     this.logger.debug("listening on", multiaddr);
@@ -194,6 +186,7 @@ export class ZeroP2P extends Libp2p {
         const { address } = fromBufferToJSON(data);
         if (!this._keepers.includes(from)) {
           this._keepers.push(from);
+          //@ts-ignore
           this.emit("keeper:discovery", from);
         }
       }

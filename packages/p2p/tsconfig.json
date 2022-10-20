@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "module": "nodenext",
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "target": "es2020",
