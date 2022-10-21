@@ -35,6 +35,8 @@ const config = {
     },
   },
   output: {
+    library: 'ZeroP2P',
+    libraryTarget: 'umd',
     globalObject: 'this',
     filename: "index.js",
     path: resolve(__dirname, "lib"),
