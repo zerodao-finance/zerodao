@@ -13,6 +13,9 @@
     "test": "yarn build && jest"
   },
   "dependencies": {
+    "wrtc": "^0.4.7"
+  },
+  "devDependencies": {
     "@chainsafe/libp2p-gossipsub": "^4.1.1",
     "@chainsafe/libp2p-noise": "^10.0.0",
     "@libp2p/bootstrap": "^5.0.0",
@@ -22,9 +25,6 @@
     "@libp2p/webrtc-star": "^5.0.3",
     "@libp2p/websockets": "^5.0.0",
     "libp2p": "^0.40.0",
-    "wrtc": "^0.4.7"
-  },
-  "devDependencies": {
     "@ethersproject/bytes": "^5.6.1",
     "@noble/ed25519": "^1.6.0",
     "@zerodao/buffer": "^0.3.40",
