@@ -1,8 +1,8 @@
-import PeerId from "peer-id";
-import { Libp2pNode as Libp2p } from "libp2p/libp2p";
-import { Signer } from "@ethersproject/abstract-signer";
-import { Logger } from "@zerodao/logger";
 import type { Libp2pOptions } from "libp2p";
+import { Libp2pNode as Libp2p } from "../../../node_modules/libp2p/dist/src/libp2p";
+import { Signer } from "@ethersproject/abstract-signer";
+import PeerId from "peer-id";
+import { Logger } from "@zerodao/logger";
 interface ZeroP2POptions extends Libp2pOptions {
     multiaddr: "dev-mainnet" | "mainnet";
     signer: any;

@@ -15,13 +15,6 @@ const config = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-      {
-        test: require.resolve(__dirname, "./node_modules/libp2p/libp2p"),
-        loader: "exports-loader",
-        options: {
-          exports: "Libp2pNode"
-        }
-      }
     ],
   },
   plugins: [new webpack.ProvidePlugin({ process: "process/browser" })],

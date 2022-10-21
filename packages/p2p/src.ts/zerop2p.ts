@@ -1,27 +1,34 @@
 "use strict";
-import { mplex } from "@libp2p/mplex";
-import { noise } from "@chainsafe/libp2p-noise";
-import { kadDHT } from "@libp2p/kad-dht";
-import { bootstrap } from "@libp2p/bootstrap";
-import PeerId from "peer-id";
-import { GossipSub } from "@chainsafe/libp2p-gossipsub";
-import * as RelayConstants from "libp2p/circuit/constants";
-import { webRTCStar } from "@libp2p/webrtc-star";
+// importing from node_modules for webpack: @libp2p
+import { mplex } from "../../../node_modules/@libp2p/mplex/dist/src/index";
+import { kadDHT } from "../../../node_modules/@libp2p/kad-dht/dist/src/index";
+import { webRTCStar } from "../../../node_modules/@libp2p/webrtc-star/dist/src/index";
+import crypto from "../../../node_modules/@libp2p/crypto/dist/src/index";
+import { bootstrap } from "../../../node_modules/@libp2p/bootstrap/dist/src/index";
+
+// importing from node_modules for webpack: libp2p
+import type { Libp2pInit, Libp2pOptions } from "libp2p";
+import * as RelayConstants from "../../../node_modules/libp2p/dist/src/circuit/constants";
+import { Libp2pNode as Libp2p } from "../../../node_modules/libp2p/dist/src/libp2p";
+import { validateConfig } from "../../../node_modules/libp2p/dist/src/config";
+
+// importing from node_modules for webpack: @chainsafe
+import { noise } from "../../../node_modules/@chainsafe/libp2p-noise/dist/src/index"; // TODO
+import { GossipSub } from "../../../node_modules/@chainsafe/libp2p-gossipsub/dist/src/index";
+
 import { hexlify } from "@ethersproject/bytes";
 import { keccak256 } from "@ethersproject/solidity";
-import { Libp2pNode as Libp2p } from "libp2p/libp2p";
-import { validateConfig } from "libp2p/config";
-import crypto from "@libp2p/crypto";
+import { Signer } from "@ethersproject/abstract-signer";
+
+import PeerId from "peer-id";
 import cryptico from "cryptico-js";
 import globalObject from "the-global-object";
 import { Buffer } from "buffer";
 import { mapValues } from "lodash";
 import base64url from "base64url";
-import { Signer } from "@ethersproject/abstract-signer";
 
 import { createLogger, Logger } from "@zerodao/logger";
 import { fromBufferToJSON } from "@zerodao/buffer";
-import type { Libp2pInit, Libp2pOptions } from "libp2p";
 
 const returnOp = (v) => v;
 const logger = createLogger("@zerodao/p2p");
