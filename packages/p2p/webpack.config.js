@@ -1,10 +1,8 @@
-import { resolve } from "node:path";
-import webpack from "webpack";
-import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
+const { resolve } = require("node:path");
+const webpack = require("webpack");
+const { createRequire } = require("node:module");
+const { fileURLToPath } = require("node:url");
 
-const require = createRequire(import.meta.url);
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const config = {
   entry: "./src.ts/index.ts",
   mode: process.env.NODE_ENV || "production",
@@ -37,6 +35,7 @@ const config = {
     },
   },
   output: {
+    globalObject: 'this',
     filename: "index.js",
     path: resolve(__dirname, "lib"),
     libraryTarget: "umd",
@@ -44,4 +43,4 @@ const config = {
   },
 };
 
-export default config;
+module.exports = config;

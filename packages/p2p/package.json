@@ -2,7 +2,7 @@
   "name": "@zerodao/p2p",
   "version": "0.3.40",
   "description": "zerop2p implementation",
-  "main": "index.js",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
