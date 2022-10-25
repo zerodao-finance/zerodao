@@ -11,7 +11,7 @@ const config = {
       {
         test: /\.tsx?$/,
         use: "ts-loader",
-        exclude: /node_modules\/(?!(cryptico-js)\/).*/,
+        exclude: /node_modules\/(?!(cryptico-js|this-global-object|libp2p)\/).*/,
       }
     ],
   },

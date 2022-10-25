@@ -1,4 +1,5 @@
 "use strict";
+
 // importing from node_modules for webpack: @libp2p
 import { mplex } from "../../../node_modules/@libp2p/mplex/dist/src/index";
 import { kadDHT } from "../../../node_modules/@libp2p/kad-dht/dist/src/index";
@@ -13,7 +14,7 @@ import { Libp2pNode as Libp2p } from "../../../node_modules/libp2p/dist/src/libp
 import { validateConfig } from "../../../node_modules/libp2p/dist/src/config";
 
 // importing from node_modules for webpack: @chainsafe
-import { noise } from "../../../node_modules/@chainsafe/libp2p-noise/dist/src/index"; // TODO
+import { noise } from "../../../node_modules/@chainsafe/libp2p-noise/dist/src/index";
 import { GossipSub } from "../../../node_modules/@chainsafe/libp2p-gossipsub/dist/src/index";
 
 import { hexlify } from "@ethersproject/bytes";
