@@ -31,35 +31,15 @@ const generalConfig = {
       url: require.resolve("url"),
       buffer: require.resolve("buffer"),
     },
+  },
+  output: {
+    filename: "browser.js",
+    path: path.resolve(__dirname, "lib"),
+    libraryTarget: "umd",
+    library: "this",
   }
 };
 
-const browserConfig = {
-  // target: 'web',
-  output: {
-    filename: "index.js",
-    path: path.resolve(__dirname, "lib/browser"),
-    libraryTarget: "umd",
-    library: "this",
-  }
-}
-
-// Build not fully functional
-const nodeConfig = {
-  // target: 'node',
-  output: {
-    filename: "index.js",
-    path: path.resolve(__dirname, "lib/node"),
-    libraryTarget: "umd",
-    library: "this",
-  },
-}
-
 module.exports = (env, argsv) => {
-  Object.assign(browserConfig, generalConfig);
-  // Since Node build is not fully functional
-  // Object.assign(nodeConfig, generalConfig);
-
-  // return [browserConfig, nodeConfig];
-  return browserConfig;
+  return generalConfig;
 }

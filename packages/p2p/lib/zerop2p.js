@@ -25,11 +25,11 @@ const lodash_1 = require("lodash");
 const base64url = require("base64url");
 const logger_1 = require("@zerodao/logger");
 const buffer_2 = require("@zerodao/buffer");
-const packageJson = require("../../package.json");
 const returnOp = (v) => v;
-const logger = (0, logger_1.createLogger)(packageJson.name);
+const logger = (0, logger_1.createLogger)("@zerodao/p2p");
 globalObject.Buffer = globalObject.Buffer || buffer_1.Buffer;
-const mapToBuffers = (o) => (0, lodash_1.mapValues)(o, (v) => base64url(v.toByteArray && buffer_1.Buffer.from(v.toByteArray()) || buffer_1.Buffer.from((0, bytes_1.hexlify)(v).substr(2), 'hex')));
+const mapToBuffers = (o) => (0, lodash_1.mapValues)(o, (v) => base64url((v.toByteArray && buffer_1.Buffer.from(v.toByteArray())) ||
+    buffer_1.Buffer.from((0, bytes_1.hexlify)(v).substr(2), "hex")));
 const cryptoFromSeed = async function (seed) {
     const key = mapToBuffers(await cryptico.generateRSAKey(seed, 2048));
     key.dp = key.dmp1;
@@ -69,26 +69,26 @@ class ZeroP2P extends Libp2p {
         super({
             peerId: options.peerId,
             connectionManager: {
-                minConnections: 25
+                minConnections: 25,
             },
             relay: {
                 enabled: true,
                 advertise: {
                     bootDelay: RelayConstants.ADVERTISE_BOOT_DELAY,
                     enabled: false,
-                    ttl: RelayConstants.ADVERTISE_TTL
+                    ttl: RelayConstants.ADVERTISE_TTL,
                 },
                 hop: {
                     enabled: false,
-                    active: false
+                    active: false,
                 },
                 autoRelay: {
                     enabled: false,
-                    maxListeners: 2
-                }
+                    maxListeners: 2,
+                },
             },
             addresses: {
-                listen: [multiaddr]
+                listen: [multiaddr],
             },
             modules: {
                 transport: [WStar],
@@ -104,7 +104,7 @@ class ZeroP2P extends Libp2p {
                     [Bootstrap.tag]: {
                         enabled: true,
                         list: [
-                            multiaddr + 'QmXRimgxFGd8FEFRX8FvyzTG4jJTJ5pwoa3N5YDCrytASu'
+                            multiaddr + "QmXRimgxFGd8FEFRX8FvyzTG4jJTJ5pwoa3N5YDCrytASu",
                         ],
                     },
                 },
@@ -129,11 +129,10 @@ class ZeroP2P extends Libp2p {
         this.setSigner(options.signer);
     }
     static fromPresetOrMultiAddr(multiaddr) {
-        return this.PRESETS[(multiaddr || '').toUpperCase() || 'MAINNET'] || multiaddr;
+        return (this.PRESETS[(multiaddr || "").toUpperCase() || "MAINNET"] || multiaddr);
     }
     static toMessage(password) {
-        return ("/zerop2p/1.0.0/" +
-            (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
+        return ("/zerop2p/1.0.0/" + (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
     }
     static async peerIdFromSeed(seed) {
         return await PeerId.createFromPrivKey((await cryptoFromSeed(seed)).bytes);
@@ -177,8 +176,7 @@ class ZeroP2P extends Libp2p {
 }
 exports.ZeroP2P = ZeroP2P;
 ZeroP2P.PRESETS = {
-    MAINNET: '/dns4/p2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/',
-    'DEV-MAINNET': '/dns4/devp2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/'
+    MAINNET: "/dns4/p2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/",
+    "DEV-MAINNET": "/dns4/devp2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/",
 };
-;
 //# sourceMappingURL=zerop2p.js.map
