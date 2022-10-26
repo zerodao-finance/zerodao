@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-module.exports = {
+
+const generalConfig = {
   entry: "./src.ts/index.ts",
   mode: process.env.NODE_ENV || "production",
   module: {
@@ -30,11 +31,35 @@ module.exports = {
       url: require.resolve("url"),
       buffer: require.resolve("buffer"),
     },
-  },
+  }
+};
+
+const browserConfig = {
+  // target: 'web',
   output: {
     filename: "index.js",
-    path: path.resolve(__dirname, "lib"),
+    path: path.resolve(__dirname, "lib/browser"),
+    libraryTarget: "umd",
+    library: "this",
+  }
+}
+
+// Build not fully functional
+const nodeConfig = {
+  // target: 'node',
+  output: {
+    filename: "index.js",
+    path: path.resolve(__dirname, "lib/node"),
     libraryTarget: "umd",
     library: "this",
   },
-};
+}
+
+module.exports = (env, argsv) => {
+  Object.assign(browserConfig, generalConfig);
+  // Since Node build is not fully functional
+  // Object.assign(nodeConfig, generalConfig);
+
+  // return [browserConfig, nodeConfig];
+  return browserConfig;
+}
