@@ -1,14 +1,11 @@
 "use strict";
-import WS = require("libp2p-websockets");
 import Mplex = require("libp2p-mplex");
 import { NOISE } from "libp2p-noise";
 import KadDHT = require("libp2p-kad-dht");
 import Bootstrap = require("libp2p-bootstrap");
-import PeerInfo = require("peer-info");
 import PeerId = require("peer-id");
 import GossipSub = require("libp2p-gossipsub");
 import RelayConstants = require("libp2p/src/circuit/constants");
-import { FaultTolerance } from "libp2p/src/transport-manager";
 import WStar = require("libp2p-webrtc-star");
 import isBrowser = require("is-browser");
 import { hexlify } from "@ethersproject/bytes";
