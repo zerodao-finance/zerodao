@@ -2,20 +2,11 @@ const path = require("path");
 const webpack = require("webpack");
 
 const generalConfig = {
-  entry: "./src.ts/index.ts",
+  entry: "./lib/index.js",
   mode: process.env.NODE_ENV || "production",
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-    ],
-  },
   plugins: [new webpack.ProvidePlugin({ process: "process/browser" })],
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".js", ".json"],
     alias: {
       process: "process/browser",
     },
@@ -35,8 +26,6 @@ const generalConfig = {
   output: {
     filename: "browser.js",
     path: path.resolve(__dirname, "lib"),
-    libraryTarget: "umd",
-    library: "this",
   }
 };
 
