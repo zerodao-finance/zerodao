@@ -27,6 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.utils = exports.DEPLOYMENTS = exports.ZeroP2P = exports.makeCompute = exports.makeQuoter = exports.ID_CHAIN = exports.NAME_CHAIN = exports.CHAINS = exports.URLS = exports.CONTROLLER_DEPLOYMENTS = exports.RPC_ENDPOINTS = exports.RENVM_PROVIDERS = exports.FIXTURES = exports.toFixtureName = exports.isZcashAddress = void 0;
+// index file v2
 var common_1 = require("@zerodao/common");
 Object.defineProperty(exports, "isZcashAddress", { enumerable: true, get: function () { return common_1.isZcashAddress; } });
 Object.defineProperty(exports, "toFixtureName", { enumerable: true, get: function () { return common_1.toFixtureName; } });
@@ -48,13 +49,13 @@ __exportStar(require("@zerodao/logger"), exports);
 var p2p_1 = require("@zerodao/p2p");
 Object.defineProperty(exports, "ZeroP2P", { enumerable: true, get: function () { return p2p_1.ZeroP2P; } });
 const utilsModule = __importStar(require("@zerodao/utils"));
-const deployments = require("@zerodao/protocol");
+const deployments = __importStar(require("@zerodao/protocol/deployments/deployments.json"));
 exports.DEPLOYMENTS = deployments;
 const utils = Object.assign({
     applyRatio: compute_2.applyRatio,
     computeRandomValue: compute_2.computeRandomValue,
     getNonce: compute_2.getNonce,
-    getPNonce: compute_2.getPNonce
+    getPNonce: compute_2.getPNonce,
 }, utilsModule);
 exports.utils = utils;
 //# sourceMappingURL=index.js.map

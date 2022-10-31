@@ -3,6 +3,10 @@
   "version": "0.3.40",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
+  "type": "module",
+  "exports": {
+    ".": "lib/index.js"
+  },
   "repository": "https://github.com/zerodao-finance/zerodao",
   "author": "protoeloka",
   "license": "MIT",
@@ -40,11 +44,7 @@
     "access": "public"
   },
   "lint-staged": {
-    "*.{js,ts,tsx, jsx}": [
-      "eslint --quiet --fix"
-    ],
-    "*.{json,md,html,js,jsx,ts,tsx}": [
-      "prettier --write"
-    ]
+    "*.{js,ts,tsx, jsx}": ["eslint --quiet --fix"],
+    "*.{json,md,html,js,jsx,ts,tsx}": ["prettier --write"]
   }
 }

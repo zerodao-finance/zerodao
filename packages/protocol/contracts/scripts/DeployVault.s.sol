@@ -13,17 +13,16 @@ import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/contrac
 import { ProxyAdmin } from "@openzeppelin/contracts-new/contracts/proxy/transparent/ProxyAdmin.sol";
 import "../erc4626/interfaces/IRenBtcEthConverter.sol";
 import { BlockGasPriceOracle } from "../erc4626/utils/BlockGasPriceOracle.sol";
-import "forge-std/console2.sol";
 
 contract DeployVault is Script {
   uint256 constant DefaultCacheTTL = 3600;
   uint256 constant DefaultMaxLoanDuration = 86400;
   uint256 constant DefaultTargetEthReserve = 1 ether;
-  uint256 constant DefaultMaxGasProfitShareBips = 4000;
-  uint256 constant DefaultZeroBorrowFeeBips = 100;
-  uint256 constant DefaultRenBorrowFeeBips = 100;
-  uint256 constant DefaultZeroBorrowFeeStatic = 200;
-  uint256 constant DefaultRenBorrowFeeStatic = 200;
+  uint256 constant DefaultMaxGasProfitShareBips = 1000;
+  uint256 constant DefaultZeroBorrowFeeBips = 800;
+  uint256 constant DefaultRenBorrowFeeBips = 20;
+  uint256 constant DefaultZeroBorrowFeeStatic = 1;
+  uint256 constant DefaultRenBorrowFeeStatic = 1000;
   uint256 constant DefaultZeroFeeShareBips = 8000;
   uint256 constant MaxUintApprove = ~uint256(0) >> 2;
 
@@ -122,16 +121,16 @@ contract DeployVault is Script {
     address deployer = vm.rememberKey(deployerKey);
     vm.startBroadcast(deployerKey);
     renBtcConverter = address(new RenBtcEthConverterMainnet());
-    RenBtcEthConverterMainnet(payable(renBtcConverter)).initialize();
     moduleWBTC = address(new ConvertWBTCMainnet(renbtc));
     moduleUSDC = address(new ConvertUSDCMainnet(renbtc));
     moduleETH = address(new ConvertNativeMainnet(renbtc));
-    proxyAdmin = address(new ProxyAdmin());
-    initializeProxy(deployer, deployer, deployer);
+    proxyAdmin = address(0xFF727BDFa7608d7Fd12Cd2cDA1e7736ACbfCdB7B);
+    initializeProxy(deployer, 0xec5D65739C722A46cd79951E069753c2FC879B27, deployer);
     vault.addModule(address(moduleWBTC), ModuleType.LoanOverride, 181e3, 82e3);
     vault.addModule(address(moduleUSDC), ModuleType.LoanOverride, 330e3, 82e3);
     vault.addModule(address(moduleETH), ModuleType.LoanOverride, 257e3, 82e3);
     vault.addModule(address(0x0), ModuleType.Null, 84e3, 83e3);
     vault.authorize(deployer);
+    vault.setGovernance(0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC);
   }
 }

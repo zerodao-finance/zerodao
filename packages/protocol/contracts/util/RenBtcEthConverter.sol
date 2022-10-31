@@ -14,9 +14,7 @@ contract RenBtcEthConverterMainnet {
   ISwapRouter constant router = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
   uint256 constant MaxUintApprove = type(uint256).max;
 
-  constructor() {}
-
-  function initialize() public {
+  constructor() {
     bool success;
     (success, ) = renbtc.call(abi.encodeWithSelector(IERC20.approve.selector, address(rencrv), MaxUintApprove));
     require(success, "!renbtc");
@@ -25,6 +23,8 @@ contract RenBtcEthConverterMainnet {
     (success, ) = weth.call(abi.encodeWithSelector(IERC20.approve.selector, address(router), MaxUintApprove));
     require(success, "!weth");
   }
+
+  function initialize() public {}
 
   function convertToEth(uint256 minOut) public returns (uint256 amount) {
     uint256 wbtcAmount = IERC20(wbtc).balanceOf(address(this));

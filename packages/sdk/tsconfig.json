@@ -2,22 +2,16 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "module": "nodenext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "target": "es2020",
     "noImplicitAny": false,
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "declaration": true,
-    "types": [
-      "node"
-    ]
+    "declaration": true
   },
-  "include": [
-    "./src.ts/**/*"
-  ],
-  "exclude": [
-    "./lib"
-  ]
+  "include": ["./src.ts/*"],
+  "exclude": ["./lib"]
 }

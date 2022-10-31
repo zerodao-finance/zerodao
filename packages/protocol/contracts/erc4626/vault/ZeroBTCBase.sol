@@ -214,7 +214,8 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 zeroFeeShareBips
   ) internal {
     if (
-      (zeroBorrowFeeBips | renBorrowFeeBips | zeroFeeShareBips) > 2000 ||
+      (zeroBorrowFeeBips | renBorrowFeeBips) > 2000 ||
+      (zeroFeeShareBips) > 8000 ||
       zeroBorrowFeeBips == 0 ||
       renBorrowFeeBips == 0 ||
       zeroFeeShareBips == 0
