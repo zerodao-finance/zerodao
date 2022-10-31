@@ -10,18 +10,23 @@ const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
 const chains_bitcoin_1 = require("@renproject/chains-bitcoin");
 const bytes_1 = require("@ethersproject/bytes");
 const address_1 = require("@ethersproject/address");
-const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
 const { getUTXOs } = BTCHandler_1.BTCHandler;
 const getZcashUTXOs = async (testnet, { confirmations, address }) => {
-    const zcash = new chains_bitcoin_1.Zcash({ network: Boolean(testnet) ? 'testnet' : 'mainnet' });
+    const zcash = new chains_bitcoin_1.Zcash({
+        network: Boolean(testnet) ? "testnet" : "mainnet",
+    });
     const utxos = await zcash.api.fetchUTXOs(address);
     return utxos.filter((v) => v.height !== null);
 };
-const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === '0x' ? buffer_1.Buffer.from((0, bytes_1.hexlify)(hex).substr(2), 'hex').toString('utf8').substr(0, 1) === 't' : hex.substr(0, 2) === 'zs' || hex.substr(0, 1) === 't')(buffer_1.Buffer.isBuffer(hex) ? '0x' + hex.toString('hex') : hex);
+const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === "0x"
+    ? buffer_1.Buffer.from((0, bytes_1.hexlify)(hex).substr(2), "hex")
+        .toString("utf8")
+        .substr(0, 1) === "t"
+    : hex.substr(0, 2) === "zs" || hex.substr(0, 1) === "t")(buffer_1.Buffer.isBuffer(hex) ? "0x" + hex.toString("hex") : hex);
 const cache = {};
 const VAULT_DEPLOYMENTS = {
-    [constants_1.AddressZero]: 1
+    "0x11dbf784098e296471a08251178f757156651085": 1,
 };
 const getGateway = async (request) => {
     const { nonce } = request;
@@ -56,7 +61,7 @@ class PendingProcess {
     }
     async run() {
         // process first item in list
-        for (let i = 0; i < await this.redis.llen('/zero/pending'); i++) {
+        for (let i = 0; i < (await this.redis.llen("/zero/pending")); i++) {
             try {
                 const item = await this.redis.lindex("/zero/pending", i);
                 const transferRequest = JSON.parse(item);
@@ -70,13 +75,15 @@ class PendingProcess {
                 const gateway = await getGateway(transferRequest);
                 logGatewayAddress(this.logger, gateway.gatewayAddress);
                 const blockNumber = await getBTCBlockNumber();
-                const utxos = isZcashAddress(gateway.gatewayAddress) ? await getZcashUTXOs(false, {
-                    address: gateway.gatewayAddress,
-                    confirmations: 1
-                }) : await getUTXOs(false, {
-                    address: gateway.gatewayAddress,
-                    confirmations: 1,
-                });
+                const utxos = isZcashAddress(gateway.gatewayAddress)
+                    ? await getZcashUTXOs(false, {
+                        address: gateway.gatewayAddress,
+                        confirmations: 1,
+                    })
+                    : await getUTXOs(false, {
+                        address: gateway.gatewayAddress,
+                        confirmations: 1,
+                    });
                 if (utxos && utxos.length) {
                     this.logger.info("got UTXO");
                     this.logger.info(util_1.default.inspect(utxos, { colors: true, depth: 15 }));

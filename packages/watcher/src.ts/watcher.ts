@@ -10,6 +10,7 @@ import { Logger } from "@zerodao/logger";
 
 const VAULT_DEPLOYMENTS = {
   [AddressZero]: 1337,
+  ["0x11dbf784098e296471a08251178f757156651085"]: 1,
 };
 
 export class WatcherProcess {
@@ -28,13 +29,18 @@ export class WatcherProcess {
         const request = await this.redis.lindex("/zero/watch", 0);
         const tr = JSON.parse(request);
 
-        const contractAddress = getAddress(tr.transferRequest.contractAddress)
-        const transferRequest = VAULT_DEPLOYMENTS[contractAddress] ? new TransferRequestV2(tr.transferRequest) : new TransferRequest(tr.transferRequest);
+        const contractAddress = getAddress(tr.transferRequest.contractAddress);
+        const transferRequest = VAULT_DEPLOYMENTS[contractAddress]
+          ? new TransferRequestV2(tr.transferRequest)
+          : new TransferRequest(tr.transferRequest);
         const { signature, amount, nHash, pHash } =
           await transferRequest.waitForSignature();
-        
-        await this.redis.rpush("/zero/dispatch", JSON.stringify(transferRequest.buildRepayTransaction()));
-        
+
+        await this.redis.rpush(
+          "/zero/dispatch",
+          JSON.stringify(transferRequest.buildRepayTransaction())
+        );
+
         await this.redis.lpop("/zero/watch");
       }
     } catch (error) {
