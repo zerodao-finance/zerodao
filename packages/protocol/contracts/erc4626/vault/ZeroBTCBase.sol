@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity >=0.8.13;
+pragma solidity ^0.8.15;
 
 import { ZeroBTCStorage, ModuleStateCoder, DefaultModuleState, ModuleType, ModuleState, GlobalStateCoder, GlobalState, LoanRecordCoder, LoanRecord } from "../storage/ZeroBTCStorage.sol";
 import { IGateway, IGatewayRegistry } from "../../interfaces/IGatewayRegistry.sol";
@@ -10,6 +10,7 @@ import "../interfaces/IZeroBTC.sol";
 import "../interfaces/IRenBtcEthConverter.sol";
 import { IGateway, IGatewayRegistry } from "../../interfaces/IGatewayRegistry.sol";
 import { IChainlinkOracle } from "../../interfaces/IChainlinkOracle.sol";
+import "../utils/Math.sol";
 
 uint256 constant OneBitcoin = 1e8;
 
@@ -18,6 +19,7 @@ uint256 constant OneBitcoin = 1e8;
 uint256 constant BtcEthPriceInversionNumerator = 1e26;
 
 abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
+  using Math for uint256;
   using ModuleStateCoder for ModuleState;
   using GlobalStateCoder for GlobalState;
   using LoanRecordCoder for LoanRecord;
@@ -81,23 +83,23 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
     uint256 renBorrowFeeStatic,
-    address strategy
-  ) external override {
+    uint256 zeroFeeShareBips,
+    address initialHarvester
+  ) public payable virtual override {
     if (_governance != address(0)) {
       revert AlreadyInitialized();
     }
     // Initialize governance address
     Governable._initialize(initialGovernance);
-    // Initialize reentrancy guard mutex
-    ReentrancyGuard._initialize();
-    // Ensure fees are valid
-    if (zeroBorrowFeeBips > 2000 || renBorrowFeeBips > 2000 || zeroBorrowFeeBips == 0 || renBorrowFeeBips == 0) {
-      revert InvalidDynamicBorrowFee();
-    }
-    // Set strategy
-    _strategy = strategy;
+    _authorized[initialGovernance] = true;
+    // Initialize UpgradeableEIP712 and ReentrancyGuard
+    super._initialize();
+
     // Set initial global state
-    _state = _state.setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic);
+    _setFees(zeroBorrowFeeBips, renBorrowFeeBips, zeroBorrowFeeStatic, renBorrowFeeStatic, zeroFeeShareBips);
+
+    // set harvester
+    _isHarvester[initialHarvester] = true;
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -186,7 +188,7 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
 
   function _getGweiPerGas() internal view returns (uint256) {
     uint256 gasPrice = _gasPriceOracle.latestAnswer();
-    return gasPrice / 1e9;
+    return gasPrice.uncheckedDivUpE9();
   }
 
   function _getGateway() internal view returns (IGateway gateway) {
@@ -198,5 +200,41 @@ abstract contract ZeroBTCBase is ZeroBTCStorage, ERC4626, Governable, IZeroBTC {
     if (moduleState.isNull()) {
       revert ModuleDoesNotExist();
     }
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                          Internal Setters
+  //////////////////////////////////////////////////////////////*/
+
+  function _setFees(
+    uint256 zeroBorrowFeeBips,
+    uint256 renBorrowFeeBips,
+    uint256 zeroBorrowFeeStatic,
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips
+  ) internal {
+    if (
+      (zeroBorrowFeeBips | renBorrowFeeBips | zeroFeeShareBips) > 2000 ||
+      zeroBorrowFeeBips == 0 ||
+      renBorrowFeeBips == 0 ||
+      zeroFeeShareBips == 0
+    ) {
+      revert InvalidDynamicBorrowFee();
+    }
+    _state = _state.setFees(
+      zeroBorrowFeeBips,
+      renBorrowFeeBips,
+      zeroBorrowFeeStatic,
+      renBorrowFeeStatic,
+      zeroFeeShareBips
+    );
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                          External Setters
+  //////////////////////////////////////////////////////////////*/
+
+  function authorize(address user) external onlyGovernance {
+    _authorized[user] = true;
   }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "../erc4626/utils/GlobalStateCoder.sol";
+import '../erc4626/utils/GlobalStateCoder.sol';
 
 // ============================== NOTICE ==============================
 // This library was automatically generated with stackpacker.
@@ -29,19 +29,7 @@ contract ExternalGlobalStateCoder {
       uint256 unburnedZeroFeeShares
     )
   {
-    (
-      zeroBorrowFeeBips,
-      renBorrowFeeBips,
-      zeroFeeShareBips,
-      zeroBorrowFeeStatic,
-      renBorrowFeeStatic,
-      satoshiPerEth,
-      gweiPerGas,
-      lastUpdateTimestamp,
-      totalBitcoinBorrowed,
-      unburnedGasReserveShares,
-      unburnedZeroFeeShares
-    ) = GlobalStateCoder.decode(_globalState);
+    return GlobalStateCoder.decode(_globalState);
   }
 
   function encode(
@@ -72,33 +60,42 @@ contract ExternalGlobalStateCoder {
     );
   }
 
-  function setLoanInfo(uint256 totalBitcoinBorrowed) external {
+  function setLoanInfo(
+    uint256 totalBitcoinBorrowed
+  ) external {
     (_globalState) = GlobalStateCoder.setLoanInfo(
       _globalState,
       totalBitcoinBorrowed
     );
   }
 
-  function getLoanInfo() external view returns (uint256 totalBitcoinBorrowed) {
-    (totalBitcoinBorrowed) = GlobalStateCoder.getLoanInfo(_globalState);
+  function getLoanInfo()
+    external
+    view
+    returns (uint256 totalBitcoinBorrowed)
+  {
+    (totalBitcoinBorrowed) = GlobalStateCoder
+      .getLoanInfo(_globalState);
   }
 
   function setFees(
     uint256 zeroBorrowFeeBips,
     uint256 renBorrowFeeBips,
     uint256 zeroBorrowFeeStatic,
-    uint256 renBorrowFeeStatic
+    uint256 renBorrowFeeStatic,
+    uint256 zeroFeeShareBips
   ) external {
     (_globalState) = GlobalStateCoder.setFees(
       _globalState,
       zeroBorrowFeeBips,
       renBorrowFeeBips,
       zeroBorrowFeeStatic,
-      renBorrowFeeStatic
+      renBorrowFeeStatic,
+      zeroFeeShareBips
     );
   }
 
-  function getFees()
+  function getBorrowFees()
     external
     view
     returns (
@@ -113,7 +110,9 @@ contract ExternalGlobalStateCoder {
       renBorrowFeeBips,
       zeroBorrowFeeStatic,
       renBorrowFeeStatic
-    ) = GlobalStateCoder.getFees(_globalState);
+    ) = GlobalStateCoder.getBorrowFees(
+      _globalState
+    );
   }
 
   function setCached(
@@ -129,44 +128,56 @@ contract ExternalGlobalStateCoder {
     );
   }
 
-  function setParamsForModuleFees(uint256 satoshiPerEth, uint256 gweiPerGas)
-    external
-  {
-    (_globalState) = GlobalStateCoder.setParamsForModuleFees(
-      _globalState,
-      satoshiPerEth,
-      gweiPerGas
-    );
+  function setParamsForModuleFees(
+    uint256 satoshiPerEth,
+    uint256 gweiPerGas
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setParamsForModuleFees(
+        _globalState,
+        satoshiPerEth,
+        gweiPerGas
+      );
   }
 
   function getParamsForModuleFees()
     external
     view
-    returns (uint256 satoshiPerEth, uint256 gweiPerGas)
+    returns (
+      uint256 satoshiPerEth,
+      uint256 gweiPerGas
+    )
   {
-    (satoshiPerEth, gweiPerGas) = GlobalStateCoder.getParamsForModuleFees(
-      _globalState
-    );
+    (satoshiPerEth, gweiPerGas) = GlobalStateCoder
+      .getParamsForModuleFees(_globalState);
   }
 
   function setUnburnedShares(
     uint256 unburnedGasReserveShares,
     uint256 unburnedZeroFeeShares
   ) external {
-    (_globalState) = GlobalStateCoder.setUnburnedShares(
-      _globalState,
-      unburnedGasReserveShares,
-      unburnedZeroFeeShares
-    );
+    (_globalState) = GlobalStateCoder
+      .setUnburnedShares(
+        _globalState,
+        unburnedGasReserveShares,
+        unburnedZeroFeeShares
+      );
   }
 
   function getUnburnedShares()
     external
     view
-    returns (uint256 unburnedGasReserveShares, uint256 unburnedZeroFeeShares)
+    returns (
+      uint256 unburnedGasReserveShares,
+      uint256 unburnedZeroFeeShares
+    )
   {
-    (unburnedGasReserveShares, unburnedZeroFeeShares) = GlobalStateCoder
-      .getUnburnedShares(_globalState);
+    (
+      unburnedGasReserveShares,
+      unburnedZeroFeeShares
+    ) = GlobalStateCoder.getUnburnedShares(
+      _globalState
+    );
   }
 
   function getZeroBorrowFeeBips()
@@ -174,14 +185,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 zeroBorrowFeeBips)
   {
-    (zeroBorrowFeeBips) = GlobalStateCoder.getZeroBorrowFeeBips(_globalState);
+    (zeroBorrowFeeBips) = GlobalStateCoder
+      .getZeroBorrowFeeBips(_globalState);
   }
 
-  function setZeroBorrowFeeBips(uint256 zeroBorrowFeeBips) external {
-    (_globalState) = GlobalStateCoder.setZeroBorrowFeeBips(
-      _globalState,
-      zeroBorrowFeeBips
-    );
+  function setZeroBorrowFeeBips(
+    uint256 zeroBorrowFeeBips
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setZeroBorrowFeeBips(
+        _globalState,
+        zeroBorrowFeeBips
+      );
   }
 
   function getRenBorrowFeeBips()
@@ -189,14 +204,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 renBorrowFeeBips)
   {
-    (renBorrowFeeBips) = GlobalStateCoder.getRenBorrowFeeBips(_globalState);
+    (renBorrowFeeBips) = GlobalStateCoder
+      .getRenBorrowFeeBips(_globalState);
   }
 
-  function setRenBorrowFeeBips(uint256 renBorrowFeeBips) external {
-    (_globalState) = GlobalStateCoder.setRenBorrowFeeBips(
-      _globalState,
-      renBorrowFeeBips
-    );
+  function setRenBorrowFeeBips(
+    uint256 renBorrowFeeBips
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setRenBorrowFeeBips(
+        _globalState,
+        renBorrowFeeBips
+      );
   }
 
   function getZeroFeeShareBips()
@@ -204,14 +223,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 zeroFeeShareBips)
   {
-    (zeroFeeShareBips) = GlobalStateCoder.getZeroFeeShareBips(_globalState);
+    (zeroFeeShareBips) = GlobalStateCoder
+      .getZeroFeeShareBips(_globalState);
   }
 
-  function setZeroFeeShareBips(uint256 zeroFeeShareBips) external {
-    (_globalState) = GlobalStateCoder.setZeroFeeShareBips(
-      _globalState,
-      zeroFeeShareBips
-    );
+  function setZeroFeeShareBips(
+    uint256 zeroFeeShareBips
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setZeroFeeShareBips(
+        _globalState,
+        zeroFeeShareBips
+      );
   }
 
   function getZeroBorrowFeeStatic()
@@ -219,16 +242,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 zeroBorrowFeeStatic)
   {
-    (zeroBorrowFeeStatic) = GlobalStateCoder.getZeroBorrowFeeStatic(
-      _globalState
-    );
+    (zeroBorrowFeeStatic) = GlobalStateCoder
+      .getZeroBorrowFeeStatic(_globalState);
   }
 
-  function setZeroBorrowFeeStatic(uint256 zeroBorrowFeeStatic) external {
-    (_globalState) = GlobalStateCoder.setZeroBorrowFeeStatic(
-      _globalState,
-      zeroBorrowFeeStatic
-    );
+  function setZeroBorrowFeeStatic(
+    uint256 zeroBorrowFeeStatic
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setZeroBorrowFeeStatic(
+        _globalState,
+        zeroBorrowFeeStatic
+      );
   }
 
   function getRenBorrowFeeStatic()
@@ -236,22 +261,37 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 renBorrowFeeStatic)
   {
-    (renBorrowFeeStatic) = GlobalStateCoder.getRenBorrowFeeStatic(_globalState);
+    (renBorrowFeeStatic) = GlobalStateCoder
+      .getRenBorrowFeeStatic(_globalState);
   }
 
-  function setRenBorrowFeeStatic(uint256 renBorrowFeeStatic) external {
-    (_globalState) = GlobalStateCoder.setRenBorrowFeeStatic(
-      _globalState,
-      renBorrowFeeStatic
+  function setRenBorrowFeeStatic(
+    uint256 renBorrowFeeStatic
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setRenBorrowFeeStatic(
+        _globalState,
+        renBorrowFeeStatic
+      );
+  }
+
+  function getSatoshiPerEth()
+    external
+    view
+    returns (uint256 satoshiPerEth)
+  {
+    (satoshiPerEth) = GlobalStateCoder
+      .getSatoshiPerEth(_globalState);
+  }
+
+  function getGweiPerGas()
+    external
+    view
+    returns (uint256 gweiPerGas)
+  {
+    (gweiPerGas) = GlobalStateCoder.getGweiPerGas(
+      _globalState
     );
-  }
-
-  function getSatoshiPerEth() external view returns (uint256 satoshiPerEth) {
-    (satoshiPerEth) = GlobalStateCoder.getSatoshiPerEth(_globalState);
-  }
-
-  function getGweiPerGas() external view returns (uint256 gweiPerGas) {
-    (gweiPerGas) = GlobalStateCoder.getGweiPerGas(_globalState);
   }
 
   function getLastUpdateTimestamp()
@@ -259,9 +299,8 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 lastUpdateTimestamp)
   {
-    (lastUpdateTimestamp) = GlobalStateCoder.getLastUpdateTimestamp(
-      _globalState
-    );
+    (lastUpdateTimestamp) = GlobalStateCoder
+      .getLastUpdateTimestamp(_globalState);
   }
 
   function getTotalBitcoinBorrowed()
@@ -269,16 +308,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 totalBitcoinBorrowed)
   {
-    (totalBitcoinBorrowed) = GlobalStateCoder.getTotalBitcoinBorrowed(
-      _globalState
-    );
+    (totalBitcoinBorrowed) = GlobalStateCoder
+      .getTotalBitcoinBorrowed(_globalState);
   }
 
-  function setTotalBitcoinBorrowed(uint256 totalBitcoinBorrowed) external {
-    (_globalState) = GlobalStateCoder.setTotalBitcoinBorrowed(
-      _globalState,
-      totalBitcoinBorrowed
-    );
+  function setTotalBitcoinBorrowed(
+    uint256 totalBitcoinBorrowed
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setTotalBitcoinBorrowed(
+        _globalState,
+        totalBitcoinBorrowed
+      );
   }
 
   function getUnburnedGasReserveShares()
@@ -286,18 +327,18 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 unburnedGasReserveShares)
   {
-    (unburnedGasReserveShares) = GlobalStateCoder.getUnburnedGasReserveShares(
-      _globalState
-    );
+    (unburnedGasReserveShares) = GlobalStateCoder
+      .getUnburnedGasReserveShares(_globalState);
   }
 
-  function setUnburnedGasReserveShares(uint256 unburnedGasReserveShares)
-    external
-  {
-    (_globalState) = GlobalStateCoder.setUnburnedGasReserveShares(
-      _globalState,
-      unburnedGasReserveShares
-    );
+  function setUnburnedGasReserveShares(
+    uint256 unburnedGasReserveShares
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setUnburnedGasReserveShares(
+        _globalState,
+        unburnedGasReserveShares
+      );
   }
 
   function getUnburnedZeroFeeShares()
@@ -305,15 +346,17 @@ contract ExternalGlobalStateCoder {
     view
     returns (uint256 unburnedZeroFeeShares)
   {
-    (unburnedZeroFeeShares) = GlobalStateCoder.getUnburnedZeroFeeShares(
-      _globalState
-    );
+    (unburnedZeroFeeShares) = GlobalStateCoder
+      .getUnburnedZeroFeeShares(_globalState);
   }
 
-  function setUnburnedZeroFeeShares(uint256 unburnedZeroFeeShares) external {
-    (_globalState) = GlobalStateCoder.setUnburnedZeroFeeShares(
-      _globalState,
-      unburnedZeroFeeShares
-    );
+  function setUnburnedZeroFeeShares(
+    uint256 unburnedZeroFeeShares
+  ) external {
+    (_globalState) = GlobalStateCoder
+      .setUnburnedZeroFeeShares(
+        _globalState,
+        unburnedZeroFeeShares
+      );
   }
 }

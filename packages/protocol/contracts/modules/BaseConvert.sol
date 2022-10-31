@@ -1,18 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.15;
 
 import { BaseModule } from "../erc4626/BaseModule.sol";
 
 abstract contract BaseConvert is BaseModule {
   constructor(address asset) BaseModule(asset) {}
-
-  struct ConvertLocals {
-    address borrower;
-    uint256 minOut;
-    uint256 amount;
-    uint256 nonce;
-  }
 
   function _receiveLoan(
     address borrower,
@@ -23,13 +16,9 @@ abstract contract BaseConvert is BaseModule {
     ConvertLocals memory locals;
     locals.borrower = borrower;
     locals.amount = amount;
-    (locals.minOut) = abi.decode(data, (uint256));
-    bytes32 ptr;
-    assembly {
-      ptr := locals
-    }
-    collateralIssued = swap(ptr);
-    transfer(borrower, amount);
+    if (data.length > 0) (locals.minOut) = abi.decode(data, (uint256));
+    collateralIssued = swap(locals);
+    transfer(borrower, collateralIssued);
   }
 
   function _repayLoan(

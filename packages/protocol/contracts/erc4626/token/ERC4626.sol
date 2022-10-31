@@ -4,7 +4,7 @@ pragma solidity >=0.8.13;
 import { FixedPointMathLib } from "../utils/FixedPointMathLib.sol";
 import { SafeTransferLib } from "../utils/SafeTransferLib.sol";
 import { ReentrancyGuard } from "../utils/ReentrancyGuard.sol";
-import { ERC2612 } from "./ERC2612.sol";
+import { ERC2612, UpgradeableEIP712 } from "./ERC2612.sol";
 import { ERC4626Storage } from "../storage/ERC4626Storage.sol";
 import "../interfaces/IERC4626.sol";
 
@@ -33,6 +33,16 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     asset = _asset;
   }
 
+  modifier onlyAuthorized() {
+    require(_authorized[msg.sender], "unauthorized");
+    _;
+  }
+
+  function _initialize() internal virtual override(UpgradeableEIP712, ReentrancyGuard) {
+    UpgradeableEIP712._initialize();
+    ReentrancyGuard._initialize();
+  }
+
   /*//////////////////////////////////////////////////////////////
                         DEPOSIT/WITHDRAWAL LOGIC
     //////////////////////////////////////////////////////////////*/
@@ -41,6 +51,7 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     public
     virtual
     override
+    onlyAuthorized
     nonReentrant
     returns (uint256 shares)
   {
@@ -59,13 +70,7 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     afterDeposit(assets, shares);
   }
 
-  function mint(uint256 shares, address receiver)
-    public
-    virtual
-    override
-    nonReentrant
-    returns (uint256 assets)
-  {
+  function mint(uint256 shares, address receiver) public virtual override nonReentrant returns (uint256 assets) {
     assets = previewMint(shares); // No need to check for rounding error, previewMint rounds up.
 
     // Need to transfer before minting or ERC777s could reenter.
@@ -88,8 +93,7 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     if (msg.sender != owner) {
       uint256 allowed = _allowance[owner][msg.sender]; // Saves gas for limited approvals.
 
-      if (allowed != type(uint256).max)
-        _allowance[owner][msg.sender] = allowed - shares;
+      if (allowed != type(uint256).max) _allowance[owner][msg.sender] = allowed - shares;
     }
 
     beforeWithdraw(assets, shares);
@@ -136,71 +140,35 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     return IERC20(asset).balanceOf(address(this));
   }
 
-  function convertToShares(uint256 assets)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function convertToShares(uint256 assets) public view virtual override returns (uint256) {
     uint256 supply = _totalSupply; // Saves an extra SLOAD if totalSupply is non-zero.
 
     return supply == 0 ? assets : assets.mulDivDown(supply, totalAssets());
   }
 
-  function convertToAssets(uint256 shares)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function convertToAssets(uint256 shares) public view virtual override returns (uint256) {
     uint256 supply = _totalSupply; // Saves an extra SLOAD if totalSupply is non-zero.
 
     return supply == 0 ? shares : shares.mulDivDown(totalAssets(), supply);
   }
 
-  function previewDeposit(uint256 assets)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function previewDeposit(uint256 assets) public view virtual override returns (uint256) {
     return convertToShares(assets);
   }
 
-  function previewMint(uint256 shares)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function previewMint(uint256 shares) public view virtual override returns (uint256) {
     uint256 supply = _totalSupply; // Saves an extra SLOAD if totalSupply is non-zero.
 
     return supply == 0 ? shares : shares.mulDivUp(totalAssets(), supply);
   }
 
-  function previewWithdraw(uint256 assets)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function previewWithdraw(uint256 assets) public view virtual override returns (uint256) {
     uint256 supply = _totalSupply; // Saves an extra SLOAD if totalSupply is non-zero.
 
     return supply == 0 ? assets : assets.mulDivUp(supply, totalAssets());
   }
 
-  function previewRedeem(uint256 shares)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function previewRedeem(uint256 shares) public view virtual override returns (uint256) {
     return convertToAssets(shares);
   }
 
@@ -209,17 +177,10 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     uint256 checkpointSupply,
     uint256 checkpointTotalAssets
   ) internal pure virtual returns (uint256) {
-    return
-      checkpointSupply == 0
-        ? assets
-        : assets.mulDivUp(checkpointSupply, checkpointTotalAssets);
+    return checkpointSupply == 0 ? assets : assets.mulDivUp(checkpointSupply, checkpointTotalAssets);
   }
 
-  function checkpointWithdrawParams()
-    internal
-    view
-    returns (uint256 checkpointSupply, uint256 checkpointTotalAssets)
-  {
+  function checkpointWithdrawParams() internal view returns (uint256 checkpointSupply, uint256 checkpointTotalAssets) {
     checkpointSupply = _totalSupply;
     checkpointTotalAssets = totalAssets();
   }
@@ -236,23 +197,11 @@ contract ERC4626 is ERC4626Storage, ERC2612, ReentrancyGuard, IERC4626 {
     return type(uint256).max;
   }
 
-  function maxWithdraw(address owner)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function maxWithdraw(address owner) public view virtual override returns (uint256) {
     return convertToAssets(_balanceOf[owner]);
   }
 
-  function maxRedeem(address owner)
-    public
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function maxRedeem(address owner) public view virtual override returns (uint256) {
     return _balanceOf[owner];
   }
 

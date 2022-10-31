@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+
 // ============================== NOTICE ==============================
 // This library was automatically generated with stackpacker.
 // Be very careful about modifying it, as doing so incorrectly could
 // result in corrupted reads/writes.
 // ====================================================================
 
+uint256 constant GlobalState_BorrowFees_maskOut = 0x000003ffe000000000007fffffffffffffffffffffffffffffffffffffffffff;
 uint256 constant GlobalState_Cached_maskOut = 0xffffffffffffffffffff80000000000000000001ffffffffffffffffffffffff;
-uint256 constant GlobalState_Fees_maskOut = 0x000003ffe000000000007fffffffffffffffffffffffffffffffffffffffffff;
+uint256 constant GlobalState_Fees_maskOut = 0x000000000000000000007fffffffffffffffffffffffffffffffffffffffffff;
 uint256 constant GlobalState_LoanInfo_maskOut = 0xfffffffffffffffffffffffffffffffffffffffe0000000001ffffffffffffff;
 uint256 constant GlobalState_ParamsForModuleFees_maskOut = 0xffffffffffffffffffff800000000001ffffffffffffffffffffffffffffffff;
 uint256 constant GlobalState_UnburnedShares_maskOut = 0xfffffffffffffffffffffffffffffffffffffffffffffffffe00000000000001;

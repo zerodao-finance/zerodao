@@ -2,11 +2,14 @@
 pragma solidity >=0.8.13;
 
 import { FixedPointMathLib } from "./utils/FixedPointMathLib.sol";
+import "./utils/ModuleStateCoder.sol";
+import { ZeroBTCStorage } from "./storage/ZeroBTCStorage.sol";
 
 /**
  * @notice Base contract that must be inherited by all modules.
  */
-abstract contract BaseModule {
+abstract contract BaseModule is ZeroBTCStorage {
+  using ModuleStateCoder for ModuleState;
   using FixedPointMathLib for uint256;
 
   /// @notice Base asset of the vault which is calling the module.
@@ -15,15 +18,17 @@ abstract contract BaseModule {
 
   /// @notice Isolated storage pointer for any data that the module must write
   /// Use like so:
-  /// function getModuleStorage() internal returns (ModuleData storage moduleData) {
-  ///   bytes32 moduleSlot = _moduleSlot;
-  ///   assembly { moduleData := moduleSlot }
-  /// }
-  uint256 internal immutable _moduleSlot;
+  address internal immutable _moduleSlot;
 
   constructor(address _asset) {
     asset = _asset;
-    _moduleSlot = uint256(keccak256(abi.encode(address(this)))) - 1;
+    _moduleSlot = address(this);
+  }
+
+  function initialize() external virtual {}
+
+  function _getModuleState() internal returns (ModuleState moduleState) {
+    moduleState = _moduleFees[_moduleSlot];
   }
 
   /**
@@ -39,20 +44,13 @@ abstract contract BaseModule {
    * @param loanId Unique (per vault) identifier for a loan.
    * @param data Any additional data provided to the module.
    * @return collateralToUnlock Amount of collateral to unlock for the lender.
-   * @return gasCostEther Max gas value expected to be used by module.
    */
   function repayLoan(
     address borrower,
     uint256 repaidAmount,
     uint256 loanId,
     bytes calldata data
-  )
-    external
-    virtual
-    returns (uint256 collateralToUnlock, uint256 gasCostEther)
-  {
-    // Get gas price in ETH
-    gasCostEther = this.maxRepayGas() * getGasPrice();
+  ) external virtual returns (uint256 collateralToUnlock) {
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
     collateralToUnlock = _repayLoan(borrower, repaidAmount, loanId, data);
   }
@@ -70,31 +68,28 @@ abstract contract BaseModule {
    * @param loanId Unique (per vault) identifier for a loan.
    * @param data Any additional data provided to the module.
    * @return collateralToLock Amount of collateral to lock for the lender.
-   * @return gasCostEther Max gas value expected to be used by module.
    */
   function receiveLoan(
     address borrower,
     uint256 borrowAmount,
     uint256 loanId,
     bytes calldata data
-  ) external virtual returns (uint256 collateralToLock, uint256 gasCostEther) {
-    // Get gas price in ETH
-    gasCostEther = this.maxLoanGas() * getGasPrice();
-    // Get gas price in `asset`
-    uint256 gasCostAsset = gasCostEther.mulDivUp(getEthPrice(), 1e18);
+  ) external virtual returns (uint256 collateralToLock) {
     // Handle loan using module's logic, reducing borrow amount by the value of gas used
-    collateralToLock = _receiveLoan(
-      borrower,
-      borrowAmount - gasCostAsset,
-      loanId,
-      data
-    );
+    collateralToLock = _receiveLoan(borrower, borrowAmount, loanId, data);
+  }
+
+  struct ConvertLocals {
+    address borrower;
+    uint256 minOut;
+    uint256 amount;
+    uint256 nonce;
   }
 
   /* ---- Override These In Child ---- */
-  function swap(bytes32) internal virtual returns (uint256 amountOut);
+  function swap(ConvertLocals memory) internal virtual returns (uint256 amountOut);
 
-  function swapBack(bytes32) internal virtual returns (uint256 amountOut);
+  function swapBack(ConvertLocals memory) internal virtual returns (uint256 amountOut);
 
   function transfer(address to, uint256 amount) internal virtual;
 
@@ -112,21 +107,6 @@ abstract contract BaseModule {
     bytes calldata data
   ) internal virtual returns (uint256 collateralToUnlock);
 
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxBurnGas() external virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxLoanGas() external virtual returns (uint256);
-
-  /// @notice Returns the maximum amount of gas that will be used by
-  /// a burn call. This should simply be a constant set in the
-  /// inheriting contract.
-  function maxRepayGas() external virtual returns (uint256);
-
   /* ---- Leave Empty For Now ---- */
 
   /// @notice Return recent average gas price in wei per unit of gas
@@ -143,13 +123,7 @@ abstract contract BaseModule {
 contract ABC {
   function x(uint256 a) external pure {
     assembly {
-      a := or(
-        shr(96, a),
-        or(
-          shr(96, a),
-          or(shr(96, a), or(shr(96, a), or(shr(96, a), shr(96, a))))
-        )
-      )
+      a := or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), or(shr(96, a), shr(96, a))))))
     }
   }
 }

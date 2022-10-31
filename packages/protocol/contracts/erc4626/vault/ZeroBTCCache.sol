@@ -2,7 +2,6 @@
 pragma solidity >=0.8.13;
 
 import "./ZeroBTCBase.sol";
-import "../utils/Math.sol";
 
 abstract contract ZeroBTCCache is ZeroBTCBase {
   using ModuleStateCoder for ModuleState;
@@ -26,10 +25,7 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
                   Internal Fee Getters and Updaters               
   //////////////////////////////////////////////////////////////*/
 
-  function _updateGlobalCache(GlobalState state)
-    internal
-    returns (GlobalState)
-  {
+  function _updateGlobalCache(GlobalState state) internal returns (GlobalState) {
     uint256 satoshiPerEth = _getSatoshiPerEth();
     uint256 gweiPerGas = _getGweiPerGas();
     state = state.setCached(satoshiPerEth, gweiPerGas, block.timestamp);
@@ -64,10 +60,7 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
     return moduleState;
   }
 
-  function _getUpdatedGlobalState()
-    internal
-    returns (GlobalState state, uint256 lastUpdateTimestamp)
-  {
+  function _getUpdatedGlobalState() internal returns (GlobalState state, uint256 lastUpdateTimestamp) {
     state = _state;
     lastUpdateTimestamp = state.getLastUpdateTimestamp();
     if (block.timestamp - lastUpdateTimestamp > _cacheTimeToLive) {
@@ -137,14 +130,10 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
       uint256 renBorrowFeeBips,
       uint256 zeroBorrowFeeStatic,
       uint256 renBorrowFeeStatic
-    ) = state.getFees();
+    ) = state.getBorrowFees();
 
-    renFees =
-      renBorrowFeeStatic +
-      borrowAmount.uncheckedMulBipsUp(renBorrowFeeBips);
-    zeroFees =
-      zeroBorrowFeeStatic +
-      borrowAmount.uncheckedMulBipsUp(zeroBorrowFeeBips);
+    renFees = renBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(renBorrowFeeBips);
+    zeroFees = zeroBorrowFeeStatic + borrowAmount.uncheckedMulBipsUp(zeroBorrowFeeBips);
   }
 
   function _calculateLoanFees(
@@ -160,36 +149,22 @@ abstract contract ZeroBTCCache is ZeroBTCBase {
       uint256 btcFeeForLoanGas
     )
   {
-    (uint256 renFees, uint256 zeroFees) = _calculateRenAndZeroFees(
-      state,
-      borrowAmount
-    );
+    (uint256 renFees, uint256 zeroFees) = _calculateRenAndZeroFees(state, borrowAmount);
     uint256 btcFeeForRepayGas;
     (btcFeeForLoanGas, btcFeeForRepayGas) = moduleState.getBitcoinGasFees();
 
-    // Lender is responsible for actualBorrowAmount, renFees, zeroFees, loan refund
-    // and estimated repay refund.
+    // Lender is responsible for actualBorrowAmount, zeroFees and gas refunds.
     lenderDebt = borrowAmount - renFees;
 
     // Subtract ren, zero and gas fees
-    actualBorrowAmount =
-      lenderDebt -
-      (zeroFees + btcFeeForLoanGas + btcFeeForRepayGas);
+    actualBorrowAmount = lenderDebt - (zeroFees + btcFeeForLoanGas + btcFeeForRepayGas);
   }
 
-  function _ethToBtc(uint256 ethAmount, uint256 satoshiPerEth)
-    internal
-    pure
-    returns (uint256 btcAmount)
-  {
+  function _ethToBtc(uint256 ethAmount, uint256 satoshiPerEth) internal pure returns (uint256 btcAmount) {
     return (ethAmount * satoshiPerEth) / OneEth;
   }
 
-  function _btcToEth(uint256 btcAmount, uint256 satoshiPerEth)
-    internal
-    pure
-    returns (uint256 ethAmount)
-  {
+  function _btcToEth(uint256 btcAmount, uint256 satoshiPerEth) internal pure returns (uint256 ethAmount) {
     return (btcAmount * OneEth) / satoshiPerEth;
   }
 }

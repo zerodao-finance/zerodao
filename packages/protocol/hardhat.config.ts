@@ -150,7 +150,7 @@ module.exports = {
     excludeContracts: ["contracts/libraries/"],
   },
   paths: {
-    sources: "contracts_old",
+    sources: "contracts",
   },
   solidity: {
     compilers: [

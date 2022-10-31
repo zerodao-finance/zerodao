@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 
 import "./AbstractEIP712.sol";
 
+// @todo Rename UpgradeableEIP712 to UpgradeableSingletonEIP712
 /**
  * @dev ProxyImmutable is used to set `proxyContract` in UpgradeableEIP712
  * before the constructor of AbstractEIP712 runs, giving it access to the
@@ -23,6 +24,12 @@ contract UpgradeableEIP712 is ProxyImmutable, AbstractEIP712 {
     string memory _name,
     string memory _version
   ) ProxyImmutable(_proxyContract) AbstractEIP712(_name, _version) {}
+
+  function _initialize() internal virtual {
+    if (address(this) != _verifyingContract()) {
+      revert InvalidVerifyingContract();
+    }
+  }
 
   function _verifyingContract()
     internal

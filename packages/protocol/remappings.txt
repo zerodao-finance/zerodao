@@ -1,2 +1,8 @@
-forge-std/=lib/forge-std/src/
 ds-test/=lib/forge-std/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+oz410=lib/oz410/
+oz460=lib/oz460/contracts
+@openzeppelin/contracts-new=lib/@openzeppelin/contracts-new/
+@openzeppelin/contracts=lib/@openzeppelin/contracts/
+@uniswap/v3-periphery=lib/@uniswap/v3-periphery/
+@rari-capital/solmate=lib/@rari-capital/solmate/src/

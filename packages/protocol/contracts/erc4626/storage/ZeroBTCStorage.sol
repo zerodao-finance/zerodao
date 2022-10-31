@@ -10,10 +10,11 @@ import "../utils/LoanRecordCoder.sol";
 contract ZeroBTCStorage is ERC4626Storage, GovernableStorage {
   GlobalState internal _state;
 
-  address internal _strategy;
-
   mapping(address => ModuleState) internal _moduleFees;
 
   // Maps loanId => LoanRecord
   mapping(uint256 => LoanRecord) internal _outstandingLoans;
+
+  // maps wallets => whether they can call earn
+  mapping(address => bool) internal _isHarvester;
 }
