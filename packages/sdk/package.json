@@ -3,7 +3,7 @@
   "version": "0.3.40",
   "description": "zerodao sdk implementations",
   "main": "lib/index.js",
-  "type": "module",
+  "browser": "lib/browser.js",
   "exports": {
     ".": "lib/index.js"
   },
@@ -12,7 +12,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "tsc",
+    "build:node": "tsc",
+    "build:browser": "webpack",
+    "build": "yarn build:node && yarn build:browser",
     "test": "yarn build && cross-env node dist/test",
     "prepare": "cd ../.. && husky install packages/sdk/.husky"
   },
@@ -37,14 +39,20 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "gitHead": "f5de56359a38c1d981f2db41c2c78c7869440ea4",
   "publicConfig": {
     "access": "public"
   },
   "lint-staged": {
-    "*.{js,ts,tsx, jsx}": ["eslint --quiet --fix"],
-    "*.{json,md,html,js,jsx,ts,tsx}": ["prettier --write"]
+    "*.{js,ts,tsx, jsx}": [
+      "eslint --quiet --fix"
+    ],
+    "*.{json,md,html,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
   }
 }

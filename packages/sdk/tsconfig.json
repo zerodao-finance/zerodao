@@ -3,7 +3,7 @@
 //   "compilerOptions": {
 //     "experimentalDecorators": true,
 //     "emitDecoratorMetadata": true,
-//     "module": "nodenext",
+//     "module": "NodeNext",
 //     "moduleResolution": "node",
 //     "resolveJsonModule": true,
 //     "target": "es2020",
@@ -11,12 +11,13 @@
 //     "esModuleInterop": true,
 //     "sourceMap": true,
 //     "outDir": "./lib",
-//     "declaration": true
+//     "declaration": true,
 //   },
 //   "include": ["./src.ts/*"],
 //   "exclude": ["./lib"]
 // }
 
+// TSCONFIG FROM P2P
 {
   "compilerOptions": {
     "strict": false,
