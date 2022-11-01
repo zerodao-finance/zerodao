@@ -1,17 +1,55 @@
+// OLD TSCONFIG
+// {
+//   "compilerOptions": {
+//     "experimentalDecorators": true,
+//     "emitDecoratorMetadata": true,
+//     "module": "nodenext",
+//     "moduleResolution": "node",
+//     "resolveJsonModule": true,
+//     "target": "es2020",
+//     "noImplicitAny": false,
+//     "esModuleInterop": true,
+//     "sourceMap": true,
+//     "outDir": "./lib",
+//     "declaration": true
+//   },
+//   "include": ["./src.ts/*"],
+//   "exclude": ["./lib"]
+// }
+
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "module": "nodenext",
+    "strict": false,
+    "outDir": "lib",
+    "allowJs": true,
+    "checkJs": true,
+    "target": "es5",
+    "lib": [
+      "ES2020",
+      "ES2020.Promise",
+      "ES2020.String",
+      "ES2020.BigInt",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "es2020",
-    "noImplicitAny": false,
-    "esModuleInterop": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "removeComments": false,
     "sourceMap": true,
-    "outDir": "./lib",
-    "declaration": true
+    "esModuleInterop": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "importsNotUsedAsValues": "preserve",
+    "forceConsistentCasingInFileNames": false,
+    "skipLibCheck": true,
+    "stripInternal": true,
   },
-  "include": ["./src.ts/*"],
-  "exclude": ["./lib"]
+  "types": ["node"],
+  "include": ["./src.ts/**/*.ts"]
 }

@@ -44,14 +44,14 @@ Object.defineProperty(exports, "ID_CHAIN", { enumerable: true, get: function () 
 var compute_1 = require("@zerodao/compute");
 Object.defineProperty(exports, "makeQuoter", { enumerable: true, get: function () { return compute_1.makeQuoter; } });
 Object.defineProperty(exports, "makeCompute", { enumerable: true, get: function () { return compute_1.makeCompute; } });
-const compute_2 = require("@zerodao/compute");
+var compute_2 = require("@zerodao/compute");
 __exportStar(require("@zerodao/logger"), exports);
 var p2p_1 = require("@zerodao/p2p");
 Object.defineProperty(exports, "ZeroP2P", { enumerable: true, get: function () { return p2p_1.ZeroP2P; } });
-const utilsModule = __importStar(require("@zerodao/utils"));
-const deployments = __importStar(require("@zerodao/protocol/deployments/deployments.json"));
+var utilsModule = __importStar(require("@zerodao/utils"));
+var deployments = __importStar(require("@zerodao/protocol/deployments/deployments.json"));
 exports.DEPLOYMENTS = deployments;
-const utils = Object.assign({
+var utils = Object.assign({
     applyRatio: compute_2.applyRatio,
     computeRandomValue: compute_2.computeRandomValue,
     getNonce: compute_2.getNonce,
