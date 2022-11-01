@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const generalConfig = {
   entry: "./lib/index.js",
   mode: process.env.NODE_ENV || "production",
+  target: "web", 
   plugins: [new webpack.ProvidePlugin({ process: "process/browser" })],
   resolve: {
     extensions: [".js", ".json"],

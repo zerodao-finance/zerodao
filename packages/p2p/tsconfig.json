@@ -4,7 +4,7 @@
     "outDir": "lib",
     "allowJs": true,
     "checkJs": true,
-    "target": "es5",
+    "target": "ES2021",
     "lib": [
       "ES2020",
       "ES2020.Promise",
@@ -22,7 +22,6 @@
     "removeComments": false,
     "sourceMap": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
     "noUnusedLocals": false,
@@ -31,7 +30,6 @@
     "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true,
     "stripInternal": true,
-    "resolveJsonModule": true
   },
   "types": ["node"],
   "include": ["./src.ts/**/*.ts"]
