@@ -19,6 +19,9 @@
     "prepare": "cd ../.. && husky install packages/sdk/.husky"
   },
   "dependencies": {
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
     "@zerodao/chains": "^0.3.40",
     "@zerodao/common": "^0.3.40",
     "@zerodao/compute": "^0.3.40",
@@ -26,8 +29,7 @@
     "@zerodao/p2p": "^0.3.40",
     "@zerodao/protocol": "^0.3.40",
     "@zerodao/request": "^0.3.40",
-    "@zerodao/utils": "^0.3.40",
-    "typescript": "^4.7.4"
+    "@zerodao/utils": "^0.3.40"
   },
   "devDependencies": {
     "@types/bl": "^5.1.0",
@@ -48,11 +50,7 @@
     "access": "public"
   },
   "lint-staged": {
-    "*.{js,ts,tsx, jsx}": [
-      "eslint --quiet --fix"
-    ],
-    "*.{json,md,html,js,jsx,ts,tsx}": [
-      "prettier --write"
-    ]
+    "*.{js,ts,tsx, jsx}": ["eslint --quiet --fix"],
+    "*.{json,md,html,js,jsx,ts,tsx}": ["prettier --write"]
   }
 }
