@@ -7,18 +7,8 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
     static get PROTOCOL() {
         return "/zero/2.1.0/dispatch";
     }
-    ;
     static get FIELDS() {
-        return [
-            'contractAddress',
-            'borrower',
-            'asset',
-            'borrowAmount',
-            'module',
-            'loanId',
-            'nonce',
-            'data'
-        ];
+        return ["contractAddress", "module", "to", "amount", "pNonce", "data"];
     }
     buildLoanTransaction() {
         return {

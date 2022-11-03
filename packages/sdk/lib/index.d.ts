@@ -57,6 +57,18 @@ export declare const DEPLOYMENTS: {
                         stateMutability?: undefined;
                     })[];
                 };
+                ConvertNativeMainnet: {
+                    address: string;
+                    abi: any[];
+                };
+                ConvertUSDCMainnet: {
+                    address: string;
+                    abi: string;
+                };
+                ConvertWBTCMainnet: {
+                    address: string;
+                    abi: any[];
+                };
                 GnosisSafe: {
                     address: string;
                     abi: any[];
@@ -85,14 +97,30 @@ export declare const DEPLOYMENTS: {
                         outputs?: undefined;
                     })[];
                 };
-                RenZECControllerDeployer: {
+                ZeroBTC: {
                     address: string;
                     abi: ({
-                        inputs: any[];
+                        inputs: {
+                            internalType: string;
+                            name: string;
+                            type: string;
+                        }[];
                         stateMutability: string;
                         type: string;
-                        anonymous?: undefined;
                         name?: undefined;
+                        anonymous?: undefined;
+                        outputs?: undefined;
+                    } | {
+                        inputs: {
+                            internalType: string;
+                            name: string;
+                            type: string;
+                        }[];
+                        name: string;
+                        type: string;
+                        stateMutability?: undefined;
+                        anonymous?: undefined;
+                        outputs?: undefined;
                     } | {
                         anonymous: boolean;
                         inputs: {
@@ -104,41 +132,8 @@ export declare const DEPLOYMENTS: {
                         name: string;
                         type: string;
                         stateMutability?: undefined;
-                    })[];
-                };
-            };
-        };
-        localhost: {
-            name: string;
-            chainId: string;
-            contracts: {
-                RenZECController: {
-                    address: string;
-                    abi: ({
-                        inputs: {
-                            internalType: string;
-                            name: string;
-                            type: string;
-                        }[];
-                        name: string;
-                        outputs: {
-                            internalType: string;
-                            name: string;
-                            type: string;
-                        }[];
-                        stateMutability: string;
-                        type: string;
-                    } | {
-                        stateMutability: string;
-                        type: string;
-                        inputs?: undefined;
-                        name?: undefined;
                         outputs?: undefined;
-                    })[];
-                };
-                BadgerBridgeZeroController: {
-                    address: string;
-                    abi: ({
+                    } | {
                         inputs: {
                             internalType: string;
                             name: string;
@@ -152,11 +147,13 @@ export declare const DEPLOYMENTS: {
                         }[];
                         stateMutability: string;
                         type: string;
+                        anonymous?: undefined;
                     } | {
                         stateMutability: string;
                         type: string;
                         inputs?: undefined;
                         name?: undefined;
+                        anonymous?: undefined;
                         outputs?: undefined;
                     })[];
                 };

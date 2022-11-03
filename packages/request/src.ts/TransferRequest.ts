@@ -44,23 +44,23 @@ export class TransferRequest extends Request {
   protected _mint: any;
   protected _deposit: any;
 
-  static get FIELDS(): string [] {
+  static get FIELDS(): string[] {
     return [
-      'contractAddress',
-      'to',
-      'underwriter',
-      'asset',
-      'amount',
-      'module',
-      'nonce',
-      'pNonce',
-      'data'
-    ]
-  };
+      "contractAddress",
+      "to",
+      "underwriter",
+      "asset",
+      "amount",
+      "module",
+      "nonce",
+      "pNonce",
+      "data",
+    ];
+  }
 
   static get PROTOCOL() {
     return "/zero/2.1.0/dispatch";
-  };
+  }
 
   constructor(params: {
     module: string;
@@ -93,14 +93,13 @@ export class TransferRequest extends Request {
       ? hexlify(params.pNonce)
       : hexlify(randomBytes(32));
     this.contractAddress = params.contractAddress;
-     
-  };
+  }
 
   buildLoanTransaction() {
     throw Error(
       "TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending"
     );
-  };
+  }
 
   buildRepayTransaction() {
     if (!this._queryTxResult)
@@ -125,7 +124,7 @@ export class TransferRequest extends Request {
       ]),
       chainId: this.getChainId(),
     };
-  };
+  }
 
   hash(): string {
     return ethers.utils.keccak256(this.serialize());
@@ -145,17 +144,17 @@ export class TransferRequest extends Request {
       )
     );
     return new (RenVMChain as any)({
-      network: 'mainnet'
+      network: "mainnet",
     });
-  };
+  }
 
   _getRemoteChainName() {
     return renVMChainToAssetName(this._getRemoteChain().constructor);
-  };
+  }
 
   _getRenVM() {
     return new RenJS("mainnet").withChain(this._getRemoteChain());
-  };
+  }
 
   _getContractParams() {
     return {
@@ -185,7 +184,7 @@ export class TransferRequest extends Request {
       ],
       withRenParams: true,
     };
-  };
+  }
 
   async submitToRenVM(): Promise<Gateway> {
     if (this._mint) return this._mint;
@@ -199,24 +198,29 @@ export class TransferRequest extends Request {
       nonce: arrayify(this.nonce),
     });
 
+    console.log(result);
+
     return result;
-  };
+  }
 
   async waitForDeposit() {
     if (this._deposit) return this._deposit;
     const mint = await this.submitToRenVM();
-    return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
-  };
+    return (this._deposit = await new Promise((resolve) =>
+      mint.on("transaction", resolve)
+    ));
+  }
 
   async getTransactionHash() {
     const deposit = await this.waitForDeposit();
     return deposit.renVM.tx.hash;
-  };
+  }
 
   async waitForSignature() {
     if (this._queryTxResult) return this._queryTxResult;
     const mint = await this.submitToRenVM();
     const deposit = await this.waitForDeposit();
+    console.log(deposit);
     /*
     await deposit.in.wait();
    */
@@ -233,19 +237,34 @@ export class TransferRequest extends Request {
       signature: hexlify(signature),
     });
     return result;
-  };
+  }
 
   async toGatewayAddress(): Promise<string> {
     const mint = await this.submitToRenVM();
     return mint.gatewayAddress;
-  };
+  }
 
   async fallbackMint(signer) {
     if (!this._queryTxResult) await this.waitForSignature();
     const { amount: actualAmount, nHash, signature } = this._queryTxResult;
-    const contract = new Contract(this.contractAddress, [
-      "function fallbackMint(address underwriter, address to, address asset, uint256 amount, uint256 actualAmount, uint256 nonce, address module, bytes32 nHash, bytes data, bytes signature)"
-    ], signer);
-    return await contract.fallbackMint(this.contractAddress, this.to, this.asset, this.amount, actualAmount, this.pNonce, this.module, nHash, this.data, signature);
+    const contract = new Contract(
+      this.contractAddress,
+      [
+        "function fallbackMint(address underwriter, address to, address asset, uint256 amount, uint256 actualAmount, uint256 nonce, address module, bytes32 nHash, bytes data, bytes signature)",
+      ],
+      signer
+    );
+    return await contract.fallbackMint(
+      this.contractAddress,
+      this.to,
+      this.asset,
+      this.amount,
+      actualAmount,
+      this.pNonce,
+      this.module,
+      nHash,
+      this.data,
+      signature
+    );
   }
 }

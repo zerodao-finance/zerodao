@@ -2,30 +2,32 @@ import { hexValue } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 
 import {
-    Polygon,
-    Ethereum,
-    Arbitrum,
-    Avalanche,
-    Optimism,
-    EthereumBaseChain,
+  Polygon,
+  Ethereum,
+  Arbitrum,
+  Avalanche,
+  Optimism,
+  EthereumBaseChain,
 } from "@renproject/chains";
 import { InfuraProvider, JsonRpcProvider } from "@ethersproject/providers";
 import { cachedFrom } from "@zerodao/utils";
-
+import { RenNetwork } from "@renproject/utils";
 
 interface IIntegratedChain {
-  id: number,
-  hex: string
+  id: number;
+  hex: string;
   name: string | string[];
   symbol: string;
   decimals?: number;
   uniswapName: string;
   explorerRootUrl?: string;
-  rpcUrl: string | string[] | undefined
+  rpcUrl: string | string[] | undefined;
 }
 
-const INFURA_PROJECT_ID = process.env.REACT_APP_INFURA_PROJECT_ID || process.env.INFURA_PROJECT_ID || '816df2901a454b18b7df259e61f92cd2';
-
+const INFURA_PROJECT_ID =
+  process.env.REACT_APP_INFURA_PROJECT_ID ||
+  process.env.INFURA_PROJECT_ID ||
+  "816df2901a454b18b7df259e61f92cd2";
 
 const ETHEREUM: IIntegratedChain = {
   id: 1,
@@ -35,8 +37,8 @@ const ETHEREUM: IIntegratedChain = {
   symbol: "ETH",
   decimals: 18,
   rpcUrl: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-  explorerRootUrl: "https://etherscan.io/address/"
-}
+  explorerRootUrl: "https://etherscan.io/address/",
+};
 
 const AVALANCHE: IIntegratedChain = {
   id: 43114,
@@ -46,8 +48,8 @@ const AVALANCHE: IIntegratedChain = {
   uniswapName: "",
   decimals: 18,
   rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
-  explorerRootUrl: "https://snowtrace.io/address/"
-}
+  explorerRootUrl: "https://snowtrace.io/address/",
+};
 
 const ARBITRUM: IIntegratedChain = {
   id: 42161,
@@ -56,8 +58,8 @@ const ARBITRUM: IIntegratedChain = {
   symbol: "Arb",
   uniswapName: "ARBITRUM",
   rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-  explorerRootUrl: "https://snowtrace.io/address/"
-}
+  explorerRootUrl: "https://snowtrace.io/address/",
+};
 
 const POLYGON: IIntegratedChain = {
   id: 137,
@@ -66,8 +68,8 @@ const POLYGON: IIntegratedChain = {
   symbol: "MATIC",
   uniswapName: "POLYGON",
   rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-  explorerRootUrl: "https://polygonscan.com/address/"
-}
+  explorerRootUrl: "https://polygonscan.com/address/",
+};
 
 const OPTIMISM: IIntegratedChain = {
   id: 10,
@@ -76,24 +78,24 @@ const OPTIMISM: IIntegratedChain = {
   symbol: "OPTIMISM",
   uniswapName: "OPTIMISM",
   rpcUrl: `https://optimism-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-  explorerRootUrl: "https://optimistic.etherscan.io/address/"
-}
+  explorerRootUrl: "https://optimistic.etherscan.io/address/",
+};
 
 export const ID_CHAIN = {
   [1]: ETHEREUM,
   [43114]: AVALANCHE,
   [42161]: ARBITRUM,
   [137]: POLYGON,
-  [10]: OPTIMISM
-}
+  [10]: OPTIMISM,
+};
 
 export const NAME_CHAIN = {
-  "Arbitrum": ARBITRUM,
-  "Ethereum": ETHEREUM,
-  "Avalanche": AVALANCHE,
-  "Optimism": OPTIMISM,
-  "Polygon": POLYGON
-}
+  Arbitrum: ARBITRUM,
+  Ethereum: ETHEREUM,
+  Avalanche: AVALANCHE,
+  Optimism: OPTIMISM,
+  Polygon: POLYGON,
+};
 
 const ETH = {
   name: "Ether",
@@ -145,15 +147,20 @@ export const getExplorerRoot = (chainId) => {
   }
 };
 
-
-export const CHAINS = [[1, ETH], [10, ETH], [42161, ETH], [43114, AVAX], [137, MATIC]].reduce((r, [chainId, currency]) => {
+export const CHAINS = [
+  [1, ETH],
+  [10, ETH],
+  [42161, ETH],
+  [43114, AVAX],
+  [137, MATIC],
+].reduce((r, [chainId, currency]) => {
   const { rpcUrl, explorerRootUrl } = ID_CHAIN[Number(chainId)];
   r[Number(chainId)] = {
     chainId: hexValue(Number(chainId)),
     chainName: getChainName(chainId).toLowerCase(),
     nativeCurrency: currency,
     rpcUrl: rpcUrl,
-    blockExplorerUrls: explorerRootUrl
+    blockExplorerUrls: explorerRootUrl,
   };
   return r;
 }, {});
@@ -164,44 +171,50 @@ export const URLS = Object.keys(CHAINS).reduce((r, chainId) => {
 }, {});
 
 export const CONTROLLER_DEPLOYMENTS = {
-    [getAddress(
-        require("@zerodao/protocol/deployments/arbitrum/BadgerBridgeZeroController").address
-    )]: "Arbitrum",
-    [getAddress(
-        require("@zerodao/protocol/deployments/avalanche/BadgerBridgeZeroController").address
-    )]: "Avalanche",
-    [getAddress(
-        require("@zerodao/protocol/deployments/matic/BadgerBridgeZeroController").address
-    )]: "Polygon",
-    [getAddress(
-        require("@zerodao/protocol/deployments/mainnet/BadgerBridgeZeroController").address
-    )]: "Ethereum",
-    [getAddress(
-      require("@zerodao/protocol/deployments/mainnet/RenZECController").address
-    )]: "Ethereum",
-    [getAddress(
-        require("@zerodao/protocol/deployments/optimism/BadgerBridgeZeroController").address
-    )]: "Optimism",
+  [getAddress(
+    require("@zerodao/protocol/deployments/arbitrum/BadgerBridgeZeroController")
+      .address
+  )]: "Arbitrum",
+  [getAddress(
+    require("@zerodao/protocol/deployments/avalanche/BadgerBridgeZeroController")
+      .address
+  )]: "Avalanche",
+  [getAddress(
+    require("@zerodao/protocol/deployments/matic/BadgerBridgeZeroController")
+      .address
+  )]: "Polygon",
+  [getAddress(
+    require("@zerodao/protocol/deployments/mainnet/BadgerBridgeZeroController")
+      .address
+  )]: "Ethereum",
+  [getAddress(
+    require("@zerodao/protocol/deployments/mainnet/RenZECController").address
+  )]: "Ethereum",
+  [getAddress(
+    require("@zerodao/protocol/deployments/mainnet/ZeroBTC").address
+  )]: "Ethereum",
+  [getAddress(
+    require("@zerodao/protocol/deployments/optimism/BadgerBridgeZeroController")
+      .address
+  )]: "Optimism",
 };
 
 export const RPC_ENDPOINTS = {
-    Arbitrum: CHAINS[42161].rpcUrl,
-    Avalanche: CHAINS[43114].rpcUrl,
-    Polygon: CHAINS[137].rpcUrl,
-    Ethereum: CHAINS[1].rpcUrl,
-    Optimism: CHAINS[10].rpcUrl,
-    localhost: "http://localhost:8545",
+  Arbitrum: CHAINS[42161].rpcUrl,
+  Avalanche: CHAINS[43114].rpcUrl,
+  Polygon: CHAINS[137].rpcUrl,
+  Ethereum: CHAINS[1].rpcUrl,
+  Optimism: CHAINS[10].rpcUrl,
+  localhost: "http://localhost:8545",
 };
 
 export const RENVM_PROVIDERS = {
-    Arbitrum,
-    Polygon,
-    Ethereum,
-    Avalanche,
-    Optimism,
+  Arbitrum,
+  Polygon,
+  Ethereum,
+  Avalanche,
+  Optimism,
 };
-
-
 
 export const providerFromChainId = cachedFrom((chainId) => {
   const chainIdNumber = Number(chainId);
@@ -209,11 +222,11 @@ export const providerFromChainId = cachedFrom((chainId) => {
   const name = chain.chainName.toLowerCase();
   const infuraKey = (() => {
     switch (name) {
-      case 'ethereum':
-        return 'mainnet';
-      case 'polygon':
-        return 'matic';
-      case 'arbitrum':
+      case "ethereum":
+        return "mainnet";
+      case "polygon":
+        return "matic";
+      case "arbitrum":
         return name;
     }
   })();
@@ -221,40 +234,45 @@ export const providerFromChainId = cachedFrom((chainId) => {
   return new JsonRpcProvider(chain.rpcUrl);
 });
 
-
 export const getVanillaProvider = (request) => {
-    const checkSummedContractAddr = getAddress(request.contractAddress);
-    if (Object.keys(CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {
-        const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
-        return providerFromChainId(NAME_CHAIN[chain_key].id);;
-    } else {
-        throw new Error('Not a contract currently deployed: ' + checkSummedContractAddr);
-    }
+  const checkSummedContractAddr = getAddress(request.contractAddress);
+  if (Object.keys(CONTROLLER_DEPLOYMENTS).includes(checkSummedContractAddr)) {
+    const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
+    return providerFromChainId(NAME_CHAIN[chain_key].id);
+  } else {
+    throw new Error(
+      "Not a contract currently deployed: " + checkSummedContractAddr
+    );
+  }
 };
 
 export const getRenVMChain = (transferRequest) => {
-    const checkSummedContractAddr = getAddress(transferRequest.contractAddress);
-    const ethersProvider = getVanillaProvider(transferRequest);
-    const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
-    return new RENVM_PROVIDERS[chain_key]({ network: "mainnet", provider: ethersProvider });
-}
+  const checkSummedContractAddr = getAddress(transferRequest.contractAddress);
+  const ethersProvider = getVanillaProvider(transferRequest);
+  const chain_key = CONTROLLER_DEPLOYMENTS[checkSummedContractAddr];
+  return new RENVM_PROVIDERS[chain_key]({
+    network: "mainnet",
+    provider: ethersProvider,
+  });
+};
 
+export const getProvider: ({
+  contractAddress,
+}: {
+  contractAddress: string;
+}) => EthereumBaseChain = (transferRequest) => {
+  const checksummedAddr = getAddress(transferRequest.contractAddress);
 
-export const getProvider: ({ contractAddress }: {contractAddress: string}) => EthereumBaseChain =
-    (transferRequest) => {
-        const checksummedAddr = getAddress(
-            transferRequest.contractAddress
-        );
-
-        const ethersProvider = getVanillaProvider(transferRequest);
-        const chain_key = CONTROLLER_DEPLOYMENTS[checksummedAddr];
-        if (chain_key == "localhost")
-            return new RENVM_PROVIDERS.Ethereum({
-                network: "mainnet",
-                provider: ethersProvider
-            });
-        return new RENVM_PROVIDERS[chain_key]({
-          provider: ethersProvider,
-          network: "mainnet",
-        });
-    };
+  const ethersProvider = getVanillaProvider(transferRequest);
+  const chain_key = CONTROLLER_DEPLOYMENTS[checksummedAddr];
+  if (chain_key == "localhost")
+    //@ts-ignore
+    return new RENVM_PROVIDERS.Ethereum({
+      network: RenNetwork.Mainnet,
+      provider: ethersProvider,
+    });
+  return new RENVM_PROVIDERS[chain_key]({
+    provider: ethersProvider,
+    network: "mainnet",
+  });
+};
