@@ -54,4 +54,3 @@ export declare class TransferRequest extends Request {
     toGatewayAddress(): Promise<string>;
     fallbackMint(signer: any): Promise<any>;
 }
-//# sourceMappingURL=TransferRequest.d.ts.map

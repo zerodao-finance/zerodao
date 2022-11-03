@@ -10,4 +10,3 @@ export declare type QueryTXResult = {
     pHash: BytesLike;
     signature: BytesLike;
 };
-//# sourceMappingURL=types.d.ts.map

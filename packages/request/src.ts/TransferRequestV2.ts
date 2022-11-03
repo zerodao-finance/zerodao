@@ -21,8 +21,8 @@ export class TransferRequestV2 extends TransferRequest {
         "function loan(address, address, uint256, uint256, bytes)",
       ]).encodeFunctionData("loan", [
         this.module,
-        this.borrower,
-        this.borrowAmount,
+        this.to,
+        this.amount,
         this.nonce, // Could be this.loanId ?
         this.data,
       ]),
@@ -42,10 +42,10 @@ export class TransferRequestV2 extends TransferRequest {
         "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes"
       ]).encodeFunctionData("repay", [
         this.underwriter,
-        this.borrower, // to address
+        this.to, // borrower address
         this.asset, 
-        this.borrowAmount, // amount
-        this.borrowAmount, // actualAmount
+        this.amount, // borrow amount
+        this._queryTxResult.amount, // actual amount
         this.nonce, 
         this.module,
         this._queryTxResult.nHash,

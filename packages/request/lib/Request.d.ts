@@ -16,4 +16,3 @@ export declare abstract class Request {
     getChainId(): number;
     publish(peer: ZeroP2P): Promise<PublishEventEmitter>;
 }
-//# sourceMappingURL=Request.d.ts.map
