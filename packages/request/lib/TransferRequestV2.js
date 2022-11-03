@@ -1,15 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequestV2 = void 0;
-const TransferRequest_1 = require("./TransferRequest");
+const random_1 = require("@ethersproject/random");
+const bytes_1 = require("@ethersproject/bytes");
+const bignumber_1 = require("@ethersproject/bignumber");
 const abi_1 = require("@ethersproject/abi");
-class TransferRequestV2 extends TransferRequest_1.TransferRequest {
-    static get PROTOCOL() {
-        return "/zero/2.1.0/dispatch";
+const Request_1 = require("./Request");
+class TransferRequestV2 extends Request_1.Request {
+    constructor(params) {
+        super();
+        this.contractAddress = params.contractAddress;
+        this.borrower = params.borrower;
+        this.asset = params.asset;
+        this.borrowAmount = (0, bytes_1.hexlify)(typeof params.borrowAmount === "number"
+            ? params.borrowAmount
+            : typeof params.borrowAmount === "string"
+                ? bignumber_1.BigNumber.from(params.borrowAmount)
+                : params.borrowAmount);
+        this.module = params.module;
+        this.loanId = params.loanId
+            ? (0, bytes_1.hexlify)(params.loanId)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.nonce = params.nonce
+            ? (0, bytes_1.hexlify)(params.nonce)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.data = params.data;
+        this.underwriter = params.underwriter;
     }
     static get FIELDS() {
         return ["contractAddress", "module", "to", "amount", "pNonce", "data"];
     }
+    static get PROTOCOL() {
+        return "/zero/2.1.0/dispatch";
+    }
+    ;
+    ;
     buildLoanTransaction() {
         return {
             chainId: this.getChainId(),
@@ -18,9 +43,9 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
                 "function loan(address, address, uint256, uint256, bytes)",
             ]).encodeFunctionData("loan", [
                 this.module,
-                this.to,
-                this.amount,
-                this.pNonce,
+                this.borrower,
+                this.borrowAmount,
+                this.nonce,
                 this.data,
             ]),
         };
@@ -33,15 +58,17 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
             chainId: this.getChainId(),
             to: this.contractAddress,
             data: new abi_1.Interface([
-                "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)",
+                "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes"
             ]).encodeFunctionData("repay", [
-                this.module,
-                this.to,
-                this.amount,
-                this.pNonce,
-                this.data,
                 this.underwriter,
+                this.borrower,
+                this.asset,
+                this.borrowAmount,
+                this.borrowAmount,
+                this.nonce,
+                this.module,
                 this._queryTxResult.nHash,
+                this.data,
                 this._queryTxResult.signature,
             ]),
         };

@@ -1,38 +1,23 @@
-import { BigNumberish } from "ethers";
 import RenJS, { Gateway } from "@renproject/ren";
 import { Request } from "./Request";
-export declare class TransferRequest extends Request {
+import { Transaction } from "./types";
+export declare class BaseTransferRequest extends Request {
     module: string;
     to: string;
-    underwriter: string;
     asset: string;
     nonce: string;
     pNonce: string;
     amount: string;
     data: string;
     contractAddress: string;
+    underwriter: string;
     protected _queryTxResult: any;
     protected _mint: any;
     protected _deposit: any;
-    static get FIELDS(): string[];
     static get PROTOCOL(): string;
-    constructor(params: {
-        module: string;
-        to: string;
-        underwriter?: string;
-        asset: string;
-        amount: BigNumberish;
-        data: string;
-        nonce?: BigNumberish;
-        pNonce?: BigNumberish;
-        contractAddress: string;
-    });
+    static get FIELDS(): string[];
     buildLoanTransaction(): void;
-    buildRepayTransaction(): {
-        to: string;
-        data: string;
-        chainId: number;
-    };
+    buildRepayTransaction(): Transaction;
     hash(): string;
     _getRemoteChain(): any;
     _getRemoteChainName(): "BTC" | "ZEC";
@@ -54,4 +39,3 @@ export declare class TransferRequest extends Request {
     toGatewayAddress(): Promise<string>;
     fallbackMint(signer: any): Promise<any>;
 }
-//# sourceMappingURL=TransferRequest.d.ts.map

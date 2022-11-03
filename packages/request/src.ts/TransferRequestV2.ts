@@ -1,10 +1,9 @@
-import { TransferRequest } from "./TransferRequest";
 import { randomBytes } from "@ethersproject/random";
 import { hexlify, type BytesLike } from "@ethersproject/bytes";
-import { BigNumberish } from "@ethersproject/bignumber";
+import { BigNumberish, BigNumber } from "@ethersproject/bignumber";
 import { Interface } from "@ethersproject/abi";
-import { EthArgs } from "@renproject/interfaces";
 import type { Transaction } from "./types";
+import { TransferRequest } from "./TransferRequest";
 
 export class TransferRequestV2 extends TransferRequest {
   static get PROTOCOL() {
@@ -22,9 +21,9 @@ export class TransferRequestV2 extends TransferRequest {
         "function loan(address, address, uint256, uint256, bytes)",
       ]).encodeFunctionData("loan", [
         this.module,
-        this.to,
-        this.amount,
-        this.pNonce,
+        this.borrower,
+        this.borrowAmount,
+        this.nonce, // Could be this.loanId ?
         this.data,
       ]),
     };
@@ -40,15 +39,17 @@ export class TransferRequestV2 extends TransferRequest {
       chainId: this.getChainId(),
       to: this.contractAddress,
       data: new Interface([
-        "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)",
+        "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes"
       ]).encodeFunctionData("repay", [
-        this.module,
-        this.to,
-        this.amount,
-        this.pNonce,
-        this.data,
         this.underwriter,
+        this.borrower, // to address
+        this.asset, 
+        this.borrowAmount, // amount
+        this.borrowAmount, // actualAmount
+        this.nonce, 
+        this.module,
         this._queryTxResult.nHash,
+        this.data,
         this._queryTxResult.signature,
       ]),
     };

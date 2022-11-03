@@ -96,3 +96,4 @@ export declare class BurnRequest extends Request {
         to: string;
     };
 }
+//# sourceMappingURL=BurnRequest.d.ts.map
