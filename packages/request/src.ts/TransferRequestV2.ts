@@ -10,7 +10,15 @@ export class TransferRequestV2 extends TransferRequest {
     return "/zero/2.1.0/dispatch";
   }
   static get FIELDS() {
-    return ["contractAddress", "module", "to", "amount", "pNonce", "data"];
+    return [
+      "contractAddress",
+      "module",
+      "to",
+      "amount",
+      "nonce",
+      "data",
+      "underwriter",
+    ];
   }
 
   buildLoanTransaction(): Transaction {
@@ -23,7 +31,7 @@ export class TransferRequestV2 extends TransferRequest {
         this.module,
         this.to,
         this.amount,
-        this.nonce, // Could be this.loanId ?
+        this.nonce,
         this.data,
       ]),
     };
@@ -34,22 +42,19 @@ export class TransferRequestV2 extends TransferRequest {
       throw Error(
         "TransferRequest#buildRepayTransaction(): must call waitForSignature()"
       );
-    // TODO: add usage of this._queryTxResult.amount
     return {
       chainId: this.getChainId(),
       to: this.contractAddress,
       data: new Interface([
-        "function repay(address, address, address, uint256, uint256, uint256, address, bytes32, bytes, bytes"
+        "function repay(address, address, uint256, uint256, bytes, address, bytes32,  bytes",
       ]).encodeFunctionData("repay", [
-        this.underwriter,
-        this.to, // borrower address
-        this.asset, 
-        this.amount, // borrow amount
-        this._queryTxResult.amount, // actual amount
-        this.nonce, 
         this.module,
-        this._queryTxResult.nHash,
+        this.to, // borrower address
+        this.amount, // borrow amount
+        this.nonce,
         this.data,
+        this.underwriter,
+        this._queryTxResult.nHash,
         this._queryTxResult.signature,
       ]),
     };
