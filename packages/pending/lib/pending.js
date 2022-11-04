@@ -29,11 +29,11 @@ const VAULT_DEPLOYMENTS = {
     "0x11dbf784098e296471a08251178f757156651085": 1,
 };
 const getGateway = async (request) => {
-    const { nonce } = request;
+    const { nonce, loanId } = request;
     if (cache[nonce])
         return cache[nonce];
     else {
-        cache[nonce] = await new request_1.TransferRequest(request).submitToRenVM();
+        cache[nonce] = await new (loanId && request_1.TransferRequestV2 || request_1.TransferRequest)(request).submitToRenVM();
         return cache[nonce];
     }
 };

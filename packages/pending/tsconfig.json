@@ -4,6 +4,7 @@
         "emitDecoratorMetadata": true,
         "module": "commonjs",
         "moduleResolution": "node",
+	"skipLibCheck": true,
         "target": "es2020",
         "noImplicitAny": false,
         "esModuleInterop": true,
