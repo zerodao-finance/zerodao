@@ -6,6 +6,7 @@ import type { Transaction } from "./types";
 import { TransferRequest } from "./TransferRequest";
 
 export class TransferRequestV2 extends TransferRequest {
+  public loanId: BytesLike;
   static get PROTOCOL() {
     return "/zero/2.1.0/dispatch";
   }
@@ -15,13 +16,16 @@ export class TransferRequestV2 extends TransferRequest {
       "module",
       "to",
       "amount",
-      "nonce",
       "loanId",
+      "nonce",
       "data",
       "underwriter",
     ];
   }
-
+  constructor(o: any) {
+    super(o);
+    this.loanId = o.loanId;
+  }
   buildLoanTransaction(): Transaction {
     return {
       chainId: this.getChainId(),
@@ -32,7 +36,7 @@ export class TransferRequestV2 extends TransferRequest {
         this.module,
         this.to,
         this.amount,
-        this.nonce,
+        this.loanId,
         this.data,
       ]),
     };
@@ -52,7 +56,7 @@ export class TransferRequestV2 extends TransferRequest {
         this.module,
         this.to, // borrower address
         this.amount, // borrow amount
-        this.nonce,
+        this.loanId,
         this.data,
         this.underwriter,
         this._queryTxResult.nHash,

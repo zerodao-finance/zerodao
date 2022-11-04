@@ -4,6 +4,10 @@ exports.TransferRequestV2 = void 0;
 const abi_1 = require("@ethersproject/abi");
 const TransferRequest_1 = require("./TransferRequest");
 class TransferRequestV2 extends TransferRequest_1.TransferRequest {
+    constructor(o) {
+        super(o);
+        this.loanId = o.loanId;
+    }
     static get PROTOCOL() {
         return "/zero/2.1.0/dispatch";
     }
@@ -13,6 +17,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
             "module",
             "to",
             "amount",
+            "loanId",
             "nonce",
             "data",
             "underwriter",
@@ -28,7 +33,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
                 this.module,
                 this.to,
                 this.amount,
-                this.nonce,
+                this.loanId,
                 this.data,
             ]),
         };
@@ -45,7 +50,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
                 this.module,
                 this.to,
                 this.amount,
-                this.nonce,
+                this.loanId,
                 this.data,
                 this.underwriter,
                 this._queryTxResult.nHash,
