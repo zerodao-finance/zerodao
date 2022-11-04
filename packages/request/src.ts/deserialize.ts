@@ -8,7 +8,7 @@ export function deserialize(data: BytesLike) {
 	console.log(data);
   const decoded = decode(arrayify(data));
   if (decoded.length < 8 || decoded.length > 9) throw Error('No request type has ' + decoded.length + ' fields');
-  if (decoded.length === 9) return TransferRequest.deserialize(data);
+  if (String(decoded[8] || '').length !== 42) return TransferRequest.deserialize(data);
   if (arrayify(decoded[7]).length === 65) return BurnRequest.deserialize(data);
   return TransferRequestV2.deserialize(data);
 }
