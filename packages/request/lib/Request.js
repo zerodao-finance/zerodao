@@ -56,7 +56,7 @@ class Request {
             })());
     }
     async publish(peer) {
-        const request = this.serialize().toString('utf8');
+        const request = new Uint8Array(this.serialize());
         const result = new PublishEventEmitter_1.PublishEventEmitter();
         if (peer._keepers.length === 0) {
             setTimeout(() => result.emit("error", new Error("Cannot publish request if no keepers are found")), 0);
