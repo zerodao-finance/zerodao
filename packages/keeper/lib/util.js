@@ -90,6 +90,7 @@ function handleRequestsV21(p2p) {
             p2p.emit("zero:request:2.1.0", await pipeToBuffer(duplex.stream));
         }
         catch (e) {
+            console.error(e);
             p2p.emit("error", e);
         }
     });

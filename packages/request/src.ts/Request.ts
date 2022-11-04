@@ -64,7 +64,7 @@ export abstract class Request {
     );
   }
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
-    const request = new Uint8Array(this.serialize());
+    const request = this.serialize().toString('utf8');
     const result = new PublishEventEmitter();
     if (peer._keepers.length === 0) {
       setTimeout(() =>
