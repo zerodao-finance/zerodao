@@ -16,6 +16,7 @@ export class TransferRequestV2 extends TransferRequest {
       "to",
       "amount",
       "nonce",
+      "loanId",
       "data",
       "underwriter",
     ];

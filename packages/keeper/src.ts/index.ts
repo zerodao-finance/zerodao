@@ -127,6 +127,7 @@ export const runKeeper = () => {
       await handleEvent(data);
     });
     peer.on("zero:request:2.1.0", async (data) => {
+      console.log('woop');
       await handleEvent(serializeToJSON(deserialize(data)));
     });
     peer.on("error", logger.error.bind(logger));

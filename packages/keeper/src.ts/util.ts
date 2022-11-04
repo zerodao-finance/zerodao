@@ -46,7 +46,7 @@ export async function pipeToString(stream) {
 export async function pipeToBuffer(stream) {
   return await new Promise((resolve, reject) => {
     pipe(stream.source, lp.decode(), async (rawData) => {
-      const buffers = [];
+      let buffers = [];
       try {
         for await (const msg of rawData) {
           buffers.push(msg);
@@ -54,7 +54,9 @@ export async function pipeToBuffer(stream) {
       } catch (e) {
         return reject(e);
       }
-      resolve(Buffer.concat(buffers.map((v) => Buffer.from(v))));
+      const result = buffers.reduce((r, v) => Buffer.concat([r, ...v._bufs]), Buffer.alloc(0));
+      console.log(result);
+      resolve(result);
     });
   });
 }
@@ -79,10 +81,12 @@ export function handleRequestsV2(p2p) {
   });
 }
 
+const ln = (v) => ((console.log(v)), v);
+
 export function handleRequestsV21(p2p) {
   p2p.handle("/zero/2.1.0/dispatch", async (duplex) => {
     try {
-      p2p.emit("zero:request:2.1.0", await pipeToBuffer(duplex.stream));
+      p2p.emit("zero:request:2.1.0", ln(await pipeToBuffer(duplex.stream)));
     } catch (e) {
       console.error(e);
       p2p.emit("error", e);

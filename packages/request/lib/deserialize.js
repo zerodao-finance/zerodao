@@ -7,7 +7,8 @@ const TransferRequestV2_1 = require("./TransferRequestV2");
 const rlp_1 = require("@ethersproject/rlp");
 const bytes_1 = require("@ethersproject/bytes");
 function deserialize(data) {
-    const decoded = (0, rlp_1.decode)(data);
+    console.log(data);
+    const decoded = (0, rlp_1.decode)((0, bytes_1.arrayify)(data));
     if (decoded.length < 8 || decoded.length > 9)
         throw Error('No request type has ' + decoded.length + ' fields');
     if (decoded.length === 9)

@@ -99,6 +99,7 @@ const runKeeper = () => {
             await handleEvent(data);
         });
         peer.on("zero:request:2.1.0", async (data) => {
+            console.log('woop');
             await handleEvent((0, util_1.serializeToJSON)((0, request_1.deserialize)(data)));
         });
         peer.on("error", logger.error.bind(logger));
