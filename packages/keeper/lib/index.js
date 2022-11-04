@@ -76,6 +76,7 @@ async function handleEvent(data) {
 const runKeeper = () => {
     (async () => {
         logger.info("keeper process started");
+        console.log(process.env.WALLET);
         const signer = new wallet_1.Wallet(process.env.WALLET).connect(new providers_1.InfuraProvider("mainnet", chains_1.CHAINS[1].rpcUrl));
         console.log(process.env.SIGNALLING_SERVER);
         const peer = await p2p_1.ZeroP2P.fromPassword({

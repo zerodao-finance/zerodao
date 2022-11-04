@@ -1,7 +1,7 @@
 {
   "apps": [{
     "name": "keeper",
-    "script": "yarn workspace @zerodao/keeper start"
+    "script": "source ~/.variables.env && yarn workspace @zerodao/keeper start"
   }, {
     "name": "watcher",
     "script": "yarn workspace @zerodao/watcher start"

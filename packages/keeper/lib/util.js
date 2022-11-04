@@ -57,7 +57,7 @@ async function pipeToBuffer(stream) {
             catch (e) {
                 return reject(e);
             }
-            resolve(Buffer.concat(buffers));
+            resolve(Buffer.concat(buffers.map((v) => Buffer.from(v))));
         });
     });
 }

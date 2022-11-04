@@ -97,6 +97,7 @@ async function handleEvent(data) {
 export const runKeeper = () => {
   (async () => {
     logger.info("keeper process started");
+    console.log(process.env.WALLET)
     const signer = new Wallet(process.env.WALLET).connect(
       new InfuraProvider("mainnet", CHAINS[1].rpcUrl)
     );

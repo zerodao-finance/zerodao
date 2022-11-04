@@ -1,13 +1,18 @@
 "use strict";
-import { hexlify } from "@ethersproject/bytes";
-import { keccak256 } from "@ethersproject/solidity";
-import crypto from "libp2p-crypto";
-import { Buffer } from "buffer";
-import { mapValues } from "lodash";
-import "@ethersproject/abstract-signer";
-import { createLogger } from "@zerodao/logger";
-import { fromBufferToJSON } from "@zerodao/buffer";
-import { NOISE } from "libp2p-noise";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ZeroP2P = void 0;
+const bytes_1 = require("@ethersproject/bytes");
+const solidity_1 = require("@ethersproject/solidity");
+const libp2p_crypto_1 = __importDefault(require("libp2p-crypto"));
+const buffer_1 = require("buffer");
+const lodash_1 = require("lodash");
+require("@ethersproject/abstract-signer");
+const logger_1 = require("@zerodao/logger");
+const buffer_2 = require("@zerodao/buffer");
+const SECIO = require('libp2p-secio');
 const Mplex = require("libp2p-mplex");
 const KadDHT = require("libp2p-kad-dht");
 const Bootstrap = require("libp2p-bootstrap");
@@ -22,20 +27,20 @@ const globalObject = require("the-global-object");
 const base64url = require("base64url");
 const cryptico = require("cryptico-js");
 const returnOp = (v) => v;
-const logger = createLogger("@zerodao/p2p");
-globalObject.Buffer = globalObject.Buffer || Buffer;
-const mapToBuffers = (o) => mapValues(o, (v) => base64url((v.toByteArray && Buffer.from(v.toByteArray())) ||
-    Buffer.from(hexlify(v).substr(2), "hex")));
+const logger = (0, logger_1.createLogger)("@zerodao/p2p");
+globalObject.Buffer = globalObject.Buffer || buffer_1.Buffer;
+const mapToBuffers = (o) => (0, lodash_1.mapValues)(o, (v) => base64url((v.toByteArray && buffer_1.Buffer.from(v.toByteArray())) ||
+    buffer_1.Buffer.from((0, bytes_1.hexlify)(v).substr(2), "hex")));
 const cryptoFromSeed = async function (seed) {
     const key = mapToBuffers(await cryptico.generateRSAKey(seed, 2048));
     key.dp = key.dmp1;
     key.dq = key.dmq1;
     key.qi = key.coeff;
-    return crypto.keys.supportedKeys.rsa.unmarshalRsaPrivateKey(new crypto.keys.supportedKeys.rsa.RsaPrivateKey(key, key).marshal());
+    return libp2p_crypto_1.default.keys.supportedKeys.rsa.unmarshalRsaPrivateKey(new libp2p_crypto_1.default.keys.supportedKeys.rsa.RsaPrivateKey(key, key).marshal());
 };
 const coerceBuffersToHex = (v) => {
-    if (v instanceof Uint8Array || Buffer.isBuffer(v))
-        return hexlify(v);
+    if (v instanceof Uint8Array || buffer_1.Buffer.isBuffer(v))
+        return (0, bytes_1.hexlify)(v);
     if (Array.isArray(v))
         return v.map(coerceBuffersToHex);
     if (typeof v === "object") {
@@ -48,7 +53,7 @@ const coerceBuffersToHex = (v) => {
 };
 const coerceHexToBuffers = (v) => {
     if (typeof v === "string" && v.substr(0, 2) === "0x")
-        return Buffer.from(v.substr(2), "hex");
+        return buffer_1.Buffer.from(v.substr(2), "hex");
     if (Array.isArray(v))
         return v.map(coerceHexToBuffers);
     if (typeof v === "object") {
@@ -59,7 +64,7 @@ const coerceHexToBuffers = (v) => {
     }
     return v;
 };
-export class ZeroP2P extends Libp2p {
+class ZeroP2P extends Libp2p {
     constructor(options) {
         const multiaddr = ZeroP2P.fromPresetOrMultiAddr(options.multiaddr || "mainnet");
         super({
@@ -89,7 +94,7 @@ export class ZeroP2P extends Libp2p {
             modules: {
                 transport: [WStar],
                 streamMuxer: [Mplex],
-                connEncryption: [NOISE],
+                connEncryption: [SECIO],
                 pubsub: GossipSub,
                 peerDiscovery: [Bootstrap],
                 dht: KadDHT,
@@ -128,7 +133,7 @@ export class ZeroP2P extends Libp2p {
         return (this.PRESETS[(multiaddr || "").toUpperCase() || "MAINNET"] || multiaddr);
     }
     static toMessage(password) {
-        return ("/zerop2p/1.0.0/" + keccak256(["string"], ["/zerop2p/1.0.0/" + password]));
+        return ("/zerop2p/1.0.0/" + (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
     }
     static async peerIdFromSeed(seed) {
         return await PeerId.createFromPrivKey((await cryptoFromSeed(seed)).bytes);
@@ -158,7 +163,7 @@ export class ZeroP2P extends Libp2p {
     async subscribeKeepers() {
         await this.pubsub.subscribe("zero.keepers", async (message) => {
             const { data, from } = message;
-            const { address } = fromBufferToJSON(data);
+            const { address } = (0, buffer_2.fromBufferToJSON)(data);
             if (!this._keepers.includes(from)) {
                 this._keepers.push(from);
                 this.emit("keeper:discovery", from);
@@ -170,6 +175,7 @@ export class ZeroP2P extends Libp2p {
         this._keepers = [];
     }
 }
+exports.ZeroP2P = ZeroP2P;
 ZeroP2P.PRESETS = {
     MAINNET: "/dns4/p2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/",
     "DEV-MAINNET": "/dns4/devp2p.zerodao.com/tcp/443/wss/p2p-webrtc-star/",

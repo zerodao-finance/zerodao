@@ -4,6 +4,7 @@
     "outDir": "lib",
     "allowJs": true,
     "checkJs": true,
+    "module": "commonjs",
     "target": "ES2021",
     "lib": [
       "ES2020",

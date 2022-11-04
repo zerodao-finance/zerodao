@@ -8,7 +8,7 @@ import { Signer } from "@ethersproject/abstract-signer";
 
 import { createLogger, Logger } from "@zerodao/logger";
 import { fromBufferToJSON } from "@zerodao/buffer";
-import { NOISE } from "libp2p-noise";
+const SECIO = require('libp2p-secio');
 const Mplex = require("libp2p-mplex");
 const KadDHT = require("libp2p-kad-dht");
 const Bootstrap = require("libp2p-bootstrap");
@@ -148,7 +148,7 @@ export class ZeroP2P extends Libp2p {
       modules: {
         transport: [WStar],
         streamMuxer: [Mplex],
-        connEncryption: [NOISE],
+        connEncryption: [SECIO],
         pubsub: GossipSub,
         peerDiscovery: [Bootstrap],
         dht: KadDHT,
