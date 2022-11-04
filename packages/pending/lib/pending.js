@@ -26,7 +26,7 @@ const isZcashAddress = (hex) => ((hex) => hex.substr(0, 2) === "0x"
     : hex.substr(0, 2) === "zs" || hex.substr(0, 1) === "t")(buffer_1.Buffer.isBuffer(hex) ? "0x" + hex.toString("hex") : hex);
 const cache = {};
 const VAULT_DEPLOYMENTS = {
-    "0x11dbf784098e296471a08251178f757156651085": 1,
+    [(0, address_1.getAddress)("0x11dbf784098e296471a08251178f757156651085")]: 1,
 };
 const getGateway = async (request) => {
     const { nonce, loanId } = request;

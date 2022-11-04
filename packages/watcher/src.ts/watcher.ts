@@ -10,7 +10,7 @@ import { Logger } from "@zerodao/logger";
 
 const VAULT_DEPLOYMENTS = {
   [AddressZero]: 1337,
-  ["0x11dbf784098e296471a08251178f757156651085"]: 1,
+  [getAddress("0x11dbf784098e296471a08251178f757156651085")]: 1,
 };
 
 export class WatcherProcess {

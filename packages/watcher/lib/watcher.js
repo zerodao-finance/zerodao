@@ -7,7 +7,7 @@ const constants_1 = require("@ethersproject/constants");
 const request_1 = require("@zerodao/request");
 const VAULT_DEPLOYMENTS = {
     [constants_1.AddressZero]: 1337,
-    ["0x11dbf784098e296471a08251178f757156651085"]: 1,
+    [(0, address_1.getAddress)("0x11dbf784098e296471a08251178f757156651085")]: 1,
 };
 class WatcherProcess {
     constructor({ logger, redis }) {

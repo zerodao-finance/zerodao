@@ -33,7 +33,7 @@ const isZcashAddress = (hex) =>
 
 const cache = {};
 const VAULT_DEPLOYMENTS = {
-  "0x11dbf784098e296471a08251178f757156651085": 1,
+  [getAddress("0x11dbf784098e296471a08251178f757156651085")]: 1,
 };
 const getGateway = async (request) => {
   const { nonce, loanId } = request;
