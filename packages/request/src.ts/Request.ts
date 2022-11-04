@@ -64,7 +64,7 @@ export abstract class Request {
     );
   }
   async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
-    const request = this.serialize().toString('utf8');
+    const request = new Uint8Array(this.serialize());
     const result = new PublishEventEmitter();
     if (peer._keepers.length === 0) {
       setTimeout(() =>
@@ -83,7 +83,7 @@ export abstract class Request {
             _peerId,
             (this as any).constructor.PROTOCOL
           );
-          pipe(request, lp.encode(), stream.sink);
+          pipe([ request ], lp.encode(), stream.sink);
           result.emit("dialed", keeper);
         } catch (e: any) {
           result.emit("error", e);
