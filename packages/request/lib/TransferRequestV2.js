@@ -16,6 +16,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
             "contractAddress",
             "module",
             "to",
+            "asset",
             "amount",
             "loanId",
             "nonce",

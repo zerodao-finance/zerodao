@@ -15,6 +15,7 @@ export class TransferRequestV2 extends TransferRequest {
       "contractAddress",
       "module",
       "to",
+      "asset",
       "amount",
       "loanId",
       "nonce",
