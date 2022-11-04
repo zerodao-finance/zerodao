@@ -26,6 +26,7 @@ export class TransferRequestV2 extends TransferRequest {
   constructor(o: any) {
     super(o);
     this.loanId = o.loanId;
+    this.pNonce = this.loanId || o.pNonce || this.pNonce;
   }
   buildLoanTransaction(): Transaction {
     return {

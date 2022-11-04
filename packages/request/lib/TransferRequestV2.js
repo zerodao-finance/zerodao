@@ -7,6 +7,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
     constructor(o) {
         super(o);
         this.loanId = o.loanId;
+        this.pNonce = this.loanId || o.pNonce || this.pNonce;
     }
     static get PROTOCOL() {
         return "/zero/2.1.0/dispatch";
