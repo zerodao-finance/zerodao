@@ -51,7 +51,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
             ]).encodeFunctionData("repay", [
                 this.module,
                 this.to,
-                this.amount,
+                this._queryTxResult.actualAmount,
                 this.loanId,
                 this.data,
                 this.underwriter,

@@ -112,7 +112,12 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
 
     bytes32 pHash = _deriveLoanPHash(data);
-    uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
+    uint256 repaidAmount = _getGateway().mint(
+      keccak256(abi.encode(borrower, nonce, module, data)),
+      borrowAmount,
+      nHash,
+      renSignature
+    );
 
     uint256 loanId = _deriveLoanId(lender, pHash);
     if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
