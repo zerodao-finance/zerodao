@@ -53,7 +53,7 @@ export class TransferRequestV2 extends TransferRequest {
       chainId: this.getChainId(),
       to: this.contractAddress,
       data: new Interface([
-        "function repay(address, address, uint256, uint256, bytes, address, bytes32,  bytes",
+        "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)",
       ]).encodeFunctionData("repay", [
         this.module,
         this.to, // borrower address

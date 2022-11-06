@@ -47,7 +47,7 @@ class TransferRequestV2 extends TransferRequest_1.TransferRequest {
             chainId: this.getChainId(),
             to: this.contractAddress,
             data: new abi_1.Interface([
-                "function repay(address, address, uint256, uint256, bytes, address, bytes32,  bytes",
+                "function repay(address, address, uint256, uint256, bytes, address, bytes32, bytes)",
             ]).encodeFunctionData("repay", [
                 this.module,
                 this.to,
