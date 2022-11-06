@@ -56,7 +56,7 @@ class Request {
             })());
     }
     async publish(peer) {
-        const request = this.serialize().toString('utf8');
+        const request = new Uint8Array(this.serialize());
         const result = new PublishEventEmitter_1.PublishEventEmitter();
         if (peer._keepers.length === 0) {
             setTimeout(() => result.emit("error", new Error("Cannot publish request if no keepers are found")), 0);
@@ -68,7 +68,7 @@ class Request {
                     console.log([_peerId, this.constructor.PROTOCOL]);
                     console.log(request);
                     const { stream } = await peer.dialProtocol(_peerId, this.constructor.PROTOCOL);
-                    (0, it_pipe_1.default)(request, it_length_prefixed_1.default.encode(), stream.sink);
+                    (0, it_pipe_1.default)([request], it_length_prefixed_1.default.encode(), stream.sink);
                     result.emit("dialed", keeper);
                 }
                 catch (e) {
