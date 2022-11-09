@@ -29,7 +29,8 @@
     "gen:coders": "stack-packer ./struct-defs ./contracts/erc4626/utils ./contracts/test/ ./test/types/",
     "test:mainnet": "forge test --match-contract 'BTCVaultTestMainnet|ExistingVaultTest' --fork-url https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
     "debug:mainnet": "forge debug --fork-url https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2 ./contracts/test/ExistingVaultTest.test.sol --debug",
-    "deploy:mainnet": "PRIVATE_KEY=`ethers eval \"ethers.Wallet.fromEncryptedJsonSync(require('fs').readFileSync(process.env.SIGNER_PATH).toString(), process.env.PASSWORD)._signingKey().privateKey\"` forge script contracts/scripts/DeployVault.s.sol:DeployVault --fork-url https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2"
+    "deploy:mainnet": "PRIVATE_KEY=`ethers eval \"ethers.Wallet.fromEncryptedJsonSync(require('fs').readFileSync(process.env.SIGNER_PATH).toString(), process.env.PASSWORD)._signingKey().privateKey\"` forge script contracts/scripts/DeployVault.s.sol:DeployVault --fork-url https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2",
+    "deploy:mainnet:upgrade": "PRIVATE_KEY=`ethers eval \"ethers.Wallet.fromEncryptedJsonSync(require('fs').readFileSync(process.env.SIGNER_PATH).toString(), process.env.PASSWORD)._signingKey().privateKey\"` forge script contracts/scripts/DeployVaultUpgrade.s.sol:DeployVaultUpgrade --fork-url https://mainnet.infura.io/v3/816df2901a454b18b7df259e61f92cd2"
   },
   "author": "zeroDAO",
   "license": "MIT",
