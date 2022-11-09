@@ -57,7 +57,7 @@ export class TransferRequestV2 extends TransferRequest {
       ]).encodeFunctionData("repay", [
         this.module,
         this.to, // borrower address
-        this._queryTxResult.actualAmount, // borrow amount
+        this._queryTxResult.amount, // borrow amount
         this.loanId,
         this.data,
         this.underwriter,

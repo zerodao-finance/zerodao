@@ -112,12 +112,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
 
     bytes32 pHash = _deriveLoanPHash(data);
-    uint256 repaidAmount = _getGateway().mint(
-      keccak256(abi.encode(borrower, nonce, module, data)),
-      borrowAmount,
-      nHash,
-      renSignature
-    );
+    uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
 
     uint256 loanId = _deriveLoanId(lender, pHash);
     if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
@@ -330,23 +325,17 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
                        Internal Loan Handling
   //////////////////////////////////////////////////////////////*/
 
-  function _deriveLoanPHash(bytes memory data)
-    internal
-    view
-    RestoreFreeMemoryPointer
-    RestoreZeroSlot
-    RestoreFirstTwoUnreservedSlots
-    returns (bytes32 pHash)
-  {
+  function _deriveLoanPHash(bytes memory data) internal view returns (bytes32 pHash) {
+    address module;
+    address borrower;
+    uint256 nonce;
     assembly {
-      // Write data hash first, since its buffer will be overwritten by the following section
-      mstore(0xa0, keccak256(add(data, 0x20), mload(data)))
-      // Write vault address
-      mstore(0, address())
-      // Copy module, borrower, borrowAmount, nonce to hash buffer
-      calldatacopy(0x20, 0x04, 0x80)
-      pHash := keccak256(0, 0xc0)
+      // Copy module 0, borrower 1, borrowAmount, nonce 3 to hash buffer
+      borrower := calldataload(0x24)
+      nonce := calldataload(0x64)
+      module := calldataload(0x04)
     }
+    pHash = keccak256(abi.encode(borrower, nonce, module, data));
   }
 
   function _deriveLoanId(address lender, bytes32 pHash) internal pure returns (uint256 loanId) {
