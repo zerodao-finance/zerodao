@@ -108,13 +108,15 @@ contract Common is VaultTestHelpers {
       uint256 actualBorrowAmount,
       uint256 lenderDebt,
       uint256 btcFeeForLoanGas,
-      uint256 expiry
+      uint256 expiry,
+      address lender
     ) = vault.getOutstandingLoan(uint256(loanId));
     assertEq(actualBorrowAmount, expectedActualBorrowAmount, "loan's actualBorrowAmount did not match expected");
     assertEq(lenderDebt, expectedLenderDebt, "loan's lenderDebt did not match expected");
     assertEq(btcFeeForLoanGas, expectedBtcFeeForLoanGas, "loan's btcFeeForLoanGas did not match expected");
     assertEq(expiry, block.timestamp + DefaultMaxLoanDuration, "loan's expiry did not match expected");
     assertEq(address(100).balance, expectedEthRefundForLoanGas, "tx.origin did not receive expected refund");
+    assertEq(lender, address(this), "lender does not match");
   }
 
   function zeroLoan(address module, uint256 amount) public checkBalance(module) {

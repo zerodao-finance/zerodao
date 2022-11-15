@@ -66,8 +66,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     bytes memory data
   ) external override nonReentrant {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
-
-    uint256 loanId = _deriveLoanId(msg.sender, _deriveLoanPHash(data));
+    uint256 loanId = uint256(_deriveLoanPHash(data));
 
     (uint256 actualBorrowAmount, uint256 lenderDebt, uint256 btcFeeForLoanGas) = _calculateLoanFees(
       state,
@@ -90,30 +89,20 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
   }
 
   // repays an existing loan with a forced ren pHash
-  function fallbackRepay(
+  function fallbackMint(
     address module,
     address borrower,
     uint256 borrowAmount,
     bytes memory data,
-    address lender,
     bytes32 nHash,
-    bytes memory renSignature,
-    butes32 storedPHash,
-    bytes32 pHash
+    bytes memory renSignature
   ) external override nonReentrant {
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
 
-    uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
-
-    uint256 loanId = _deriveLoanId(lender, storedPHash);
-    if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
-      repaidAmount = _executeRepayLoan(module, borrower, loanId, repaidAmount, data);
-    }
-    LoanRecord loanRecord = _deleteLoan(loanId);
-
-    _repayTo(state, moduleState, loanRecord, lender, loanId, repaidAmount);
-
-    tx.origin.safeTransferETH(moduleState.getEthRefundForRepayGas());
+    bytes32 pHash = _deriveLoanPHash(data);
+    require(_lenders[uint256(pHash)] == address(0x0), "loan exists");
+    uint256 mintAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
+    asset.safeTransfer(borrower, mintAmount);
   }
 
   /**
@@ -141,13 +130,14 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     bytes32 pHash = _deriveLoanPHash(data);
     uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
 
-    uint256 loanId = _deriveLoanId(lender, pHash);
     if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
-      repaidAmount = _executeRepayLoan(module, borrower, loanId, repaidAmount, data);
+      repaidAmount = _executeRepayLoan(module, borrower, uint256(pHash), repaidAmount, data);
     }
-    LoanRecord loanRecord = _deleteLoan(loanId);
+    (LoanRecord loanRecord, address _lender) = _deleteLoan(uint256(pHash));
 
-    _repayTo(state, moduleState, loanRecord, lender, loanId, repaidAmount);
+    require(_lender == lender, "mismatching lender for loan");
+
+    _repayTo(state, moduleState, loanRecord, lender, uint256(pHash), repaidAmount);
 
     tx.origin.safeTransferETH(moduleState.getEthRefundForRepayGas());
   }
@@ -160,19 +150,19 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     bytes memory data,
     address lender
   ) external override nonReentrant {
-    uint256 loanId = _deriveLoanId(lender, _deriveLoanPHash(data));
-    LoanRecord loanRecord = _deleteLoan(loanId);
+    bytes32 pHash = _deriveLoanPHash(data);
+    (LoanRecord loanRecord, ) = _deleteLoan(uint256(pHash));
     if (loanRecord.getExpiry() >= block.timestamp) {
-      revert LoanNotExpired(loanId);
+      revert LoanNotExpired(uint256(pHash));
     }
     (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
     ModuleType moduleType = moduleState.getModuleType();
     uint256 repaidAmount = 0;
     if (moduleType == ModuleType.LoanAndRepayOverride) {
-      repaidAmount = _executeRepayLoan(module, borrower, loanId, repaidAmount, data);
+      repaidAmount = _executeRepayLoan(module, borrower, uint256(pHash), repaidAmount, data);
     }
 
-    _repayTo(state, moduleState, loanRecord, lender, loanId, repaidAmount);
+    _repayTo(state, moduleState, loanRecord, lender, uint256(pHash), repaidAmount);
 
     tx.origin.safeTransferETH(moduleState.getEthRefundForRepayGas());
   }
@@ -211,10 +201,12 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       uint256 actualBorrowAmount,
       uint256 lenderDebt,
       uint256 btcFeeForLoanGas,
-      uint256 expiry
+      uint256 expiry,
+      address lender
     )
   {
-    return _outstandingLoans[loanId].decode();
+    (sharesLocked, actualBorrowAmount, lenderDebt, btcFeeForLoanGas, expiry) = _outstandingLoans[loanId].decode();
+    lender = _lenders[loanId];
   }
 
   /**
@@ -373,18 +365,26 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     }
   }
 
-  function _getAndSetLoan(uint256 loanId, LoanRecord newRecord) internal returns (LoanRecord oldRecord) {
+  function _getAndSetLoan(
+    uint256 loanId,
+    LoanRecord newRecord,
+    address lender
+  ) internal returns (LoanRecord oldRecord, address oldLender) {
     assembly {
       mstore(0, loanId)
       mstore(0x20, _outstandingLoans.slot)
       let loanSlot := keccak256(0, 0x40)
+      mstore(0x20, _lenders.slot)
+      let lenderSlot := keccak256(0, 0x40)
       oldRecord := sload(loanSlot)
+      oldLender := sload(lenderSlot)
       sstore(loanSlot, newRecord)
+      sstore(lenderSlot, lender)
     }
   }
 
-  function _deleteLoan(uint256 loanId) internal returns (LoanRecord loanRecord) {
-    loanRecord = _getAndSetLoan(loanId, DefaultLoanRecord);
+  function _deleteLoan(uint256 loanId) internal returns (LoanRecord loanRecord, address lender) {
+    (loanRecord, lender) = _getAndSetLoan(loanId, DefaultLoanRecord, address(0x0));
 
     // Ensure the loan exists
     if (loanRecord.isNull()) {
@@ -427,7 +427,7 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
       _state = state.setTotalBitcoinBorrowed(totalBitcoinBorrowed + actualBorrowAmount);
     }
 
-    LoanRecord oldRecord = _getAndSetLoan(
+    (LoanRecord oldRecord, ) = _getAndSetLoan(
       loanId,
       LoanRecordCoder.encode(
         shares,
@@ -435,7 +435,8 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
         lenderDebt,
         vaultExpenseWithoutRepayFee,
         block.timestamp + _maxLoanDuration
-      )
+      ),
+      lender
     );
 
     if (!oldRecord.isNull()) {

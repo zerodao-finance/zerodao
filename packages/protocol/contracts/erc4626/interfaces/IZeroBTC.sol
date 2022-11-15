@@ -19,6 +19,15 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
     bytes memory data
   ) external;
 
+  function fallbackMint(
+    address module,
+    address borrower,
+    uint256 borrowAmount,
+    bytes memory data,
+    bytes32 nHash,
+    bytes memory renSignature
+  ) external;
+
   function repay(
     address module,
     address borrower,
@@ -136,7 +145,8 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
       uint256 actualBorrowAmount,
       uint256 lenderDebt,
       uint256 vaultExpenseWithoutRepayFee,
-      uint256 expiry
+      uint256 expiry,
+      address lender
     );
 
   function calculateLoanId(

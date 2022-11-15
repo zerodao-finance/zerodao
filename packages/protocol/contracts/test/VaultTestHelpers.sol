@@ -394,7 +394,6 @@ contract VaultTestHelpers is Test {
     uint256 nonce,
     bytes memory data
   ) internal view returns (bytes32 pHash, bytes32 loanId) {
-    pHash = keccak256(abi.encode(borrower, nonce, module, data));
-    loanId = keccak256(abi.encode(address(this), pHash));
+    loanId = pHash = keccak256(abi.encode(borrower, nonce, module, data));
   }
 }
