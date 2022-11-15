@@ -207,6 +207,32 @@ contract RevertTest is Common {
     vault.loan(address(0x0), zerowallet, 2e6, 1, data);
   }
 
+  function testRevertOnFallbackMintingExistingLoan() public {
+    bytes memory data;
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+    vm.expectRevert(bytes("loan exists"));
+    vault.fallbackMint(address(0x0), zerowallet, 1e6, 1, data, bytes32(0x0), data);
+  }
+
+  function testRevertOnRepayingAnotherKeeper() public {
+    bytes memory data;
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+    vm.expectRevert("mismatching lender for loan");
+    vault.repay(address(0x0), zerowallet, 1e6, 1, data, address(0x0), bytes32(0x0), data);
+  }
+
+  function testRevertOnDuplicateLoans() public {
+    bytes memory data;
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+    approveDeposit(address(100));
+    vm.startPrank(address(100));
+    mintRenBtc(2e6);
+    IERC20(renbtc).approve(address(vault), MaxUintApprove);
+    vault.deposit(1e6, address(100));
+    (, bytes32 loanId) = _deriveLoanPHashAndId(address(0x0), zerowallet, 1e6, 1, data);
+    vm.expectRevert(abi.encodeWithSelector(IZeroBTC.LoanIdNotUnique.selector, loanId));
+    vault.loan(address(0x0), zerowallet, 1000000, 1, data);
+  }
   //TODO: check if this is intended behavior
   // function testFailOnRepayingExpiredLoan() public {
   //   bytes memory data;

@@ -23,6 +23,7 @@ interface IZeroBTC is IERC4626, IGovernable, InitializationErrors {
     address module,
     address borrower,
     uint256 borrowAmount,
+    uint256 nonce,
     bytes memory data,
     bytes32 nHash,
     bytes memory renSignature

@@ -142,6 +142,11 @@ contract Common is VaultTestHelpers {
     zeroLoan(address(moduleETH), 1e8);
   }
 
+  function testFallbackMint() public {
+    bytes memory data;
+    vault.fallbackMint(address(0x0), zerowallet, 1e6, 1, data, bytes32(0x0), data);
+  }
+
   function testExpiry() public {
     bytes memory data;
     vault.loan(address(0x0), zerowallet, 1000000, 1, data);
