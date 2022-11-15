@@ -89,10 +89,37 @@ abstract contract ZeroBTCLoans is ZeroBTCCache {
     tx.origin.safeTransferETH(moduleState.getEthRefundForLoanGas());
   }
 
+  // repays an existing loan with a forced ren pHash
+  function fallbackRepay(
+    address module,
+    address borrower,
+    uint256 borrowAmount,
+    bytes memory data,
+    address lender,
+    bytes32 nHash,
+    bytes memory renSignature,
+    butes32 storedPHash,
+    bytes32 pHash
+  ) external override nonReentrant {
+    (GlobalState state, ModuleState moduleState) = _getUpdatedGlobalAndModuleState(module);
+
+    uint256 repaidAmount = _getGateway().mint(pHash, borrowAmount, nHash, renSignature);
+
+    uint256 loanId = _deriveLoanId(lender, storedPHash);
+    if (moduleState.getModuleType() == ModuleType.LoanAndRepayOverride) {
+      repaidAmount = _executeRepayLoan(module, borrower, loanId, repaidAmount, data);
+    }
+    LoanRecord loanRecord = _deleteLoan(loanId);
+
+    _repayTo(state, moduleState, loanRecord, lender, loanId, repaidAmount);
+
+    tx.origin.safeTransferETH(moduleState.getEthRefundForRepayGas());
+  }
+
   /**
    * @param module Module used for the loan
    * @param borrower Address of account that took out the loan
-   * @param borrowAmount Original loan amount before fees
+   * @param borrowAmount loan amount after ren fees
    * @param nonce Nonce for the loan
    * @param data Extra data used by module
    * @param lender Address of account that gave the loan
