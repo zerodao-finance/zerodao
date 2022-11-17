@@ -11,10 +11,10 @@ function deserialize(data) {
     const decoded = (0, rlp_1.decode)((0, bytes_1.arrayify)(data));
     if (decoded.length < 8 || decoded.length > 9)
         throw Error('No request type has ' + decoded.length + ' fields');
-    if (String(decoded[8] || '').length !== 42)
-        return TransferRequest_1.TransferRequest.deserialize(data);
     if ((0, bytes_1.arrayify)(decoded[7]).length === 65)
         return BurnRequest_1.BurnRequest.deserialize(data);
+    if (String(decoded[8] || '').length !== 42)
+        return TransferRequest_1.TransferRequest.deserialize(data);
     return TransferRequestV2_1.TransferRequestV2.deserialize(data);
 }
 exports.deserialize = deserialize;
