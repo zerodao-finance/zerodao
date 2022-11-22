@@ -50,6 +50,9 @@
       },
       {
         "path": "./packages/watcher"
+      },
+      {
+        "path": "./packages/zeronode"
       }
 ],
 "files": []
