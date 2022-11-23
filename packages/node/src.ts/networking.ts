@@ -5,10 +5,5 @@
 
 import { ZeroP2P } from "@zerodao/p2p";
 
-
-// create a new peer 
+// create a new peer
 // listen to comms from other peers
-
-
-
-

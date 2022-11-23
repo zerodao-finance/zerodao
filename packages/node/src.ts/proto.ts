@@ -1,5 +1,5 @@
-'use strict';
+"use strict";
 
-import protobuf = require('protobufjs');
+import protobuf = require("protobufjs");
 
-export const protocol = protobuf.Root.fromJSON(require('../build/ZeroProto'));
+export const protocol = protobuf.Root.fromJSON(require("../build/ZeroProto"));
