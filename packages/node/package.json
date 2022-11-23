@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "cross-chain node",
   "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:proto": "cross-env node scripts/compile-proto"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zerodao-finance/zerodao.git"

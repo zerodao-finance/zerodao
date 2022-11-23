@@ -3,7 +3,7 @@
 //
 //
 
-import { ZeroNode } from "@zerodao/p2p";
+import { ZeroP2P } from "@zerodao/p2p";
 
 
 // create a new peer 
