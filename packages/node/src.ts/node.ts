@@ -6,8 +6,12 @@ import { ethers } from "ethers";
 import chalk = require('chalk');
 import { logger } from "./logger";
 import { ZeroP2P } from "@zerodao/p2p";
-  
+import { protobuf } from "protobufjs";
+
+
 export class ZeroNode {
+
+  _buf = protobuf.load('../proto/ZeroProtocol.proto');
   static async fromSigner(signer) {
     logger.info('generating seed from secp256k1 signature');
     const seed = await signer.signMessage(ZeroP2P.toMessage(await signer.getAddress()));
@@ -35,4 +39,26 @@ export class ZeroNode {
       peer
     });
   }
+
+  //send message
+  //@param topic: string topic p2p topic 
+  //@param messageType: string messageType for protobuf validation
+  //@param message: javascript object
+  _sendMessage(topic: string, messageType: string, message: any) {
+    const data = await this.encodeMsg(message, messageType);
+    await (this.pubsub as any).publish(topic, data);
+  }
+
+  //decode message from buffer to json
+  static async _decodeMsg(message: Buffer, type: string) {
+   const _type = this._buf.lookupType(`${type}`)
+   return _type.decode(message);
+  }
+
+  //encode message to protobuf type
+  static async _encodeMsg(message: any, type: string) {
+    const _type = this._buf.lookupType(`${type}`);
+    return _type.encode(message).finish();
+  }
+ 
 }

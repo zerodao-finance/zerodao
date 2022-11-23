@@ -3,11 +3,13 @@
 //
 //
 
-import { ZeroP2P } from "@zerodao/p2p";
+import { ZeroNode } from "../node";
+import { ethers } from "ethers";
 
+export async function initNode(signer: ethers.Signer) {
+  return await ZeroNode.fromSigner(signer);
+}
 
-// create a new peer 
-// listen to comms from other peers
 
 
 
