@@ -39,7 +39,7 @@ export class ZeroNode {
       peer
     });
   }
-
+  
   //send message
   //@param topic: string topic p2p topic 
   //@param messageType: string messageType for protobuf validation
