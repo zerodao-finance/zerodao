@@ -7,11 +7,12 @@ import chalk = require('chalk');
 import { logger } from "./logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { protobuf } from "protobufjs";
-
+import { ZeroPool } from "./mempool";
 
 export class ZeroNode {
 
-  _buf = protobuf.load('../proto/ZeroProtocol.proto');
+  private _buf = protobuf.load('../proto/ZeroProtocol.proto');
+  private _clientTopic: string = "zeronode.v1.inbound";
   static async fromSigner(signer) {
     logger.info('generating seed from secp256k1 signature');
     const seed = await signer.signMessage(ZeroP2P.toMessage(await signer.getAddress()));
@@ -39,12 +40,17 @@ export class ZeroNode {
       peer
     });
   }
+
+  async _listenForClient() {
+    if (!this._isValidator) return;
+
+    await _this.pubsub.subscribe(this._clientTopic, async (message: Buffer) => {
+      await ZeroNode._decodeMsg(message, 'Transaction');
+      await this._pool._addTx(message);
+    }
+  } 
   
-  //send message
-  //@param topic: string topic p2p topic 
-  //@param messageType: string messageType for protobuf validation
-  //@param message: javascript object
-  _sendMessage(topic: string, messageType: string, message: any) {
+  async _sendMessage(topic: string, messageType: string, message: any) {
     const data = await this.encodeMsg(message, messageType);
     await (this.pubsub as any).publish(topic, data);
   }
