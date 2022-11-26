@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ETHERS } from "ethers";
 import { CHAINS, TRANSACTIONS_TYPE } from "./transaction";
 import { protobuf } from "protobuf";
 
@@ -44,7 +44,10 @@ export class ZeroPool {
   */
  start(): boolean {
   if (this._running) return false;
-  
+  /**
+   * 
+   * remember to clear the interval in the cleanup code
+   */
   this._cleanupInterval == setInterval(
     this.cleanup.bind(this),
     this.POOL_STORAGE_TIME_LIMIT * 1000 * 60
@@ -58,14 +61,31 @@ export class ZeroPool {
   return this(config);
  }
 
- public async _addTx(tx: typedTransaction) {
-  if (!await this._validate(tx)) return
-  this._pending
+ async addTx(tx: typedTransaction) {
+  const hash: string = tx.hash.toString(hex);
+  const timestamp = Date.now();
+  try {
+    await (this._validate(tx));
+    if (this._pool.has(hash)) return // disregard duplicate transaction
+    this._pool.set(hash, { tx, added, hash }); // set the added tx with the hash as the key
+    this._handled.set(hash, { hash, added });
+    this._length++ // increase _length property by 1 transaction
+  } catch (error) {
+    this._handled.set(hash, { hash, added, error: error as Error});
+    throw error;
+  }
 
-   //TODO: add a typed transaction to the mempool
  }
 
- public async _handleAnnouncedTx(txHashes: Buffer[])  {
+ private _generateTHash() {
+  let keys: string[] = new Array.from(this._pool.keys()) 
+  // create buffer from keys
+  // hash buffer keccak256
+  // return hash
+ }
+
+ public async _handlePeerGossip(txHashes: string[])  {
+   
    //TODO: handle transaction hashes annouced via gossip
  }
 
