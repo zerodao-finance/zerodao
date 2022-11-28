@@ -4,6 +4,10 @@
 //
 //
 Object.defineProperty(exports, "__esModule", { value: true });
-// create a new peer 
-// listen to comms from other peers
+exports.initNode = void 0;
+const node_1 = require("./node");
+async function initNode(signer) {
+    return await node_1.ZeroNode.fromSigner(signer);
+}
+exports.initNode = initNode;
 //# sourceMappingURL=networking.js.map

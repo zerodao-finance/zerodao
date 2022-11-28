@@ -1,1 +1,1 @@
-{"version":3,"file":"networking.js","sourceRoot":"","sources":["../src.ts/networking.ts"],"names":[],"mappings":";AAAA,2CAA2C;AAC3C,EAAE;AACF,EAAE;AACF,EAAE;;AAKF,qBAAqB;AACrB,mCAAmC"}
+{"version":3,"file":"networking.js","sourceRoot":"","sources":["../src.ts/networking.ts"],"names":[],"mappings":";AAAA,2CAA2C;AAC3C,EAAE;AACF,EAAE;AACF,EAAE;;;AAEF,iCAAkC;AAG3B,KAAK,UAAU,QAAQ,CAAC,MAAqB;IAClD,OAAO,MAAM,eAAQ,CAAC,UAAU,CAAC,MAAM,CAAC,CAAC;AAC3C,CAAC;AAFD,4BAEC"}

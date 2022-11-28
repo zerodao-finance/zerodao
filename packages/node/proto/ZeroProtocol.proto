@@ -15,6 +15,9 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
+message TransactionBlock {
+ required repeated Transaction transactions = 0;
+}
 /*
 
 Transactions submitted REBASE block and signed during BASE block:
