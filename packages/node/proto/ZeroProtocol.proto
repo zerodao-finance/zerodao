@@ -18,6 +18,15 @@ message Transaction {
 message TransactionBlock {
  required repeated Transaction transactions = 0;
 }
+
+message TransactionWithHash {
+  required Transaction transaction = 0;
+  required bytes hash = 1;
+}
+
+message HashBlock {
+  required repeated bytes hash = 0;
+}
 /*
 
 Transactions submitted REBASE block and signed during BASE block:

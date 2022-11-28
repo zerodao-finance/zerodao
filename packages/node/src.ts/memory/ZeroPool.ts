@@ -32,16 +32,9 @@ export class ZeroPool {
    }
  }
 
-
- public open() {
-  if (this.running) return false; 
-  this.running = true;
-  return true
- }
-
  public start() {
-   this.open();
-   if (!this.running) return;
+   if (this.running) return;
+   this.running = true;
    // this.peer.subscribe() // handle new transactions 
    // this.peer.subscribe() // handle peer gossip
    
