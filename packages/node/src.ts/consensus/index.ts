@@ -1,1 +1,1 @@
-export * from "consensus";
+export * from "./consensus";
