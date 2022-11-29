@@ -37,6 +37,7 @@ class ZeroNode {
     async init() {
         this.pool = memory_1.ZeroPool.init({}, this.peer, this.protocol);
         await this.peer.start();
+        await this.peer.pubsub.start();
     }
     async startNode() {
         //TODO: implement
@@ -47,15 +48,21 @@ class ZeroNode {
     async cleanup() {
         //TODO: implement
     }
-    async pingpong() {
-        this.peer.pubsub.subscribe('zerodao.V1.pingpong');
-        this.peer.pubsub.on("zerodao.V1.pingpong", (data) => {
-            console.log(new TextDecoder().decode(data));
-            this.peer.pubsub.unsubscribe('zerodao.V1.pingpong');
-            setTimeout(this.pingpong, 4000);
+    async ping() {
+        await this.peer.pubsub.subscribe("zerodao.V1.pingpong");
+        this.peer.on("zerodao.V1.pingpong", async (message) => {
+            let msg = new TextDecoder().decode(message);
+            logger_1.logger.info(`heard message ${msg}`);
+            if (msg == "ping") {
+                await this.peer.pubsub.publish("zerodao.V1.pingong", new TextEncoder().encode("pong"));
+            }
         });
-        console.log("ping");
-        this.peer.pubsub.publish('zerodao.V1.pingpong', new TextEncoder().encode("ping"));
+        logger_1.logger.info("\n gossiping ping to the network");
+        await this.listenForPing();
+    }
+    async listenForPing() {
+        logger_1.logger.info(`\n saying ping`);
+        await this.peer.pubsub.publish("zerodao.V1.pingpong", new TextEncoder().encode("ping"));
     }
 }
 exports.ZeroNode = ZeroNode;

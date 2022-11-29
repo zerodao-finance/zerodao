@@ -16,5 +16,6 @@ export declare class ZeroNode {
     startNode(): Promise<void>;
     stopNode(): Promise<void>;
     cleanup(): Promise<void>;
-    pingpong(): Promise<void>;
+    ping(): Promise<void>;
+    listenForPing(): Promise<void>;
 }
