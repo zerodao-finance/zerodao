@@ -5,7 +5,6 @@ import { ZeroNode } from "../lib";
 	const signer = ethers.Wallet.createRandom(); 
 	let node = await ZeroNode.fromSigner(signer, 'DEV-MAINNET');	
 	await node.init();
-	console.log("starting ping pong");
-	await node.ping();
+	await node.statNode();
 })()
 

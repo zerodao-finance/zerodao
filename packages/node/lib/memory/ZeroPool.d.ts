@@ -1,9 +1,15 @@
 /// <reference types="node" />
-type Transaction = {
+export interface ZeroPoolConfig {
+    TOPIC: string;
+    POOL_STORAGE_TIME_LIMIT: number;
+    POOL_GOSSIP_TIME_LIMIT: number;
+    PEER_GOSSIP_TOPIC: string;
+}
+declare type Transaction = {
     tx: any;
     hash: any;
 };
-type HandledTransaction = {
+declare type HandledTransaction = {
     tx: Transaction;
     timestamp: number;
     hash: string;
@@ -12,21 +18,21 @@ type HandledTransaction = {
 export declare class ZeroPool {
     running: boolean;
     txPool: Map<string, Transaction>;
-    handled: Map<String, HandledTransaction>;
+    handled: Map<string, HandledTransaction>;
     private _len;
     private _cleanupInterval;
     private _gossipInterval;
     private config;
     private buffer;
     private peer;
-    static init(config: any, peer: any, buffer: any): ZeroPool;
+    static init(config: ZeroPoolConfig, peer: any, buffer: any): ZeroPool;
     constructor({ config, peer, buffer }: any);
-    start(): boolean;
+    start(): Promise<boolean>;
     get length(): number;
     close(): Promise<void>;
     getPoolHashes(): any;
     getPoolState(): any;
-    getHandledHashes(): String[];
+    getHandledHashes(): string[];
     getHandledLogs(): HandledTransaction[];
     addTx(tx: any): Promise<void>;
     handleGossip(txs: Buffer): Promise<void>;

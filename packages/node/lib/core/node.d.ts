@@ -1,3 +1,4 @@
+import { ZeroPoolConfig } from "../memory";
 export declare class ZeroNode {
     _clientTopic: string;
     private pool;
@@ -12,11 +13,14 @@ export declare class ZeroNode {
         signer: any;
         peer: any;
     });
-    init(): Promise<void>;
-    listenForMsg(topic: any): Promise<void>;
+    /**
+     *
+     * initializes mempool and starts peer pubsub
+     *
+     */
+    init(poolConfig: ZeroPoolConfig): Promise<void>;
     startNode(): Promise<void>;
     stopNode(): Promise<void>;
     cleanup(): Promise<void>;
     ping(): Promise<void>;
-    listenForPing(): Promise<void>;
 }

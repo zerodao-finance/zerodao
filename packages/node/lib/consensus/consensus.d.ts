@@ -16,7 +16,7 @@ export declare class Consensus extends EventEmitter {
     lockedRound: number;
     validRound: number;
     constructor({ signatory, // for now an actual number
-    f, initTimeoutPropose, initTimeoutPrevote, initTimeoutPrecommit, timeoutDelta, valid }?: {
+    f, initTimeoutPropose, initTimeoutPrevote, initTimeoutPrecommit, timeoutDelta, valid, }?: {
         signatory?: number;
         f?: number;
         initTimeoutPropose?: number;

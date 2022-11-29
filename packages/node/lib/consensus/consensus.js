@@ -1,23 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Consensus = void 0;
-const { createLogger, format, transports } = require('winston');
+const { createLogger, format, transports } = require("winston");
 const { combine, timestamp, prettyPrint, colorize } = format;
 const logger = createLogger({
-    level: 'info',
+    level: "info",
     format: combine(timestamp(), prettyPrint(), colorize()),
-    transports: [
-        new transports.Console(),
-    ]
+    transports: [new transports.Console()],
 });
 const EventEmitter = require("events");
-const { logError } = require('sparse-merkle-tree');
+const { logError } = require("sparse-merkle-tree");
 const PROPOSE = 0;
 const PREVOTE = 1;
 const PRECOMMIT = 2;
 class Consensus extends EventEmitter {
     constructor({ signatory = 0, // for now an actual number
-    f = 0, initTimeoutPropose = 10000, initTimeoutPrevote = 2000, initTimeoutPrecommit = 2000, timeoutDelta = 500, valid = (value) => true } = {}) {
+    f = 0, initTimeoutPropose = 10000, initTimeoutPrevote = 2000, initTimeoutPrecommit = 2000, timeoutDelta = 500, valid = (value) => true, } = {}) {
         super();
         this.signatory = signatory;
         this.f = f;
@@ -47,7 +45,7 @@ class Consensus extends EventEmitter {
         return true; //TODO FIX ME
     }
     proposer() {
-        return 'NODE2'; // TODO replace with actual proposer
+        return "NODE2"; // TODO replace with actual proposer
     }
     id(value) {
         return 1;
@@ -65,7 +63,7 @@ class Consensus extends EventEmitter {
         for (var i = 0; i < rule.length - 1; i++) {
             key = rule[i];
             //logger.debug(`${key} - <${rule.slice(i+1)}>`);
-            if (key === '*') {
+            if (key === "*") {
                 for (var log in logs) {
                     let containsValue = this.hasLogs(rule.slice(i + 1), log);
                     if (containsValue)
@@ -78,7 +76,7 @@ class Consensus extends EventEmitter {
                 logs = logs[key];
             }
         }
-        if (rule[rule.length - 1] === logs || rule[rule.length - 1] === '*')
+        if (rule[rule.length - 1] === logs || rule[rule.length - 1] === "*")
             return true;
         return false;
     }
@@ -89,7 +87,8 @@ class Consensus extends EventEmitter {
      * @return {boolean} Success
      */
     sufficient(rule, minSignatories) {
-        let count = Object.keys(this.messageLog).reduce((voteCount, signatory) => voteCount + Number(this.hasLogs(rule, this.messageLog[signatory] || {})), 0);
+        let count = Object.keys(this.messageLog).reduce((voteCount, signatory) => voteCount +
+            Number(this.hasLogs(rule, this.messageLog[signatory] || {})), 0);
         logger.debug(`Rule ${rule}: ${count}/${minSignatories} signers.`);
         return count >= minSignatories;
     }
@@ -200,8 +199,7 @@ class Consensus extends EventEmitter {
             return;
         if (this.step !== PROPOSE)
             return;
-        const valueId = this.valid(value) &&
-            (this.lockedRound == -1 || this.lockedValue == value)
+        const valueId = this.valid(value) && (this.lockedRound == -1 || this.lockedValue == value)
             ? this.id(value)
             : null;
         this.step = PREVOTE;
@@ -228,7 +226,9 @@ class Consensus extends EventEmitter {
         rule = [PREVOTE, this.height, this.validRound, this.id(this.value)];
         if (!this.sufficient(rule, 2 * this.f + 1))
             return;
-        if (!(this.step == PROPOSE && this.validRound >= 0 && this.validRound < this.round))
+        if (!(this.step == PROPOSE &&
+            this.validRound >= 0 &&
+            this.validRound < this.round))
             return;
         const valueId = this.valid(this.value) &&
             (this.lockedRound <= this.validRound || this.lockedValue == this.value)
@@ -246,11 +246,12 @@ class Consensus extends EventEmitter {
      */
     L34() {
         logger.debug("L34: MAJORITY (2f + 1) HAVE <PREVOTE, height, round, *>");
-        if (this.messageLog?.L34?.[this.round] !== undefined || this.step !== PREVOTE)
+        if (this.messageLog?.L34?.[this.round] !== undefined ||
+            this.step !== PREVOTE)
             return;
-        this.setLog(true, 'L34', this.round);
+        this.setLog(true, "L34", this.round);
         // 2f + 1 ⟨PREVOTE, height, round, *⟩
-        let rule = [PREVOTE, this.height, this.round, '*'];
+        let rule = [PREVOTE, this.height, this.round, "*"];
         if (!this.sufficient(rule, 2 * this.f + 1))
             return;
         let height = this.height;
@@ -274,8 +275,8 @@ class Consensus extends EventEmitter {
         logger.debug("<PROPOSAL, height, round, value, *>");
         if (this.messageLog?.L36?.[this.round] !== undefined)
             return;
-        this.setLog(true, 'L36', this.round);
-        let rule = [PROPOSE, this.height, this.round, this.value, '*'];
+        this.setLog(true, "L36", this.round);
+        let rule = [PROPOSE, this.height, this.round, this.value, "*"];
         if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
             return;
         if (!(this.valid(this.value) && this.step >= PREVOTE))
@@ -326,8 +327,8 @@ class Consensus extends EventEmitter {
         logger.debug("L47: <2f + 1 <PRECOMMIT, height, round, *>");
         if (this.messageLog?.L47?.[this.round] !== undefined)
             return;
-        this.setLog(true, 'L47', this.round);
-        let rule = [PRECOMMIT, this.height, this.round, '*'];
+        this.setLog(true, "L47", this.round);
+        let rule = [PRECOMMIT, this.height, this.round, "*"];
         if (!this.sufficient(rule, 2 * this.f + 1))
             return;
         let height = this.height;
@@ -347,7 +348,7 @@ class Consensus extends EventEmitter {
      */
     L49() {
         logger.info("L49: <PROPOSAL, height, round, value, *>");
-        let rule = [PROPOSE, this.height, this.round, this.value, '*'];
+        let rule = [PROPOSE, this.height, this.round, this.value, "*"];
         if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
             return logger.error(`<PROPOSE,${this.height},${this.round},${this.value},'*'> NOT DETECTED`);
         rule = [PRECOMMIT, this.height, this.round, this.id(this.value)];
@@ -375,7 +376,7 @@ class Consensus extends EventEmitter {
      */
     L55() {
         logger.debug("L55: f + 1 <*, height, round, *, *>");
-        let rule = ['*', this.height, this.round + 1, '*', '*'];
+        let rule = ["*", this.height, this.round + 1, "*", "*"];
         if (!this.sufficient(rule, this.f + 1))
             return;
         logger.debug("L55: Completed.");

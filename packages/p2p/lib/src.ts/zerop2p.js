@@ -64,6 +64,38 @@ const coerceHexToBuffers = (v) => {
     return v;
 };
 class ZeroP2P extends Libp2p {
+    static fromPresetOrMultiAddr(multiaddr) {
+        return this.PRESETS[(multiaddr || '').toUpperCase() || 'MAINNET'] || multiaddr;
+    }
+    static toMessage(password) {
+        return ("/zerop2p/1.0.0/" +
+            (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
+    }
+    static async peerIdFromSeed(seed) {
+        return await PeerId.createFromPrivKey((await cryptoFromSeed(seed)).bytes);
+    }
+    static async fromSeed({ signer, seed, multiaddr }) {
+        return new this({
+            peerId: await this.peerIdFromSeed(seed),
+            multiaddr,
+            signer,
+        });
+    }
+    static async fromPassword({ signer, multiaddr, password }) {
+        return await this.fromSeed({
+            signer,
+            multiaddr,
+            seed: await signer.signMessage(this.toMessage(password)),
+        });
+    }
+    async start() {
+        await super.start();
+        await this.pubsub.start();
+    }
+    setSigner(signer) {
+        this.signer = signer;
+        this.addressPromise = this.signer.getAddress();
+    }
     constructor(options) {
         const multiaddr = ZeroP2P.fromPresetOrMultiAddr(options.multiaddr || "mainnet");
         super({
@@ -127,38 +159,6 @@ class ZeroP2P extends Libp2p {
         this.logger = logger;
         this.logger.debug("listening on", multiaddr);
         this.setSigner(options.signer);
-    }
-    static fromPresetOrMultiAddr(multiaddr) {
-        return this.PRESETS[(multiaddr || '').toUpperCase() || 'MAINNET'] || multiaddr;
-    }
-    static toMessage(password) {
-        return ("/zerop2p/1.0.0/" +
-            (0, solidity_1.keccak256)(["string"], ["/zerop2p/1.0.0/" + password]));
-    }
-    static async peerIdFromSeed(seed) {
-        return await PeerId.createFromPrivKey((await cryptoFromSeed(seed)).bytes);
-    }
-    static async fromSeed({ signer, seed, multiaddr }) {
-        return new this({
-            peerId: await this.peerIdFromSeed(seed),
-            multiaddr,
-            signer,
-        });
-    }
-    static async fromPassword({ signer, multiaddr, password }) {
-        return await this.fromSeed({
-            signer,
-            multiaddr,
-            seed: await signer.signMessage(this.toMessage(password)),
-        });
-    }
-    async start() {
-        await super.start();
-        await this.pubsub.start();
-    }
-    setSigner(signer) {
-        this.signer = signer;
-        this.addressPromise = this.signer.getAddress();
     }
     async subscribeKeepers() {
         await this.pubsub.subscribe("zero.keepers", async (message) => {
