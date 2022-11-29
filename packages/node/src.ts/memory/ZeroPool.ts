@@ -3,6 +3,13 @@ import _ from "lodash";
 import { logger } from "../logger";
 import { Message } from "protobufjs";
 
+interface ZeroPoolConfig {
+  TOPIC: string;
+  POOL_STORAGE_TIME_LIMIT: number;
+  POOL_GOSSIP_TIME_LIMIT: number;
+  PEER: string;
+}
+
 type Transaction = {
   tx: any;
   hash: any;
@@ -111,7 +118,7 @@ export class ZeroPool {
  async gossipToPeers() {
   let txs = Array.from(this.txPool.values());
   let tBuf: Buffer = this.buffer.TransactionBlock.encode({ transactions: txs });
-  this.peer.pubsub(this.config.topic, tBuf); 
+  this.peer.pubsub.publish(this.config.topic, tBuf); 
  }
 
  async validateTx(tx: any) {
