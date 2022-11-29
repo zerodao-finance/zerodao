@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "build:proto": "cross-env node scripts/compile-proto"
+    "build:proto": "cross-env node scripts/compile-proto",
+    "prettier": "prettier --write ./src.ts/**/*"
   },
   "repository": {
     "type": "git",
@@ -14,12 +15,19 @@
   "author": "zerodao",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^18.11.9",
+    "@ethereumjs/trie": "^5.0.1",
+    "@ethereumjs/util": "^8.0.2",
+    "@types/level": "^6.0.1",
+    "abstract-level": "^1.0.3",
+    "level": "^8.0.0",
+    "memory-level": "^1.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.190",
-    "sparse-merkle-tree": "^1.0.0"
+    "sparse-merkle-tree": "^1.0.0",
+    "@types/node": "^18.11.9",
+    "prettier": "^2.8.0"
   }
 }

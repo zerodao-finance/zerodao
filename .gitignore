@@ -11,3 +11,4 @@ dist/deployments/localhost/
 packages/contracts/out/
 packages/contracts/typechain-types
 .npmrc
+db/

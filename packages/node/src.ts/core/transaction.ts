@@ -8,21 +8,14 @@ export const CHAINS = {
 } as const;
 
 export class Transaction {
-    constructor({
-        type,
-        to,
-        data,
-        nonce,
-        signature,
-        chain,
-    }: any) {
-        Object.assign(this, {
-            type,
-            to,
-            data,
-            nonce,
-            signature,
-            chain
-        })
-    }
+  constructor({ type, to, data, nonce, signature, chain }: any) {
+    Object.assign(this, {
+      type,
+      to,
+      data,
+      nonce,
+      signature,
+      chain,
+    });
+  }
 }
