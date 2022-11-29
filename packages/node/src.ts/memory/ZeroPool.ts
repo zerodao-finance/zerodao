@@ -2,12 +2,13 @@ import { ethers } from "ethers";
 import _ from "lodash";
 import { logger } from "../logger";
 import { Message } from "protobufjs";
+import { ZeroP2P } from "@zerodao/p2p";
 
-interface ZeroPoolConfig {
+export interface ZeroPoolConfig {
   TOPIC: string;
   POOL_STORAGE_TIME_LIMIT: number;
   POOL_GOSSIP_TIME_LIMIT: number;
-  PEER: string;
+  PEER_GOSSIP_TOPIC: string;
 }
 
 type Transaction = {
@@ -25,16 +26,16 @@ type HandledTransaction = {
 export class ZeroPool {
  public running: boolean = false;
  public txPool: Map<string, Transaction>;
- public handled: Map<String, HandledTransaction>;
+ public handled: Map<string, HandledTransaction>;
 
  private _len: number = 0;
  private _cleanupInterval: any;
  private _gossipInterval: any;
- private config: any;
+ private config: ZeroPoolConfig;
  private buffer: any;
- private peer: any;
+ private peer: ZeroP2P;
 
- static init(config, peer, buffer) { 
+ static init(config: ZeroPoolConfig, peer, buffer) { 
    return new this({config, peer, buffer}) 
  }
 
@@ -47,11 +48,18 @@ export class ZeroPool {
 
  }
 
- start() {
+ async start() {
    if (this.running) return;
    this.running = true;
-   // this.peer.subscribe() // handle new transactions 
-   // this.peer.subscribe() // handle peer gossip
+    
+   /**
+    *
+    * start listening to peer gossip topic
+    *
+    */
+    await (this.peer.pubsub.subscribe as any)(this.config.PEER_GOSSIP_TOPIC, async (msg) => {
+      await this.handlePeerGossip(msg);
+    });
    
    this._cleanupInterval = setInterval(
      this.cleanup.bind(this),
@@ -71,8 +79,10 @@ export class ZeroPool {
  }
 
  async close() {
-  await this.cleanup()
-  // TODO: close pool conn logic 
+  if (!this.running) return;
+  await this.cleanup();
+  await this.peer.pubsub.unsubscribe(this.config.PEER_GOSSIP_TOPIC);
+  this.running = false;
  }
 
 
@@ -118,7 +128,7 @@ export class ZeroPool {
  async gossipToPeers() {
   let txs = Array.from(this.txPool.values());
   let tBuf: Buffer = this.buffer.TransactionBlock.encode({ transactions: txs });
-  this.peer.pubsub.publish(this.config.topic, tBuf); 
+  this.peer.pubsub.publish(this.config.PEER_GOSSIP_TOPIC, tBuf); 
  }
 
  async validateTx(tx: any) {
@@ -128,8 +138,8 @@ export class ZeroPool {
  }
 
  cleanup() {
-  
-  //TODO: cleanup logic
+   this.txPool.clear();
+   this.handled.clear();
  }
 
  getThash() {

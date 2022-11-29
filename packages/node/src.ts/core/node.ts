@@ -4,9 +4,14 @@ import { ethers } from "ethers";
 import chalk = require('chalk');
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { ZeroPool } from "../memory";
+import { ZeroPool, ZeroPoolConfig } from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
+
+async timeout(time) => {
+  await new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: ZeroPool;
@@ -48,41 +53,49 @@ export class ZeroNode {
     });
     
   }
-
-  async init() {
-    this.pool = ZeroPool.init({}, this.peer, this.protocol);
+  
+  /**
+   *
+   * initializes mempool and starts peer pubsub
+   *
+   */
+  async init(poolConfig : ZeroPoolConfig) {
+    this.pool = ZeroPool.init(poolConfig, this.peer, this.protocol);
+    logger.info("\n networking stack starting \n");
     await this.peer.start();
-    await this.peer.pubsub.start();
+    await new Promise((resolve) => {
+      this.peer.start();
+      this.peer.on("peer:discovery", async (peerInfo) => {
+        logger.info(`found peer \n ${peerInfo}`);
+      })
+      resolve(undefined);
+    });
+    await timeout(10000);
   }
-    
+
   async startNode() {
-    //TODO: implement
+    logger.info("\n starting mempool \n");
+    await this.pool.start(); // starts mempool
   }
 
   async stopNode() {
-    //TODO: implement
+    await this.pool.close(); // closes mempool
+    await this.cleanup();
   }
 
   async cleanup() {
-    //TODO: implement
+    await this.peer.stop();
   }
  
   async ping() {
-    await this.peer.pubsub.subscribe("zerodao.V1.pingpong");
-    this.peer.on("zerodao.V1.pingpong", async (message) => {
-      let msg = new TextDecoder().decode(message);
+    await (this.peer.pubsub.subscribe as any)("zerodao.V1.pingpong", async (msg) => {
       logger.info(`heard message ${msg}`);
       if (msg == "ping") {
         await this.peer.pubsub.publish("zerodao.V1.pingong", new TextEncoder().encode("pong"))
       }
     });
     logger.info("\n gossiping ping to the network");
-    await this.listenForPing();
-  }
-
-  async listenForPing() {
-    logger.info(`\n saying ping`);
-    await this.peer.pubsub.publish("zerodao.V1.pingpong", new TextEncoder().encode("ping"));
+    await this.peer.pubsub.publish("zerodao.V1.pingpong", new TextEncoder().encode("ping");
   }
 
 }

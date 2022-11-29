@@ -37,7 +37,16 @@ class ZeroNode {
     async init() {
         this.pool = memory_1.ZeroPool.init({}, this.peer, this.protocol);
         await this.peer.start();
-        await this.peer.pubsub.start();
+        await new Promise((resolve) => this.peer.on("peer:discovery", async (peerInfo) => {
+            logger_1.logger.info("found peer");
+            resolve(undefined);
+        }));
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+    }
+    async listenForMsg(topic) {
+        await this.peer.pubsub.subscribe(topic, async (msg) => {
+            //do work
+        });
     }
     async startNode() {
         //TODO: implement
@@ -49,9 +58,7 @@ class ZeroNode {
         //TODO: implement
     }
     async ping() {
-        await this.peer.pubsub.subscribe("zerodao.V1.pingpong");
-        this.peer.on("zerodao.V1.pingpong", async (message) => {
-            let msg = new TextDecoder().decode(message);
+        await this.peer.pubsub.subscribe("zerodao.V1.pingpong", async (msg) => {
             logger_1.logger.info(`heard message ${msg}`);
             if (msg == "ping") {
                 await this.peer.pubsub.publish("zerodao.V1.pingong", new TextEncoder().encode("pong"));

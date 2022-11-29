@@ -67,7 +67,7 @@ class ZeroPool {
     async gossipToPeers() {
         let txs = Array.from(this.txPool.values());
         let tBuf = this.buffer.TransactionBlock.encode({ transactions: txs });
-        this.peer.pubsub(this.config.topic, tBuf);
+        this.peer.pubsub.publish(this.config.topic, tBuf);
     }
     async validateTx(tx) {
         // Validate TX logic

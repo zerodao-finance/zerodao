@@ -13,6 +13,7 @@ export declare class ZeroNode {
         peer: any;
     });
     init(): Promise<void>;
+    listenForMsg(topic: any): Promise<void>;
     startNode(): Promise<void>;
     stopNode(): Promise<void>;
     cleanup(): Promise<void>;
