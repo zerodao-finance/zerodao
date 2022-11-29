@@ -18,7 +18,7 @@ type HandledTransaction = {
 export class ZeroPool {
  public running: boolean = false;
  public txPool: Map<string, Transaction>;
- public handled: Map<String, HandledTransaction>
+ public handled: Map<String, HandledTransaction>;
 
  private _len: number = 0;
  private _cleanupInterval: any;
@@ -121,6 +121,7 @@ export class ZeroPool {
  }
 
  cleanup() {
+  
   //TODO: cleanup logic
  }
 

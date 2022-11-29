@@ -47,6 +47,41 @@
         }
       }
     },
+    "TransactionBlock": {
+      "fields": {
+        "tx": {
+          "rule": "repeated",
+          "type": "Transaction",
+          "id": 0,
+          "options": {
+            "packed": false
+          }
+        }
+      }
+    },
+    "TransactionWithHash": {
+      "fields": {
+        "tx": {
+          "rule": "required",
+          "type": "Transaction",
+          "id": 0
+        },
+        "hash": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
+    "HashBlock": {
+      "fields": {
+        "hash": {
+          "rule": "repeated",
+          "type": "bytes",
+          "id": 0
+        }
+      }
+    },
     "BlockHeader": {
       "fields": {
         "type": {
@@ -95,6 +130,11 @@
         "signatories": {
           "type": "bytes",
           "id": 9
+        },
+        "fee": {
+          "rule": "required",
+          "type": "uint64",
+          "id": 10
         }
       },
       "nested": {

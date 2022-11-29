@@ -19,6 +19,7 @@
     "typescript": "^4.9.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.190"
+    "@types/lodash": "^4.14.190",
+    "sparse-merkle-tree": "^1.0.0"
   }
 }
