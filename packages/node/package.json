@@ -1,12 +1,13 @@
 {
-  "name": "zeronode",
+  "name": "@zerodao/node",
   "version": "1.0.0",
   "description": "cross-chain node",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "build:proto": "cross-env node scripts/compile-proto",
-    "prettier": "prettier --write ./src.ts/**/*"
+    "prettier": "prettier --write ./src.ts/**/*",
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -27,9 +28,13 @@
   "devDependencies": {
     "@types/level": "^6.0.1",
     "@types/lodash": "^4.14.190",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.9",
+    "chai": "^4.3.7",
     "cross-env": "^7.0.3",
+    "mocha": "^10.1.0",
     "prettier": "^2.8.0",
-    "sparse-merkle-tree": "^1.0.0"
+    "sparse-merkle-tree": "^1.0.0",
+    "ts-node": "^10.9.1"
   }
 }
