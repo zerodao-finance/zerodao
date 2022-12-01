@@ -83,7 +83,7 @@ class ZeroPool {
         let tBuf = this.buffer.TransactionBlock.encode({
             transactions: txs,
         });
-        // this.peer.pubsub.publish(this.config.PEER_GOSSIP_TOPIC, tBuf);
+        this.peer.pubsub.publish(this.config.PEER_GOSSIP_TOPIC, tBuf);
     }
     async validateTx(tx) {
         // Validate TX logic

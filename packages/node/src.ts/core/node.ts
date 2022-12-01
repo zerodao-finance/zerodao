@@ -17,7 +17,7 @@ export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: ZeroPool;
   private peer: ZeroP2P;
-  private propser: Proposer;
+  private propser: typeof Proposer;
   private protocol: any;
 
   static PRESETS = {

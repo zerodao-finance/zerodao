@@ -3,6 +3,7 @@ export declare class ZeroNode {
     _clientTopic: string;
     private pool;
     private peer;
+    private propser;
     private protocol;
     static PRESETS: {
         DEVNET: string;
