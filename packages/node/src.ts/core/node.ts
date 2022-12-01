@@ -7,6 +7,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { ZeroPool, ZeroPoolConfig } from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
+import { Proposer } from "../proposal";
 
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
@@ -16,6 +17,7 @@ export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: ZeroPool;
   private peer: ZeroP2P;
+  private propser: Proposer;
   private protocol: any;
 
   static PRESETS = {
@@ -57,6 +59,7 @@ export class ZeroNode {
    *
    */
   async init(poolConfig: ZeroPoolConfig) {
+    
     this.pool = ZeroPool.init(poolConfig, this.peer, this.protocol);
     logger.info("\n networking stack starting \n");
     await this.peer.start();
@@ -67,7 +70,10 @@ export class ZeroNode {
       });
       resolve(undefined);
     });
+    
     await timeout(10000);
+
+    
   }
 
   async startNode() {
