@@ -7,16 +7,16 @@ peers can dial for the current state of the proposer pool
 this should be as light-weight and fast as possible as to not impose a overly-large toll on
 the system at large
 
-####Requirements
+#### Requirements
 
-######R1: Determinism
+###### R1: Determinism
 Given a validator set V, and two honest validators p and q, for each height h and each round r the following must hold:
 
 proposer_p(h,r) = proposer_q(h,r)
 
 where proposer_p(h,r) is the proposer returned by the Proposer Selection Procedure at process p, at height h and round r.
 
-#######R2: Fairness
+###### R2: Fairness
 Given a validator set with total voting power P and a sequence S of elections. In any sub-sequence of S with length C*P, a validator v must be elected as proposer P/VP(v) times, i.e. with frequency:
 
 f(v) ~ VP(v) / P
@@ -28,7 +28,7 @@ C ~ k when there are validator changes
 
 
 
-####Basic Algorithm
+#### Basic Algorithm
 
 At its core, the proposer selection procedure uses a weighted round-robin algorithm.
 
