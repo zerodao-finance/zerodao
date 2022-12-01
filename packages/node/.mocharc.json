@@ -1,0 +1,6 @@
+{
+  "extension": ["ts"],
+  "node-option": ["loader=ts-node/register", "no-warnings"],
+  "spec": ["test/**/*.test.ts"],
+  "timeout": 120000
+}
