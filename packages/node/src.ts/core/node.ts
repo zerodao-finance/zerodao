@@ -17,6 +17,7 @@ export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: ZeroPool;
   private peer: ZeroP2P;
+  private signer: ethers.Signer;
   private propser: typeof Proposer;
   private protocol: any;
 
@@ -24,7 +25,7 @@ export class ZeroNode {
     DEVNET: "",
   };
 
-  static async fromSigner(signer, multiaddr?) {
+  static async fromSigner(signer: ethers.Signer, multiaddr?: any) {
     logger.info("generating seed from secp256k1 signature");
     const seed = await signer.signMessage(
       ZeroP2P.toMessage(await signer.getAddress())
@@ -32,7 +33,7 @@ export class ZeroNode {
     logger.info("creating peer from seed, wait for complete ...");
     const peer = await ZeroP2P.fromSeed({
       signer,
-      seed: Buffer.from(seed.substr(2), "hex"),
+      seed: Buffer.from(seed.substring(2), "hex"),
       multiaddr: multiaddr || ZeroNode.PRESETS.DEVNET,
     } as any);
     logger.info("done!");
@@ -58,7 +59,11 @@ export class ZeroNode {
    * initializes mempool and starts peer pubsub
    *
    */
-  async init(poolConfig?: ZeroPoolConfig) {
+  async init(
+    poolConfig: Partial<ZeroPoolConfig> = {
+      peer: this.peer,
+    }
+  ) {
     this.pool = ZeroPool.init(poolConfig);
     logger.info("\n networking stack starting \n");
     await this.peer.start();

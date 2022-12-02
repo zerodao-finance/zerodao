@@ -4,8 +4,8 @@ import { ZeroNode } from "../src.ts/index";
 describe("node", () => {
   let node: ZeroNode, signer: ethers.Signer;
   before(async () => {
-    let node = await ZeroNode.fromSigner(signer, "DEV-MAINNET");
     signer = ethers.Wallet.createRandom();
+    node = await ZeroNode.fromSigner(signer, "DEV-MAINNET");
   });
   it("should test the node", async () => {
     await node.init();

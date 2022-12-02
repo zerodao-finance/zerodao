@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import * as _ from "lodash";
 import { logger } from "../logger";
+import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 
 export interface ZeroPoolConfig {
@@ -27,7 +28,7 @@ export class ZeroPool {
   private _len: number = 0;
   private _cleanupInterval: any;
   private _gossipInterval: any;
-  private peer: any;
+  private peer: ZeroP2P;
   private protocol: any;
 
   private POOL_GOSSIP_TIME: number = 5;
@@ -36,8 +37,8 @@ export class ZeroPool {
   private POOL_STORAGE_TIME_LIMIT: number;
   private PEER_GOSSIP_TOPIC: any;
 
-  static init(config: ZeroPoolConfig) {
-    return new this(config);
+  static init(config: Partial<ZeroPoolConfig>) {
+    return new ZeroPool(config);
   }
 
   constructor(
@@ -56,6 +57,7 @@ export class ZeroPool {
     }
   ) {
     Object.assign(this, config);
+    console.log(this.peer);
   }
 
   async start() {
@@ -67,7 +69,9 @@ export class ZeroPool {
      * start listening to peer gossip topic
      *
      */
-    await (this.peer.pubsub.subscribe as any)(
+    console.log(this.peer);
+
+    await (this.peer.pubsub as any).subscribe(
       this.PEER_GOSSIP_TOPIC,
       async (msg) => {
         await this.handleGossip(msg);
