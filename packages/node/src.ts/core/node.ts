@@ -1,10 +1,10 @@
-"use strict";
-
 import { ethers } from "ethers";
 import chalk = require("chalk");
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { ZeroPool, ZeroPoolConfig } from "../memory";
+import { ZeroPool } from "../memory";
+import type { ZeroPoolConfig } from "../memory";
+import type {} from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
@@ -58,9 +58,8 @@ export class ZeroNode {
    * initializes mempool and starts peer pubsub
    *
    */
-  async init(poolConfig: ZeroPoolConfig) {
-    
-    this.pool = ZeroPool.init(poolConfig, this.peer, this.protocol);
+  async init(poolConfig?: ZeroPoolConfig) {
+    this.pool = ZeroPool.init(poolConfig);
     logger.info("\n networking stack starting \n");
     await this.peer.start();
     await new Promise((resolve) => {
@@ -70,10 +69,8 @@ export class ZeroNode {
       });
       resolve(undefined);
     });
-    
-    await timeout(10000);
 
-    
+    await timeout(10000);
   }
 
   async startNode() {
