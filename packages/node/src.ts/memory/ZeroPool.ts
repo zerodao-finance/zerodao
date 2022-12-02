@@ -3,36 +3,22 @@ import _ from "lodash";
 import { logger } from "../logger";
 import { Message } from "protobufjs";
 
-export interface ZeroPoolConfig {
-  TOPIC: string;
-  POOL_STORAGE_TIME_LIMIT: number;
-  POOL_GOSSIP_TIME_LIMIT: number;
-  PEER_GOSSIP_TOPIC: string;
-}
 
-type Transaction = {
-  tx: any;
-  hash: any;
-};
-
-type HandledTransaction = {
-  tx: Transaction;
-  timestamp: number;
-  hash: string;
-  error?: Error | string;
-};
 
 export class ZeroPool {
   public running: boolean = false;
-  public txPool: Map<string, Transaction>;
-  public handled: Map<string, HandledTransaction>;
+  public state: Map<string, Buffer>;
+  public handled: Map<string, any>;
 
   private _len: number = 0;
   private _cleanupInterval: any;
   private _gossipInterval: any;
-  private config: ZeroPoolConfig;
-  private buffer: any;
   private peer: any; 
+  private protocol: any;
+
+  private POOL_GOSSIP_TIME: number = 5;
+  private MAX_POOL_SIZE: number = 10000;
+  private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
 
   static init(config: ZeroPoolConfig, peer, buffer) {
     return new this({ config, peer, buffer });
