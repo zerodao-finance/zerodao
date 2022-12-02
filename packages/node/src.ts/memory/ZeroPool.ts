@@ -61,10 +61,7 @@ export class ZeroPool {
     return true;
   }
 
-  get length() {
-    return this._len;
-  }
-
+  
   async close() {
     if (!this.running) return;
     await this.cleanup();
@@ -89,6 +86,17 @@ export class ZeroPool {
   getHandledLogs() {
     return Array.from(this.handled.values());
   }
+
+  async validate(tx: any) {
+    let tx_buffer: Buffer = this.protocol.Transaction.encode(tx).finish(); // buffer
+    if (tx_buffer.length > this.MAX_MSG_BYTES) {
+      throw new Error("Transaction exceeded memory limit");     
+    }
+
+    // pass transaction to vm or equivilant
+    
+    
+  } 
 
   async addTx(tx: any) {
     const timestamp = Date.now();
