@@ -53,7 +53,7 @@ export class ZeroPool {
       MAX_POOL_SIZE: 10000,
       MAX_MSG_BYTES: 1000, // 1kb max message limit;
       POOL_STORAGE_TIME_LIMIT: 3600,
-      PEER_GOSSIP_TOPIC: "message",
+      PEER_GOSSIP_TOPIC: "/zeropool/0.0.1",
     }
   ) {
     Object.assign(this, config);
@@ -69,14 +69,9 @@ export class ZeroPool {
      * start listening to peer gossip topic
      *
      */
-    console.log(this.peer);
 
-    await (this.peer.pubsub as any).subscribe(
-      this.PEER_GOSSIP_TOPIC,
-      async (msg) => {
-        await this.handleGossip(msg);
-      }
-    );
+    this.peer.pubsub.subscribe(this.PEER_GOSSIP_TOPIC);
+    this.peer.pubsub.on(this.PEER_GOSSIP_TOPIC, this.handleGossip);
 
     this._cleanupInterval = setInterval(
       this.cleanup.bind(this),
@@ -98,7 +93,7 @@ export class ZeroPool {
   async close() {
     if (!this.running) return;
     await this.cleanup();
-    await this.peer.pubsub.unsubscribe(this.PEER_GOSSIP_TOPIC);
+    this.peer.pubsub.unsubscribe(this.PEER_GOSSIP_TOPIC);
     this.running = false;
   }
 
