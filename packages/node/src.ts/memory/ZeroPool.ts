@@ -1,35 +1,63 @@
 import { ethers } from "ethers";
-import _ from "lodash";
+import * as _ from "lodash";
 import { logger } from "../logger";
+import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 
+export interface ZeroPoolConfig {
+  _len: number;
+  _cleanupInterval: any;
+  _gossipInterval: any;
+  peer: any;
+  protocol: any;
 
+  POOL_GOSSIP_TIME: number;
+  MAX_POOL_SIZE: number;
+  MAX_MSG_BYTES: number; // 1kb max message limit;
+  POOL_STORAGE_TIME_LIMIT: number;
+  PEER_GOSSIP_TOPIC: any;
+}
 
 export class ZeroPool {
   public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
+  public buffer: any;
+  public txPool: any;
 
   private _len: number = 0;
   private _cleanupInterval: any;
   private _gossipInterval: any;
-  private peer: any; 
+  private peer: ZeroP2P;
   private protocol: any;
 
   private POOL_GOSSIP_TIME: number = 5;
   private MAX_POOL_SIZE: number = 10000;
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
+  private POOL_STORAGE_TIME_LIMIT: number;
+  private PEER_GOSSIP_TOPIC: any;
 
-  static init(config: ZeroPoolConfig, peer, buffer) {
-    return new this({ config, peer, buffer });
+  static init(config: Partial<ZeroPoolConfig>) {
+    return new ZeroPool(config);
   }
 
-  constructor({ config, peer, buffer }: any) {
-    Object.bind(this, {
-      config: config,
-      peer: peer,
-      buffer: buffer,
-    });
+  constructor(
+    config: Partial<ZeroPoolConfig> = {
+      _len: 0,
+      _cleanupInterval: 3600,
+      _gossipInterval: 3600,
+      peer: null,
+      protocol: null,
+
+      POOL_GOSSIP_TIME: 5,
+      MAX_POOL_SIZE: 10000,
+      MAX_MSG_BYTES: 1000, // 1kb max message limit;
+      POOL_STORAGE_TIME_LIMIT: 3600,
+      PEER_GOSSIP_TOPIC: "/zeropool/0.0.1",
+    }
+  ) {
+    Object.assign(this, config);
+    console.log(this.peer);
   }
 
   async start() {
@@ -41,21 +69,18 @@ export class ZeroPool {
      * start listening to peer gossip topic
      *
      */
-    await (this.peer.pubsub.subscribe as any)(
-      this.config.PEER_GOSSIP_TOPIC,
-      async (msg) => {
-        await this.handleGossip(msg);
-      }
-    );
+
+    this.peer.pubsub.subscribe(this.PEER_GOSSIP_TOPIC);
+    this.peer.pubsub.on(this.PEER_GOSSIP_TOPIC, this.handleGossip);
 
     this._cleanupInterval = setInterval(
       this.cleanup.bind(this),
-      this.config.POOL_STORAGE_TIME_LIMIT * 1000 * 60
+      this.POOL_STORAGE_TIME_LIMIT * 1000 * 60
     );
 
     this._gossipInterval = setInterval(
       this.gossipToPeers.bind(this),
-      this.config.POOL_GOSSIP_TIME_LIMIT * 1000 * 60
+      this.POOL_GOSSIP_TIME * 1000 * 60
     );
 
     return true;
@@ -68,7 +93,7 @@ export class ZeroPool {
   async close() {
     if (!this.running) return;
     await this.cleanup();
-    await this.peer.pubsub.unsubscribe(this.config.PEER_GOSSIP_TOPIC);
+    this.peer.pubsub.unsubscribe(this.PEER_GOSSIP_TOPIC);
     this.running = false;
   }
 
@@ -100,7 +125,7 @@ export class ZeroPool {
     } catch (error) {
       this.handled.set(hash, {
         tx: tx,
-        timestamp: Date.now(),
+        timestamp,
         hash: hash,
         error: error as Error,
       });
@@ -119,7 +144,7 @@ export class ZeroPool {
     let tBuf: Buffer = this.buffer.TransactionBlock.encode({
       transactions: txs,
     });
-    this.peer.pubsub.publish(this.config.PEER_GOSSIP_TOPIC, tBuf);
+    this.peer.pubsub.publish(this.PEER_GOSSIP_TOPIC, tBuf);
   }
 
   async validateTx(tx: any) {
@@ -128,9 +153,9 @@ export class ZeroPool {
     // ensure addresses are valid
   }
 
-  cleanup() {
-    this.txPool.clear();
-    this.handled.clear();
+  async cleanup() {
+    await this.txPool.clear();
+    await this.handled.clear();
   }
 
   getThash() {
