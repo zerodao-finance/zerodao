@@ -1,4 +1,3 @@
-import { ZeroPoolConfig } from "../memory";
 export declare class ZeroNode {
     _clientTopic: string;
     private pool;
@@ -19,7 +18,7 @@ export declare class ZeroNode {
      * initializes mempool and starts peer pubsub
      *
      */
-    init(poolConfig: ZeroPoolConfig): Promise<void>;
+    init(): Promise<void>;
     startNode(): Promise<void>;
     stopNode(): Promise<void>;
     cleanup(): Promise<void>;

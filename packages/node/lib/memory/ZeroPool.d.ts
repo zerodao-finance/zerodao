@@ -1,44 +1,28 @@
 /// <reference types="node" />
-export interface ZeroPoolConfig {
-    TOPIC: string;
-    POOL_STORAGE_TIME_LIMIT: number;
-    POOL_GOSSIP_TIME_LIMIT: number;
-    PEER_GOSSIP_TOPIC: string;
-}
-declare type Transaction = {
-    tx: any;
-    hash: any;
-};
-declare type HandledTransaction = {
-    tx: Transaction;
-    timestamp: number;
-    hash: string;
-    error?: Error | string;
-};
-export declare class ZeroPool {
+import { Transaction } from "../core/types";
+export declare class Mempool {
     running: boolean;
-    txPool: Map<string, Transaction>;
-    handled: Map<string, HandledTransaction>;
+    state: Map<string, Buffer>;
+    handled: Map<string, any>;
     private _len;
     private _cleanupInterval;
     private _gossipInterval;
-    private config;
-    private buffer;
     private peer;
-    static init(config: ZeroPoolConfig, peer: any, buffer: any): ZeroPool;
-    constructor({ config, peer, buffer }: any);
+    private protocol;
+    private POOL_GOSSIP_TOPIC;
+    private POOL_GOSSIP_TIME;
+    private MEMORY_CLEANUP_TIME;
+    private MAX_POOL_SIZE;
+    private MAX_MSG_BYTES;
+    static init(peer: any): Mempool;
+    constructor({ peer }: any);
     start(): Promise<boolean>;
-    get length(): number;
     close(): Promise<void>;
-    getPoolHashes(): any;
-    getPoolState(): any;
-    getHandledHashes(): string[];
-    getHandledLogs(): HandledTransaction[];
-    addTx(tx: any): Promise<void>;
-    handleGossip(txs: Buffer): Promise<void>;
-    gossipToPeers(): Promise<void>;
-    validateTx(tx: any): Promise<void>;
-    cleanup(): void;
-    getThash(): string;
+    validate(tx: Buffer): Promise<void>;
+    get length(): number;
+    addTx(tx: Transaction): Promise<void>;
+    cleanup(): Promise<void>;
+    ackGossip(message: Buffer): Promise<void>;
+    broadcast(): Promise<void>;
+    _hashMempool(): Promise<void>;
 }
-export {};

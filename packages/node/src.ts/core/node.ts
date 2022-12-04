@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import chalk = require("chalk");
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { ZeroPool, ZeroPoolConfig } from "../memory";
+import { Mempool } from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
@@ -15,7 +15,7 @@ const timeout = async (time) => {
 
 export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
-  private pool: ZeroPool;
+  private pool: Mempool;
   private peer: ZeroP2P;
   private propser: typeof Proposer;
   private protocol: any;
@@ -58,9 +58,9 @@ export class ZeroNode {
    * initializes mempool and starts peer pubsub
    *
    */
-  async init(poolConfig: ZeroPoolConfig) {
+  async init() {
     
-    this.pool = ZeroPool.init(poolConfig, this.peer, this.protocol);
+    this.pool = Mempool.init(this.peer);
     logger.info("\n networking stack starting \n");
     await this.peer.start();
     await new Promise((resolve) => {

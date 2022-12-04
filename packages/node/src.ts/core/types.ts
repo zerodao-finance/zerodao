@@ -1,24 +1,26 @@
+type Time = string | number;
+type CommitRoot = Buffer | Uint8Array;
 
-type Data = {
+export type Data = {
   Txs: Buffer[][]
 }
 
-type PartSetHeader =  {
+export type PartSetHeader =  {
   Total: number;
   Hash: Buffer;
 }
 
-type Version = {
+export type Version = {
   Block: number;
   App: number;
 }
 
-interface BlockID {
+export interface BlockID {
   Hash: Buffer
   PartsHeader: PartSetHeader
 }
 
-interface Vote {
+export interface Vote {
   Type: number
   Height: number
   Round: number
@@ -31,22 +33,22 @@ interface Vote {
 
 type PubKey = string | Buffer;
 
-interface Evidence {
+export interface Evidence {
   PubKey: PubKey
   VoteA: Vote
   VoteB: Vote
 }
 
-interface EvidenceData{
+export interface EvidenceData{
   Evicdence: Evidence[]
 }
 
-interface Commit {
+export interface Commit {
   BlockID: BlockID
   Precommits: Vote[]
 }
 
-interface Header {
+export interface Header {
   Version: Version
   ChainID: string
   Height: number
@@ -65,15 +67,32 @@ interface Header {
   AppHash: Buffer
   LastResultsHash: Buffer
 
-  EvidenceHash: Bufffer
+  EvidenceHash: Buffer
   ProposerAddress: Buffer
 }
 
-interface Block {
+export interface Block {
   Header: Header
   Txs: Data
   Evidence: EvidenceData
   LastRoot: CommitRoot
 }
 
+const enum TxType {
+  TRANSFER,
+  SLASH
+}
 
+const enum TxChain {
+  ETHEREUM,
+  MONERO
+}
+
+export interface Transaction {
+  type: TxType
+  to: Uint8Array
+  data: Uint8Array
+  nonce: number
+  signature: Uint8Array
+  chain: TxChain
+}

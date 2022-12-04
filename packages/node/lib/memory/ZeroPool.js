@@ -1,105 +1,85 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ZeroPool = void 0;
+exports.Mempool = void 0;
 const ethers_1 = require("ethers");
-class ZeroPool {
-    constructor({ config, peer, buffer }) {
+const logger_1 = require("../logger");
+class Mempool {
+    static init(peer) {
+        logger_1.logger.info("Mempool has been initialized");
+        return new this({ peer });
+    }
+    constructor({ peer }) {
         this.running = false;
         this._len = 0;
+        this.POOL_GOSSIP_TOPIC = "";
+        this.POOL_GOSSIP_TIME = 5;
+        this.MEMORY_CLEANUP_TIME = 10;
+        this.MAX_POOL_SIZE = 10000;
+        this.MAX_MSG_BYTES = 1000; // 1kb max message limit;
         Object.bind(this, {
-            config: config,
             peer: peer,
-            buffer: buffer,
         });
-    }
-    static init(config, peer, buffer) {
-        return new this({ config, peer, buffer });
     }
     async start() {
         if (this.running)
             return;
         this.running = true;
-        /**
-         *
-         * start listening to peer gossip topic
-         *
-         */
-        await this.peer.pubsub.subscribe(this.config.PEER_GOSSIP_TOPIC, async (msg) => {
-            await this.handleGossip(msg);
+        await this.peer.pubsub.subscribe(this.POOL_GOSSIP_TOPIC, async (msg) => {
+            await this.ackGossip(msg);
         });
-        this._cleanupInterval = setInterval(this.cleanup.bind(this), this.config.POOL_STORAGE_TIME_LIMIT * 1000 * 60);
-        this._gossipInterval = setInterval(this.gossipToPeers.bind(this), this.config.POOL_GOSSIP_TIME_LIMIT * 1000 * 60);
+        this._cleanupInterval = setInterval(this.cleanup.bind(this), this.MEMORY_CLEANUP_TIME * 1000 * 60);
+        this._gossipInterval = setInterval(this.broadcast.bind(this), this.POOL_GOSSIP_TIME * 1000 * 60);
         return true;
-    }
-    get length() {
-        return this._len;
     }
     async close() {
         if (!this.running)
             return;
-        await this.cleanup();
-        await this.peer.pubsub.unsubscribe(this.config.PEER_GOSSIP_TOPIC);
-        this.running = false;
+        //TODO:
     }
-    getPoolHashes() {
-        let values = Array.from(this.txPool.keys());
-        return this.buffer.HashBlock.encode({ hashes: values });
+    async validate(tx) {
+        if (tx.length > this.MAX_MSG_BYTES) {
+            throw new Error("Transaction exceeded memory limit");
+        }
+        //TODO: pass transaction to vm or equivilant
     }
-    getPoolState() {
-        let values = Array.from(this.txPool.values());
-        return this.buffer.TransactionBlock.encode({ transactions: values });
-    }
-    getHandledHashes() {
-        return Array.from(this.handled.keys());
-    }
-    getHandledLogs() {
-        return Array.from(this.handled.values());
+    get length() {
+        return (Array.from(this.state.keys())).length;
     }
     async addTx(tx) {
         const timestamp = Date.now();
-        let _tx = this.buffer.Transaction.encode(tx);
-        const hash = ethers_1.ethers.utils.keccak256(_tx);
+        let tBuf = this.protocol.Transaction.encode(tx);
+        const hash = ethers_1.ethers.utils.keccak256(tBuf);
         try {
-            await this.validateTx(tx);
-            this.txPool.set(hash, { tx: tx, hash: hash });
+            await this.validate(tBuf);
+            this.state.set(hash, tBuf);
         }
         catch (error) {
             this.handled.set(hash, {
-                tx: tx,
-                timestamp: Date.now(),
+                tx: tBuf,
                 hash: hash,
+                timestamp: Date.now(),
                 error: error,
             });
         }
     }
-    async handleGossip(txs) {
-        let _txs = this.buffer.TransactionBlock.decode(txs);
-        for (let i of _txs.transactions) {
-            this.txPool.set(i.hash, i.tx);
-        }
+    async cleanup() {
+        //TODO:
     }
-    async gossipToPeers() {
-        let txs = Array.from(this.txPool.values());
-        let tBuf = this.buffer.TransactionBlock.encode({
-            transactions: txs,
-        });
-        this.peer.pubsub.publish(this.config.PEER_GOSSIP_TOPIC, tBuf);
+    async ackGossip(message) {
+        let msg = (this.protocol.Mempool.decode(message)).toObject();
+        // set recieved message items with current state
     }
-    async validateTx(tx) {
-        // Validate TX logic
-        // ensure valid chain is selected
-        // ensure addresses are valid
+    async broadcast() {
+        let m = Array.from(this.state.values());
+        let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
+        this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
     }
-    cleanup() {
-        this.txPool.clear();
-        this.handled.clear();
-    }
-    getThash() {
-        const vals = Array.from(this.txPool.values());
-        const buff = this.buffer.TransactionBlock({ transactions: vals });
-        const hash = ethers_1.ethers.utils.keccak256(buff.toString("hex"));
-        return hash;
+    // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
+    // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
+    // the message from that peer can be safely ignored without losing information.
+    async _hashMempool() {
+        //TODO: implement
     }
 }
-exports.ZeroPool = ZeroPool;
+exports.Mempool = Mempool;
 //# sourceMappingURL=ZeroPool.js.map

@@ -11,15 +11,6 @@ const timeout = async (time) => {
     await new Promise((resolve) => setTimeout(resolve, time));
 };
 class ZeroNode {
-    constructor({ consensus, signer, peer }) {
-        this._clientTopic = "zeronode.v1.inbound";
-        Object.assign(this, {
-            consensus,
-            signer,
-            peer,
-            protocol: proto_1.protocol,
-        });
-    }
     static async fromSigner(signer, multiaddr) {
         logger_1.logger.info("generating seed from secp256k1 signature");
         const seed = await signer.signMessage(p2p_1.ZeroP2P.toMessage(await signer.getAddress()));
@@ -37,13 +28,22 @@ class ZeroNode {
             signer,
         });
     }
+    constructor({ consensus, signer, peer }) {
+        this._clientTopic = "zeronode.v1.inbound";
+        Object.assign(this, {
+            consensus,
+            signer,
+            peer,
+            protocol: proto_1.protocol,
+        });
+    }
     /**
      *
      * initializes mempool and starts peer pubsub
      *
      */
-    async init(poolConfig) {
-        this.pool = memory_1.ZeroPool.init(poolConfig, this.peer, this.protocol);
+    async init() {
+        this.pool = memory_1.Mempool.init(this.peer);
         logger_1.logger.info("\n networking stack starting \n");
         await this.peer.start();
         await new Promise((resolve) => {

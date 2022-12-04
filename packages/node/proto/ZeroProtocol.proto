@@ -15,18 +15,15 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
-message TransactionBlock {
- repeated Transaction tx = 0;
+
+/*
+   used for encoding and decoding the Mempool for broadcasting over pubsub to other peers
+*/
+message Mempool {
+  repeated bytes tx = 0;
+  required hash string = 1;
 }
 
-message TransactionWithHash {
-  required Transaction tx = 0;
-  required bytes hash = 1;
-}
-
-message HashBlock {
-  repeated bytes hash = 0;
-}
 /*
 
 Transactions submitted REBASE block and signed during BASE block:
