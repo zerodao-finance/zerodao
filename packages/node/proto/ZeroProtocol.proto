@@ -15,6 +15,17 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
+message TransactionReply {
+  enum STATUS {
+    SUCCESS = 0;
+    ERROR = 1
+  }
+
+  required STATUS status = 0
+  optional bytes errorMsg = 1;
+
+}
+
 
 /*
    used for encoding and decoding the Mempool for broadcasting over pubsub to other peers
@@ -50,4 +61,9 @@ message BlockHeader {
   required uint64 timestamp = 8;
   optional bytes signatories = 9; // Can only be defined in BASE and REBASE types. BASE signatories must be same as parent (REBASE).
   required uint64 fee = 10; // Network block fee
+}
+
+
+service RouteGuide {
+  rpc broadcastTX ( Transaction ) returns (TransactionReply) {};
 }
