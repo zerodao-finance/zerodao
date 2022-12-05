@@ -1,5 +1,3 @@
-"use strict";
-
 import { ethers } from "ethers";
 import chalk = require("chalk");
 import { logger } from "../logger";
@@ -21,6 +19,7 @@ export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: Mempool;
   private peer: ZeroP2P;
+  private signer: ethers.Signer;
   private propser: typeof Proposer;
   private protocol: any;
 
@@ -28,8 +27,7 @@ export class ZeroNode {
     DEVNET: "",
   };
 
-  static async fromSigner(signer, multiaddr?) {
-    console.time("node:start-up");
+  static async fromSigner(signer: ethers.Signer, multiaddr?: any) {
     logger.info("generating seed from secp256k1 signature");
     const seed = await signer.signMessage(
       ZeroP2P.toMessage(await signer.getAddress())
@@ -37,7 +35,7 @@ export class ZeroNode {
     logger.info("creating peer from seed, wait for complete ...");
     const peer = await ZeroP2P.fromSeed({
       signer,
-      seed: Buffer.from(seed.substr(2), "hex"),
+      seed: Buffer.from(seed.substring(2), "hex"),
       multiaddr: multiaddr || ZeroNode.PRESETS.DEVNET,
     } as any);
 
@@ -72,7 +70,45 @@ export class ZeroNode {
       pool
     });
   }
+<<<<<<< HEAD
   
+=======
+
+  /**
+   *
+   * initializes mempool and starts peer pubsub
+   *
+   */
+  async init(
+    poolConfig: Partial<ZeroPoolConfig> = {
+      peer: this.peer,
+    }
+  ) {
+    this.pool = ZeroPool.init(poolConfig);
+    logger.info("\n networking stack starting \n");
+    await this.peer.start();
+    await new Promise((resolve) => {
+      this.peer.start();
+      this.peer.on("peer:discovery", async (peerInfo) => {
+        logger.info(`found peer \n ${peerInfo}`);
+      });
+      resolve(undefined);
+    });
+
+    await timeout(10000);
+  }
+
+  async startNode() {
+    logger.info("\n starting mempool \n");
+    await this.pool.start(); // starts mempool
+  }
+
+  async stopNode() {
+    await this.pool.close(); // closes mempool
+    await this.cleanup();
+  }
+
+>>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   async cleanup() {
     await this.peer.stop();
   }

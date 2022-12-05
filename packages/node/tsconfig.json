@@ -1,19 +1,18 @@
 {
   "compilerOptions": {
-    "lib": ["es2020", "es5", "dom"],
+    "lib": ["ES2015", "es5", "dom"],
     "preserveWatchOutput": true,
     "pretty": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2020",
+    "target": "ES2015",
     "noImplicitAny": false,
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
-    "esModuleInterop": true,
     "skipLibCheck": true
   },
   "include": ["src.ts/*"],
