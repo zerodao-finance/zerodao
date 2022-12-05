@@ -8,17 +8,12 @@ export declare class ZeroNode {
         DEVNET: string;
     };
     static fromSigner(signer: any, multiaddr?: any): Promise<ZeroNode>;
+    init(): Promise<void>;
     constructor({ consensus, signer, peer }: {
         consensus: any;
         signer: any;
         peer: any;
     });
-    /**
-     *
-     * initializes mempool and starts peer pubsub
-     *
-     */
-    init(): Promise<void>;
     startNode(): Promise<void>;
     stopNode(): Promise<void>;
     cleanup(): Promise<void>;

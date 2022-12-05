@@ -11,7 +11,7 @@ class Mempool {
     constructor({ peer }) {
         this.running = false;
         this._len = 0;
-        this.POOL_GOSSIP_TOPIC = "";
+        this.POOL_GOSSIP_TOPIC = "zerodao:xnode:gossip:v1";
         this.POOL_GOSSIP_TIME = 5;
         this.MEMORY_CLEANUP_TIME = 10;
         this.MAX_POOL_SIZE = 10000;
@@ -43,7 +43,7 @@ class Mempool {
         //TODO: pass transaction to vm or equivilant
     }
     get length() {
-        return (Array.from(this.state.keys())).length;
+        return Array.from(this.state.keys()).length;
     }
     async addTx(tx) {
         const timestamp = Date.now();
@@ -66,7 +66,7 @@ class Mempool {
         //TODO:
     }
     async ackGossip(message) {
-        let msg = (this.protocol.Mempool.decode(message)).toObject();
+        let msg = this.protocol.Mempool.decode(message).toObject();
         // set recieved message items with current state
     }
     async broadcast() {

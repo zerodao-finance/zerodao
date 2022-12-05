@@ -12,6 +12,7 @@ const timeout = async (time) => {
 };
 class ZeroNode {
     static async fromSigner(signer, multiaddr) {
+        console.time("node:start-up");
         logger_1.logger.info("generating seed from secp256k1 signature");
         const seed = await signer.signMessage(p2p_1.ZeroP2P.toMessage(await signer.getAddress()));
         logger_1.logger.info("creating peer from seed, wait for complete ...");
@@ -20,31 +21,24 @@ class ZeroNode {
             seed: Buffer.from(seed.substr(2), "hex"),
             multiaddr: multiaddr || ZeroNode.PRESETS.DEVNET,
         });
+        await new Promise((resolve) => {
+            peer.start();
+            peer.on("peer:discover", async (peerInfo) => {
+                logger_1.logger.info(`found peer \n ${peerInfo}`);
+            });
+            resolve(console.timeLog('node:start-up'));
+        });
+        await timeout(5000);
         logger_1.logger.info("done!");
         logger_1.logger.info("zerop2p address " + chalk.bold(peer.peerId.toB58String()));
+        console.timeEnd('node:start-up');
         return new this({
             consensus: new consensus_1.Consensus(),
             peer,
             signer,
         });
     }
-    constructor({ consensus, signer, peer }) {
-        this._clientTopic = "zeronode.v1.inbound";
-        Object.assign(this, {
-            consensus,
-            signer,
-            peer,
-            protocol: proto_1.protocol,
-        });
-    }
-    /**
-     *
-     * initializes mempool and starts peer pubsub
-     *
-     */
     async init() {
-        this.pool = memory_1.Mempool.init(this.peer);
-        logger_1.logger.info("\n networking stack starting \n");
         await this.peer.start();
         await new Promise((resolve) => {
             this.peer.start();
@@ -54,6 +48,17 @@ class ZeroNode {
             resolve(undefined);
         });
         await timeout(10000);
+    }
+    constructor({ consensus, signer, peer }) {
+        this._clientTopic = "zeronode.v1.inbound";
+        const pool = memory_1.Mempool.init(this.peer);
+        Object.assign(this, {
+            consensus,
+            signer,
+            peer,
+            protocol: proto_1.protocol,
+            pool
+        });
     }
     async startNode() {
         logger_1.logger.info("\n starting mempool \n");

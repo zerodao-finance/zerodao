@@ -13,6 +13,10 @@ const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
 };
 
+const timeoutWithCallback = async (time, callback) => {
+  await new Promise((resolve) => setTimeout(callback(resolve), time))
+}
+
 export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private pool: Mempool;
@@ -25,6 +29,7 @@ export class ZeroNode {
   };
 
   static async fromSigner(signer, multiaddr?) {
+    console.time("node:start-up");
     logger.info("generating seed from secp256k1 signature");
     const seed = await signer.signMessage(
       ZeroP2P.toMessage(await signer.getAddress())
@@ -35,8 +40,21 @@ export class ZeroNode {
       seed: Buffer.from(seed.substr(2), "hex"),
       multiaddr: multiaddr || ZeroNode.PRESETS.DEVNET,
     } as any);
+
+    await new Promise((resolve) => {
+      peer.start();
+      peer.on("peer:discover", async (peerInfo) => {
+        logger.info(`found peer \n ${peerInfo}`);
+
+      })
+      resolve(console.timeLog('node:start-up'))
+    })
+
+    await timeout(5000);
+
     logger.info("done!");
     logger.info("zerop2p address " + chalk.bold(peer.peerId.toB58String()));
+    console.timeEnd('node:start-up');
     return new this({
       consensus: new Consensus(),
       peer,
@@ -45,52 +63,21 @@ export class ZeroNode {
   }
 
   constructor({ consensus, signer, peer }) {
+    const pool = Mempool.init(this.peer);
     Object.assign(this, {
       consensus,
       signer,
       peer,
       protocol: protocol,
+      pool
     });
   }
-
-  /**
-   *
-   * initializes mempool and starts peer pubsub
-   *
-   */
-  async init() {
-    
-    this.pool = Mempool.init(this.peer);
-    logger.info("\n networking stack starting \n");
-    await this.peer.start();
-    await new Promise((resolve) => {
-      this.peer.start();
-      this.peer.on("peer:discovery", async (peerInfo) => {
-        logger.info(`found peer \n ${peerInfo}`);
-      });
-      resolve(undefined);
-    });
-    
-    await timeout(10000);
-
-    
-  }
-
-  async startNode() {
-    logger.info("\n starting mempool \n");
-    await this.pool.start(); // starts mempool
-  }
-
-  async stopNode() {
-    await this.pool.close(); // closes mempool
-    await this.cleanup();
-  }
-
+  
   async cleanup() {
     await this.peer.stop();
   }
 
-  async ping() {
+  async ping(time) {
     await (this.peer.pubsub.subscribe as any)(
       "zerodao.V1.pingpong",
       async (msg) => {
