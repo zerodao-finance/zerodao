@@ -5,9 +5,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Transaction } from "../core/types";
 
-<<<<<<< HEAD
 export class Mempool {
-=======
 export interface ZeroPoolConfig {
   _len: number;
   _cleanupInterval: any;
@@ -23,7 +21,6 @@ export interface ZeroPoolConfig {
 }
 
 export class ZeroPool {
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
@@ -33,11 +30,7 @@ export class ZeroPool {
   private _len: number = 0;
   private _cleanupInterval: any;
   private _gossipInterval: any;
-<<<<<<< HEAD
-  private peer: any;
-=======
   private peer: ZeroP2P;
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   private protocol: any;
 
   private POOL_GOSSIP_TOPIC: string = "zerodao:xnode:gossip:v1";
@@ -48,17 +41,6 @@ export class ZeroPool {
   private POOL_STORAGE_TIME_LIMIT: number;
   private PEER_GOSSIP_TOPIC: any;
 
-<<<<<<< HEAD
-  static init(peer) {
-    logger.info("Mempool has been initialized");
-    return new this({ peer });
-  }
-
-  constructor({ peer }: any) {
-    Object.bind(this, {
-      peer: peer,
-    });
-=======
   static init(config: Partial<ZeroPoolConfig>) {
     return new ZeroPool(config);
   }
@@ -80,14 +62,12 @@ export class ZeroPool {
   ) {
     Object.assign(this, config);
     console.log(this.peer);
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   }
 
   async start() {
     if (this.running) return;
     this.running = true;
 
-<<<<<<< HEAD
     await (this.peer.pubsub.subscribe as any)(
       this.POOL_GOSSIP_TOPIC,
       async (msg) => {
@@ -102,24 +82,7 @@ export class ZeroPool {
 
     this._gossipInterval = setInterval(
       this.broadcast.bind(this),
-=======
-    /**
-     *
-     * start listening to peer gossip topic
-     *
-     */
 
-    this.peer.pubsub.subscribe(this.PEER_GOSSIP_TOPIC);
-    this.peer.pubsub.on(this.PEER_GOSSIP_TOPIC, this.handleGossip);
-
-    this._cleanupInterval = setInterval(
-      this.cleanup.bind(this),
-      this.POOL_STORAGE_TIME_LIMIT * 1000 * 60
-    );
-
-    this._gossipInterval = setInterval(
-      this.gossipToPeers.bind(this),
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
       this.POOL_GOSSIP_TIME * 1000 * 60
     );
 
@@ -128,11 +91,8 @@ export class ZeroPool {
 
   async close() {
     if (!this.running) return;
-<<<<<<< HEAD
-=======
     await this.cleanup();
     this.peer.pubsub.unsubscribe(this.PEER_GOSSIP_TOPIC);
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
     this.running = false;
     clearInterval(this._gossipInterval);
     clearInterval(this._cleanupInterval);
@@ -152,19 +112,15 @@ export class ZeroPool {
 
   async addTx(tx: Transaction) {
     const timestamp = Date.now();
-    let tBuf = this.protocol.Transaction.encode(tx);
+    let tBuf = this.protocol.Transaction.encode(tx).finish();
     const hash: string = ethers.utils.keccak256(tBuf);
     try {
       await this.validate(tBuf);
       this.state.set(hash, tBuf);
     } catch (error) {
       this.handled.set(hash, {
-<<<<<<< HEAD
         tx: tBuf,
-=======
-        tx: tx,
         timestamp,
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
         hash: hash,
         timestamp: Date.now(),
         error: error as Error,
@@ -172,24 +128,9 @@ export class ZeroPool {
     }
   }
 
-<<<<<<< HEAD
   async cleanup() {
     //TODO:
-=======
-  async handleGossip(txs: Buffer) {
-    let _txs = this.buffer.TransactionBlock.decode(txs);
-    for (let i of _txs.transactions) {
-      this.txPool.set(i.hash, i.tx);
-    }
-  }
 
-  async gossipToPeers() {
-    let txs = Array.from(this.txPool.values());
-    let tBuf: Buffer = this.buffer.TransactionBlock.encode({
-      transactions: txs,
-    });
-    this.peer.pubsub.publish(this.PEER_GOSSIP_TOPIC, tBuf);
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   }
 
   async ackGossip(message: Buffer) {
@@ -197,16 +138,10 @@ export class ZeroPool {
     // set recieved message items with current state
   }
 
-<<<<<<< HEAD
   async broadcast() {
     let m = Array.from(this.state.values());
     let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
     this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
-=======
-  async cleanup() {
-    await this.txPool.clear();
-    await this.handled.clear();
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   }
 
   // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
