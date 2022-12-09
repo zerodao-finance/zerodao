@@ -5,8 +5,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Transaction } from "../core/types";
 
-export class Mempool {
-export interface ZeroPoolConfig {
+export interface MempoolConfig {
   _len: number;
   _cleanupInterval: any;
   _gossipInterval: any;
@@ -17,15 +16,14 @@ export interface ZeroPoolConfig {
   MAX_POOL_SIZE: number;
   MAX_MSG_BYTES: number; // 1kb max message limit;
   POOL_STORAGE_TIME_LIMIT: number;
-  PEER_GOSSIP_TOPIC: any;
+  POOL_GOSSIP_TOPIC: string;
 }
 
-export class ZeroPool {
+export class Mempool {
   public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
   public buffer: any;
-  public txPool: any;
 
   private _len: number = 0;
   private _cleanupInterval: any;
@@ -39,14 +37,14 @@ export class ZeroPool {
   private MAX_POOL_SIZE: number = 10000;
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
   private POOL_STORAGE_TIME_LIMIT: number;
-  private PEER_GOSSIP_TOPIC: any;
 
-  static init(config: Partial<ZeroPoolConfig>) {
-    return new ZeroPool(config);
+
+  static init(config: Partial<MempoolConfig>) {
+    return new Mempool(config);
   }
 
   constructor(
-    config: Partial<ZeroPoolConfig> = {
+    config: Partial<MempoolConfig> = {
       _len: 0,
       _cleanupInterval: 3600,
       _gossipInterval: 3600,
@@ -57,11 +55,10 @@ export class ZeroPool {
       MAX_POOL_SIZE: 10000,
       MAX_MSG_BYTES: 1000, // 1kb max message limit;
       POOL_STORAGE_TIME_LIMIT: 3600,
-      PEER_GOSSIP_TOPIC: "/zeropool/0.0.1",
+      POOL_GOSSIP_TOPIC: "/zeropool/0.0.1",
     }
   ) {
     Object.assign(this, config);
-    console.log(this.peer);
   }
 
   async start() {
@@ -82,7 +79,6 @@ export class ZeroPool {
 
     this._gossipInterval = setInterval(
       this.broadcast.bind(this),
-
       this.POOL_GOSSIP_TIME * 1000 * 60
     );
 
@@ -92,7 +88,7 @@ export class ZeroPool {
   async close() {
     if (!this.running) return;
     await this.cleanup();
-    this.peer.pubsub.unsubscribe(this.PEER_GOSSIP_TOPIC);
+    this.peer.pubsub.unsubscribe(this.POOL_GOSSIP_TOPIC);
     this.running = false;
     clearInterval(this._gossipInterval);
     clearInterval(this._cleanupInterval);
@@ -122,7 +118,6 @@ export class ZeroPool {
         tx: tBuf,
         timestamp,
         hash: hash,
-        timestamp: Date.now(),
         error: error as Error,
       });
     }
@@ -130,7 +125,6 @@ export class ZeroPool {
 
   async cleanup() {
     //TODO:
-
   }
 
   async ackGossip(message: Buffer) {
