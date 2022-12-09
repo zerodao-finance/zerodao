@@ -5,7 +5,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Transaction } from "../core/types";
 
-export interface ZeroPoolConfig {
+export interface MempoolConfig {
   _len: number;
   _cleanupInterval: any;
   _gossipInterval: any;
@@ -19,7 +19,7 @@ export interface ZeroPoolConfig {
   POOL_GOSSIP_TOPIC: string;
 }
 
-export class ZeroPool {
+export class Mempool {
   public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
@@ -39,12 +39,12 @@ export class ZeroPool {
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
   private POOL_STORAGE_TIME_LIMIT: number;
 
-  static init(config: Partial<ZeroPoolConfig>) {
-    return new ZeroPool(config);
+  static init(config: Partial<MempoolConfig>) {
+    return new Mempool(config);
   }
 
   constructor(
-    config: Partial<ZeroPoolConfig> = {
+    config: Partial<MempoolConfig> = {
       _len: 0,
       _cleanupInterval: 3600,
       _gossipInterval: 3600,

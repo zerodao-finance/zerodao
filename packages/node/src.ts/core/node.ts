@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import chalk = require("chalk");
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { Mempool } from "../memory";
+import { Mempool, MempoolConfig } from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
@@ -12,8 +12,8 @@ const timeout = async (time) => {
 };
 
 const timeoutWithCallback = async (time, callback) => {
-  await new Promise((resolve) => setTimeout(callback(resolve), time))
-}
+  await new Promise((resolve) => setTimeout(callback(resolve), time));
+};
 
 export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
@@ -43,16 +43,15 @@ export class ZeroNode {
       peer.start();
       peer.on("peer:discover", async (peerInfo) => {
         logger.info(`found peer \n ${peerInfo}`);
-
-      })
-      resolve(console.timeLog('node:start-up'))
-    })
+      });
+      resolve(console.timeLog("node:start-up"));
+    });
 
     await timeout(5000);
 
     logger.info("done!");
     logger.info("zerop2p address " + chalk.bold(peer.peerId.toB58String()));
-    console.timeEnd('node:start-up');
+    console.timeEnd("node:start-up");
     return new this({
       consensus: new Consensus(),
       peer,
@@ -61,18 +60,15 @@ export class ZeroNode {
   }
 
   constructor({ consensus, signer, peer }) {
-    const pool = Mempool.init(this.peer);
+    const pool = Mempool.init({ peer: this.peer });
     Object.assign(this, {
       consensus,
       signer,
       peer,
       protocol: protocol,
-      pool
+      pool,
     });
   }
-<<<<<<< HEAD
-  
-=======
 
   /**
    *
@@ -80,11 +76,11 @@ export class ZeroNode {
    *
    */
   async init(
-    poolConfig: Partial<ZeroPoolConfig> = {
+    poolConfig: Partial<MempoolConfig> = {
       peer: this.peer,
     }
   ) {
-    this.pool = ZeroPool.init(poolConfig);
+    this.pool = Mempool.init(poolConfig);
     logger.info("\n networking stack starting \n");
     await this.peer.start();
     await new Promise((resolve) => {
@@ -108,7 +104,6 @@ export class ZeroNode {
     await this.cleanup();
   }
 
->>>>>>> ac4ad871be2b64b207358e17fd9dfef2693522a8
   async cleanup() {
     await this.peer.stop();
   }
