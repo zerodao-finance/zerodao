@@ -1,5 +1,17 @@
 /// <reference types="node" />
 import { Transaction } from "../core/types";
+export interface MempoolConfig {
+    _len: number;
+    _cleanupInterval: any;
+    _gossipInterval: any;
+    peer: any;
+    protocol: any;
+    POOL_GOSSIP_TIME: number;
+    MAX_POOL_SIZE: number;
+    MAX_MSG_BYTES: number;
+    POOL_STORAGE_TIME_LIMIT: number;
+    POOL_GOSSIP_TOPIC: string;
+}
 export declare class Mempool {
     running: boolean;
     state: Map<string, Buffer>;
@@ -14,8 +26,9 @@ export declare class Mempool {
     private MEMORY_CLEANUP_TIME;
     private MAX_POOL_SIZE;
     private MAX_MSG_BYTES;
-    static init(peer: any): Mempool;
-    constructor({ peer }: any);
+    private POOL_STORAGE_TIME_LIMIT;
+    static init(config: Partial<MempoolConfig>): Mempool;
+    constructor(config?: Partial<MempoolConfig>);
     start(): Promise<boolean>;
     close(): Promise<void>;
     validate(tx: Buffer): Promise<void>;

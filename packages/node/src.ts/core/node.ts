@@ -6,6 +6,7 @@ import { Mempool, MempoolConfig } from "../memory";
 import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
+import { RPCServer } from "../rpc";
 
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
@@ -22,6 +23,7 @@ export class ZeroNode {
   private signer: ethers.Signer;
   private propser: typeof Proposer;
   private protocol: any;
+  private rpc: RPCServer;
 
   static PRESETS = {
     DEVNET: "",
@@ -61,15 +63,18 @@ export class ZeroNode {
 
   constructor({ consensus, signer, peer }) {
     const pool = Mempool.init({ peer: this.peer });
+    const rpc = RPCServer.init()
     Object.assign(this, {
       consensus,
       signer,
       peer,
+      rpc,
       protocol: protocol,
       pool,
     });
   }
 
+ 
   /**
    *
    * initializes mempool and starts peer pubsub

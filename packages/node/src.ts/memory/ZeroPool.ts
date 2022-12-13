@@ -23,7 +23,6 @@ export class Mempool {
   public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
-  public buffer: any;
 
   private _len: number = 0;
   private _cleanupInterval: any;

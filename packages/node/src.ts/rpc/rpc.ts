@@ -1,58 +1,42 @@
-import { grpc } from "grpc";
-import { protoLoader } from "@grpc/proto-loader";
-var PROTO_PATH = __dirname + "/../../proto/ZeroProtocol.proto";
-/**
- *
- * Use
- *
- * import { getServer } from "<path-to>/rpc"
- *
- * let rpcServer = new getServer().init();
- *
- */
+"use strict"
+const grpc = require("grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader");
+import { TransactionService } from "./services";
 
+export class RPCServer {
 
-export function getServer() {
-	this.server = new grpc.Server();
-	this.running = false;
-	this.routeServer = undefined;
+	self: any = undefined;
+	path: string = __dirname + "/../../ZeroProtocol.proto";
+	service: any = undefined;
+	pkg: any = undefined;
+	
+	static PORT: string = "50051";
+
+	static init() {
+		return new RPCServer();
+	}
+
+	constructor() {
+		this.self = new grpc.Server();
+	}
+
+	start({ port }: any = {}) {
+		this.pkg = grpc.loadPackageDefinitions(protoLoader.loadSync(
+			this.path,
+			{
+				keepCase: true,
+				longs: String,
+				enums: String,
+				defualts: true,
+				oneofs: true
+			}
+		));
+
+		this.service = (this.pkg as any).ZeroRpcService;
+
+		this.self.addService((this.service as any).service, TransactionService);
+
+		this.self.bindAsync(`0.0.0.0:${port || RPCServer.PORT }`, grpc.ServerCredentials.createInsecure(), () => { this.self.start() });
+		return { success: true };
+	}
 }
-
-
-
-getServer.prototype._addService = ({ routeguide }: any) => {
-	this.server.addService(routeguide.RouteGuide.service, {
-		broadcastTx: this._broadcastTx
-	});
-}
-
-getServer.prototype.init = () => {	
-	var packageDefs = protoLoader.loadSync(
-		PROTO_PATH,
-		{ keepCase: true,
-			longs: String,
-			enums: String, 
-			defaults: true,
-			oneofs: true
-		});
-	var protoDescriptor = grpc.loadPackageDefinitions(packageDefs);
-
-	routeguide = protoDescriptor.routeguide;
-	this._addService(routeguide);	
-	this.routeServer = this.server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
-		routeServer.start();
-	});
-}
-
-getServer.prototype._handleTx = (tx) => {
-	//TODO
-	return 0 //return status;
-} 
-
-
-getServer.prototype._broadcastTx = (call, callback) => {
-	callback(null, this._handleTx(call.request));
-}
-
-
-
