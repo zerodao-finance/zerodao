@@ -1,12 +1,12 @@
 "use strict"
-const grpc = require("grpc/grpc-js");
+const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 import { TransactionService } from "./services";
 
 export class RPCServer {
 
 	self: any = undefined;
-	path: string = __dirname + "/../../ZeroProtocol.proto";
+	path: string = __dirname + "/../../proto/ZeroProtocol.proto";
 	service: any = undefined;
 	pkg: any = undefined;
 	
@@ -21,7 +21,7 @@ export class RPCServer {
 	}
 
 	start({ port }: any = {}) {
-		this.pkg = grpc.loadPackageDefinitions(protoLoader.loadSync(
+		this.pkg = grpc.loadPackageDefinition(protoLoader.loadSync(
 			this.path,
 			{
 				keepCase: true,
@@ -32,7 +32,7 @@ export class RPCServer {
 			}
 		));
 
-		this.service = (this.pkg as any).ZeroRpcService;
+		this.service = (this.pkg as any).RpcService;
 
 		this.self.addService((this.service as any).service, TransactionService);
 

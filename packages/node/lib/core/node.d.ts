@@ -23,8 +23,5 @@ export declare class ZeroNode {
      *
      */
     init(poolConfig?: Partial<MempoolConfig>): Promise<void>;
-    startNode(): Promise<void>;
-    stopNode(): Promise<void>;
-    cleanup(): Promise<void>;
     ping(time: any): Promise<void>;
 }

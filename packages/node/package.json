@@ -18,6 +18,8 @@
   "dependencies": {
     "@ethereumjs/trie": "^5.0.1",
     "@ethereumjs/util": "^8.0.2",
+    "@grpc/grpc-js": "^1.8.0",
+    "@grpc/proto-loader": "^0.7.4",
     "abstract-level": "^1.0.3",
     "grpc": "^1.24.11",
     "level": "^8.0.0",

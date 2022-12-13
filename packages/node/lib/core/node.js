@@ -85,23 +85,7 @@ class ZeroNode {
                 resolve(undefined);
             });
             yield timeout(10000);
-        });
-    }
-    startNode() {
-        return __awaiter(this, void 0, void 0, function* () {
-            logger_1.logger.info("\n starting mempool \n");
-            yield this.pool.start(); // starts mempool
-        });
-    }
-    stopNode() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.pool.close(); // closes mempool
-            yield this.cleanup();
-        });
-    }
-    cleanup() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.peer.stop();
+            yield this.rpc.start();
         });
     }
     ping(time) {

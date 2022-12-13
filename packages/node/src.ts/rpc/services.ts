@@ -1,8 +1,9 @@
 "use strict";
-// Send Transaction Message Interface
+
+function validateTransaction(transaction) { return true };
 
 function handleTransactionMessage(call, callback) {	
-	callback(null, ackTranscationMessage(call));
+	callback(null, ackTransactionMessage(call));
 }
 
 function ackTransactionMessage(message) {
@@ -21,5 +22,5 @@ interface ITransactionService {
 }
 
 export const TransactionService: ITransactionService = {
-	handleTransaction: handleTransactionMessage;
-}
+	handleTransaction: handleTransactionMessage
+};

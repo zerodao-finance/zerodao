@@ -74,7 +74,6 @@ export class ZeroNode {
     });
   }
 
- 
   /**
    *
    * initializes mempool and starts peer pubsub
@@ -97,21 +96,10 @@ export class ZeroNode {
     });
 
     await timeout(10000);
+    await this.rpc.start();
   }
 
-  async startNode() {
-    logger.info("\n starting mempool \n");
-    await this.pool.start(); // starts mempool
-  }
-
-  async stopNode() {
-    await this.pool.close(); // closes mempool
-    await this.cleanup();
-  }
-
-  async cleanup() {
-    await this.peer.stop();
-  }
+  
 
   async ping(time) {
     await (this.peer.pubsub.subscribe as any)(
