@@ -39,7 +39,7 @@ message TransactionReply {
 */
 message Mempool {
   repeated bytes tx = 0;
-  required hash string = 1;
+  required bytes hash = 1;
 }
 
 /*
@@ -71,6 +71,6 @@ message BlockHeader {
 }
 
 
-service RouteGuide {
-  rpc broadcastTX ( Transaction ) returns (TransactionReply) {};
+service RpcService{
+  rpc handleTransaction( Transaction ) returns (TransactionReply) {};
 }

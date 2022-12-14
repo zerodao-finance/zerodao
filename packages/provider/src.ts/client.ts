@@ -1,40 +1,35 @@
-"use strict";
-const grpc = require("@grpc/grpc-js"); 
-const protoLoader = require("@grpc/proto-loader");
+import grpc from "@grpc/grpc-js"; 
+import protoLoader from "@grpc/proto-loader"
+import { Transaction } from "../proto/Transaction";
+import { TransactionReply } from "../proto/TransactionReply"
 
-interface TransactionRequest {
-	name: string;
-	data: string;
-}
 
-interface TransactionResponse {
-	status: number;
-}
 
 export class Client {
 	service: any = undefined;
-	static PATH: string = __dirname + "/../proto/BufferDeclr.proto";
-	static PORT: string = "50052";
+	static PROTO_PATH: string = __dirname + '/../proto/ZeroProtocol.proto';
+	static PORT: string = "50051";
+	static SERVER: string = '0.0.0.0';
+	constructor({ port, server }: any = {}) {
+		const packageDefinition = protoLoader.loadSync(Client.PROTO_PATH, {
+			keepCase: true,
+			longs: String,
+			enums: String,
+			defaults: true,
+			oneofs: true
+		  });
 
-	constructor({ port }: any = {}) {
-		let pkg = grpc.loadPackageDefinition(protoLoader.loadSync(
-			Client.PATH,
-			{
-				keepCase: true,
-				longs: String,
-				enums: String,
-				defaults: true,
-				oneofs: true
-			}
-		));
-		this.service = new (pkg as any).TransactionService(`0.0.0.0:${port || Client.PORT}`, grpc.credentials.createInsecure());
+		let pkg = grpc.loadPackageDefinition(packageDefinition);
+
+		this.service = new (pkg as any).RpcService(`${server || Client.SERVER}:${port || Client.PORT}`, grpc.credentials.createInsecure());
 	}
 	
-	async getTransaction(data: TransactionRequest) {
-		await this.service.getTransaction(data, (err: Error | string, response: any) => { 
+	async handleTransaction(data: Transaction): Promise<TransactionReply> {
+		const reply = this.service.handleTransaction(data, (err: Error | string, response: any) => { 
 			if (err) throw err;
-			console.log(response);
-		})
+			return response;
+		});
+		return reply;
 	}
 
 }
