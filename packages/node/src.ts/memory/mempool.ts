@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
+import { Minisketch } from "libminisketch-wasm";
 import { Transaction } from "../core/types";
 
 export interface MempoolConfig {
@@ -11,6 +12,7 @@ export interface MempoolConfig {
   _gossipInterval: any;
   peer: any;
   protocol: any;
+  sketch: Minisketch;
 
   POOL_GOSSIP_TIME: number;
   MAX_POOL_SIZE: number;
@@ -29,7 +31,7 @@ export class Mempool {
   private _gossipInterval: any;
   private peer: ZeroP2P;
   private protocol: any;
-
+  private sketch: Minisketch;
   private POOL_GOSSIP_TOPIC: string = "zerodao:xnode:gossip:v1";
   private POOL_GOSSIP_TIME: number = 5;
   private MEMORY_CLEANUP_TIME: number = 10;
@@ -37,9 +39,9 @@ export class Mempool {
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
   private POOL_STORAGE_TIME_LIMIT: number;
 
-
-  static init(config: Partial<MempoolConfig>) {
-    return new Mempool(config);
+  static async init(config: Partial<MempoolConfig>) {
+    const sketch = await Minisketch.create({ fieldSize: 64, capacity: 20 });
+    return new Mempool({ ...config, sketch });
   }
 
   constructor(
