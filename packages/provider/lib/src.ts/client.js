@@ -8,25 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
-const grpc_js_1 = __importDefault(require("@grpc/grpc-js"));
-const proto_loader_1 = __importDefault(require("@grpc/proto-loader"));
+const grpc = require("@grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader");
 class Client {
-    constructor({ port, server } = {}) {
+    constructor(url) {
         this.service = undefined;
-        const packageDefinition = proto_loader_1.default.loadSync(Client.PROTO_PATH, {
+        const packageDefinition = protoLoader.loadSync(Client.PROTO_PATH, {
             keepCase: true,
             longs: String,
             enums: String,
             defaults: true,
             oneofs: true
         });
-        let pkg = grpc_js_1.default.loadPackageDefinition(packageDefinition);
-        this.service = new pkg.RpcService(`${server || Client.SERVER}:${port || Client.PORT}`, grpc_js_1.default.credentials.createInsecure());
+        let pkg = grpc.loadPackageDefinition(packageDefinition);
+        this.service = new pkg.RpcService(`${url || Client.URL}`, grpc.credentials.createInsecure());
     }
     handleTransaction(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,12 +32,12 @@ class Client {
                     throw err;
                 return response;
             });
-            return reply;
+            const message = reply.call.call.pendingMessage.message;
+            return message;
         });
     }
 }
 exports.Client = Client;
-Client.PROTO_PATH = __dirname + '/../proto/ZeroProtocol.proto';
-Client.PORT = "50051";
-Client.SERVER = '0.0.0.0';
+Client.PROTO_PATH = __dirname + '/../../proto/ZeroProtocol.proto';
+Client.URL = '0.0.0.0:50051';
 //# sourceMappingURL=client.js.map

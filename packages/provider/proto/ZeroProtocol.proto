@@ -1,3 +1,5 @@
+syntax = "proto3";
+
 message Transaction {
   enum Type {
     TRANSFER = 0; // Transfer asset from one chain to another
