@@ -24,12 +24,15 @@ export class Client {
 	}
 
 	async handleTransaction(data: Transaction): Promise<TransactionReply> {
-		const reply = this.service.handleTransaction(data, (err: Error | string, response: any) => {
-			if (err) throw err;
-			return response;
-		});
-		const message = reply.call.call.pendingMessage.message;
-		return message;
+		return new Promise((resolve, reject) => {
+			this.service.handleTransaction(data, (err: Error | string, response: TransactionReply) => {
+			  if (err) {
+				reject(err)
+			  } else {
+				resolve(response)
+			  }
+			})
+		  })
 	}
 
 }

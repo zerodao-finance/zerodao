@@ -9,7 +9,7 @@ export class Provider {
     }
 
     async call(data: Transaction) {
-        const response: any = await this.client.handleTransaction(data);
+        const response: TransactionReply = await this.client.handleTransaction(data);
         return response;
     }
     

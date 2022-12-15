@@ -27,13 +27,16 @@ class Client {
     }
     handleTransaction(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const reply = this.service.handleTransaction(data, (err, response) => {
-                if (err)
-                    throw err;
-                return response;
+            return new Promise((resolve, reject) => {
+                this.service.handleTransaction(data, (err, response) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(response);
+                    }
+                });
             });
-            const message = reply.call.call.pendingMessage.message;
-            return message;
         });
     }
 }
