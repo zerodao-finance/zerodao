@@ -1,21 +1,21 @@
-"use strict";
-
+import grpc from 'grpc'
+import { Transaction, TransactionReply } from '../../../provider/proto';
 function validateTransaction(transaction) { return true };
 
-function handleTransactionMessage(call, callback) {	
+function handleTransactionMessage(call: grpc.ServerUnaryCall<Transaction>, callback: grpc.sendUnaryData<TransactionReply>) {
 	callback(null, ackTransactionMessage(call));
 }
 
-function ackTransactionMessage(message) {
+function ackTransactionMessage(message): { status: 0 | 1, errorMsg?: any } {
 	try {
-		validateTransaction(message); 
-		return { status: 0 }; 
+		validateTransaction(message);
+		return { status: 0 };
 	} catch (error) {
 		return { status: 1, errorMsg: new TextEncoder().encode(error.message) };
 	}
 }
 
-export type UnaryCallHandler = (call: any, callback: any) => void;
+type UnaryCallHandler = (call: grpc.ServerUnaryCall<Transaction>, callback: grpc.sendUnaryData<TransactionReply>) => void;
 
 interface ITransactionService {
 	handleTransaction: UnaryCallHandler;
