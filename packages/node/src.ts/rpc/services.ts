@@ -8,14 +8,14 @@ function handleTransactionMessage(call, callback) {
 
 function ackTransactionMessage(message) {
 	try {
-		validateTransaction(message); //TODO: implement validateTransaction()
+		validateTransaction(message); 
 		return { status: 0 }; 
 	} catch (error) {
 		return { status: 1, errorMsg: new TextEncoder().encode(error.message) };
 	}
 }
 
-type UnaryCallHandler = (call: any, callback: any) => void;
+export type UnaryCallHandler = (call: any, callback: any) => void;
 
 interface ITransactionService {
 	handleTransaction: UnaryCallHandler;

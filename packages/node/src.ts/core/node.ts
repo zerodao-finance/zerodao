@@ -18,11 +18,11 @@ const timeoutWithCallback = async (time, callback) => {
 
 export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
-  private pool: Mempool;
   private peer: ZeroP2P;
   private signer: ethers.Signer;
   private propser: typeof Proposer;
   private protocol: any;
+  private pool: Mempool;
   private rpc: RPCServer;
 
   static PRESETS = {
@@ -62,15 +62,11 @@ export class ZeroNode {
   }
 
   constructor({ consensus, signer, peer }) {
-    const pool = Mempool.init({ peer: this.peer });
-    const rpc = RPCServer.init()
     Object.assign(this, {
       consensus,
       signer,
       peer,
-      rpc,
       protocol: protocol,
-      pool,
     });
   }
 
@@ -85,20 +81,19 @@ export class ZeroNode {
     }
   ) {
     this.pool = Mempool.init(poolConfig);
-    logger.info("\n networking stack starting \n");
-    await this.peer.start();
-    await new Promise((resolve) => {
-      this.peer.start();
-      this.peer.on("peer:discovery", async (peerInfo) => {
-        logger.info(`found peer \n ${peerInfo}`);
-      });
-      resolve(undefined);
-    });
-
-    await timeout(10000);
+    this.rpc = RPCServer.init();
     await this.rpc.start();
   }
 
+  async __rpc() {
+    //start rpc server listening
+  }
+
+  async __handle_tx() {
+    //handle rpc server messages
+  }
+
+  // implement mempool interface
   
 
   async ping(time) {
