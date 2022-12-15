@@ -1,7 +1,7 @@
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader")
-import { Transaction } from "../proto/Transaction";
-import { TransactionReply } from "../proto/TransactionReply"
+import { Transaction } from "../../protobuf/generated/Transaction";
+import { TransactionReply } from "../../protobuf/generated/TransactionReply"
 
 
 

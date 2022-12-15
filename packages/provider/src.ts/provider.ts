@@ -1,6 +1,6 @@
 import { Client } from './client'
-import { Transaction } from '../proto/Transaction';
-import { TransactionReply } from '../proto/TransactionReply';
+import { Transaction } from '../../protobuf/generated/Transaction';
+import { TransactionReply } from '../../protobuf/generated/TransactionReply';
 
 export class Provider {
     client: Client;
