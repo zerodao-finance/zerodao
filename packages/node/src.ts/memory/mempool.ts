@@ -107,13 +107,14 @@ export class Mempool {
     return Array.from(this.state.keys()).length;
   }
 
-  async addTx(tx: Transaction) {
+  async addTransaction(tx: Transaction) {
     const timestamp = Date.now();
     let tBuf = this.protocol.Transaction.encode(tx).finish();
     const hash: string = ethers.utils.keccak256(tBuf);
     try {
       await this.validate(tBuf);
       this.state.set(hash, tBuf);
+      this.sketch.addUint(hash);
     } catch (error) {
       this.handled.set(hash, {
         tx: tBuf,
@@ -126,6 +127,8 @@ export class Mempool {
 
   async cleanup() {
     //TODO:
+    this.sketch.destroy();
+    this.sketch = await Minisketch.create({ fieldSize: 64, capacity: 20 });
   }
 
   async ackGossip(message: Buffer) {
@@ -143,6 +146,6 @@ export class Mempool {
   // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
   // the message from that peer can be safely ignored without losing information.
   async _hashMempool() {
-    //TODO: implement
+    return this.sketch.serialize();
   }
 }

@@ -80,7 +80,7 @@ export class ZeroNode {
       peer: this.peer,
     }
   ) {
-    this.pool = Mempool.init(poolConfig);
+    this.pool = await Mempool.init(poolConfig);
     this.rpc = RPCServer.init();
     await this.rpc.start();
   }
@@ -94,7 +94,6 @@ export class ZeroNode {
   }
 
   // implement mempool interface
-  
 
   async ping(time) {
     await (this.peer.pubsub.subscribe as any)(
