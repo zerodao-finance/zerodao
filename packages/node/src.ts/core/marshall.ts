@@ -66,8 +66,10 @@ export class Marshaller {
     })
   }
 
+  async broadcast() {}
+
   //gossip current state of mempool to peers
-  async _gossipMempool() {}
+  async _broadcastMempool() {}
 
   // cleanup stale transactions in mempool
   async _cleanupMempool() {}
