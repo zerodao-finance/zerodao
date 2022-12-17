@@ -285,9 +285,7 @@
   "args": [
     "0x3A627ab4F61985f9F353a3F4c2C91dd8c18a9B04",
     "0x53f38bEA30fE6919e0475Fe57C2629f3D3754d1E",
-    [
-      "0xec5d65739c722a46cd79951e069753c2fc879b27"
-    ]
+    ["0xec5d65739c722a46cd79951e069753c2fc879b27"]
   ],
   "numDeployments": 1,
   "solcInputHash": "ae25fbd9e23e0c6c5567c02f7a89a071",

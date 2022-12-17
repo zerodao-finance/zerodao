@@ -1,18 +1,12 @@
-
 export class Transaction {
-    provider: Provider
+  provider: Provider;
 
-    constructor() {
-        this.provider = new Provider();
-    }
-    async runBlock() {
+  constructor() {
+    this.provider = new Provider();
+  }
+  async runBlock() {}
 
-    }
+  async runTransaction() {}
 
-    async runTransaction() {
-
-    }
-
-    async validateTransaction(tx) {
-    }
+  async validateTransaction(tx) {}
 }

@@ -6,23 +6,23 @@ import { Interface } from "@ethersproject/abi";
 import { EthArgs } from "@renproject/interfaces";
 import type { Transaction } from "./types";
 
-export class TransferRequestV2 extends TransferRequest {  
+export class TransferRequestV2 extends TransferRequest {
   static get PROTOCOL() {
     return "/zero/2.1.0/dispatch";
-  };
+  }
   static get FIELDS() {
     return [
-      'contractAddress',
-      'borrower',
-      'asset',
-      'borrowAmount',
-      'module',
-      'loanId',
-      'nonce',
-      'data'
+      "contractAddress",
+      "borrower",
+      "asset",
+      "borrowAmount",
+      "module",
+      "loanId",
+      "nonce",
+      "data",
     ];
   }
-  
+
   buildLoanTransaction(): Transaction {
     return {
       chainId: this.getChainId(),

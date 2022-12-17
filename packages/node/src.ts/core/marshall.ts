@@ -23,8 +23,13 @@ export class Marshaller {
 
     const peer = await ZeroP2P.fromSeed({
       signer,
+<<<<<<< HEAD
       seed: Buffer.from(seed.substring(2), "hex"),
       multiaddr: multiaddr,
+=======
+      seed: Bufer.from(seed.substring(2), "hex"),
+      multiaddr: mulltiaddr,
+>>>>>>> 9f233992 (create trie)
     } as any);
 
     await new Promise((resolve) => {
@@ -35,7 +40,11 @@ export class Marshaller {
       resolve(console.timeLog("marshall:start:"));
     });
 
+<<<<<<< HEAD
     // await timeout(5000);
+=======
+    await timeout(5000);
+>>>>>>> 9f233992 (create trie)
     logger.info(
       `marshall process startup in ${console.timeEnd("marshall:start")}`
     );

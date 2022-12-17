@@ -39,9 +39,14 @@ export class Mempool {
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
   private POOL_STORAGE_TIME_LIMIT: number;
 
+<<<<<<< HEAD
   static async init(config: Partial<MempoolConfig>) {
     const sketch = await Minisketch.create({ fieldSize: 64, capacity: 20 });
     return new Mempool({ ...config, sketch });
+=======
+  static init(config: Partial<MempoolConfig>) {
+    return new Mempool(config);
+>>>>>>> 9f233992 (create trie)
   }
 
   constructor(

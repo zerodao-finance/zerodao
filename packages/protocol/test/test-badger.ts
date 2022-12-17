@@ -30,7 +30,7 @@ UnderwriterTransferRequest.prototype.waitForSignature = async function () {
 const getRepl = async (o) => {
   const r = require("repl").start("> ");
   Object.assign(r.context, o || {});
-  await new Promise(() => { });
+  await new Promise(() => {});
 };
 
 const getContractName = () => {
@@ -101,29 +101,29 @@ const toEIP712USDC = (asset) =>
       domain:
         process.env.CHAIN == "MATIC"
           ? {
-            name: "USD Coin (PoS)",
-            version: "1",
-            verifyingContract: asset || ethers.constants.AddressZero,
-            salt: ethers.utils.hexZeroPad(
-              ethers.BigNumber.from(
-                String(this.chainId) || "1"
-              ).toHexString(),
-              32
-            ),
-          }
+              name: "USD Coin (PoS)",
+              version: "1",
+              verifyingContract: asset || ethers.constants.AddressZero,
+              salt: ethers.utils.hexZeroPad(
+                ethers.BigNumber.from(
+                  String(this.chainId) || "1"
+                ).toHexString(),
+                32
+              ),
+            }
           : {
-            name:
-              process.env.CHAIN == "ARBITRUM"
-                ? "USD Coin (Arb1)"
-                : "USD Coin",
-            version:
-              process.env.CHAIN == "ETHEREUM" ||
+              name:
+                process.env.CHAIN == "ARBITRUM"
+                  ? "USD Coin (Arb1)"
+                  : "USD Coin",
+              version:
+                process.env.CHAIN == "ETHEREUM" ||
                 process.env.CHAIN == "AVALANCHE"
-                ? "2"
-                : "1",
-            chainId: String(this.chainId) || "1",
-            verifyingContract: asset || ethers.constants.AddressZero,
-          },
+                  ? "2"
+                  : "1",
+              chainId: String(this.chainId) || "1",
+              verifyingContract: asset || ethers.constants.AddressZero,
+            },
       message: {
         owner: this.owner,
         spender: contractAddress,
@@ -780,4 +780,3 @@ describe("BadgerBridgeZeroController", () => {
     await (await getController()).earn();
   });
 });
-

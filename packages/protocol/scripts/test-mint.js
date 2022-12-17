@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const fixtures = require('../lib/fixtures');
-const hre = require('hardhat');
+const fixtures = require("../lib/fixtures");
+const hre = require("hardhat");
 
 const testMint = async (signer, amount) => {
   const contract = new ethers.Contract(
@@ -21,6 +21,6 @@ const testMint = async (signer, amount) => {
 };
 
 (async () => {
-  const [ signer ] = await hre.ethers.getSigners();
-  await testMint(signer, '0.5');
+  const [signer] = await hre.ethers.getSigners();
+  await testMint(signer, "0.5");
 })().catch(console.error);

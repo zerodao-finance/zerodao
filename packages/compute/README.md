@@ -6,17 +6,17 @@ it is responsible for computation utilities. These are the most recent update de
 
 for more information, see the documentation
 
-## Importing 
+## Importing
 
 most users will prefer to use the umbrella package, but for those with more specific needs, individual components can be imported.
 
-``` Javascript
-    const = 
-    { 
+```Javascript
+    const =
+    {
         computeRandomValue,
         getNonce,
         getPNonce,
-        btcAddressToHex 
+        btcAddressToHex
     } = require('@zerodao/compute')
 ```
 

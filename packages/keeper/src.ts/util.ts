@@ -90,8 +90,10 @@ export function handleRequestsV21(p2p) {
 }
 
 export function serializeToJSON(request) {
-  return JSON.stringify(request.constructor.FIELDS.reduce((r, v) => {
-    r[v] = request[v];
-    return r;
-  }, {}));
+  return JSON.stringify(
+    request.constructor.FIELDS.reduce((r, v) => {
+      r[v] = request[v];
+      return r;
+    }, {})
+  );
 }
