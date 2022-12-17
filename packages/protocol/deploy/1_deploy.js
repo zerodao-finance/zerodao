@@ -92,4 +92,3 @@ module.exports = async ({ getNamedAccounts }) => {
   console.log("waiting on proxy deploy to mine ...");
   await zeroController.deployTransaction.wait();
 };
-

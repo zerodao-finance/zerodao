@@ -7,6 +7,6 @@ export function defer() {
   return {
     resolve,
     reject,
-    promise
+    promise,
   };
-};
+}

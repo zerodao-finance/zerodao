@@ -1,3 +1,4 @@
 module.exports = {
-  ZeroUnderwriterLockBytecodeLib: require('../deployments/matic/ZeroUnderwriterLockBytecodeLib').address
+  ZeroUnderwriterLockBytecodeLib:
+    require("../deployments/matic/ZeroUnderwriterLockBytecodeLib").address,
 };

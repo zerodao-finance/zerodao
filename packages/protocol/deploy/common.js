@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const path = require('path');
-const hre = require('hardhat');
+const path = require("path");
+const hre = require("hardhat");
 const { ethers, upgrades, deployments } = hre;
 
 exports = module.exports = function () {};
@@ -16,10 +16,10 @@ exports.isSelectedDeployment = (filename) =>
     : false;
 
 exports.networkNameFromEnv = () => {
-  if (!process.env.CHAIN) return 'localhost';
+  if (!process.env.CHAIN) return "localhost";
   switch (process.env.CHAIN) {
-    case 'ETHEREUM':
-      return 'mainnet';
+    case "ETHEREUM":
+      return "mainnet";
     default:
       return process.env.CHAIN.toLowerCase();
   }
@@ -28,7 +28,7 @@ exports.networkNameFromEnv = () => {
 exports.getSigner = async (address) => {
   try {
     await hre.network.provider.request({
-      method: 'hardhat_impersonateAccount',
+      method: "hardhat_impersonateAccount",
       params: [address],
     });
   } catch (e) {}
@@ -36,7 +36,7 @@ exports.getSigner = async (address) => {
 };
 
 exports.fundWithGas = async (address) => {
-  if (!process.env.FORKING || hre.network.name !== 'hardhat') return;
+  if (!process.env.FORKING || hre.network.name !== "hardhat") return;
   const [signer] = await hre.ethers.getSigners();
   const balance = Number(
     hre.ethers.utils.formatEther(await signer.provider.getBalance(address))
@@ -44,24 +44,24 @@ exports.fundWithGas = async (address) => {
   if (balance < 0.1) {
     await signer.sendTransaction({
       to: address,
-      value: ethers.utils.parseEther('0.1'),
+      value: ethers.utils.parseEther("0.1"),
     });
   }
 };
 
 exports.deployFixedAddress = async (...args) => {
-  console.log('Deploying ' + args[0]);
+  console.log("Deploying " + args[0]);
   args[1].waitConfirmations = 1;
   const [signer] = await ethers.getSigners();
   //  hijackSigner(signer);
   const result = await deployments.deploy(...args);
   //  restoreSigner(signer);
-  console.log('Deployed to ' + result.address);
+  console.log("Deployed to " + result.address);
   return result;
 };
 
 exports.deployProxyFixedAddress = async (...args) => {
-  console.log('Deploying proxy');
+  console.log("Deploying proxy");
   //const [signer] = await ethers.getSigners();
   //hijackSigner(signer);
   const result = await upgrades.deployProxy(...args);
@@ -72,8 +72,8 @@ exports.deployProxyFixedAddress = async (...args) => {
 exports.getContract = async (name) => {
   const deployment = require(path.join(
     __dirname,
-    '..',
-    'deployments',
+    "..",
+    "deployments",
     exports.networkNameFromEnv(),
     name
   ));

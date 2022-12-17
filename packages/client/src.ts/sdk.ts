@@ -2,7 +2,6 @@
 // import Logger from "@zerodao/logger";
 // const { TransferRequest, BurnRequest } = require("@zerodao/sdk")
 
-
 // export class SDKTransfer extends EventEmitter {
 
 //     log: Logger;
@@ -33,10 +32,6 @@
 //         const transferRequest = await this.transferRequest
 //     }
 
-
-
-
-
 // }
 
-export { }
+export {};

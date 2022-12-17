@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const { createGetGasPrice } = require('ethers-polygongastracker');
+const { createGetGasPrice } = require("ethers-polygongastracker");
 
 const getGasPrice = createGetGasPrice();
 
-const hre = require('hardhat');
+const hre = require("hardhat");
 const { BaseProvider } = hre.ethers.providers;
 
 BaseProvider.prototype.getGasPrice = async () => {
@@ -13,8 +13,16 @@ BaseProvider.prototype.getGasPrice = async () => {
 };
 
 const main = async () => {
-  const controller = await hre.ethers.getContract('DelegateUnderwriter');
+  const controller = await hre.ethers.getContract("DelegateUnderwriter");
   console.log(await controller.owner());
 };
 
-main().then(() => { console.log('done'); process.exit(0); }).catch((err) => { console.error(err); process.exit(1); });
+main()
+  .then(() => {
+    console.log("done");
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

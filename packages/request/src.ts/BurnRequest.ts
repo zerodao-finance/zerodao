@@ -14,12 +14,17 @@ import { Base58 } from "@ethersproject/basex";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
-import { FIXTURES, toFixtureName, getRenAssetName, isZcashAddress } from "@zerodao/common";
+import {
+  FIXTURES,
+  toFixtureName,
+  getRenAssetName,
+  isZcashAddress,
+} from "@zerodao/common";
 import type { ZeroP2P } from "@zerodao/p2p";
 import { getVanillaProvider } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 const coder = new AbiCoder();
 
@@ -68,11 +73,12 @@ function getDomainStructure(request) {
 
 function isAsset(assetName, address) {
   return Boolean(
-    Object.keys(FIXTURES).find((network) =>
-      getAddress(
-        FIXTURES[network][assetName] ||
-          AddressZero.substr(0, 41) + "1"
-      ) === getAddress(address))
+    Object.keys(FIXTURES).find(
+      (network) =>
+        getAddress(
+          FIXTURES[network][assetName] || AddressZero.substr(0, 41) + "1"
+        ) === getAddress(address)
+    )
   );
 }
 
@@ -216,37 +222,37 @@ export class BurnRequest extends Request {
 
   static get PROTOCOL() {
     return "/zero/2.1.0/dispatch";
-  };
-  static get FIELDS(): string [] {
+  }
+  static get FIELDS(): string[] {
     return [
-      'contractAddress',
-      'owner',
-      'asset',
-      'amount',
-      'deadline',
-      'data',
-      'destination',
-      'signature'
-    ]
-  };
+      "contractAddress",
+      "owner",
+      "asset",
+      "amount",
+      "deadline",
+      "data",
+      "destination",
+      "signature",
+    ];
+  }
   static minOutFromData(data) {
-    const [ result ] = coder.decode(["uint256"], data);
+    const [result] = coder.decode(["uint256"], data);
     return result;
-  };
+  }
 
   static dataFromMinOut(minOut) {
-    return coder.encode(['uint256'], [ minOut ]);
-  };
+    return coder.encode(["uint256"], [minOut]);
+  }
 
   constructor(o: {
-    asset: string,
-    data: string,
-    owner: string,
-    destination: string,
-    deadline: BigNumberish,
-    amount: BigNumberish,
-    contractAddress: string,
-    signature: string
+    asset: string;
+    data: string;
+    owner: string;
+    destination: string;
+    deadline: BigNumberish;
+    amount: BigNumberish;
+    contractAddress: string;
+    signature: string;
   }) {
     super();
     this.asset = o.asset;
@@ -277,7 +283,7 @@ export class BurnRequest extends Request {
     );
     remoteTxMap.set(this, tx.wait());
     return tx;
-  };
+  }
 
   hash(): string {
     return ethers.utils.keccak256(this.serialize());
@@ -285,7 +291,7 @@ export class BurnRequest extends Request {
 
   isNative() {
     return this.asset === AddressZero;
-  };
+  }
 
   toEIP712() {
     return {
@@ -297,7 +303,7 @@ export class BurnRequest extends Request {
       domain: getDomain(this),
       message: getMessage(this),
     };
-  };
+  }
 
   getExpiry() {
     return keccak256(
@@ -311,7 +317,7 @@ export class BurnRequest extends Request {
         this.destination,
       ]
     );
-  };
+  }
 
   async waitForHostTransaction() {
     const receiptPromise = remoteTxMap.get(this);
@@ -364,26 +370,41 @@ export class BurnRequest extends Request {
       };
       renAsset.on(filter, listener);
     });
-  };
+  }
 
   supportsERC20Permit() {
-    return !(isUSDC(this.asset) && this.getChainId() === 43114 || isWBTC(this.asset) || this.getChainId() === 1 && getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset));
-  };
+    return !(
+      (isUSDC(this.asset) && this.getChainId() === 43114) ||
+      isWBTC(this.asset) ||
+      (this.getChainId() === 1 &&
+        getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset))
+    );
+  }
 
   async needsApproval() {
-    const contract = new Contract(this.asset, ['function allowance(address, address) view returns (uint256)'], getVanillaProvider(this));
-    return (await contract.allowance(this.owner, this.contractAddress)).lt(this.amount);
-  };
+    const contract = new Contract(
+      this.asset,
+      ["function allowance(address, address) view returns (uint256)"],
+      getVanillaProvider(this)
+    );
+    return (await contract.allowance(this.owner, this.contractAddress)).lt(
+      this.amount
+    );
+  }
 
   async approve(signer, amount?: BigNumberish) {
     if (!amount) amount = MaxUint256;
-    const contract = new Contract(this.asset, ['function approve(address, uint256) returns (bool)'], signer);
+    const contract = new Contract(
+      this.asset,
+      ["function approve(address, uint256) returns (bool)"],
+      signer
+    );
     return await contract.approve(this.contractAddress, amount);
-  };
+  }
 
   getHandlerForDestinationChain() {
     return isZcashAddress(this.destination) ? ZECHandler : BTCHandler;
-  };
+  }
 
   getNormalizedDestinationAddress() {
     if (isZcashAddress(this.destination))
@@ -395,7 +416,7 @@ export class BurnRequest extends Request {
     if (arrayed.length > 40) address = Buffer.from(arrayed).toString("utf8");
     else address = Base58.encode(this.destination);
     return address;
-  };
+  }
 
   async waitForRemoteTransaction() {
     const { length } = await this.getHandlerForDestinationChain().getUTXOs(
@@ -420,7 +441,7 @@ export class BurnRequest extends Request {
       }
       await new Promise((resolve) => setTimeout(resolve, 3000));
     }
-  };
+  }
 
   async sign(signer) {
     if (this.isNative())
@@ -442,7 +463,7 @@ export class BurnRequest extends Request {
         [await signer.getAddress(), this.toEIP712()]
       ));
     }
-  };
+  }
 
   publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
     if (!this.isNative()) return super.publish(peer);
@@ -450,7 +471,7 @@ export class BurnRequest extends Request {
       const result = new PublishEventEmitter();
       setTimeout(() => result.emit("finish"), 0);
     }
-  };
+  }
 
   async fetchData() {
     if (getAddress(FIXTURES.ETHEREUM.USDT) === getAddress(this.asset)) {
@@ -498,7 +519,7 @@ export class BurnRequest extends Request {
       this.tokenName = await token.name();
     }
     return this;
-  };
+  }
 
   buildTransaction() {
     return {
@@ -516,5 +537,5 @@ export class BurnRequest extends Request {
       ]),
       to: this.contractAddress,
     };
-  };
+  }
 }

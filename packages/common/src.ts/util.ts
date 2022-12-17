@@ -23,4 +23,3 @@ export function toFixtureName(chainId) {
       return "OPTIMISM";
   }
 }
-

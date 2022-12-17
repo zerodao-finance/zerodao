@@ -6,7 +6,10 @@
  * format it down to 14 units. 14 units bc 6 from USDC and 8 from
  * BTC that get added together
  */
-export declare const formatUSDCPricedBTC: (btc_amount: any, btc_usd: any) => string;
+export declare const formatUSDCPricedBTC: (
+  btc_amount: any,
+  btc_usd: any
+) => string;
 /**
  * @param  {string} eth_amount
  * @param  {BigNumber} eth_usd
@@ -15,5 +18,8 @@ export declare const formatUSDCPricedBTC: (btc_amount: any, btc_usd: any) => str
  * format it down to 24 units. 24 units bc 6 from USDC and 18 from
  * ETH that get added together
  */
-export declare const formatUSDCPricedETH: (eth_amount: any, eth_usd: any) => string;
+export declare const formatUSDCPricedETH: (
+  eth_amount: any,
+  eth_usd: any
+) => string;
 export declare const formatUSDC: (usdc_amount: any) => string;
