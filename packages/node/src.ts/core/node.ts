@@ -94,7 +94,6 @@ export class ZeroNode {
   }
 
   // implement mempool interface
-  
 
   async ping(time) {
     await (this.peer.pubsub.subscribe as any)(

@@ -15,6 +15,13 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
+message Account {
+  required bytes address = 0;
+  required uint64 balance = 1;
+  required uint64 nonce = 2;
+
+}
+
 message TransactionReply {
   enum STATUS {
     SUCCESS = 0;

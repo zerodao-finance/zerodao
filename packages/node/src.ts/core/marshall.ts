@@ -6,10 +6,10 @@ export class Marshaller {
   private peer: ZeroP2P;
   private memory: Mempool;
 
-  static async init( signer: ethers.Signer, multiaddr?: any ) {
+  static async init(signer: ethers.Signer, multiaddr?: any) {
     console.time("marshall:start");
 
-    // initialize Mempool and rpc server 
+    // initialize Mempool and rpc server
     let rpc = RPCServer.init();
     let memory = Mempool.init();
 
@@ -21,7 +21,7 @@ export class Marshaller {
     const peer = await ZeroP2P.fromSeed({
       signer,
       seed: Bufer.from(seed.substring(2), "hex"),
-      multiaddr: mulltiaddr
+      multiaddr: mulltiaddr,
     } as any);
 
     await new Promise((resolve) => {
@@ -33,37 +33,39 @@ export class Marshaller {
     });
 
     await timeout(5000);
-    logger.info(`marshall process startup in ${console.timeEnd("marshall:start")}`);
+    logger.info(
+      `marshall process startup in ${console.timeEnd("marshall:start")}`
+    );
 
     return new this({
       rpc,
       memory,
-      peer
+      peer,
     });
   }
 
-  constructor({ rpc, memory, peer}) {
+  constructor({ rpc, memory, peer }) {
     Object.assign(this, {
       rpc,
       memory,
-      peer
+      peer,
     });
   }
 
   async startService() {
-    this.rpc.start(); 
+    this.rpc.start();
     logger.info("rpc server started");
     await this._handleInboundTransactions();
   }
-  
+
   async stopService() {}
   async sync() {}
   async proposeBlockFromMemory(height: number) {}
 
   async _handleInboundTransactions() {
     this.rpc.on("zero_sendTransaction", (message) => {
-     this.memory.addTransaction(message); 
-    })
+      this.memory.addTransaction(message);
+    });
   }
 
   //gossip current state of mempool to peers
@@ -71,5 +73,4 @@ export class Marshaller {
 
   // cleanup stale transactions in mempool
   async _cleanupMempool() {}
-
 }

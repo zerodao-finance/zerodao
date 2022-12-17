@@ -1,0 +1,28 @@
+{
+  "name": "@zerodao/protobuf",
+  "version": "1.0.0",
+  "description": "protobuf types",
+  "main": "generated/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zerodao-finance/zerodao.git"
+  },
+  "author": "zerodao",
+  "license": "MIT",
+  "dependencies": {
+    "@grpc/grpc-js": "1.8.0",
+    "@grpc/proto-loader": "0.7.4"
+  },
+  "devDependencies": {
+    "@types/level": "^6.0.1",
+    "@types/lodash": "^4.14.190",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.10",
+    "chai": "^4.3.7",
+    "cross-env": "^7.0.3",
+    "mocha": "^10.1.0",
+    "prettier": "^2.8.0",
+    "sparse-merkle-tree": "^1.0.0",
+    "ts-node": "^10.9.1"
+  }
+}

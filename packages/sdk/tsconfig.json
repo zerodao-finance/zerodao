@@ -10,14 +10,8 @@
     "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "./src.ts/**/*"
-  ],
-  "exclude": [
-    "./lib"
-  ]
+  "include": ["./src.ts/**/*"],
+  "exclude": ["./lib"]
 }

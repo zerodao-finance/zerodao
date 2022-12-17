@@ -10,11 +10,7 @@
     "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "./src.ts/**/*",
-  ]
+  "include": ["./src.ts/**/*"]
 }

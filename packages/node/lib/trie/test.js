@@ -4,21 +4,24 @@ const trie_1 = require("@ethereumjs/trie");
 const level_1 = require("level");
 const level_2 = require("./level");
 const trie = new trie_1.Trie({
-    db: new level_2.LevelDB(new level_1.Level("../../db")),
-    useRootPersistence: true,
+  db: new level_2.LevelDB(new level_1.Level("../../db")),
+  useRootPersistence: true,
 });
 console.log("Empty trie root: ", trie.root()); // The trie root
 async function test() {
-    const key = Buffer.from("testKey");
-    const value = Buffer.from("testValue");
-    await trie.put(key, value); // We update (using "put") the trie with the key-value pair "testKey": "testValue"
-    const valuePre = await trie.get(key); // We retrieve (using "get") the value at key "testKey"
-    console.log("Value (String): ", valuePre?.toString() || "null value for testKey"); // We retrieve our value
-    console.log("Updated trie root:", trie.root()); // The new trie root
-    await trie.del(key);
-    const valuePost = await trie.get(key); // We try to retrieve the value at (deleted) key "testKey"
-    console.log('Value at key "testKey": ', valuePost); // Key not found. Value is therefore null.
-    console.log("Trie root after deletion:", trie.root()); // Our trie root is back to its initial value
+  const key = Buffer.from("testKey");
+  const value = Buffer.from("testValue");
+  await trie.put(key, value); // We update (using "put") the trie with the key-value pair "testKey": "testValue"
+  const valuePre = await trie.get(key); // We retrieve (using "get") the value at key "testKey"
+  console.log(
+    "Value (String): ",
+    valuePre?.toString() || "null value for testKey"
+  ); // We retrieve our value
+  console.log("Updated trie root:", trie.root()); // The new trie root
+  await trie.del(key);
+  const valuePost = await trie.get(key); // We try to retrieve the value at (deleted) key "testKey"
+  console.log('Value at key "testKey": ', valuePost); // Key not found. Value is therefore null.
+  console.log("Trie root after deletion:", trie.root()); // Our trie root is back to its initial value
 }
 test();
 /*

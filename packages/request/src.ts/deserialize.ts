@@ -6,7 +6,8 @@ import { arrayify, BytesLike } from "@ethersproject/bytes";
 
 export function deserialize(data: BytesLike) {
   const decoded = decode(data);
-  if (decoded.length < 8 || decoded.length > 9) throw Error('No request type has ' + decoded.length + ' fields');
+  if (decoded.length < 8 || decoded.length > 9)
+    throw Error("No request type has " + decoded.length + " fields");
   if (decoded.length === 9) return TransferRequest.deserialize(data);
   if (arrayify(decoded[7]).length === 65) return BurnRequest.deserialize(data);
   return TransferRequestV2.deserialize(data);

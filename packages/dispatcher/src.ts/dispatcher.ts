@@ -30,11 +30,9 @@ const fixGetFeeData = (provider) => {
 };
 
 const RPC_ENDPOINTS = {
-  [42161]:
-    ID_CHAIN[42161].rpcUrl,
+  [42161]: ID_CHAIN[42161].rpcUrl,
   [10]: "https://mainnet.optimism.io",
-  [137]:
-    ID_CHAIN[137].rpcUrl,
+  [137]: ID_CHAIN[137].rpcUrl,
   [1]: "https://rpc.flashbots.net",
   [43114]: "https://api.avax.network/ext/bc/C/rpc",
 };
@@ -44,7 +42,7 @@ const NO_FLASHBOTS = {
   [137]: true,
   [42161]: true,
   [10]: true,
-  [1]: true
+  [1]: true,
 };
 
 const ERROR_TIMEOUT = 1000;
@@ -142,12 +140,11 @@ export class Dispatcher {
               data: tx.data,
               to: tx.to,
               from: await signer.getAddress(),
-              gasPrice: parseUnits('10', 9)
-
+              gasPrice: parseUnits("10", 9),
             });
           } catch (e) {
             hadError = e;
-	          this.logger.debug(hadError);
+            this.logger.debug(hadError);
           }
           if (
             (typeof response === "string" && response.match(EIP838_BYTES)) ||
@@ -156,20 +153,28 @@ export class Dispatcher {
             this.logger.info("tx simulation failed");
             // Remove if transfer amount exceeds balance
             // Not certain if exception string or object, so account for both
-            this.logger.info(typeof hadError, hadError)
-	          if(typeof hadError === 'string' && hadError.includes('transfer amount exceeds balance')) {
+            this.logger.info(typeof hadError, hadError);
+            if (
+              typeof hadError === "string" &&
+              hadError.includes("transfer amount exceeds balance")
+            ) {
               await this.redis.lrem("/zero/dispatch", txSerialized, 1);
-            }
-            else if(typeof hadError === 'object'){
-              if(JSON.stringify(hadError).includes('transfer amount exceeds balance')) {
+            } else if (typeof hadError === "object") {
+              if (
+                JSON.stringify(hadError).includes(
+                  "transfer amount exceeds balance"
+                )
+              ) {
                 await this.redis.lrem("/zero/dispatch", txSerialized, 1);
               }
             }
           }
-          const dispatched = await this.getSigner(tx.chainId)
-            .sendTransaction(txObject);
+          const dispatched = await this.getSigner(tx.chainId).sendTransaction(
+            txObject
+          );
 
-	        if (tx.chainId === 1) dispatched.wait = makeFlashbotsWait(dispatched, this.logger); // poll flashbots protect
+          if (tx.chainId === 1)
+            dispatched.wait = makeFlashbotsWait(dispatched, this.logger); // poll flashbots protect
 
           chainIdToPromise[tx.chainId] = dispatched
             .wait()

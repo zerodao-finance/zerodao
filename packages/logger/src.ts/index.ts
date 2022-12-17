@@ -5,7 +5,7 @@ import {
   transports,
   Logger,
   format,
-  addColors
+  addColors,
 } from "winston";
 
 const customLevels = {
@@ -16,7 +16,7 @@ const customLevels = {
   debug: 4,
   verbose: 5,
   silly: 6,
-  custom: 7
+  custom: 7,
 };
 
 const customColors = {
@@ -27,7 +27,7 @@ const customColors = {
   debug: "red",
   verbose: "cyan",
   silly: "magenta",
-  custom: "blue"
+  custom: "blue",
 };
 
 const customFormatter = ({ level, message, label, timestamp }) => {
@@ -42,7 +42,7 @@ const createLogger = (proc?: string) => {
   addColors(customColors);
   const logger = createWinstonLogger({
     defaultMeta: {
-      service: proc || "zerodao"
+      service: proc || "zerodao",
     },
     levels: customLevels,
     format: format.combine(format.errors({ stack: true }), format.json()),
@@ -53,9 +53,9 @@ const createLogger = (proc?: string) => {
           format.label({ label: proc }),
           format.timestamp(),
           format.printf(customFormatter)
-        )
-      })
-    ]
+        ),
+      }),
+    ],
   });
 
   return logger;
