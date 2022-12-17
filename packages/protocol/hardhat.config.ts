@@ -46,9 +46,7 @@ extendEnvironment(async (hre) => {
     (async () => {
       const artifact = require("./artifacts/contracts/test/MockGatewayLogicV1.sol/MockGatewayLogicV1");
       await hre.network.provider.send("hardhat_setCode", [
-        hre.ethers.utils.getAddress(
-          FIXTURES[process.env.CHAIN].btcGateway
-        ),
+        hre.ethers.utils.getAddress(FIXTURES[process.env.CHAIN].btcGateway),
         artifact.deployedBytecode,
       ]);
     })().catch((err) => console.error(err));

@@ -10,6 +10,7 @@ the system at large
 #### Requirements
 
 ###### R1: Determinism
+
 Given a validator set V, and two honest validators p and q, for each height h and each round r the following must hold:
 
 proposer_p(h,r) = proposer_q(h,r)
@@ -17,7 +18,8 @@ proposer_p(h,r) = proposer_q(h,r)
 where proposer_p(h,r) is the proposer returned by the Proposer Selection Procedure at process p, at height h and round r.
 
 ###### R2: Fairness
-Given a validator set with total voting power P and a sequence S of elections. In any sub-sequence of S with length C*P, a validator v must be elected as proposer P/VP(v) times, i.e. with frequency:
+
+Given a validator set with total voting power P and a sequence S of elections. In any sub-sequence of S with length C\*P, a validator v must be elected as proposer P/VP(v) times, i.e. with frequency:
 
 f(v) ~ VP(v) / P
 
@@ -25,8 +27,6 @@ where C is a tolerance factor for validator set changes with following values:
 
 C == 1 if there are no validator set changes
 C ~ k when there are validator changes
-
-
 
 #### Basic Algorithm
 

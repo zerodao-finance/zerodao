@@ -1,6 +1,6 @@
 import { RPCServer } from "../lib/rpc";
 
 (async () => {
-	let server = RPCServer.init();
-	server.start();
+  let server = RPCServer.init();
+  console.log(server.start());
 })();

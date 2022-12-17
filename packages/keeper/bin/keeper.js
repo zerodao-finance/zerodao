@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-require('../lib').runKeeper();
+require("../lib").runKeeper();

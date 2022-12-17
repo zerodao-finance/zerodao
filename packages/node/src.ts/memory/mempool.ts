@@ -21,7 +21,6 @@ export class Mempool {
   private MAX_POOL_SIZE: number = 10000;
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
 
-
   static init(config: Partial<MempoolConfig>) {
     return new Mempool(config);
   }
