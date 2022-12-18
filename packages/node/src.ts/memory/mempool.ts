@@ -114,7 +114,7 @@ export class Mempool {
     try {
       await this.validate(tBuf);
       this.state.set(hash, tBuf);
-      this.sketch.addUint(hash);
+      this.sketch.addUint(ethers.utils.hexlify(hash).slice(23, 32));
     } catch (error) {
       this.handled.set(hash, {
         tx: tBuf,
