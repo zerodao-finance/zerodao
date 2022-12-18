@@ -35,13 +35,13 @@ export class StateTrie {
   }
 }
 
-type PromisifiedTrie = {
+export type PromisifiedTrie = {
   [K in keyof SecureTrie]: SecureTrie[K] extends (...args: any[]) => void
     ? (...args: Parameters<SecureTrie[K]>) => Promise<ReturnType<SecureTrie[K]>>
     : SecureTrie[K];
 };
 
-const promisifyTrie = (trie: SecureTrie): PromisifiedTrie =>
+export const promisifyTrie = (trie: SecureTrie): PromisifiedTrie =>
   Object.getOwnPropertyNames(Object.getPrototypeOf(trie))
     .filter((v) => typeof trie[v] === "function")
     .reduce((r, fn) => {
