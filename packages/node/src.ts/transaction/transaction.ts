@@ -14,13 +14,17 @@ export class Transaction {
   constructor(trie: PromisifiedTrie) {
     this.Trie = trie;
   }
-  async runBlock(txs) {}
+  async runBlock(txs) {
+    for (const tx of txs) {
+      this.runTransaction(tx)
+    }
+  }
 
   async runTransaction(tx) {
     this.Trie.checkpoint();
     // execute tx on state
     try {
-      // execute
+      this.Trie.put(tx.address, tx.account /* new account */)
       this.Trie.commit()
     }
     catch (error) {
