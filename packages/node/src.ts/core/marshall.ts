@@ -54,8 +54,8 @@ export class Marshaller {
 
   async startService() {
     this.rpc.start();
-    logger.info("rpc server started");
     await this._handleInboundTransactions();
+    logger.info("rpc server started");
   }
 
   async stopService() {}

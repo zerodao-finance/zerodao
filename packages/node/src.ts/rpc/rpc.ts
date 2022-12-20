@@ -2,7 +2,8 @@
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const EventEmitter = require("events");
-import { type UnaryCallHandler } from "./services";
+import { UnaryCallHandler } from "./services";
+import { logger } from "@zerodao/logger";
 
 export class RPCServer extends EventEmitter {
 	self: any = undefined;
@@ -49,9 +50,8 @@ export class RPCServer extends EventEmitter {
 	}
 	
 
-	// handle zero_sendTransaction gRPC request
-	_handleTransaction: UnaryCallHandler (call: any, callback: any) {
-		callback(null, () => {
+	_handleTransaction (call: any, callback: any) {
+		callback(null, (message) => {
 			try {
 				this._emit("zero_sendTransaction", message);
 				return { status: 0 };

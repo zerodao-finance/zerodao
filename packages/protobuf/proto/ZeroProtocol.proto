@@ -40,8 +40,7 @@ message TransactionReply {
    used for encoding and decoding the Mempool for broadcasting over pubsub to other peers
 */
 message Mempool {
-  repeated bytes tx = 0;
-  required bytes hash = 1;
+  map<bytes, Transaction> data = 0;
 }
 
 /*
@@ -72,7 +71,24 @@ message BlockHeader {
   required uint64 fee = 10; // Network block fee
 }
 
+message BalanceQuery {
+  required bytes address = 0;
+}
+
+message BalanceReply {
+  enum STATUS {
+    SUCCESS = 0;
+    ERROR = 1;
+  }
+
+  required STATUS status = 0;
+  optional uint64 balance = 1;
+  optional bytes address = 2;
+  optional bytes errorMsg = 3;
+
+}
 
 service RpcService{
-  rpc handleTransaction( Transaction ) returns (TransactionReply) {};
+  rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
+  rpc zero_getBalance( BalanceQuery ) returns (BalanceResponse) {};
 }

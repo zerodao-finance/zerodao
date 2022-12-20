@@ -4,21 +4,21 @@ import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Transaction } from "../core/types";
+import { EventEmitter } from "events";
 
 export interface MempoolConfig {
   protocol: any;
 
-  MAX_POOL_SIZE: number;
+  MAX_BLOCK_SIZE: number;
   MAX_MSG_BYTES: number; // 1kb max message limit;
 }
 
-export class Mempool {
-  public running: boolean = false;
+export class Mempool extends EventEmitter {
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
 
   private protocol: any;
-  private MAX_POOL_SIZE: number = 10000;
+  private MAX_BLOCK_SIZE: number = 10000;
   private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
 
   static init(config: Partial<MempoolConfig>) {
@@ -29,28 +29,27 @@ export class Mempool {
     config: Partial<MempoolConfig> = {
       protocol: null,
 
-      MAX_POOL_SIZE: 10000,
+      MAX_BLOCK_SIZE: 10000,
       MAX_MSG_BYTES: 1000, // 1kb max message limit;
     }
   ) {
     Object.assign(this, config);
   }
-
-  get queryState() {
-    return this.state.entries();
-  }
-
+  
   get length() {
     return this.state.size;
   }
+  
+  
 
-  async set(tx: any) {
-    let _buff = this.protocol.Transaction.encode(tx).finish();
-    const hash = ethers.utils.keccak256(_buff);
+  async addTransaction(tx: any) {
+    
+    let _buff = this.protocol.Transaction.encode(tx).finish(); //encode transaction
+    const hash = ethers.utils.keccak256(_buff); // generate arbitrary hash string 
+
     try { 
-      this._validate(tx: Buffer);
-      this.state.set(hash, _buff);
-      return { status: 1 };
+      this._validate(_buff);
+      this.state.set(hash, _buff); //set valid transaction to the state set
     } catch (error) {
       this.handled.set(hash, {
         tx: _buff,
@@ -60,32 +59,54 @@ export class Mempool {
       throw error;
     }
   }
-
-  async constructBlock() {
-    this
-    //remove subset of state to block transaction field
-  }
-
-  async mergeState(newState: Buffer) {
-    this._xor(newState);
-  }
-
-  async resolveCommit(commitedBlocks: Buffer) {
-    this._xnot(commitedBlocks);
-  }
-
-  //Resolve set difference between two Mempool states 
   
-  _xor(subset: Map<>) {
+  /**
+   * retrieves max bytes for a proposal block,
+   * order of items is not garunteed due to the nature
+   * of javascript maps forEach iteration order
+   *
+   */
+  reapMaxBytes() {
+    let acc = [];
+    this.state.forEach((tx, hash) => {
+      if (acc.length > this.MAX_BLOCK_SIZE) {
+        acc.append([tx, hash]); 
+        this.state.delete(hash);
+      }
+      return;
+    });
+    return acc;
+  } 
 
+  merge(_message: Buffer) {
+    let message = this.protocol.Mempool.decode(_message);
+    this._xor(message);
+  }
+
+  resolve(_message: Buffer) {
+    let message = this.protocol.Mempool.decode(_message);
+    this._xnot(message);
+  }
+
+  
+  _xor(subset: Map<string, Buffer>) {
+    subset.forEach((tx, hash) => {
+     this.state.set(hash, tx); 
+    });
   }
   
-  _xnot(subset: Map<>) {
-     
+  _xnot(subset: Map<string, Buffer>) {
+    subset.forEach((tx, hash) => {
+      this.state.delete(hash);
+    });
   }
  
   _validate(tx: Buffer) {
-    if (tx.length > this.MAX_MSG_BYTES) {
+    if (this.protocol.Transaction.verify(tx)) {
+      throw new Error("Check transaction params");
+    }
+
+    if (Buffer.byteLength(tx, "hex") > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
 
