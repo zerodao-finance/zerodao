@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import type { Hexable } from "@ethersproject/bytes";
 import { chunk } from "lodash";
 
-class Sketch {
+export class Sketch {
   private _sketch: Minisketch;
   private TxMap: Record<string, Hexable>;
   private capacity: number;
@@ -17,19 +17,25 @@ class Sketch {
   constructor({ sketch, capacity }: { sketch: Minisketch; capacity: number }) {
     this._sketch = sketch;
     this.capacity = capacity;
+    this.TxMap = {};
   }
 
-  storeTx(txHash: Hexable) {
+  storeTx(txHash: Hexable, addToSketch: boolean = true) {
     const sketchValue = ethers.BigNumber.from(
       ethers.utils.arrayify(txHash).slice(24, 32)
     ).toString();
-    this._sketch.addUint(sketchValue);
+    if (addToSketch) this._sketch.addUint(sketchValue);
     this.TxMap[sketchValue] = txHash;
   }
 
-  rebuildFromStore() {
+  rebuild() {
     this._sketch.rebuild();
     Object.keys(this.TxMap).map((d) => this._sketch.addUint(d));
+  }
+
+  clear() {
+    this._sketch.rebuild();
+    this.TxMap = {};
   }
 
   async calculateDifferences(serializedSketch: Buffer) {
@@ -45,13 +51,14 @@ class Sketch {
       chunk(this._sketch.decode() as Uint8Array, 8)
     );
     if (length < 0) {
-      //TODO: rewrite this out a bit
+      return { missing, found, rebuild: true };
     } else {
       res.map((r) => {
         if (this.TxMap[r]) found.push(this.TxMap[r]);
         else missing.push(r);
       });
     }
-    return { missing, found };
+    this._sketch.rebuild();
+    return { missing, found, rebuild: false };
   }
 }
