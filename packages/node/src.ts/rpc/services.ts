@@ -20,7 +20,7 @@ function ackTransactionMessage(message): { status: 0 | 1; errorMsg?: any } {
   }
 }
 
-type UnaryCallHandler = (
+export type UnaryCallHandler = (
   call: grpc.ServerUnaryCall<Transaction>,
   callback: grpc.sendUnaryData<TransactionReply>
 ) => void;

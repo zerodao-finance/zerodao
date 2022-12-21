@@ -30,7 +30,7 @@ describe("Mempool Test", () => {
   (async () => await new Promise((resolve) => setTimeout(resolve, 5000)))();
 
   it("should test add tx to a mempool", async () => {
-    let state = Mempool.init(peer);
+    let state = Mempool.init({ peer });
     console.log(state);
   });
 });

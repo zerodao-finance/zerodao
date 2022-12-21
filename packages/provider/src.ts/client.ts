@@ -5,7 +5,8 @@ import { TransactionReply } from "../../protobuf/generated/TransactionReply";
 
 export class Client {
   service: any = undefined;
-  static PROTO_PATH: string = __dirname + "/../../proto/ZeroProtocol.proto";
+  static PROTO_PATH: string =
+    __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
   static URL: string = "0.0.0.0:50051";
   constructor(url?: string) {
     const packageDefinition = protoLoader.loadSync(Client.PROTO_PATH, {

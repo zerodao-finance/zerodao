@@ -1,5 +1,8 @@
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
+import { Mempool } from "../memory";
+import { ethers } from "ethers";
+import { RPCServer } from "../rpc";
 
 export class Marshaller {
   private rpc: RPCServer;
@@ -11,7 +14,7 @@ export class Marshaller {
 
     // initialize Mempool and rpc server
     let rpc = RPCServer.init();
-    let memory = Mempool.init();
+    let memory = await Mempool.init({});
 
     // start peer process
     const seed = await signer.signMessage(
@@ -20,8 +23,8 @@ export class Marshaller {
 
     const peer = await ZeroP2P.fromSeed({
       signer,
-      seed: Bufer.from(seed.substring(2), "hex"),
-      multiaddr: mulltiaddr,
+      seed: Buffer.from(seed.substring(2), "hex"),
+      multiaddr: multiaddr,
     } as any);
 
     await new Promise((resolve) => {
@@ -32,7 +35,7 @@ export class Marshaller {
       resolve(console.timeLog("marshall:start:"));
     });
 
-    await timeout(5000);
+    // await timeout(5000);
     logger.info(
       `marshall process startup in ${console.timeEnd("marshall:start")}`
     );
