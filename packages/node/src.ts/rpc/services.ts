@@ -1,6 +1,8 @@
-import grpc from 'grpc'
-import { Transaction, TransactionReply } from '../../../protobuf/generated';
-function validateTransaction(transaction) { return true };
+import grpc from "grpc";
+import { Transaction, TransactionReply } from "../../../protobuf/generated";
+function validateTransaction(transaction) {
+  return true;
+}
 
 function handleTransactionMessage(
   call: grpc.ServerUnaryCall<Transaction>,

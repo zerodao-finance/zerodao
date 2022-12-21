@@ -5,7 +5,7 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Minisketch } from "libminisketch-wasm";
 import { Transaction } from "../core/types";
-
+import { validateTransaction } from "../transaction";
 export interface MempoolConfig {
   _len: number;
   _cleanupInterval: any;
@@ -99,7 +99,7 @@ export class Mempool {
     if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
-
+    await validateTransaction(tx);
     //TODO: pass transaction to vm or equivilant
   }
 

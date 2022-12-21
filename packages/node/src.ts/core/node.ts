@@ -20,7 +20,7 @@ export class ZeroNode {
   public _clientTopic: string = "zeronode.v1.inbound";
   private peer: ZeroP2P;
   private signer: ethers.Signer;
-  private propser: typeof Proposer;
+  private proposer: typeof Proposer;
   private protocol: any;
   private pool: Mempool;
   private rpc: RPCServer;

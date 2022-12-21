@@ -2,14 +2,9 @@ import { SecureTrie } from "merkle-patricia-tree";
 import { Level } from "level";
 import path from "path";
 import yargs from "yargs/yargs";
-
-export type Account = {
-  balance: number;
-  nonce: Uint8Array;
-};
-
+import { Account } from "../../../protobuf";
 export class StateTrie {
-  trie: PromisifiedTrie
+  trie: PromisifiedTrie;
 
   constructor() {
     const db = new Level(
