@@ -5,19 +5,31 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Minisketch } from "libminisketch-wasm";
 import { Transaction } from "../core/types";
-import { validateTransaction } from "../transaction";
+
 export interface MempoolConfig {
+  _len: number;
+  _cleanupInterval: any;
+  _gossipInterval: any;
+  peer: any;
   protocol: any;
   sketch: Minisketch;
 
-  MAX_BLOCK_SIZE: number;
+  POOL_GOSSIP_TIME: number;
+  MAX_POOL_SIZE: number;
   MAX_MSG_BYTES: number; // 1kb max message limit;
+  POOL_STORAGE_TIME_LIMIT: number;
+  POOL_GOSSIP_TOPIC: string;
 }
 
 export class Mempool {
+  public running: boolean = false;
   public state: Map<string, Buffer>;
   public handled: Map<string, any>;
 
+  private _len: number = 0;
+  private _cleanupInterval: any;
+  private _gossipInterval: any;
+  private peer: ZeroP2P;
   private protocol: any;
   private sketch: Minisketch;
   private POOL_GOSSIP_TOPIC: string = "zerodao:xnode:gossip:v1";
@@ -34,94 +46,63 @@ export class Mempool {
 
   constructor(
     config: Partial<MempoolConfig> = {
+      _len: 0,
+      _cleanupInterval: 3600,
+      _gossipInterval: 3600,
+      peer: null,
       protocol: null,
 
-      MAX_BLOCK_SIZE: 10000,
+      POOL_GOSSIP_TIME: 5,
+      MAX_POOL_SIZE: 10000,
       MAX_MSG_BYTES: 1000, // 1kb max message limit;
+      POOL_STORAGE_TIME_LIMIT: 3600,
+      POOL_GOSSIP_TOPIC: "/zeropool/0.0.1",
     }
   ) {
     Object.assign(this, config);
   }
-  
-  get length() {
-    return this.state.size;
-  }
-  
-  
 
-  async addTransaction(tx: any) {
-    
-    let _buff = this.protocol.Transaction.encode(tx).finish(); //encode transaction
-    const hash = ethers.utils.keccak256(_buff); // generate arbitrary hash string 
+  async start() {
+    if (this.running) return;
+    this.running = true;
 
-    try { 
-      this._validate(_buff);
-      this.state.set(hash, _buff); //set valid transaction to the state set
-    } catch (error) {
-      this.handled.set(hash, {
-        tx: _buff,
-        timestamp: Date.now(),
-        error: error as Error
-      });
-      throw error;
-    }
-  }
-  
-  /**
-   * retrieves max bytes for a proposal block,
-   * order of items is not garunteed due to the nature
-   * of javascript maps forEach iteration order
-   *
-   */
-  reapMaxBytes() {
-    let acc = [];
-    this.state.forEach((tx, hash) => {
-      if (acc.length > this.MAX_BLOCK_SIZE) {
-        acc.append([tx, hash]); 
-        this.state.delete(hash);
+    await (this.peer.pubsub.subscribe as any)(
+      this.POOL_GOSSIP_TOPIC,
+      async (msg) => {
+        await this.ackGossip(msg);
       }
-      return;
-    });
-    return acc;
-  } 
+    );
 
-  merge(_message: Buffer) {
-    let message = this.protocol.Mempool.decode(_message);
-    this._xor(message);
+    this._cleanupInterval = setInterval(
+      this.cleanup.bind(this),
+      this.MEMORY_CLEANUP_TIME * 1000 * 60
+    );
+
+    this._gossipInterval = setInterval(
+      this.broadcast.bind(this),
+      this.POOL_GOSSIP_TIME * 1000 * 60
+    );
+
+    return true;
   }
 
-  resolve(_message: Buffer) {
-    let message = this.protocol.Mempool.decode(_message);
-    this._xnot(message);
+  async close() {
+    if (!this.running) return;
+    await this.cleanup();
+    this.peer.pubsub.unsubscribe(this.POOL_GOSSIP_TOPIC);
+    this.running = false;
+    clearInterval(this._gossipInterval);
+    clearInterval(this._cleanupInterval);
   }
 
-  
-  _xor(subset: Map<string, Buffer>) {
-    subset.forEach((tx, hash) => {
-     this.state.set(hash, tx); 
-    });
-  }
-  
-  _xnot(subset: Map<string, Buffer>) {
-    subset.forEach((tx, hash) => {
-      this.state.delete(hash);
-    });
-  }
- 
-  _validate(tx: Buffer) {
-    if (this.protocol.Transaction.verify(tx)) {
-      throw new Error("Check transaction params");
-    }
-
-    if (Buffer.byteLength(tx, "hex") > this.MAX_MSG_BYTES) {
+  async validate(tx: Buffer) {
+    if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
-    await validateTransaction(tx);
+
     //TODO: pass transaction to vm or equivilant
   }
 
-<<<<<<< HEAD
-=======
   get length() {
     return Array.from(this.state.keys()).length;
   }
@@ -167,5 +148,4 @@ export class Mempool {
   async _hashMempool() {
     return this.sketch.serialize();
   }
->>>>>>> aed/node
 }

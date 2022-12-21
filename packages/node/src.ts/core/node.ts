@@ -7,13 +7,13 @@ import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
-
+import { Marshaller } from './marshall'
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
 };
 
 interface NodeConfig {
-  signer: ethers.Signer || ethers.Wallet;
+  signer: ethers.Signer | ethers.Wallet;
   consensus: Consensus;
   marshaller: Marshall;
   multiaddr?: string;
@@ -36,7 +36,7 @@ export class ZeroNode {
   private marshaller;
   private engine;
 
-  async init({ signer, consensus, multiaddr? }: Partial<NodeConfig> = {
+  async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
     signer: ethers.Wallet.createRandom(),
     consensus: new Consensus()
   }) {

@@ -1,12 +1,13 @@
 /// <reference types="node" />
+/// <reference types="long" />
 import type { Long } from "@grpc/proto-loader";
 export declare const _BlockHeader_BlockType: {
     readonly STANDARD: "STANDARD";
     readonly BASE: "BASE";
     readonly REBASE: "REBASE";
 };
-export declare type _BlockHeader_BlockType = "STANDARD" | 0 | "BASE" | 1 | "REBASE" | 2;
-export declare type _BlockHeader_BlockType__Output = typeof _BlockHeader_BlockType[keyof typeof _BlockHeader_BlockType];
+export type _BlockHeader_BlockType = "STANDARD" | 0 | "BASE" | 1 | "REBASE" | 2;
+export type _BlockHeader_BlockType__Output = typeof _BlockHeader_BlockType[keyof typeof _BlockHeader_BlockType];
 export interface BlockHeader {
     type?: _BlockHeader_BlockType;
     parentHash?: Buffer | Uint8Array | string;

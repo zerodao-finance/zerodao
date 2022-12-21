@@ -12,29 +12,32 @@ describe("TransactionEngine", () => {
     engine = new TransactionEngine(trie);
   });
 
-
-const validTx = {
+  const validTx = {
     from: "0x123",
     to: "0x456",
     amount: "10",
     signature: "valid signature",
   };
-  
+
   const invalidTx = {
     from: "0x123",
     to: "0x456",
     amount: "10",
     signature: "invalid signature",
   };
-  
+
   const txs = [validTx, invalidTx];
 
   it("should run a block of transactions", async () => {
     await engine.runBlock(txs);
-    expect((await trie.getAccount(validTx.from) as Account).balance).to.equal("-10");
-    expect((await trie.getAccount(validTx.to) as Account).balance).to.equal("10");
+    expect(((await trie.getAccount(validTx.from)) as Account).balance).to.equal(
+      "-10"
+    );
+    expect(((await trie.getAccount(validTx.to)) as Account).balance).to.equal(
+      "10"
+    );
   });
-    
+
   it("should validate a transaction", async () => {
     const validTBuf = "valid transaction buffer";
     const invalidTBuf = "invalid transaction buffer";
@@ -45,5 +48,4 @@ const validTx = {
       expect(error).to.exist;
     }
   });
-})
-  
+});
