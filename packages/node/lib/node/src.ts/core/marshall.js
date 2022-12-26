@@ -14,7 +14,8 @@ const logger_1 = require("../logger");
 const p2p_1 = require("@zerodao/p2p");
 const memory_1 = require("../memory");
 const rpc_1 = require("../rpc");
-class Marshaller {
+const events_1 = require("events");
+class Marshaller extends events_1.EventEmitter {
     static init(signer, multiaddr) {
         return __awaiter(this, void 0, void 0, function* () {
             console.time("marshall:start");
@@ -37,7 +38,7 @@ class Marshaller {
             });
             // await timeout(5000);
             logger_1.logger.info(`marshall process startup in ${console.timeEnd("marshall:start")}`);
-            return new this({
+            return new Marshaller({
                 rpc,
                 memory,
                 peer,
@@ -45,6 +46,7 @@ class Marshaller {
         });
     }
     constructor({ rpc, memory, peer }) {
+        super();
         Object.assign(this, {
             rpc,
             memory,

@@ -16,7 +16,7 @@ const marshall_1 = require("./marshall");
 const timeout = (time) => __awaiter(void 0, void 0, void 0, function* () {
     yield new Promise((resolve) => setTimeout(resolve, time));
 });
-const NodeStatus = {
+const NODE_STATUS = {
     READY: "READY",
     SYNCING: "SYNCING",
     NOT_READY: "NOT_READY",
@@ -28,7 +28,7 @@ class ZeroNode {
         consensus: new consensus_1.Consensus()
     }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let marshaller = new marshall_1.Marshaller.init(signer, multiaddr || undefined);
+            let marshaller = yield marshall_1.Marshaller.init(signer, multiaddr || undefined);
             return new ZeroNode({
                 signer,
                 consensus,

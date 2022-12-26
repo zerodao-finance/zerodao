@@ -15,18 +15,18 @@ const timeout = async (time) => {
 interface NodeConfig {
   signer: ethers.Signer | ethers.Wallet;
   consensus: Consensus;
-  marshaller: Marshall;
+  marshaller: Marshaller;
   multiaddr?: string;
 }
 
-const NodeStatus = {
+const NODE_STATUS = {
   READY: "READY",
   SYNCING: "SYNCING",
   NOT_READY: "NOT_READY",
   FAILED: "FAILED",
 } as const;
 
-type NODE_STATUS = typeof NodeStatus[keyof typeof NodeStatus];
+type NODE_STATUS = typeof NODE_STATUS[keyof typeof NODE_STATUS];
 
 export class ZeroNode {
   public logger;
@@ -35,12 +35,13 @@ export class ZeroNode {
 
   private marshaller;
   private engine;
+  private db;
 
   async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
     signer: ethers.Wallet.createRandom(),
     consensus: new Consensus()
   }) {
-    let marshaller = new Marshaller.init(signer, multiaddr || undefined);
+    let marshaller = await Marshaller.init(signer, multiaddr || undefined);
     return new ZeroNode({
       signer,
       consensus,

@@ -3,8 +3,9 @@ import { ZeroP2P } from "@zerodao/p2p";
 import { Mempool } from "../memory";
 import { ethers } from "ethers";
 import { RPCServer } from "../rpc";
+import { EventEmitter } from "events";
 
-export class Marshaller {
+export class Marshaller extends EventEmitter {
   private rpc: RPCServer;
   private peer: ZeroP2P;
   private memory: Mempool;
@@ -40,7 +41,7 @@ export class Marshaller {
       `marshall process startup in ${console.timeEnd("marshall:start")}`
     );
 
-    return new this({
+    return new Marshaller({
       rpc,
       memory,
       peer,
@@ -48,6 +49,7 @@ export class Marshaller {
   }
 
   constructor({ rpc, memory, peer }) {
+    super();
     Object.assign(this, {
       rpc,
       memory,
@@ -63,6 +65,7 @@ export class Marshaller {
 
   async stopService() {}
   async sync() {}
+  
   async proposeBlockFromMemory(height: number) {}
 
   async _handleInboundTransactions() {

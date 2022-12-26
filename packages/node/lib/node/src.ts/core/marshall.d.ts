@@ -1,5 +1,7 @@
+/// <reference types="node" />
 import { ethers } from "ethers";
-export declare class Marshaller {
+import { EventEmitter } from "events";
+export declare class Marshaller extends EventEmitter {
     private rpc;
     private peer;
     private memory;
