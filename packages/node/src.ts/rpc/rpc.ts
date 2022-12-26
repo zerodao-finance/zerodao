@@ -4,6 +4,7 @@ const protoLoader = require("@grpc/proto-loader");
 const EventEmitter = require("events");
 import { UnaryCallHandler } from "./services";
 import { logger } from "@zerodao/logger";
+import { protocol } from "@zerodao/protobuf";
 
 export class RPCServer extends EventEmitter {
 	self: any = undefined;

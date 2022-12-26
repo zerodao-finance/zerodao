@@ -1,5 +1,6 @@
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
+import { protocol } from "@zerodao/protobuf";
 
 export class Marshaller {
   private rpc: RPCServer;

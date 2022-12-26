@@ -3,10 +3,10 @@ import chalk = require("chalk");
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { Mempool, MempoolConfig } from "../memory";
-import { protocol } from "../proto";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
+import { protocol } from "@zerodao/protobuf";
 
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
