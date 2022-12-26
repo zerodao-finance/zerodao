@@ -1,4 +1,5 @@
-declare const EventEmitter: any;
+/// <reference types="node" />
+import { EventEmitter } from "node:events";
 export declare class RPCServer extends EventEmitter {
     self: any;
     path: string;
@@ -13,4 +14,3 @@ export declare class RPCServer extends EventEmitter {
     _handleTransaction(call: any, callback: any): void;
     _emit(eventName: any, msg: any): void;
 }
-export {};

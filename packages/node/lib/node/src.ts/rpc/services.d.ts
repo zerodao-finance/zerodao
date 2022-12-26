@@ -1,6 +1,6 @@
 import grpc from "grpc";
 import { Transaction, TransactionReply } from "../../../protobuf/generated";
-declare type UnaryCallHandler = (call: grpc.ServerUnaryCall<Transaction>, callback: grpc.sendUnaryData<TransactionReply>) => void;
+export type UnaryCallHandler = (call: grpc.ServerUnaryCall<Transaction>, callback: grpc.sendUnaryData<TransactionReply>) => void;
 interface ITransactionService {
     handleTransaction: UnaryCallHandler;
 }

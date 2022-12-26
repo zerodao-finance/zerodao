@@ -9,6 +9,5 @@ describe("node", () => {
   });
   it("should test the node", async () => {
     await node.init();
-    await node.startNode();
   });
 });

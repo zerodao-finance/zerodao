@@ -1,17 +1,18 @@
 /// <reference types="node" />
+/// <reference types="long" />
 import type { Long } from "@grpc/proto-loader";
 export declare const _Transaction_Chain: {
     readonly ETHEREUM: "ETHEREUM";
     readonly MONERO: "MONERO";
 };
-export declare type _Transaction_Chain = "ETHEREUM" | 0 | "MONERO" | 1;
-export declare type _Transaction_Chain__Output = typeof _Transaction_Chain[keyof typeof _Transaction_Chain];
+export type _Transaction_Chain = "ETHEREUM" | 0 | "MONERO" | 1;
+export type _Transaction_Chain__Output = typeof _Transaction_Chain[keyof typeof _Transaction_Chain];
 export declare const _Transaction_Type: {
     readonly TRANSFER: "TRANSFER";
     readonly SLASH: "SLASH";
 };
-export declare type _Transaction_Type = "TRANSFER" | 0 | "SLASH" | 1;
-export declare type _Transaction_Type__Output = typeof _Transaction_Type[keyof typeof _Transaction_Type];
+export type _Transaction_Type = "TRANSFER" | 0 | "SLASH" | 1;
+export type _Transaction_Type__Output = typeof _Transaction_Type[keyof typeof _Transaction_Type];
 export interface Transaction {
     type?: _Transaction_Type;
     to?: Buffer | Uint8Array | string;

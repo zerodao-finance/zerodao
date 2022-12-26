@@ -10,97 +10,57 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZeroNode = void 0;
-const chalk = require("chalk");
-const logger_1 = require("../logger");
-const p2p_1 = require("@zerodao/p2p");
-const memory_1 = require("../memory");
-const proto_1 = require("../proto");
+const ethers_1 = require("ethers");
 const consensus_1 = require("../consensus");
-const rpc_1 = require("../rpc");
+const marshall_1 = require("./marshall");
 const timeout = (time) => __awaiter(void 0, void 0, void 0, function* () {
     yield new Promise((resolve) => setTimeout(resolve, time));
 });
-const timeoutWithCallback = (time, callback) => __awaiter(void 0, void 0, void 0, function* () {
-    yield new Promise((resolve) => setTimeout(callback(resolve), time));
-});
+const NODE_STATUS = {
+    READY: "READY",
+    SYNCING: "SYNCING",
+    NOT_READY: "NOT_READY",
+    FAILED: "FAILED",
+};
 class ZeroNode {
-    constructor({ consensus, signer, peer }) {
-        this._clientTopic = "zeronode.v1.inbound";
+    init({ signer, consensus, multiaddr } = {
+        signer: ethers_1.ethers.Wallet.createRandom(),
+        consensus: new consensus_1.Consensus()
+    }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let marshaller = yield marshall_1.Marshaller.init(signer, multiaddr || undefined);
+            return new ZeroNode({
+                signer,
+                consensus,
+                marshaller
+            });
+        });
+    }
+    constructor({ signer, consensus, marshaller }) {
+        this.status = NODE_STATUS.NOT_READY; // defaults to NOT_READY status
         Object.assign(this, {
             consensus,
             signer,
-            peer,
-            protocol: proto_1.protocol,
+            marshaller
         });
     }
-    static fromSigner(signer, multiaddr) {
+    start() {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.logger.info("generating seed from secp256k1 signature");
-            const seed = yield signer.signMessage(p2p_1.ZeroP2P.toMessage(yield signer.getAddress()));
-            logger_1.logger.info("creating peer from seed, wait for complete ...");
-            const peer = yield p2p_1.ZeroP2P.fromSeed({
-                signer,
-                seed: Buffer.from(seed.substring(2), "hex"),
-                multiaddr: multiaddr || ZeroNode.PRESETS.DEVNET,
-            });
-            yield new Promise((resolve) => {
-                peer.start();
-                peer.on("peer:discover", (peerInfo) => __awaiter(this, void 0, void 0, function* () {
-                    logger_1.logger.info(`found peer \n ${peerInfo}`);
-                }));
-                resolve(console.timeLog("node:start-up"));
-            });
-            yield timeout(5000);
-            logger_1.logger.info("done!");
-            logger_1.logger.info("zerop2p address " + chalk.bold(peer.peerId.toB58String()));
-            console.timeEnd("node:start-up");
-            return new this({
-                consensus: new consensus_1.Consensus(),
-                peer,
-                signer,
-            });
-        });
-    }
-    /**
-     *
-     * initializes mempool and starts peer pubsub
-     *
-     */
-    init(poolConfig = {
-        peer: this.peer,
-    }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.pool = memory_1.Mempool.init(poolConfig);
-            this.rpc = rpc_1.RPCServer.init();
-            yield this.rpc.start();
-        });
-    }
-    __rpc() {
-        return __awaiter(this, void 0, void 0, function* () {
-            //start rpc server listening
-        });
-    }
-    __handle_tx() {
-        return __awaiter(this, void 0, void 0, function* () {
-            //handle rpc server messages
-        });
-    }
-    // implement mempool interface
-    ping(time) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.peer.pubsub.subscribe("zerodao.V1.pingpong", (msg) => __awaiter(this, void 0, void 0, function* () {
-                logger_1.logger.info(`heard message ${msg}`);
-                if (msg == "ping") {
-                    yield this.peer.pubsub.publish("zerodao.V1.pingong", new TextEncoder().encode("pong"));
-                }
-            }));
-            logger_1.logger.info("\n gossiping ping to the network");
-            yield this.peer.pubsub.publish("zerodao.V1.pingpong", new TextEncoder().encode("ping"));
+            try {
+                yield new Promise((resolve, reject) => {
+                    this.marshaller.startService();
+                    this.status = NODE_STATUS.SYNCING;
+                    timeout(1000);
+                    resolve(this.marshaller.sync());
+                });
+                this.status = NODE_STATUS.READY;
+            }
+            catch (error) {
+                this.status = NODE_STATUS.FAILED;
+                throw error;
+            }
         });
     }
 }
 exports.ZeroNode = ZeroNode;
-ZeroNode.PRESETS = {
-    DEVNET: "",
-};
 //# sourceMappingURL=node.js.map

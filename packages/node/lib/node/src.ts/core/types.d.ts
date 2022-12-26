@@ -1,14 +1,14 @@
 /// <reference types="node" />
-declare type Time = string | number;
-declare type CommitRoot = Buffer | Uint8Array;
-export declare type Data = {
+type Time = string | number;
+type CommitRoot = Buffer | Uint8Array;
+export type Data = {
     Txs: Buffer[][];
 };
-export declare type PartSetHeader = {
+export type PartSetHeader = {
     Total: number;
     Hash: Buffer;
 };
-export declare type Version = {
+export type Version = {
     Block: number;
     App: number;
 };
@@ -26,7 +26,7 @@ export interface Vote {
     ValidatorIndex: number;
     Signature: Buffer;
 }
-declare type PubKey = string | Buffer;
+type PubKey = string | Buffer;
 export interface Evidence {
     PubKey: PubKey;
     VoteA: Vote;

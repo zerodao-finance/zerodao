@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="long" />
 import type { Long } from "@grpc/proto-loader";
 export interface Account {
     address?: Buffer | Uint8Array | string;

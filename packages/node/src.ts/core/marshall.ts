@@ -1,8 +1,12 @@
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { protocol } from "@zerodao/protobuf";
+import { Mempool } from "../memory";
+import { ethers } from "ethers";
+import { RPCServer } from "../rpc";
+import { EventEmitter } from "events";
 
-export class Marshaller {
+export class Marshaller extends EventEmitter {
   private rpc: RPCServer;
   private peer: ZeroP2P;
   private memory: Mempool;
@@ -12,7 +16,7 @@ export class Marshaller {
 
     // initialize Mempool and rpc server
     let rpc = RPCServer.init();
-    let memory = Mempool.init();
+    let memory = await Mempool.init({});
 
     // start peer process
     const seed = await signer.signMessage(
@@ -21,8 +25,8 @@ export class Marshaller {
 
     const peer = await ZeroP2P.fromSeed({
       signer,
-      seed: Bufer.from(seed.substring(2), "hex"),
-      multiaddr: mulltiaddr,
+      seed: Buffer.from(seed.substring(2), "hex"),
+      multiaddr: multiaddr,
     } as any);
 
     await new Promise((resolve) => {
@@ -33,12 +37,12 @@ export class Marshaller {
       resolve(console.timeLog("marshall:start:"));
     });
 
-    await timeout(5000);
+    // await timeout(5000);
     logger.info(
       `marshall process startup in ${console.timeEnd("marshall:start")}`
     );
 
-    return new this({
+    return new Marshaller({
       rpc,
       memory,
       peer,
@@ -46,6 +50,7 @@ export class Marshaller {
   }
 
   constructor({ rpc, memory, peer }) {
+    super();
     Object.assign(this, {
       rpc,
       memory,
@@ -61,6 +66,7 @@ export class Marshaller {
 
   async stopService() {}
   async sync() {}
+  
   async proposeBlockFromMemory(height: number) {}
 
   async _handleInboundTransactions() {

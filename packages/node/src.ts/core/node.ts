@@ -7,26 +7,27 @@ import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
 import { protocol } from "@zerodao/protobuf";
+import { Marshaller } from './marshall'
 
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
 };
 
 interface NodeConfig {
-  signer: ethers.Signer || ethers.Wallet;
+  signer: ethers.Signer | ethers.Wallet;
   consensus: Consensus;
-  marshaller: Marshall;
+  marshaller: Marshaller;
   multiaddr?: string;
 }
 
-const NodeStatus = {
+const NODE_STATUS = {
   READY: "READY",
   SYNCING: "SYNCING",
   NOT_READY: "NOT_READY",
   FAILED: "FAILED",
 } as const;
 
-type NODE_STATUS = typeof NodeStatus[keyof typeof NodeStatus];
+type NODE_STATUS = typeof NODE_STATUS[keyof typeof NODE_STATUS];
 
 export class ZeroNode {
   public logger;
@@ -35,12 +36,13 @@ export class ZeroNode {
 
   private marshaller;
   private engine;
+  private db;
 
-  async init({ signer, consensus, multiaddr? }: Partial<NodeConfig> = {
+  async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
     signer: ethers.Wallet.createRandom(),
     consensus: new Consensus()
   }) {
-    let marshaller = new Marshaller.init(signer, multiaddr || undefined);
+    let marshaller = await Marshaller.init(signer, multiaddr || undefined);
     return new ZeroNode({
       signer,
       consensus,
