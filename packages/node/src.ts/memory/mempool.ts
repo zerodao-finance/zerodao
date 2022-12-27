@@ -6,6 +6,9 @@ import { Message } from "protobufjs";
 import { Sketch } from "./sketch";
 import { protocol } from "../proto";
 import { Transaction } from "../core/types";
+import { validateTransaction } from "../transaction"
+import { Sketch } from './sketch'
+import type { Hexable } from "@ethersproject/bytes";
 
 export interface MempoolConfig {
   _len: number;
@@ -72,7 +75,12 @@ export class Mempool {
     if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
-
+    try {
+     await validateTransaction(tx)
+    }
+    catch (error) {
+      throw error
+    }
     //TODO: pass transaction to vm or equivilant
   }
 
@@ -82,11 +90,14 @@ export class Mempool {
 
   async addTransaction(tx: Buffer) {
     const timestamp = Date.now();
-    const hash: string = ethers.utils.keccak256(tx);
+    let tBuf = this.protocol.Transaction.encode(tx).finish();
+    const hash: string = ethers.utils.keccak256(tBuf);
+    const hex: Hexable = hash.toHexString()
     try {
-      await this.validate(tx);
-      this.state.set(hash, tx);
-      this.sketch.storeTx(hash);
+      await this.validate(tBuf);
+      this.state.set(hash, tBuf);
+      // this.sketch.addUint(ethers.utils.hexlify(hash).slice(23, 32));
+      this.sketch.storeTx(hash)
     } catch (error) {
       this.handled.set(hash, {
         tx,
@@ -127,7 +138,9 @@ export class Mempool {
 
   async broadcastValues() {
     let m = Array.from(this.state.values());
-    return this.protocol.Mempool.encode({ txs: m }).finish();
+    let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
+    //
+    this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
   }
 
   _hashMempool() {
