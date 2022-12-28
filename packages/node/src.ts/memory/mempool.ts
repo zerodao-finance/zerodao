@@ -4,6 +4,7 @@ import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
 import { Sketch } from "./sketch";
+import { protocol } from "../proto";
 import { Transaction } from "../core/types";
 
 export interface MempoolConfig {
@@ -18,6 +19,11 @@ export interface MempoolConfig {
   MAX_MSG_BYTES: number; // 1kb max message limit;
   POOL_STORAGE_TIME_LIMIT: number;
   POOL_GOSSIP_TOPIC: string;
+}
+
+export interface MempoolMessage {
+  messageType: "SKETCH" | "MEMORY" | "TX";
+  data: Buffer & Buffer[];
 }
 
 export class Mempool {
@@ -59,39 +65,7 @@ export class Mempool {
     }
   ) {
     Object.assign(this, config);
-  }
-
-  async start() {
-    if (this.running) return;
-    this.running = true;
-
-    await (this.peer.pubsub.subscribe as any)(
-      this.POOL_GOSSIP_TOPIC,
-      async (msg) => {
-        await this.ackGossip(msg);
-      }
-    );
-
-    this._cleanupInterval = setInterval(
-      this.cleanup.bind(this),
-      this.MEMORY_CLEANUP_TIME * 1000 * 60
-    );
-
-    this._gossipInterval = setInterval(
-      this.broadcast.bind(this),
-      this.POOL_GOSSIP_TIME * 1000 * 60
-    );
-
-    return true;
-  }
-
-  async close() {
-    if (!this.running) return;
-    await this.cleanup();
-    this.peer.pubsub.unsubscribe(this.POOL_GOSSIP_TOPIC);
-    this.running = false;
-    clearInterval(this._gossipInterval);
-    clearInterval(this._cleanupInterval);
+    this.protocol = protocol;
   }
 
   async validate(tx: Buffer) {
@@ -106,17 +80,16 @@ export class Mempool {
     return Array.from(this.state.keys()).length;
   }
 
-  async addTransaction(tx: Transaction) {
+  async addTransaction(tx: Buffer) {
     const timestamp = Date.now();
-    let tBuf = this.protocol.Transaction.encode(tx).finish();
-    const hash: string = ethers.utils.keccak256(tBuf);
+    const hash: string = ethers.utils.keccak256(tx);
     try {
-      await this.validate(tBuf);
-      this.state.set(hash, tBuf);
+      await this.validate(tx);
+      this.state.set(hash, tx);
       this.sketch.storeTx(hash);
     } catch (error) {
       this.handled.set(hash, {
-        tx: tBuf,
+        tx,
         timestamp,
         hash: hash,
         error: error as Error,
@@ -124,29 +97,40 @@ export class Mempool {
     }
   }
 
-  async cleanup() {
+  cleanup() {
     this.sketch.clear();
-  }
-
-  async ackGossip(message: Buffer) {
-    let msg = this.protocol.Mempool.decode(message).toObject();
-    // set recieved message items with current state
-  }
-
-  async broadcast() {
-    let m = Array.from(this.state.values());
-    let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
-    this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
-  }
-
-  // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
-  // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
-  // the message from that peer can be safely ignored without losing information.
-  _hashMempool() {
-    return this.sketch.serialize();
+    this.state.clear();
+    this.handled.clear();
   }
 
   async synchronize(serializedSketch: Buffer) {
     return await this.sketch.calculateDifferences(serializedSketch);
+  }
+
+  async resetMempool(mempool: Buffer[]) {
+    this.cleanup();
+    await mempool.reduce(async (a, d) => {
+      await a;
+      await this.addTransaction(d);
+    }, Promise.resolve());
+  }
+
+  handlers = {
+    SKETCH: this.synchronize,
+    TX: this.addTransaction,
+    MEMORY: this.resetMempool,
+  };
+
+  async handleBroadcast(msg: MempoolMessage) {
+    this.handlers[msg.messageType](msg.data);
+  }
+
+  async broadcastValues() {
+    let m = Array.from(this.state.values());
+    return this.protocol.Mempool.encode({ txs: m }).finish();
+  }
+
+  _hashMempool() {
+    return this.sketch.serialize();
   }
 }
