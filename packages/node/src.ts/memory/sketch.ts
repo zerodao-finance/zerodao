@@ -5,7 +5,7 @@ import { chunk } from "lodash";
 
 export class Sketch {
   private _sketch: Minisketch;
-  private TxMap: Record<string, Hexable>;
+  private TxMap: Record<string, string>;
   private capacity: number;
 
   static async init(capacity: number) {
@@ -20,9 +20,9 @@ export class Sketch {
     this.TxMap = {};
   }
 
-  storeTx(txHash: Hexable, addToSketch: boolean = true) {
+  storeTx(txHash: string, addToSketch: boolean = true) {
     const sketchValue = ethers.BigNumber.from(
-      ethers.utils.arrayify(txHash).slice(24, 32)
+      ethers.utils.arrayify(txHash).slice(23, 32)
     ).toString();
     if (addToSketch) this._sketch.addUint(sketchValue);
     this.TxMap[sketchValue] = txHash;
@@ -38,6 +38,10 @@ export class Sketch {
     this.TxMap = {};
   }
 
+  serialize() {
+    return this._sketch.serialize();
+  }
+
   async calculateDifferences(serializedSketch: Buffer) {
     const otherSketch = await Minisketch.create({
       fieldSize: 64,
@@ -45,7 +49,7 @@ export class Sketch {
     });
     otherSketch.deserialize(serializedSketch);
     let missing: string[] = [],
-      found: Hexable[] = [];
+      found: string[] = [];
     this._sketch.merge(otherSketch);
     const [length, res] = resolve(
       chunk(this._sketch.decode() as Uint8Array, 8)

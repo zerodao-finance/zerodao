@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
 import { Message } from "protobufjs";
-import { Minisketch } from "libminisketch-wasm";
+import { Sketch } from "./sketch";
 import { Transaction } from "../core/types";
 
 export interface MempoolConfig {
@@ -12,8 +12,7 @@ export interface MempoolConfig {
   _gossipInterval: any;
   peer: any;
   protocol: any;
-  sketch: Minisketch;
-
+  sketch: Sketch;
   POOL_GOSSIP_TIME: number;
   MAX_POOL_SIZE: number;
   MAX_MSG_BYTES: number; // 1kb max message limit;
@@ -31,7 +30,7 @@ export class Mempool {
   private _gossipInterval: any;
   private peer: ZeroP2P;
   private protocol: any;
-  private sketch: Minisketch;
+  private sketch: Sketch;
   private POOL_GOSSIP_TOPIC: string = "zerodao:xnode:gossip:v1";
   private POOL_GOSSIP_TIME: number = 5;
   private MEMORY_CLEANUP_TIME: number = 10;
@@ -40,7 +39,7 @@ export class Mempool {
   private POOL_STORAGE_TIME_LIMIT: number;
 
   static async init(config: Partial<MempoolConfig>) {
-    const sketch = await Minisketch.create({ fieldSize: 64, capacity: 20 });
+    const sketch = await Sketch.init(20);
     return new Mempool({ ...config, sketch });
   }
 
@@ -114,7 +113,7 @@ export class Mempool {
     try {
       await this.validate(tBuf);
       this.state.set(hash, tBuf);
-      this.sketch.addUint(ethers.utils.hexlify(hash).slice(23, 32));
+      this.sketch.storeTx(hash);
     } catch (error) {
       this.handled.set(hash, {
         tx: tBuf,
@@ -126,9 +125,7 @@ export class Mempool {
   }
 
   async cleanup() {
-    //TODO:
-    this.sketch.destroy();
-    this.sketch = await Minisketch.create({ fieldSize: 64, capacity: 20 });
+    this.sketch.clear();
   }
 
   async ackGossip(message: Buffer) {
@@ -145,7 +142,11 @@ export class Mempool {
   // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
   // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
   // the message from that peer can be safely ignored without losing information.
-  async _hashMempool() {
+  _hashMempool() {
     return this.sketch.serialize();
+  }
+
+  async synchronize(serializedSketch: Buffer) {
+    return await this.sketch.calculateDifferences(serializedSketch);
   }
 }
