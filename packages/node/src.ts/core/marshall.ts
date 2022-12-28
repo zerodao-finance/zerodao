@@ -1,6 +1,5 @@
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { protocol } from "../proto";
 import { Mempool } from "../memory";
 import { ethers } from "ethers";
 import { RPCServer } from "../rpc";
@@ -65,8 +64,13 @@ export class Marshaller extends EventEmitter {
   }
 
   async stopService() {}
-  async sync() {}
-  
+  async sync() {
+    // TODO: populate this value
+    let serializedSketch: Buffer;
+
+    const results = await this.memory.synchronize(serializedSketch);
+  }
+
   async proposeBlockFromMemory(height: number) {}
 
   async _handleInboundTransactions() {
@@ -78,8 +82,13 @@ export class Marshaller extends EventEmitter {
   async broadcast() {}
 
   //gossip current state of mempool to peers
-  async _broadcastMempool() {}
+  async _broadcastMempool() {
+    // TODO: buffer that needs to be broadcasted
+    const serialized = this.memory._hashMempool();
+  }
 
   // cleanup stale transactions in mempool
-  async _cleanupMempool() {}
+  async _cleanupMempool() {
+    this.memory.cleanup();
+  }
 }
