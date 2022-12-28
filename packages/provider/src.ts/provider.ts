@@ -1,5 +1,10 @@
 import { Client } from "./client";
-import { Transaction, TransactionReply, BalanceQuery, BalanceReply } from "@zerodao/protobuf";
+import {
+  Transaction,
+  TransactionReply,
+  BalanceQuery,
+  BalanceReply,
+} from "@zerodao/protobuf";
 
 export class Provider {
   client: Client;

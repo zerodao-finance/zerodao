@@ -1,7 +1,7 @@
 import { StateTrie } from "../trie/trie";
 import * as protobuf from "protobufjs";
 import ethers from "ethers";
-import { Account } from "../../../protobuf";
+import { Account } from "@zerodao/protobuf";
 
 const PROTO_PATH: string =
   __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
@@ -21,14 +21,18 @@ export class TransactionEngine {
   async runTransaction(tx) {
     try {
       this.trie.trie.checkpoint();
-      const oldFromAccount: Account = (await this.trie.getAccount(tx.from) as Account);
+      const oldFromAccount: Account = (await this.trie.getAccount(
+        tx.from
+      )) as Account;
       const fromBalance = Number(oldFromAccount.balance) - Number(tx.amount);
       const newFromAccount: Account = {
         ...oldFromAccount,
         address: tx.from,
         balance: fromBalance,
       };
-      const oldToAccount: Account = (await this.trie.getAccount(tx.to) as Account);
+      const oldToAccount: Account = (await this.trie.getAccount(
+        tx.to
+      )) as Account;
       const toBalance = Number(oldToAccount.balance) + Number(tx.amount);
       const newToAccount: Account = {
         ...oldToAccount,
@@ -40,7 +44,7 @@ export class TransactionEngine {
       await this.trie.setAccount(tx.to, newToAccount);
       await this.trie.trie.commit();
     } catch (error) {
-      await this.trie.trie.revert();
+      // await this.trie.trie.revert();
     }
   }
 }

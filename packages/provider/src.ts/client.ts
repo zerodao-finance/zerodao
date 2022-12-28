@@ -1,7 +1,11 @@
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
-import { Transaction, TransactionReply, BalanceQuery, BalanceReply } from "@zerodao/protobuf";
-
+import {
+  Transaction,
+  TransactionReply,
+  BalanceQuery,
+  BalanceReply,
+} from "@zerodao/protobuf";
 
 export class Client {
   service: any = undefined;
