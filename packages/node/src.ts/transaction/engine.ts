@@ -1,10 +1,10 @@
 import { StateTrie } from "../trie/trie";
 import * as protobuf from "protobufjs";
 import ethers from "ethers";
-import { Account } from "../../../protobuf";
+import { Account } from "@zerodao/protobuf";
 
 const PROTO_PATH: string =
-  __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
+  __dirname + "@zerodao/protobuf/proto/ZeroProtocol.proto";
 const root = protobuf.loadSync(PROTO_PATH);
 const transaction = root.lookupType("Transaction");
 export class TransactionEngine {

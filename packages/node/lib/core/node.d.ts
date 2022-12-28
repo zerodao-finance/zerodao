@@ -1,31 +1,31 @@
 import { ethers } from "ethers";
-import { MempoolConfig } from "../memory";
-export declare class ZeroNode {
-  _clientTopic: string;
-  private pool;
-  private peer;
-  private signer;
-  private propser;
-  private protocol;
-  private rpc;
-  static PRESETS: {
-    DEVNET: string;
-  };
-  static fromSigner(signer: ethers.Signer, multiaddr?: any): Promise<ZeroNode>;
-  constructor({
-    consensus,
-    signer,
-    peer,
-  }: {
-    consensus: any;
-    signer: any;
-    peer: any;
-  });
-  /**
-   *
-   * initializes mempool and starts peer pubsub
-   *
-   */
-  init(poolConfig?: Partial<MempoolConfig>): Promise<void>;
-  ping(time: any): Promise<void>;
+import { Consensus } from "../consensus";
+import { Marshaller } from './marshall';
+interface NodeConfig {
+    signer: ethers.Signer | ethers.Wallet;
+    consensus: Consensus;
+    marshaller: Marshaller;
+    multiaddr?: string;
 }
+declare const NODE_STATUS: {
+    readonly READY: "READY";
+    readonly SYNCING: "SYNCING";
+    readonly NOT_READY: "NOT_READY";
+    readonly FAILED: "FAILED";
+};
+type NODE_STATUS = typeof NODE_STATUS[keyof typeof NODE_STATUS];
+export declare class ZeroNode {
+    logger: any;
+    status: NODE_STATUS;
+    signer: ethers.Signer;
+    private marshaller;
+    private engine;
+    private db;
+    private isValidator;
+    private _blsPriv;
+    static init({ signer, consensus, multiaddr }?: Partial<NodeConfig>): Promise<ZeroNode>;
+    constructor({ signer, consensus, marshaller }: NodeConfig);
+    loadBLSKey(privateKey: string | Uint8Array): Promise<void>;
+    start(): Promise<void>;
+}
+export {};

@@ -36,9 +36,11 @@ export class ZeroNode {
 
   private marshaller;
   private engine;
-  private db;
+  private isValidator: boolean = false;
 
-  async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
+  private _blsPriv: string;
+
+  static async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
     signer: ethers.Wallet.createRandom(),
     consensus: new Consensus()
   }) {
@@ -56,6 +58,10 @@ export class ZeroNode {
       signer,
       marshaller
     });
+  }
+  
+  async loadBLSKey(privateKey: string | Uint8Array ) {
+    //storeBLSKey
   }
   
   async start() {

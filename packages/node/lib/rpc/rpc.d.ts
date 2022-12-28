@@ -1,12 +1,15 @@
-export declare class RPCServer {
-  self: any;
-  path: string;
-  service: any;
-  pkg: any;
-  static PORT: string;
-  static init(): RPCServer;
-  constructor();
-  start({ port }?: any): {
-    success: boolean;
-  };
+/// <reference types="node" />
+import { EventEmitter } from "node:events";
+export declare class RPCServer extends EventEmitter {
+    self: any;
+    service: any;
+    pkg: any;
+    static PORT: string;
+    static init(): RPCServer;
+    constructor();
+    start({ port }?: any): {
+        success: boolean;
+    };
+    _handleTransaction(call: any, callback: any): void;
+    _emit(eventName: any, msg: any): void;
 }

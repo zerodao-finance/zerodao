@@ -1,1 +1,0 @@
-{"version":3,"file":"BlockHeader.js","sourceRoot":"","sources":["../../../../protobuf/generated/BlockHeader.ts"],"names":[],"mappings":";AAAA,0CAA0C;;;AAI1C,0CAA0C;AAE7B,QAAA,sBAAsB,GAAG;IACpC,QAAQ,EAAE,UAAU;IACpB,IAAI,EAAE,MAAM;IACZ,MAAM,EAAE,QAAQ;CACR,CAAC"}

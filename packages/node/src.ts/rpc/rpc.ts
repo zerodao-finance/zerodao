@@ -1,12 +1,13 @@
 import { loadPackageDefinition, Server, ServerCredentials } from "grpc";
-import { loadSync } from "@grpc/proto-loader";
 import { EventEmitter } from "node:events";
 import type { UnaryCallHandler } from "./services";
 import { logger } from "../logger";
+import { protocol, packageDef } from "@zerodao/protobuf";
+
 
 export class RPCServer extends EventEmitter {
   self: any = undefined;
-  path: string = __dirname + "/../../proto/ZeroProtocol.proto";
+
   service: any = undefined;
   pkg: any = undefined;
 
@@ -23,13 +24,7 @@ export class RPCServer extends EventEmitter {
 
   start({ port }: any = {}) {
     this.pkg = loadPackageDefinition(
-      loadSync(this.path, {
-        keepCase: true,
-        longs: String,
-        enums: String,
-        defaults: true,
-        oneofs: true,
-      })
+      packageDef
     );
 
     this.service = (this.pkg as any).RpcService;

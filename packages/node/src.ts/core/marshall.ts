@@ -1,6 +1,6 @@
 import { logger } from "../logger";
 import { ZeroP2P } from "@zerodao/p2p";
-import { protocol } from "@zerodao/protobuf";
+import { protocol } from "../proto";
 import { Mempool } from "../memory";
 import { ethers } from "ethers";
 import { RPCServer } from "../rpc";
