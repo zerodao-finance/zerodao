@@ -10,6 +10,7 @@ import type {
   BalanceReply as _BalanceReply,
   BalanceReply__Output as _BalanceReply__Output,
 } from "./BalanceReply";
+import type { Stake as _Stake, Stake__Output as _Stake__Output } from "./Stake";
 import type {
   Transaction as _Transaction,
   Transaction__Output as _Transaction__Output,
@@ -101,6 +102,47 @@ export interface RpcServiceClient extends grpc.Client {
     argument: _Transaction,
     callback: grpc.requestCallback<_TransactionReply__Output>
   ): grpc.ClientUnaryCall;
+
+  zero_stakeTransaction(
+    argument: _Stake,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zero_stakeTransaction(
+    argument: _Stake,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zero_stakeTransaction(
+    argument: _Stake,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zero_stakeTransaction(
+    argument: _Stake,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zeroStakeTransaction(
+    argument: _Stake,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zeroStakeTransaction(
+    argument: _Stake,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zeroStakeTransaction(
+    argument: _Stake,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
+  zeroStakeTransaction(
+    argument: _Stake,
+    callback: grpc.requestCallback<_TransactionReply__Output>
+  ): grpc.ClientUnaryCall;
 }
 
 export interface RpcServiceHandlers extends grpc.UntypedServiceImplementation {
@@ -108,6 +150,11 @@ export interface RpcServiceHandlers extends grpc.UntypedServiceImplementation {
 
   zero_sendTransaction: grpc.handleUnaryCall<
     _Transaction__Output,
+    _TransactionReply
+  >;
+
+  zero_stakeTransaction: grpc.handleUnaryCall<
+    _Stake__Output,
     _TransactionReply
   >;
 }
@@ -123,6 +170,12 @@ export interface RpcServiceDefinition extends grpc.ServiceDefinition {
     _Transaction,
     _TransactionReply,
     _Transaction__Output,
+    _TransactionReply__Output
+  >;
+  zero_stakeTransaction: MethodDefinition<
+    _Stake,
+    _TransactionReply,
+    _Stake__Output,
     _TransactionReply__Output
   >;
 }
