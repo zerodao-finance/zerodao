@@ -26,8 +26,9 @@ message Stake {
 
 message Account {
   required bytes address = 0;
-  required uint64 balance = 1;
-  required uint64 nonce = 2;
+  required uint64 unStakedBalance = 1;
+  required uint64 stakedBalance = 2;
+  required uint64 nonce = 3;
 }
 
 message Balance {
