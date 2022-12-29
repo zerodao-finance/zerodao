@@ -6,9 +6,13 @@ import { Mempool, MempoolConfig } from "../memory";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
+<<<<<<< HEAD
 import { protocol } from "@zerodao/protobuf";
 import { Marshaller } from './marshall'
 
+=======
+import { Marshaller } from "./marshall";
+>>>>>>> 51863c81 (sketch tests)
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -31,22 +35,24 @@ type NODE_STATUS = typeof NODE_STATUS[keyof typeof NODE_STATUS];
 
 export class ZeroNode {
   public logger;
-  public status: NODE_STATUS = NODE_STATUS.NOT_READY; // defaults to NOT_READY status
+  public status: NODE_STATUS = NodeStatus.NOT_READY; // defaults to NOT_READY status
   public signer: ethers.Signer;
 
   private marshaller;
   private engine;
   private db;
 
-  async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
-    signer: ethers.Wallet.createRandom(),
-    consensus: new Consensus()
-  }) {
+  async init(
+    { signer, consensus, multiaddr }: Partial<NodeConfig> = {
+      signer: ethers.Wallet.createRandom(),
+      consensus: new Consensus(),
+    }
+  ) {
     let marshaller = await Marshaller.init(signer, multiaddr || undefined);
     return new ZeroNode({
       signer,
       consensus,
-      marshaller
+      marshaller,
     });
   }
 
@@ -54,26 +60,28 @@ export class ZeroNode {
     Object.assign(this, {
       consensus,
       signer,
-      marshaller
+      marshaller,
     });
   }
-  
+
   async start() {
     try {
       await new Promise((resolve, reject) => {
         this.marshaller.startService();
-        this.status = NODE_STATUS.SYNCING;
+        this.status = NodeStatus.SYNCING;
 
         timeout(1000);
 
         resolve(this.marshaller.sync());
       });
-      this.status = NODE_STATUS.READY;
+      this.status = NodeStatus.READY;
     } catch (error) {
-      this.status = NODE_STATUS.FAILED;
+      this.status = NodeStatus.FAILED;
       throw error;
-    }    
-     
+    }
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51863c81 (sketch tests)
 }

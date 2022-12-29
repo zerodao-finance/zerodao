@@ -1,7 +1,7 @@
-import { expect } from "chai";
+/* import { expect } from "chai";
 import { StateTrie } from "../src.ts/trie/trie";
 import { TransactionEngine, validateTransaction } from "../src.ts/transaction";
-import { Account } from "../../protobuf/generated";
+import { Account } from "@zerodao/protobuf";
 
 describe("TransactionEngine", () => {
   let trie: StateTrie;
@@ -49,3 +49,4 @@ describe("TransactionEngine", () => {
     }
   });
 });
+ */

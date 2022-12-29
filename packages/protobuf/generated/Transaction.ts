@@ -33,6 +33,7 @@ export interface Transaction {
   nonce?: number | string | Long;
   signature?: Buffer | Uint8Array | string;
   chain?: _Transaction_Chain;
+  _chain?: "chain";
 }
 
 export interface Transaction__Output {
@@ -41,5 +42,6 @@ export interface Transaction__Output {
   data: Buffer;
   nonce: string;
   signature: Buffer;
-  chain: _Transaction_Chain__Output;
+  chain?: _Transaction_Chain__Output;
+  _chain: "chain";
 }

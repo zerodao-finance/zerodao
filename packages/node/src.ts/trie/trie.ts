@@ -2,7 +2,7 @@ import { SecureTrie } from "merkle-patricia-tree";
 import { Level } from "level";
 import path from "path";
 import yargs from "yargs/yargs";
-import { Account } from "../../../protobuf";
+import { Account } from "@zerodao/protobuf";
 export class StateTrie {
   trie: PromisifiedTrie;
 

@@ -27,18 +27,24 @@ export interface BlockHeader {
   timestamp?: number | string | Long;
   signatories?: Buffer | Uint8Array | string;
   fee?: number | string | Long;
+  _txRoot?: "txRoot";
+  _planRoot?: "planRoot";
+  _signatories?: "signatories";
 }
 
 export interface BlockHeader__Output {
   type: _BlockHeader_BlockType__Output;
   parentHash: Buffer;
   baseHash: Buffer;
-  txRoot: Buffer;
-  planRoot: Buffer;
+  txRoot?: Buffer;
+  planRoot?: Buffer;
   prevStateRoot: Buffer;
   height: string;
   round: string;
   timestamp: string;
-  signatories: Buffer;
+  signatories?: Buffer;
   fee: string;
+  _txRoot: "txRoot";
+  _planRoot: "planRoot";
+  _signatories: "signatories";
 }

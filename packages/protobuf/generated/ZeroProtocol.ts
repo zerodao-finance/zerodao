@@ -15,6 +15,8 @@ type SubtypeConstructor<
 
 export interface ProtoGrpcType {
   Account: MessageTypeDefinition;
+  BalanceQuery: MessageTypeDefinition;
+  BalanceReply: MessageTypeDefinition;
   BlockHeader: MessageTypeDefinition;
   Mempool: MessageTypeDefinition;
   RpcService: SubtypeConstructor<typeof grpc.Client, _RpcServiceClient> & {

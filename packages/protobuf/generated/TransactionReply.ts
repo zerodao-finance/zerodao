@@ -15,9 +15,11 @@ export type _TransactionReply_STATUS__Output =
 export interface TransactionReply {
   status?: _TransactionReply_STATUS;
   errorMsg?: Buffer | Uint8Array | string;
+  _errorMsg?: "errorMsg";
 }
 
 export interface TransactionReply__Output {
   status: _TransactionReply_STATUS__Output;
-  errorMsg: Buffer;
+  errorMsg?: Buffer;
+  _errorMsg: "errorMsg";
 }
