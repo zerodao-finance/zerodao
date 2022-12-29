@@ -44,7 +44,7 @@ export class TransactionEngine {
       await this.trie.setAccount(tx.to, newToAccount);
       await this.trie.trie.commit();
     } catch (error) {
-      // await this.trie.trie.revert();
+      await this.trie.trie.revert();
     }
   }
 }
