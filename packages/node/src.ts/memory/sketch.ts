@@ -4,9 +4,9 @@ import type { Hexable } from "@ethersproject/bytes";
 import { chunk } from "lodash";
 
 export class Sketch {
-  public _sketch: Minisketch;
-  public TxMap: Record<string, Hexable>;
-  public capacity: number;
+  private _sketch: Minisketch;
+  private TxMap: Record<string, string>;
+  private capacity: number;
 
   static async init(capacity: number) {
     return new this({
@@ -25,7 +25,6 @@ export class Sketch {
       ethers.utils.arrayify(txHash).slice(23, 32)
     ).toString();
     if (addToSketch) this._sketch.addUint(sketchValue);
-    // console.log(sketchValue)
     this.TxMap[sketchValue] = txHash;
   }
 
@@ -49,21 +48,9 @@ export class Sketch {
       capacity: this.capacity,
     });
     otherSketch.deserialize(serializedSketch);
-
-    // Initialize newSketch with the data from this._sketch
-    const newSketch = await Minisketch.create({
-      fieldSize: 64,
-      capacity: this.capacity,
-    });
-    newSketch.deserialize(this._sketch.serialize());
-
-    // Merge otherSketch and newSketch into this._sketch
-    this._sketch.merge(otherSketch);
-    this._sketch.merge(newSketch);
-
-    // Calculate the differences between the sketches
     let missing: string[] = [],
-      found: Hexable[] = [];
+      found: string[] = [];
+    this._sketch.merge(otherSketch);
     const [length, res] = resolve(
       chunk(this._sketch.decode() as Uint8Array, 8)
     );
@@ -75,37 +62,7 @@ export class Sketch {
         else missing.push(r);
       });
     }
-    console.log(missing)
-    console.log(found)
-    return { missing, found, rebuild: false };
-  } */
-
-  async calculateDifferences(serializedSketch: Buffer) {
-    // Initialize otherSketch with the data from serializedSketch
-    const otherSketch = await Minisketch.create({
-      fieldSize: 64,
-      capacity: this.capacity,
-    });
-    otherSketch.deserialize(serializedSketch);
-
-    // Merge otherSketch into this._sketch
-    this._sketch.merge(otherSketch);
-
-    // Calculate the differences between the sketches
-    let missing: string[] = [],
-      found: Hexable[] = [];
-    const [length, res] = resolve(
-      chunk(this._sketch.decode() as Uint8Array, 8)
-    );
-    if (length < 0) {
-      return { missing, found, rebuild: true };
-    } else {
-      // console.log(res)
-      res.map((r) => {
-        if (this.TxMap[r]) found.push(this.TxMap[r]);
-        else missing.push(r);
-      });
-    }
+    this._sketch.rebuild();
     return { missing, found, rebuild: false };
   }
 }

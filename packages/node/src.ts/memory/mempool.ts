@@ -6,8 +6,6 @@ import { Message } from "protobufjs";
 import { Sketch } from "./sketch";
 import { protocol } from "../proto";
 import { Transaction } from "../core/types";
-import { validateTransaction } from "../transaction";
-import { Sketch } from "./sketch";
 
 export interface MempoolConfig {
   _len: number;
@@ -74,11 +72,7 @@ export class Mempool {
     if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
-    try {
-      await validateTransaction(tx);
-    } catch (error) {
-      throw error;
-    }
+
     //TODO: pass transaction to vm or equivilant
   }
 
@@ -88,13 +82,10 @@ export class Mempool {
 
   async addTransaction(tx: Buffer) {
     const timestamp = Date.now();
-    let tBuf = this.protocol.Transaction.encode(tx).finish();
-    const hash: any = ethers.utils.keccak256(tBuf);
-
+    const hash: string = ethers.utils.keccak256(tx);
     try {
-      await this.validate(tBuf);
-      this.state.set(hash, tBuf);
-      // this.sketch.addUint(ethers.utils.hexlify(hash).slice(23, 32));
+      await this.validate(tx);
+      this.state.set(hash, tx);
       this.sketch.storeTx(hash);
     } catch (error) {
       this.handled.set(hash, {
@@ -136,15 +127,10 @@ export class Mempool {
 
   async broadcastValues() {
     let m = Array.from(this.state.values());
-    // let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
-
-    // this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
+    return this.protocol.Mempool.encode({ txs: m }).finish();
   }
 
-  // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
-  // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
-  // the message from that peer can be safely ignored without losing information.
-  async _hashMempool() {
-    // return this.sketch.serialize();
+  _hashMempool() {
+    return this.sketch.serialize();
   }
 }
