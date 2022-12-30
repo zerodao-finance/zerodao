@@ -20,8 +20,20 @@ message Transaction {
 message Stake {
   required bytes from = 0;
   required bytes data = 1;
-  required uint64 Balance = 2;
+  required uint64 amount = 2;
   required bytes signature = 3;
+  required uint64 nonce = 4;
+  required bytes asset = 6;
+}
+
+message Release {
+  required bytes from = 0;
+  required bytes data = 1;
+  required uint64 amount = 2;
+  required bytes signature = 3;
+  required Chain chain = 4;
+  required uint64 nonce = 5;
+  required bytes asset = 6;
 }
 
 message Account {
@@ -104,4 +116,5 @@ service RpcService{
   rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
   rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
   rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
+  rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}
 }

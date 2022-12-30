@@ -77,6 +77,9 @@ export class Marshaller extends EventEmitter {
     this.rpc.on("zero_sendTransaction", (message) => {
       this.memory.addTransaction(message);
     });
+    this.rpc.on("zero_stakeTransaction", (message) => {
+      this.memory.addTransaction(message)
+    })
   }
 
   async broadcast() {}

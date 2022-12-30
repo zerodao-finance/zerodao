@@ -72,7 +72,12 @@ export class Mempool {
     if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
+    try {
     await checkTransaction(tx);
+    }
+    catch (err){
+      throw err
+    }
     //TODO: pass transaction to vm or equivilant
   }
 

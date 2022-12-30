@@ -40,7 +40,7 @@ export interface Evidence {
 }
 
 export interface EvidenceData {
-  Evicdence: Evidence[];
+  Evidence: Evidence[];
 }
 
 export interface Commit {

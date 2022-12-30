@@ -7,3 +7,5 @@ export * from "./RpcService";
 export * from "./Transaction";
 export * from "./TransactionReply";
 export * from "./ZeroProtocol";
+export * from "./Stake";
+export * from "./Balance";
