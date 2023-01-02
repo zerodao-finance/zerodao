@@ -1,11 +1,11 @@
 import { StateTrie } from "../trie/trie";
 import * as protobuf from "protobufjs";
 import ethers from "ethers";
-import { Account } from "@zerodao/protobuf";
+import { Account, protocol } from "@zerodao/protobuf";
 
 const PROTO_PATH: string =
-  __dirname + "@zerodao/protobuf/proto/ZeroProtocol.proto";
-const root = protobuf.loadSync(PROTO_PATH);
+  __dirname + "@zerodao/protobuf";
+const root = protocol; 
 const transaction = root.lookupType("Transaction");
 export class TransactionEngine {
   Trie: StateTrie;

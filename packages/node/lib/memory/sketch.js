@@ -28,7 +28,7 @@ class Sketch {
         this.TxMap = {};
     }
     storeTx(txHash, addToSketch = true) {
-        const sketchValue = ethers_1.ethers.BigNumber.from(ethers_1.ethers.utils.arrayify(txHash).slice(24, 32)).toString();
+        const sketchValue = ethers_1.ethers.BigNumber.from(ethers_1.ethers.utils.arrayify(txHash).slice(23, 32)).toString();
         if (addToSketch)
             this._sketch.addUint(sketchValue);
         this.TxMap[sketchValue] = txHash;
@@ -40,6 +40,9 @@ class Sketch {
     clear() {
         this._sketch.rebuild();
         this.TxMap = {};
+    }
+    serialize() {
+        return this._sketch.serialize();
     }
     calculateDifferences(serializedSketch) {
         return __awaiter(this, void 0, void 0, function* () {

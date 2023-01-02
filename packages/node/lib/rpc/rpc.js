@@ -21,6 +21,7 @@ class RPCServer extends node_events_1.EventEmitter {
         this.service = this.pkg.RpcService;
         this.self.addService(this.service.service, {
             zero_sendTransaction: this._handleTransaction,
+            zero_getBalance: this._handleTransaction
         });
         this.self.bindAsync(`0.0.0.0:${port || RPCServer.PORT}`, grpc_1.ServerCredentials.createInsecure(), () => {
             this.self.start();

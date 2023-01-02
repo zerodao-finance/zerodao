@@ -20,9 +20,7 @@ export declare class ZeroNode {
     signer: ethers.Signer;
     private marshaller;
     private engine;
-    private db;
     private isValidator;
-    private _blsPriv;
     static init({ signer, consensus, multiaddr }?: Partial<NodeConfig>): Promise<ZeroNode>;
     constructor({ signer, consensus, marshaller }: NodeConfig);
     loadBLSKey(privateKey: string | Uint8Array): Promise<void>;

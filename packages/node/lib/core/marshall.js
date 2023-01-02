@@ -64,7 +64,11 @@ class Marshaller extends events_1.EventEmitter {
         return __awaiter(this, void 0, void 0, function* () { });
     }
     sync() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            // TODO: populate this value
+            let serializedSketch;
+            const results = yield this.memory.synchronize(serializedSketch);
+        });
     }
     proposeBlockFromMemory(height) {
         return __awaiter(this, void 0, void 0, function* () { });
@@ -81,11 +85,16 @@ class Marshaller extends events_1.EventEmitter {
     }
     //gossip current state of mempool to peers
     _broadcastMempool() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            // TODO: buffer that needs to be broadcasted
+            const serialized = this.memory._hashMempool();
+        });
     }
     // cleanup stale transactions in mempool
     _cleanupMempool() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            this.memory.cleanup();
+        });
     }
 }
 exports.Marshaller = Marshaller;

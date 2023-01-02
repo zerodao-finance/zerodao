@@ -6,8 +6,9 @@ import { RPCServer } from "../rpc";
 import { EventEmitter } from "events";
 
 export class Marshaller extends EventEmitter {
+  public peer: ZeroP2P;
+
   private rpc: RPCServer;
-  private peer: ZeroP2P;
   private memory: Mempool;
 
   static async init(signer: ethers.Signer, multiaddr?: any) {

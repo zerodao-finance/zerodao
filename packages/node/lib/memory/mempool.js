@@ -11,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Mempool = void 0;
 const ethers_1 = require("ethers");
-const libminisketch_wasm_1 = require("libminisketch-wasm");
+const sketch_1 = require("./sketch");
+const proto_1 = require("../proto");
 class Mempool {
     static init(config) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sketch = yield libminisketch_wasm_1.Minisketch.create({ fieldSize: 64, capacity: 20 });
+            const sketch = yield sketch_1.Sketch.init(20);
             return new Mempool(Object.assign(Object.assign({}, config), { sketch }));
         });
     }
@@ -38,31 +39,13 @@ class Mempool {
         this.MEMORY_CLEANUP_TIME = 10;
         this.MAX_POOL_SIZE = 10000;
         this.MAX_MSG_BYTES = 1000; // 1kb max message limit;
+        this.handlers = {
+            SKETCH: this.synchronize,
+            TX: this.addTransaction,
+            MEMORY: this.resetMempool,
+        };
         Object.assign(this, config);
-    }
-    start() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.running)
-                return;
-            this.running = true;
-            yield this.peer.pubsub.subscribe(this.POOL_GOSSIP_TOPIC, (msg) => __awaiter(this, void 0, void 0, function* () {
-                yield this.ackGossip(msg);
-            }));
-            this._cleanupInterval = setInterval(this.cleanup.bind(this), this.MEMORY_CLEANUP_TIME * 1000 * 60);
-            this._gossipInterval = setInterval(this.broadcast.bind(this), this.POOL_GOSSIP_TIME * 1000 * 60);
-            return true;
-        });
-    }
-    close() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.running)
-                return;
-            yield this.cleanup();
-            this.peer.pubsub.unsubscribe(this.POOL_GOSSIP_TOPIC);
-            this.running = false;
-            clearInterval(this._gossipInterval);
-            clearInterval(this._cleanupInterval);
-        });
+        this.protocol = proto_1.protocol;
     }
     validate(tx) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -78,16 +61,15 @@ class Mempool {
     addTransaction(tx) {
         return __awaiter(this, void 0, void 0, function* () {
             const timestamp = Date.now();
-            let tBuf = this.protocol.Transaction.encode(tx).finish();
-            const hash = ethers_1.ethers.utils.keccak256(tBuf);
+            const hash = ethers_1.ethers.utils.keccak256(tx);
             try {
-                yield this.validate(tBuf);
-                this.state.set(hash, tBuf);
-                this.sketch.addUint(ethers_1.ethers.utils.hexlify(hash).slice(23, 32));
+                yield this.validate(tx);
+                this.state.set(hash, tx);
+                this.sketch.storeTx(hash);
             }
             catch (error) {
                 this.handled.set(hash, {
-                    tx: tBuf,
+                    tx,
                     timestamp,
                     hash: hash,
                     error: error,
@@ -96,32 +78,37 @@ class Mempool {
         });
     }
     cleanup() {
+        this.sketch.clear();
+        this.state.clear();
+        this.handled.clear();
+    }
+    synchronize(serializedSketch) {
         return __awaiter(this, void 0, void 0, function* () {
-            //TODO:
-            this.sketch.destroy();
-            this.sketch = yield libminisketch_wasm_1.Minisketch.create({ fieldSize: 64, capacity: 20 });
+            return yield this.sketch.calculateDifferences(serializedSketch);
         });
     }
-    ackGossip(message) {
+    resetMempool(mempool) {
         return __awaiter(this, void 0, void 0, function* () {
-            let msg = this.protocol.Mempool.decode(message).toObject();
-            // set recieved message items with current state
+            this.cleanup();
+            yield mempool.reduce((a, d) => __awaiter(this, void 0, void 0, function* () {
+                yield a;
+                yield this.addTransaction(d);
+            }), Promise.resolve());
         });
     }
-    broadcast() {
+    handleBroadcast(msg) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.handlers[msg.messageType](msg.data);
+        });
+    }
+    broadcastValues() {
         return __awaiter(this, void 0, void 0, function* () {
             let m = Array.from(this.state.values());
-            let mbuf = this.protocol.Mempool.encode({ txs: m }).finish();
-            this.peer.pubsub.publish(this.POOL_GOSSIP_TOPIC, mbuf);
+            return this.protocol.Mempool.encode({ txs: m }).finish();
         });
     }
-    // to save memory and time broadcasts will include a temporary tHash of the current state of the mempool
-    // this can be checked against the stored hash in the mempool. when recieving gossip from peers. if the mHash matches your current mHash
-    // the message from that peer can be safely ignored without losing information.
     _hashMempool() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.sketch.serialize();
-        });
+        return this.sketch.serialize();
     }
 }
 exports.Mempool = Mempool;

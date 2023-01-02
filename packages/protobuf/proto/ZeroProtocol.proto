@@ -90,5 +90,5 @@ message BalanceReply {
 
 service RpcService{
   rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
-  rpc zero_getBalance( BalanceQuery ) returns (BalanceResponse) {};
+  rpc zero_getBalance( BalanceQuery ) returns ( BalanceReply ) {};
 }

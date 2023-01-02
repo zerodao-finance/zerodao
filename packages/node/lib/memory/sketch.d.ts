@@ -1,7 +1,5 @@
 /// <reference types="node" />
 import { Minisketch } from "libminisketch-wasm";
-import { ethers } from "ethers";
-import type { Hexable } from "@ethersproject/bytes";
 export declare class Sketch {
     private _sketch;
     private TxMap;
@@ -11,12 +9,13 @@ export declare class Sketch {
         sketch: Minisketch;
         capacity: number;
     });
-    storeTx(txHash: Hexable, addToSketch?: boolean): void;
+    storeTx(txHash: string, addToSketch?: boolean): void;
     rebuild(): void;
     clear(): void;
+    serialize(): Buffer;
     calculateDifferences(serializedSketch: Buffer): Promise<{
         missing: string[];
-        found: ethers.utils.Hexable[];
+        found: string[];
         rebuild: boolean;
     }>;
 }

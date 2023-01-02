@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import chalk = require("chalk");
 import { logger } from "../logger";
-import { ZeroP2P } from "@zerodao/p2p";
 import { Mempool, MempoolConfig } from "../memory";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
@@ -37,8 +36,6 @@ export class ZeroNode {
   private marshaller;
   private engine;
   private isValidator: boolean = false;
-
-  private _blsPriv: string;
 
   static async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
     signer: ethers.Wallet.createRandom(),

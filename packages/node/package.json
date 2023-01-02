@@ -7,7 +7,7 @@
     "build": "tsc",
     "build:proto": "cross-env node scripts/compile-proto",
     "prettier": "prettier --write ./src.ts/**/*",
-    "test": "mocha --exit"
+    "test": "mocha --exit --grep"
   },
   "repository": {
     "type": "git",

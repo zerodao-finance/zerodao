@@ -31,6 +31,7 @@ export class RPCServer extends EventEmitter {
 
     this.self.addService((this.service as any).service, {
       zero_sendTransaction: this._handleTransaction,
+      zero_getBalance: this._handleTransaction
     });
 
     this.self.bindAsync(

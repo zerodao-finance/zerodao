@@ -1,9 +1,10 @@
 /// <reference types="node" />
+import { ZeroP2P } from "@zerodao/p2p";
 import { ethers } from "ethers";
 import { EventEmitter } from "events";
 export declare class Marshaller extends EventEmitter {
+    peer: ZeroP2P;
     private rpc;
-    private peer;
     private memory;
     static init(signer: ethers.Signer, multiaddr?: any): Promise<Marshaller>;
     constructor({ rpc, memory, peer }: {
