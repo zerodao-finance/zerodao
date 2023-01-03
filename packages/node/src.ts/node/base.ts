@@ -64,12 +64,12 @@ export class Node {
 				
 				// request sync and send status to dialed peer
 				await pipe(
-					(new TextEncoder()).encode("REQUEST:SYNC:STATUS:SYNCING"),
+					(new TextEncoder()).encode(`REQUEST:SYNC:STATUS:SYNCING:ID:${peer}`),
 					lp.encode(),
 					stream.sink
 				);
 
-				await this.p2p.handle((this as any).constructor.PROTOCOL.BOOTSTRAP + `/${peer}`, ({stream}) => {
+				await this.p2p.handle((this as any).constructor.PROTOCOL.BOOTSTRAP + `/${this.p2p /** own peer id */}`, ({stream}) => {
 					// handle incoming syncing information from dialed peer
 				})
 
@@ -85,6 +85,12 @@ export class Node {
 		})
 	}
 
+	async peerExchange() {
+		// handle p2p bootstrap protocol to own peerId
+		await this.p2p.handle((this as any).constructor.PROTOCOL.BOOTSTRAP + `${this.p2p.peerId}`, ({ stream }) => {
+			
+		});
+	}
 	
 
 	
