@@ -46,10 +46,8 @@ export class Node {
 
 	async run() {
 		if (this._status != NODE_STATUS.READY) await this.sync();	
-			
 
 	}
-
 	
 	async sync(retryLimit?: number) {
 		logger.info(`syncing --retry ${retryLimit}`);
@@ -84,15 +82,6 @@ export class Node {
 			}
 		})
 	}
-
-	async peerExchange() {
-		// handle p2p bootstrap protocol to own peerId
-		await this.p2p.handle((this as any).constructor.PROTOCOL.BOOTSTRAP + `${this.p2p.peerId}`, ({ stream }) => {
-			
-		});
-	}
-	
-
 	
 	async subscribePeers() {
 		await (this.p2p.pubsub as any).subscribe("lzero.peers.all", async(message: any) => {
@@ -108,7 +97,5 @@ export class Node {
 		await this.p2p.pubsub.unsubscrive("lzero.peers.all");
 		this._peers = [];
 	}
-
-
 	
 }
