@@ -22,3 +22,12 @@ export const CONSENSUS_ENGINE = {
 export type CONSENSUS_ENGINE = typeof CONSENSUS_ENGINE[keyof typeof CONSENSUS_ENGINE];
 
 
+export type GenesisDoc = {
+	GenesisTime: string,
+	ChainID: string,
+	InitialHeight: number,
+	Consensusparams: ConsensusParams,
+	Validators: Validators[],
+	AppHash: Uint8Array,
+	AppState: unknown
+}
