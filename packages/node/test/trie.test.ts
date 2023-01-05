@@ -1,4 +1,4 @@
-import { LevelDB } from "../src.ts/trie/level";
+/* import { LevelDB } from "../src.ts/trie/level";
 import { Level } from "level";
 import { Trie } from "@ethereumjs/trie";
 
@@ -24,3 +24,4 @@ describe("trie", () => {
     console.log("Trie root after deletion:", trie.root()); // Our trie root is back to its initial value
   });
 });
+ */

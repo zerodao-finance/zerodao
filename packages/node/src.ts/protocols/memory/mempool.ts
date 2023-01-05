@@ -6,7 +6,7 @@ import { Message } from "protobufjs";
 import { Sketch } from "./sketch";
 import { protocol } from "../proto";
 import { Transaction } from "../core/types";
-
+import { checkTransaction } from "../transaction";
 export interface MempoolConfig {
   _len: number;
   _cleanupInterval: any;
@@ -72,7 +72,12 @@ export class Mempool {
     if (tx.length > this.MAX_MSG_BYTES) {
       throw new Error("Transaction exceeded memory limit");
     }
-
+    try {
+    await checkTransaction(tx);
+    }
+    catch (err){
+      throw err
+    }
     //TODO: pass transaction to vm or equivilant
   }
 

@@ -59,5 +59,4 @@ export class RPCServer extends EventEmitter {
     logger.info(`EMIT: <${event},${msg}>`);
     super.emit(eventName, msg);
   }
-
 }

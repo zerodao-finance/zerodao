@@ -1,11 +1,11 @@
 // Original file: proto/ZeroProtocol.proto
 
+import type { Transaction as _Transaction, Transaction__Output as _Transaction__Output } from './Transaction';
+
 export interface Mempool {
-  tx?: (Buffer | Uint8Array | string)[];
-  hash?: Buffer | Uint8Array | string;
+  'data'?: ({[key: string]: _Transaction});
 }
 
 export interface Mempool__Output {
-  tx: Buffer[];
-  hash: Buffer;
+  'data': ({[key: string]: _Transaction__Output});
 }

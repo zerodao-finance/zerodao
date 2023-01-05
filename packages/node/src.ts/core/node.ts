@@ -5,9 +5,9 @@ import { Mempool, MempoolConfig } from "../memory";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
-import { protocol } from "@zerodao/protobuf";
 import { Marshaller } from './marshall'
-
+import { TransactionEngine } from "../transaction";
+import { StateTrie } from "../trie";
 const timeout = async (time) => {
   await new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -35,6 +35,7 @@ export class ZeroNode {
 
   private marshaller;
   private engine;
+  private db
   private isValidator: boolean = false;
 
   static async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
@@ -45,15 +46,15 @@ export class ZeroNode {
     return new ZeroNode({
       signer,
       consensus,
-      marshaller
+      marshaller,
     });
   }
 
-  constructor({ signer, consensus, marshaller }: NodeConfig) {
+  constructor({ signer, consensus, marshaller}: NodeConfig) {
     Object.assign(this, {
       consensus,
       signer,
-      marshaller
+      marshaller,
     });
   }
   

@@ -2,7 +2,7 @@ import { SecureTrie } from "merkle-patricia-tree";
 import { Level } from "level";
 import path from "path";
 import yargs from "yargs/yargs";
-import { Account } from "@zerodao/protobuf";
+import { Account, Balance } from "@zerodao/protobuf";
 export class StateTrie {
   trie: PromisifiedTrie;
 
@@ -27,6 +27,20 @@ export class StateTrie {
   public async setAccount(address: string, account: Account): Promise<void> {
     const accountData = Buffer.from(JSON.stringify(account));
     await this.trie.put(Buffer.from(address), accountData);
+  }
+
+  public async getStakeBalance(hash: string): Promise<Balance | null> {
+    const balanceData = await this.trie.get(Buffer.from(hash));
+    if (balanceData) {
+      const balance: Balance = JSON.parse(balanceData.toString());
+      return balance;
+    }
+    return null;
+  }
+
+  public async setStakeBalance(hash: string, balance: Balance): Promise<void> {
+    const balanceData = Buffer.from(JSON.stringify(balance));
+    await this.trie.put(Buffer.from(hash), balanceData);
   }
 }
 

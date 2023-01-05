@@ -17,11 +17,35 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
+message Stake {
+  required bytes from = 0;
+  required bytes data = 1;
+  required uint64 amount = 2;
+  required bytes signature = 3;
+  required uint64 nonce = 4;
+  required bytes asset = 6;
+}
+
+message Release {
+  required bytes from = 0;
+  required bytes data = 1;
+  required uint64 amount = 2;
+  required bytes signature = 3;
+  required Chain chain = 4;
+  required uint64 nonce = 5;
+  required bytes asset = 6;
+}
+
 message Account {
   required bytes address = 0;
-  required uint64 balance = 1;
-  required uint64 nonce = 2;
+  required uint64 unStakedBalance = 1;
+  required uint64 stakedBalance = 2;
+  required uint64 nonce = 3;
+}
 
+message Balance {
+  required bytes hash = 0;
+  required uint64 balance = 1;
 }
 
 message TransactionReply {
@@ -90,5 +114,8 @@ message BalanceReply {
 
 service RpcService{
   rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
-  rpc zero_getBalance( BalanceQuery ) returns ( BalanceReply ) {};
+<<<<<<< HEAD
+  rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
+  rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
+  rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}
 }

@@ -1,6 +1,10 @@
 import { Client } from "./client";
-import { Transaction } from "../../protobuf/generated/Transaction";
-import { TransactionReply } from "../../protobuf/generated/TransactionReply";
+import {
+  Transaction,
+  TransactionReply,
+  BalanceQuery,
+  BalanceReply,
+} from "@zerodao/protobuf";
 
 export class Provider {
   client: Client;
@@ -8,7 +12,11 @@ export class Provider {
     this.client = new Client(server);
   }
 
-  async call(data: Transaction): Promise<TransactionReply> {
-    return await this.client.handleTransaction(data);
+  async sendZeroTransaction(data: Transaction): Promise<TransactionReply> {
+    return await this.client.sendZeroTransaction(data);
+  }
+
+  async getZeroBalance(data: BalanceQuery): Promise<BalanceReply> {
+    return await this.client.getZeroBalance(data);
   }
 }
