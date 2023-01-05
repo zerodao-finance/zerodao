@@ -3,9 +3,10 @@ import * as protobuf from "protobufjs";
 import ethers from "ethers";
 import { Account, Balance, Transaction, Stake } from "@zerodao/protobuf";
 import { Data } from "../core/types"
+
 const PROTO_PATH: string =
-  __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
-const root = protobuf.loadSync(PROTO_PATH);
+  __dirname + "@zerodao/protobuf";
+const root = protocol; 
 const transaction = root.lookupType("Transaction");
 const stake = root.lookupType("Stake");
 

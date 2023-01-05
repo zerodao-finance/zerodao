@@ -1,8 +1,14 @@
 /* import { expect } from "chai";
 import { StateTrie } from "../src.ts/trie/trie";
 import { TransactionEngine, validateTransaction } from "../src.ts/transaction";
+<<<<<<< HEAD
 import { Account } from "@zerodao/protobuf";
 
+=======
+// import { Account } from "../../protobuf/generated";
+/**
+ *
+>>>>>>> proto/zero-network
 describe("TransactionEngine", () => {
   let trie: StateTrie;
   let engine: TransactionEngine;
@@ -49,4 +55,8 @@ describe("TransactionEngine", () => {
     }
   });
 });
+<<<<<<< HEAD
  */
+=======
+*/
+>>>>>>> proto/zero-network

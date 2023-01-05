@@ -1,5 +1,5 @@
 import grpc from "grpc";
-import { Transaction, TransactionReply } from "../../../protobuf/generated";
+import { Transaction, TransactionReply } from "@zerodao/protobuf/generated";
 function validateTransaction(transaction) {
   return true;
 }

@@ -114,6 +114,7 @@ message BalanceReply {
 
 service RpcService{
   rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
+<<<<<<< HEAD
   rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
   rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
   rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}

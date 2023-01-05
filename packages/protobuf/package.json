@@ -2,16 +2,21 @@
   "name": "@zerodao/protobuf",
   "version": "1.0.0",
   "description": "protobuf types",
-  "main": "generated/index.ts",
+  "main": "lib/src.ts/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/zerodao-finance/zerodao.git"
+  },
+  "scripts": {
+    "build:proto": "cross-env node scripts/compile-proto && yarn build",
+    "build": "tsc"
   },
   "author": "zerodao",
   "license": "MIT",
   "dependencies": {
     "@grpc/grpc-js": "1.8.0",
-    "@grpc/proto-loader": "0.7.4"
+    "@grpc/proto-loader": "^0.7.4",
+    "ts-proto": "^1.136.1"
   },
   "devDependencies": {
     "@types/level": "^6.0.1",

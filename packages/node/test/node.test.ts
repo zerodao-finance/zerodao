@@ -8,7 +8,7 @@ describe("node", () => {
     // jfnode = await ZeroNode.fromSigner(signer, "DEV-MAINNET");
   });
   it("should test the node", async () => {
-    await node.init();
+    //await node.init();
   });
 });
  */

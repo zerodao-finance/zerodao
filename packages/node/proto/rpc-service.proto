@@ -1,0 +1,49 @@
+message Transaction {
+  enum Type {
+    TRANSFER = 0; // Transfer asset from one chain to another
+    SLASH = 1; // Remove darknode from peers
+  }
+  enum Chain {
+    ETHEREUM = 0;
+    MONERO = 1;
+  }
+  required Type type = 0;
+  required bytes to = 1; // Address to send to
+  required bytes data = 2;
+  required uint64 nonce = 3;
+  required bytes signature = 4;
+  optional Chain chain = 5; // Only used for TRANSFER types
+}
+
+enum STATUS {
+    SUCCESS = 0;
+    ERROR = 1;
+}
+
+message TransactionReply {
+  required STATUS status = 0;
+  optional bytes hash = 1;
+  optional bytes errorMsg = 2;
+}
+
+message BalanceRequest {
+  required bytes address = 0;
+  optional uint64 block = 1;
+}
+
+message BalanceReply {
+  required STATUS status = 0;
+  optional uint64 balance = 1;
+  optional bytes errorMsg = 2;
+}
+
+message GenericMessage {
+  optional string data = 0;
+}
+
+service ZeroNodeABCI {
+  // unary requests
+  rpc zero_sendTransaction( Transaction ) returns ( TransactionReply ) {};
+  rpc zero_getBalance( BalanceRequest ) returns ( BalanceReply ) {};
+  rpc zero_echoMessage( GenericMessage ) returns ( GenericMessage ) {}; 
+}
