@@ -10,6 +10,7 @@
 
 import _ from "lodash";
 import { protocol } from "@zerodao/protobuf";
+import * as types from "../types";
 
 interface IState {
 	version: Version;
@@ -33,6 +34,11 @@ interface IState {
 
 	appHash: Uint8Array;
 };
+
+type Version = {
+	version_number: number;
+	software_vers: string;
+}
 
 abstract class State {
 	version: Version;
