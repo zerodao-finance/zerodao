@@ -7,7 +7,7 @@ type Validator = {
 	priority: number
 }
 
-export interface ValidatorSet {
+export interface IValidatorSet {
 	validators: Validator[];
 	proposer: Validator;
 	onInit(): void;
@@ -19,7 +19,7 @@ interface ValidatorConstructor {
 }
 
 
-export class Validator implements ValidatorSet {
+export class ValidatorSet implements IValidatorSet {
 	validators: Validator[];
 	proposer: Validator;
 

@@ -136,9 +136,48 @@ abstract class State {
 		});
 	}
 
-	makeBlock() {}
+	makeBlock(
+		height: number,
+		txs: types.Tx[],
+		commit: types.Commit,
+		evidence: types.Evidence[],
+		proposerAddress: Uint8Array | string
+	) {
+		var block = types.MakeBlock(height, txs, commit, evidence);
 
-	medianTime() {}
+		var timestamp = Date.now();
+		if ( height == state.InitialHeight ) {
+			timestamp = state.LastBlockTime; // genesis time
+		} else {
+			timestamp = State.MedianTime(commit, state.LastValidator);
+		}
+
+		block.Header.Populate(
+			state.Version.Consensus,
+			state.ChainID,
+			timestamp,
+			state.LastBlockID,
+			state.Validators.Hash(),
+			state.NextValidators.Hash(),
+			types.HsahConsensusParams(state.ConsensusParams),
+			state.AppHash,
+			state.LastResultsHash,
+			proposerAddress
+		);
+
+		return block, block.MakePartSet(types.BlockPartSizeBytes);
+	}
+
+	/*
+	 * compute a median time for a given Commit (based on timestamp field of votes messages) 
+	 * computed time is between timestamps of the votes sent by honest processes
+	 */
+	static medianTime(
+		commit: types.Commit,
+		validators: types.ValidatorSet
+	) {
+		// TODO: implement median time	
+	}
 
 	makeGenesisStateFromFile(doc: GenesisDoc) {}
 
