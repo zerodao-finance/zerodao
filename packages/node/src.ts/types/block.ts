@@ -26,3 +26,37 @@ type Version = {
 	Block: number,
 	App: number
 };
+
+type BlockID = {
+	Hash: Buffer | Uint8Array;
+	PartSetHeadser: PartSetHeader
+}
+
+type PartSetHeader = {
+	Total: number;
+	Hsah: Buffer;
+}
+
+function BlockID(hash: Buffer | Uint8Array, psh: PartSetHeader) {
+	this.PartSetHeader = psh;
+	this.Hash = hash
+}
+
+BlockID.prototype.isEquals = function (other: BlockID): boolean {
+	if ( this.hash === other.hash && this.PartSetHeader === other.PartSetHeader ) return true;
+	return false;
+}
+
+BlockID.prototype.isZero = function () {}
+
+BlockID.prototype.isComplete = function () {}
+
+BlockID.prototype.toKey = function () {}
+
+BlockID.prototype.toProto = function () {}
+
+BlockID.prototype.toString = function () {}
+
+function BlockIDFromProto (blockID: Buffer): BlockID | Error {
+
+}

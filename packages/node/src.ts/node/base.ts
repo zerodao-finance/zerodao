@@ -44,7 +44,9 @@ export class Node {
 	) {
 		
 	}
-	constructor() {
+	constructor(
+		
+	) {
 
 	}
 }
