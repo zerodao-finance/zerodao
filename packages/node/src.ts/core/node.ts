@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
-import chalk = require("chalk");
+const chalk = require("chalk");
 import { logger } from "../logger";
-import { Mempool, MempoolConfig } from "../memory";
+import { Mempool, MempoolConfig } from "../protocols/memory";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";

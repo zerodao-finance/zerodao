@@ -1,10 +1,14 @@
 import { StateTrie } from "../trie/trie";
 import * as protobuf from "protobufjs";
 import ethers from "ethers";
-import { Account, Balance, Transaction, Stake } from "@zerodao/protobuf";
+import { Account, Balance, protocol, Transaction, Stake } from "@zerodao/protobuf";
 import { Data } from "../core/types"
 
+/* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
+
 const PROTO_PATH: string =
+// __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
+// const root = protobuf.loadSync(PROTO_PATH);
   __dirname + "@zerodao/protobuf";
 const root = protocol; 
 const transaction = root.lookupType("Transaction");
@@ -16,12 +20,14 @@ export class TransactionEngine {
     this.trie = trie;
   }
   async runBlock(block: Data) {
+    await this.trie.trie.checkpoint();
     for (const txs of block.Txs) {
       for (const tx of txs) {
       const txObject: any = transaction.decode(tx)
       await this.runTransaction(txObject);
       }
     }
+    await this.trie.trie.commit()
   }
   async runTransaction(tx) {
     await this.trie.trie.checkpoint();
