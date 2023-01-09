@@ -15767,6 +15767,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+"libminisketch-wasm@https://github.com/zerodao-finance/libminisketch-wasm":
+  version "0.1.0"
+  resolved "https://github.com/zerodao-finance/libminisketch-wasm#b825b0f6c567138e37c9639c3c414e75d0d3b4ca"
+  dependencies:
+    buffer "^6.0.3"
+    mocha "^10.2.0"
+
 libnpmaccess@^4.0.2:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/libnpmaccess/-/libnpmaccess-4.0.3.tgz#dfb0e5b0a53c315a2610d300e46b4ddeb66e7eec"
