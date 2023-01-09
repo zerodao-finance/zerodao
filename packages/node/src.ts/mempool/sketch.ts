@@ -22,7 +22,7 @@ export class Sketch {
 
   storeTx(txHash: string, addToSketch: boolean = true) {
     const sketchValue = ethers.BigNumber.from(
-      ethers.utils.arrayify(txHash).slice(23, 32)
+      ethers.utils.arrayify(txHash).slice(24, 32)
     ).toString();
     if (addToSketch) this._sketch.addUint(sketchValue);
     this.TxMap[sketchValue] = txHash;
@@ -54,9 +54,12 @@ export class Sketch {
     const [length, res] = resolve(
       chunk(this._sketch.decode() as Uint8Array, 8)
     );
-    if (length < 0) {
+    if (length > this.capacity) {
       return { missing, found, rebuild: true };
     } else {
+      if (length == 0) {
+        return { missing, found, rebuild: false };
+      }
       res.map((r) => {
         if (this.TxMap[r]) found.push(this.TxMap[r]);
         else missing.push(r);
