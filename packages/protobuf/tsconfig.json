@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015", "es5", "dom"],
+    "preserveWatchOutput": true,
+    "pretty": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2015",
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "./lib",
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": ["src.ts/*", "proto/*", "generated/*"],
+  "exclude": ["node_modules"]
+}

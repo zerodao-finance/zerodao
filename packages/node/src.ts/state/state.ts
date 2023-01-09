@@ -6,6 +6,9 @@
  * fields can be easily serialized.
  * State can be overridden with a new State instance but can't be directly mutated
  * use state.copy() or state.nextState();
+ *
+ * Transaction Engine should take instance of State and Block and validate a block.
+ * this validated block is the content of a proposal that will be voted on in consensus rounds
  */
 
 import _ from "lodash";

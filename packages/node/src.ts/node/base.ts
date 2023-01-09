@@ -15,9 +15,13 @@ import {
 } from "./types";
 import lp from "it-length-prefixed";
 import pipe from "it-pipe";
+import yargs from "yargs";
 
 
 
+/*
+ * @param (stateSync: boolean) whether a node should stateSync on startup (defaults: false);
+ */
 export class Node {	
 	// config
 	config: types.Config;
@@ -33,7 +37,16 @@ export class Node {
 	eventBus // pub/sub for services
 	stateStore
 	bcReactor // for block-syncing
+	stateSync: boolean = false;
 
+	/*
+	 * creates new node with default settings
+	 */
+	static default() {}
+
+	/*
+	 * creates new node with passed node settings
+	 */
 	static init(
 		config: types.Config,
 		privValidator: types.PrivValidator,
@@ -44,6 +57,7 @@ export class Node {
 	) {
 		
 	}
+
 	constructor(
 		
 	) {
