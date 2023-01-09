@@ -1,4 +1,5 @@
 import { Mempool } from "./mempool";
+import { EventEmitter } from "events";
 
 type Reactor = {
   p2p: typeof ZeroP2P;
@@ -11,7 +12,9 @@ class MempoolReactor {
  config: MempoolConfig;
  mempool: typeof Mempool;
 
- constructor() {}
+ constructor() {
+   super();
+ }
   
  /*
   * broadcast handler recieves broadcasts from peers and 
@@ -21,6 +24,10 @@ class MempoolReactor {
     var message = (protocol.Mempool.decode(data)).toObject();
      
  }
+
+
+
+ 
 }
 
 

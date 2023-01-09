@@ -6,6 +6,8 @@ import { State } from "./state";
  */
 abstract class Store {
 
+	db
+
 	constructor() {
 
 	}
