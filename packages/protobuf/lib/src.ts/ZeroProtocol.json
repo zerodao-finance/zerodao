@@ -1,0 +1,287 @@
+{
+    "nested": {
+        "Transaction": {
+            "oneofs": {
+                "_chain": {
+                    "oneof": [
+                        "chain"
+                    ]
+                }
+            },
+            "fields": {
+                "type": {
+                    "rule": "required",
+                    "type": "Type",
+                    "id": 0
+                },
+                "to": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 1
+                },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 2
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 3
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 4
+                },
+                "chain": {
+                    "type": "Chain",
+                    "id": 5,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                }
+            },
+            "nested": {
+                "Type": {
+                    "values": {
+                        "TRANSFER": 0,
+                        "SLASH": 1
+                    }
+                },
+                "Chain": {
+                    "values": {
+                        "ETHEREUM": 0,
+                        "MONERO": 1
+                    }
+                }
+            }
+        },
+        "Account": {
+            "fields": {
+                "address": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 0
+                },
+                "balance": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 1
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 2
+                }
+            }
+        },
+        "TransactionReply": {
+            "oneofs": {
+                "_errorMsg": {
+                    "oneof": [
+                        "errorMsg"
+                    ]
+                }
+            },
+            "fields": {
+                "status": {
+                    "rule": "required",
+                    "type": "STATUS",
+                    "id": 0
+                },
+                "errorMsg": {
+                    "type": "bytes",
+                    "id": 1,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                }
+            },
+            "nested": {
+                "STATUS": {
+                    "values": {
+                        "SUCCESS": 0,
+                        "ERROR": 1
+                    }
+                }
+            }
+        },
+        "Mempool": {
+            "fields": {
+                "data": {
+                    "keyType": "string",
+                    "type": "Transaction",
+                    "id": 0
+                }
+            }
+        },
+        "BlockHeader": {
+            "oneofs": {
+                "_txRoot": {
+                    "oneof": [
+                        "txRoot"
+                    ]
+                },
+                "_planRoot": {
+                    "oneof": [
+                        "planRoot"
+                    ]
+                },
+                "_signatories": {
+                    "oneof": [
+                        "signatories"
+                    ]
+                }
+            },
+            "fields": {
+                "type": {
+                    "rule": "required",
+                    "type": "BlockType",
+                    "id": 0
+                },
+                "parentHash": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 1
+                },
+                "baseHash": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 2
+                },
+                "txRoot": {
+                    "type": "bytes",
+                    "id": 3,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "planRoot": {
+                    "type": "bytes",
+                    "id": 4,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "prevStateRoot": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 5
+                },
+                "height": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 6
+                },
+                "round": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 7
+                },
+                "timestamp": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 8
+                },
+                "signatories": {
+                    "type": "bytes",
+                    "id": 9,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "fee": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 10
+                }
+            },
+            "nested": {
+                "BlockType": {
+                    "values": {
+                        "STANDARD": 0,
+                        "BASE": 1,
+                        "REBASE": 2
+                    }
+                }
+            }
+        },
+        "BalanceQuery": {
+            "fields": {
+                "address": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 0
+                }
+            }
+        },
+        "BalanceReply": {
+            "oneofs": {
+                "_balance": {
+                    "oneof": [
+                        "balance"
+                    ]
+                },
+                "_address": {
+                    "oneof": [
+                        "address"
+                    ]
+                },
+                "_errorMsg": {
+                    "oneof": [
+                        "errorMsg"
+                    ]
+                }
+            },
+            "fields": {
+                "status": {
+                    "rule": "required",
+                    "type": "STATUS",
+                    "id": 0
+                },
+                "balance": {
+                    "type": "uint64",
+                    "id": 1,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "address": {
+                    "type": "bytes",
+                    "id": 2,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "errorMsg": {
+                    "type": "bytes",
+                    "id": 3,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                }
+            },
+            "nested": {
+                "STATUS": {
+                    "values": {
+                        "SUCCESS": 0,
+                        "ERROR": 1
+                    }
+                }
+            }
+        },
+        "RpcService": {
+            "methods": {
+                "zero_sendTransaction": {
+                    "requestType": "Transaction",
+                    "responseType": "TransactionReply"
+                },
+                "zero_getBalance": {
+                    "requestType": "BalanceQuery",
+                    "responseType": "BalanceResponse"
+                }
+            }
+        }
+    }
+}
