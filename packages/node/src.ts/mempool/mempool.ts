@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { logger } from "../logger";
 import { protocol } from "@zerodao/protobuf";
 import { Sketch } from "./sketch";
+<<<<<<< HEAD
 
 type MempoolConfig = {
   MAX_BYTES: number;
@@ -56,6 +57,23 @@ export function Mempool(
   this.config = config;
   this.proxy = proxyApp;
   this.sketch = undefined;
+=======
+import { protocol } from "../proto";
+import { Transaction } from "../core/types";
+import { checkTx } from "../transaction";
+export interface MempoolConfig {
+  _len: number;
+  _cleanupInterval: any;
+  _gossipInterval: any;
+  peer: any;
+  protocol: any;
+  sketch: Sketch;
+  POOL_GOSSIP_TIME: number;
+  MAX_POOL_SIZE: number;
+  MAX_MSG_BYTES: number; // 1kb max message limit;
+  POOL_STORAGE_TIME_LIMIT: number;
+  POOL_GOSSIP_TOPIC: string;
+>>>>>>> 02962a55 (stake type)
 }
 
 Mempool.prototype.length = function () {
@@ -97,7 +115,21 @@ Mempool.prototype.checkTx = function (tx: any) {
     return [ null, new Error("transaction exists in cache") ]
   }
 
+<<<<<<< HEAD
   this.cache.add(hash);
+=======
+  async validate(tx: Buffer) {
+    if (tx.length > this.MAX_MSG_BYTES) {
+      throw new Error("Transaction exceeded memory limit");
+    }
+    try {
+    await checkTx(tx);
+    }
+    catch (err){
+      throw err
+    }
+  }
+>>>>>>> 02962a55 (stake type)
 
   let wtx = new WrappedTx(tx, time, this.height); 
   let [rsp, err] = this.proxy.checkTxSync(tx);

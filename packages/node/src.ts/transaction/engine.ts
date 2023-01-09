@@ -133,10 +133,10 @@ export class TransactionEngine {
   }
 }
 
-export async function checkTransaction(tBuf: Buffer) {
+export async function checkTx(tBuf: Buffer) {
   try {
     transaction.decode(tBuf) || stake.decode(tBuf);
   } catch (error) {
-    throw error;
+    throw "Transaction not a valid protobuf type";
   }
 }
