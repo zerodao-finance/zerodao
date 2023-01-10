@@ -1,4 +1,4 @@
-type TX = {
+export type TX = {
 	type: number; // implement Transaction types or transaction type config
 	to: Uint8Array | string;
 	data: Buffer | Uint32Array;

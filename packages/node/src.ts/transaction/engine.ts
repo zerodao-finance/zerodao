@@ -1,9 +1,11 @@
 import { StateTrie } from "../trie/trie";
 import * as protobuf from "protobufjs";
 import ethers from "ethers";
-import { Account, Balance, protocol, Transaction, Stake } from "@zerodao/protobuf";
+import { protocol} from "@zerodao/protobuf";
+import { Account } from "../types/account";
+import { Balance } from "../types/balance";
 import { Data } from "../core/types"
-
+import { TX } from "../types/tx";
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
 
 const PROTO_PATH: string =
@@ -29,9 +31,9 @@ export class TransactionEngine {
     }
     await this.trie.trie.commit()
   }
-  async runTransaction(tx) {
+  async runTransaction(tx: TX) {
     await this.trie.trie.checkpoint();
-    if (tx.type == "Transfer") {
+    if (tx.type == 0) {
       try {
         await this.validateTransaction(tx)
         const oldFromAccount: Account = (await this.trie.getAccount(
@@ -121,7 +123,7 @@ export class TransactionEngine {
       }
     } */
   }
-  async validateTransaction(tx) {
+  async validateTransaction(tx: TX) {
     const hash: string = ethers.utils.keccak256(tx);
     const address = ethers.utils.recoverAddress(hash, tx.signature);
     const oldFromAccount: Account = (await this.trie.getAccount(
