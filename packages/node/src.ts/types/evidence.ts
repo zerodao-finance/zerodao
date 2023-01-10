@@ -37,6 +37,16 @@ class DuplicateVoteEvidence {
 		)
 	}
 
+	toObject() {
+		return {
+			this.VoteA,
+			this.VoteB,
+			this.TotalVotingPower,
+			this.ValidatorPower,
+			this.Timestamp
+		}
+	}
+
 	constructor({ 
 			VoteA: Vote,
 			VoteB: Vote,
