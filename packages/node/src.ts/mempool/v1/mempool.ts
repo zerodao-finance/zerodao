@@ -1,39 +1,20 @@
-type Mempool = {
-  // methods
-  checkTx(tx: types.Tx, txInfo: TxInfo): void | Error;
-  removeTxByKey(txKey: types.TxKey): void | Error;
-  reapMaxBytesMaxGas(maxBytes: number, maxGas: number) types.Txs;
-  lock(): void;
-  unlock(): void;
-  update(
-    blockHeight: number,
-    blockTxs: types.Txs,
-  );
-  flush(): void;
-  txsAvailable(): void;
-  size(): number;
-  sizeBytes(): number;
-  height: number;
-}
+import { WrappedTx } from "./tx";
+import { Sketch } from "../sketch";
 
 class Mempool {
-  public txs: Map<types.TxKey, Buffer>;
-  
-  public size: number;
-
-  protected mempoolBytes: number;
-  
+  public txs: Map<string, Buffer>;
   protected cache: Set = new Set();
-  protected logger: unknown;
-  protected txsByte: number;
-
   protected height: number = 0;
-  protected sketch: any;
+  
+  public length: number;
+  protected size: number;
+  
+  protected logger: unknown;
+
   
   
 
   constructor() {
-    this.sketch = await Sketch.init(20);
   }
 
   lock() {
@@ -42,14 +23,28 @@ class Mempool {
 
   unlock() {}
 
-  reapMaxTxs(limit: number) {
-
+  reapMaxTxs(max: number) {  
+    if (max < 0 || max > this.txs.size ) {
+      return _.map(this.txs.values(), (x) => x.tx);
+    }
+    
+    
+    var vals = _.map([...this.txs.values()], (x) => x.tx);
+    return _.take(vals, max);
   }
 
-  reapMaxBytes() {}
-  flush() {}
-  removeTxByElement() {}
-  removeTxByKey() {}
+  flush() {
+    this.txs.clear();
+    this.cache.clear();
+  }
+
+  removeTxByKey(key: string) {
+    let wtx = this.txs.get(key); 
+    if ( wtx ) {
+      this.cache.delete(wtx.tx);
+      this.txs.delete(key);
+    }
+  }
 
   checkTx(tx: Buffer) {
     
@@ -81,6 +76,10 @@ class Mempool {
     logger.info(`adding new tx ${txKey} to mempool`);
   }
 
+  recheckTx(wtx: WrappedTX) {
+
+  }
+
   /*
    * adds new wrapped transaction to the mempool,
    * use wrapped transactions as they include height at which the transaction was checked
@@ -110,12 +109,11 @@ class Mempool {
 
   }
 
-  addNewTransaction(tx: Tx, key: TxKey) {
-    
-  }
-
-  recheckTransactions() {
+  recheckTransactions(cHeight: number) {
     if (_.isEmpty(this.txs.values())) return new Error("cannot run recheck on an empty mempool");
+    //TODO: check ( tx.height < cHeight ) 
+    // remove if check failed
+    // do nothing if check pass
     
 
   }

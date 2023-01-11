@@ -14,11 +14,32 @@ export class Sketch {
       capacity,
     });
   }
+
+  static async fromTxs(wtxs: any[]): Sketch {
+    let _valHash = _.map(txs, (i) => { 
+      let _val = ethers.BigNumber.from(ethers.utils.arrayify(i.hash).slice(24, 32)).toString()
+     return [_val, i.hash]
+    })
+
+    var sketch = Sketch.init(wtxs.length);
+    
+    for ( let val, hash of _valHash ) {
+      sketch.storeWrappedTxs(val, hash); 
+    }
+   
+    return sketch;
+  }
+
   constructor({ sketch, capacity }: { sketch: Minisketch; capacity: number }) {
     this._sketch = sketch;
     this.capacity = capacity;
     this.TxMap = {};
   }
+
+  storeWrappedTxs(sVal, hash) {
+    this._sketch.addUint(sVal);
+    this.TxMap[sVal] = hash;
+  } 
 
   storeTx(txHash: string, addToSketch: boolean = true) {
     const sketchValue = ethers.BigNumber.from(
@@ -27,6 +48,7 @@ export class Sketch {
     if (addToSketch) this._sketch.addUint(sketchValue);
     this.TxMap[sketchValue] = txHash;
   }
+
 
   rebuild() {
     this._sketch.rebuild();
