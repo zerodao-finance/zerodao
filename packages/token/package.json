@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "node:ethereum": "CHAIN=ETHEREUM hardhat node",
-    "test": "CHAIN=ETHEREUM hardhat test"
+    "test": "CHAIN=ETHEREUM hardhat test",
+    "compile": "CHAIN=ETHEREUM hardhat compile"
   },
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
@@ -26,6 +27,7 @@
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.17",
-    "chai": "^4.3.7"
+    "chai": "^4.3.7",
+    "prettier-plugin-solidity": "^1.1.1"
   }
 }
