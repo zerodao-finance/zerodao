@@ -1,6 +1,7 @@
 import { Level } from "level";
 import { Block } from "../types"
 import { protocol } from "../proto";
+
 export class BlockStore {
   private _base: number = 0;
   private _height: number = 0;
