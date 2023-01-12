@@ -14,7 +14,7 @@ export class StateTrie {
     const trie = new SecureTrie(db);
     this.trie = promisifyTrie(trie);
   }
-  
+
   public async getAccount(address: string): Promise<Account | null> {
     const accountData = await this.trie.get(Buffer.from(address));
     if (accountData) {

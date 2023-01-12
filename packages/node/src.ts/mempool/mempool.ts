@@ -123,10 +123,9 @@ Mempool.prototype.checkTx = function (tx: any) {
       throw new Error("Transaction exceeded memory limit");
     }
     try {
-    await checkTx(tx);
-    }
-    catch (err){
-      throw err
+      await checkTx(tx);
+    } catch (err) {
+      throw err;
     }
   }
 >>>>>>> 02962a55 (stake type)

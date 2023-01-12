@@ -3,9 +3,7 @@
     "Transaction": {
       "oneofs": {
         "_chain": {
-          "oneof": [
-            "chain"
-          ]
+          "oneof": ["chain"]
         }
       },
       "fields": {
@@ -171,9 +169,7 @@
     "TransactionReply": {
       "oneofs": {
         "_errorMsg": {
-          "oneof": [
-            "errorMsg"
-          ]
+          "oneof": ["errorMsg"]
         }
       },
       "fields": {
@@ -257,19 +253,13 @@
     "BlockHeader": {
       "oneofs": {
         "_txRoot": {
-          "oneof": [
-            "txRoot"
-          ]
+          "oneof": ["txRoot"]
         },
         "_planRoot": {
-          "oneof": [
-            "planRoot"
-          ]
+          "oneof": ["planRoot"]
         },
         "_signatories": {
-          "oneof": [
-            "signatories"
-          ]
+          "oneof": ["signatories"]
         }
       },
       "fields": {
@@ -357,19 +347,13 @@
     "BalanceReply": {
       "oneofs": {
         "_balance": {
-          "oneof": [
-            "balance"
-          ]
+          "oneof": ["balance"]
         },
         "_address": {
-          "oneof": [
-            "address"
-          ]
+          "oneof": ["address"]
         },
         "_errorMsg": {
-          "oneof": [
-            "errorMsg"
-          ]
+          "oneof": ["errorMsg"]
         }
       },
       "fields": {

@@ -1,6 +1,7 @@
+import { Vote } from "../core/types";
 import { ValidatorSet } from "./validator-set";
 
-class DuplicateVoteEvidence {
+export class DuplicateVoteEvidence {
 	VoteA: Vote;
 	VoteB: Vote;
 	TotalVotingPower: number;

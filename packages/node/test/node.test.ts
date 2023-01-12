@@ -1,4 +1,4 @@
-/* import { ethers } from "ethers";
+import { ethers } from "ethers";
 import { ZeroNode } from "../src.ts/index";
 
 describe("node", () => {
@@ -11,4 +11,3 @@ describe("node", () => {
     //await node.init();
   });
 });
- */

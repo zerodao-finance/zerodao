@@ -5,14 +5,15 @@ import PeerId from "peer-id";
 import os from "node:os";
 import fs from "node:fs";
 
-export class Peer extends ZeroP2P {
-
-	peerId: any;
-	wallet_key: any;
-
-	static async peerIdFromNodeKey(nodeKey) {
-		return await PeerId.createFromJSON(nodeKey);
-	}
+export class ZeroNetwork extends ZeroP2P {
+  static get PROTOCOLS() {
+    return [
+      "node:v.1:mempool",
+      "node:v.1:block-sync",
+      "node:v.1:pex",
+      "node:v.1:consensus",
+    ];
+  }
 
 	static async fromConfig(path: string = 'default.config.json') {
 		var json = fs.readFileSync(path, 'utf8');
@@ -82,6 +83,10 @@ export class Peer extends ZeroP2P {
 
 		fs.writeFile(`${options.nodeId}.config.json`, json, 'utf8', () => {logger.info("current node config saved...")})
 	}
+
+  publish(peer: string, message: Message) {
+    await this.dialProtocol(peer, message.protocol);
+  }
 }
 
 
