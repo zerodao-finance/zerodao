@@ -3,5 +3,6 @@
 /* eslint-disable */
 import type * as masterChefSol from "./MasterChef.sol";
 export type { masterChefSol };
+import type * as sZeroSol from "./sZERO.sol";
+export type { sZeroSol };
 export type { ZERO } from "./ZERO";
-export type { SZERO } from "./SZERO";
