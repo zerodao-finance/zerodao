@@ -38,16 +38,7 @@ const deploy: DeployFunction = async (hre) => {
       },
     },
   });
-  const deployedsZero = await deployments.deploy("sZERO", {
-    from: signer.address,
-    proxy: defaultProxyOptions,
-  });
-  const sZero = new ethers.Contract(
-    deployedsZero.address,
-    deployedsZero.abi,
-    signer
-  ) as SZERO;
-  const deployedMasterChef = await deployments.deploy("MasterChef", {
+  const deployedSZero = await deployments.deploy("sZERO", {
     from: signer.address,
     proxy: {
       owner: signer.address,
@@ -56,7 +47,7 @@ const deploy: DeployFunction = async (hre) => {
         init: {
           methodName: "initialize",
           args: [
-            deployedsZero.address,
+            deployedZero.address,
             signer.address,
             /*zero per block*/
             2000,
@@ -69,8 +60,8 @@ const deploy: DeployFunction = async (hre) => {
       },
     },
   });
-  await sZero.setMasterChef(deployedMasterChef.address);
   await deployments.save("ZeroLock", deployedZeroLock);
+  await deployments.save("sZERO", deployedSZero);
 
   await zero.mint(signer.address, ethers.utils.parseEther("1000"));
 };

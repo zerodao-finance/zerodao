@@ -2,5 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as masterChefSol from "./MasterChef.sol";
+export * as sZeroSol from "./sZERO.sol";
 export { ZERO__factory } from "./ZERO__factory";
-export { SZERO__factory } from "./SZERO__factory";

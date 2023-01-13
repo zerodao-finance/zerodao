@@ -48,8 +48,8 @@ export type { IMigratorChef } from "./contracts/token/MasterChef.sol/IMigratorCh
 export { IMigratorChef__factory } from "./factories/contracts/token/MasterChef.sol/IMigratorChef__factory";
 export type { MasterChef } from "./contracts/token/MasterChef.sol/MasterChef";
 export { MasterChef__factory } from "./factories/contracts/token/MasterChef.sol/MasterChef__factory";
-export type { SZERO } from "./contracts/token/SZERO";
-export { SZERO__factory } from "./factories/contracts/token/SZERO__factory";
+export type { SZERO } from "./contracts/token/sZERO.sol/SZERO";
+export { SZERO__factory } from "./factories/contracts/token/sZERO.sol/SZERO__factory";
 export type { ZERO } from "./contracts/token/ZERO";
 export { ZERO__factory } from "./factories/contracts/token/ZERO__factory";
 export type { ZeroLock } from "./contracts/util/ZeroLock";
