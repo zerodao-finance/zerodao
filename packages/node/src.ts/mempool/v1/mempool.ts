@@ -11,19 +11,30 @@ class Mempool {
   
   protected logger: unknown;
 
-  
-  
+
+  static init() {
+    return new Mempool();
+  }
 
   constructor() {
+    
   }
 
   lock() {
 
   }
 
-  unlock() {}
+  unlock() {
 
-  reapMaxTxs(max: number) {  
+  }
+
+  /*
+   * returns a list of transaction objects from the mempool
+   * used to construct a block
+   * @param max: number
+   * if max < 0 or max > size of tx pool. returns the whole pool
+   */
+  async reapMaxTxs(max: number) {  
     if (max < 0 || max > this.txs.size ) {
       return _.map(this.txs.values(), (x) => x.tx);
     }
@@ -38,7 +49,7 @@ class Mempool {
     this.cache.clear();
   }
 
-  removeTxByKey(key: string) {
+  async removeTxByKey(key: string) {
     let wtx = this.txs.get(key); 
     if ( wtx ) {
       this.cache.delete(wtx.tx);
@@ -46,7 +57,7 @@ class Mempool {
     }
   }
 
-  checkTx(tx: Buffer) {
+  async checkTx(tx: Buffer) {
     
     // check bytes in Buffer
     // rejects buffer that is greater than config.MAX_TX_BYTES
@@ -54,7 +65,7 @@ class Mempool {
     
     var txKey = ethers.utils.keccak256(tx); //generate key for transaction
     
-    if (this.cache.has(tx)) {
+    if (this.cache.has(txKey)) {
       // tx is in cache 
       if (this.txs.has(txKey)) {
         // tx is in cache and pool   
@@ -65,7 +76,7 @@ class Mempool {
     this.cache.add(tx);
     
     
-    let rsp, err = this.appProxy.checkTxSync(abci.RequestCheckTx{Tx: tx});
+    let rsp, err = this.appProxy.checkTxSync(tx);
     if (err != null) {
       this.cache.delete(txKey);
       return err;
@@ -76,9 +87,6 @@ class Mempool {
     logger.info(`adding new tx ${txKey} to mempool`);
   }
 
-  recheckTx(wtx: WrappedTX) {
-
-  }
 
   /*
    * adds new wrapped transaction to the mempool,
@@ -86,7 +94,7 @@ class Mempool {
    * if update is called in the case of a tendermint (Commit) message then recheck can be called
    * on transactions that are a height lower than the current height
    */
-  addNewTransaction(wtx: WrappedTx, checkResponse) {
+  async addNewTransaction(wtx: WrappedTx, checkResponse) {
     let tx_size = wtx.tx.length
     if (checkResponse.Code != abci.CodeTypeOK) {
       logger.info(` rejected bad transacation `);
@@ -97,7 +105,7 @@ class Mempool {
     
     // transaction can be considered valid at this point
 
-    this.txs.set(wtx.txKey, wtx);
+    this.txs.set(wtx.hash, wtx);
   }
 
   update(
@@ -109,19 +117,39 @@ class Mempool {
 
   }
 
-  recheckTransactions(cHeight: number) {
-    if (_.isEmpty(this.txs.values())) return new Error("cannot run recheck on an empty mempool");
-    //TODO: check ( tx.height < cHeight ) 
-    // remove if check failed
-    // do nothing if check pass
-    
+  async recheckTransactions() {
+    /*
+     * pop transactions that are of height < this.height
+     * run checkTx() on each popped txs
+     */
+    _recheck = _.filter([...this.txs.values()], (t) => t.height < this.height) 
+    for (let wtx in _recheck) {
+      let rsp, err = this.appProxy.checkTxSync(wtx.tx);
+      if (checkResponse.Code != abci.CodeTypeOK) {
+        this.cache.delete(wtx.hash);
+        this.txs.delete(wtx.hash);
+      }
+      var _wtx = WrapedTX.fromBytes(wtx.tx, wtx.hash, wtx.timestamp, this.height);
+      this.txs.set(_wtx.hash, _wtx);
+    }
+  }
 
+  /*
+   * creates a serialized sketch of the transaction mempool
+   */
+  async serialize() {
+    var txs = [...this.txs.values()];
+    let _s = Sketch.fromTxs(txs);
+    return _s.serialize()
   }
 
   purgeExpiredTxs() {}
 
   notifyTxsAvailable() {}
 
+  proxy() {
+    return new Proxy(this, {});
+  }
   
 }
 
