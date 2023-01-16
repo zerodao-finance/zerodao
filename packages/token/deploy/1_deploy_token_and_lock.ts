@@ -51,10 +51,8 @@ const deploy: DeployFunction = async (hre) => {
             signer.address,
             /*zero per block*/
             2000,
-            /*start block*/
-            await hre.network.provider.send("eth_getBlockNumber", []),
-            /*end block*/
-            0,
+            /*bonus end block*/
+            200,
           ],
         },
       },

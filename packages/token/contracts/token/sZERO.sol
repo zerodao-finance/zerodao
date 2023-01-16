@@ -10,6 +10,8 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import { ZERO } from "./ZERO.sol";
+import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
+import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
 
 interface IMigratorChef {
   // Perform LP token migration from legacy UniswapV2 to ZeroSwap.
@@ -77,47 +79,60 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   uint256 public totalAllocPoint = 0;
   // The block number when SUSHI mining starts.
   //
-  uint256 constant ZERO_POOL = uint256(keccak256("ZERO-TOKEN-POOL"));
+  uint256 constant ZERO_POOL = 0;
   uint256 public startBlock;
   event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
   event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
   event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
+  // Add a new lp to the pool. Can only be called by the owner.
+  // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
+  // initializes zero pool
+  // function addZeroPool(
+  //   uint256 _allocPoint,
+  //   IERC20 _lpToken,
+  //   bool _withUpdate
+  // ) public onlyOwner {
+  //   if (_withUpdate) {
+  //     massUpdatePools();
+  //   }
+  //   uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
+  //   totalAllocPoint = totalAllocPoint.add(_allocPoint);
+  //   poolInfo[ZERO_POOL] = PoolInfo({
+  //     lpToken: _lpToken,
+  //     allocPoint: _allocPoint,
+  //     lastRewardBlock: lastRewardBlock,
+  //     accZeroPerShare: 0
+  //   });
+  // }
+
   function initialize(
     ZERO _zero,
     address _devaddr,
     uint256 _zeroPerBlock,
-    uint256 _startBlock,
     uint256 _bonusEndBlock
   ) public initializer {
     zero = _zero;
     devaddr = _devaddr;
     zeroPerBlock = _zeroPerBlock;
-    bonusEndBlock = _bonusEndBlock;
-    startBlock = _startBlock;
+    bonusEndBlock = block.number + _bonusEndBlock;
+    startBlock = block.number;
     __Ownable_init_unchained();
     __ERC20_init_unchained("sZERO", "sZERO");
+    // init pool
+    totalAllocPoint = totalAllocPoint.add(1 ether);
+    poolInfo.push(
+      PoolInfo({
+        lpToken: IERC20(address(_zero)),
+        allocPoint: 1 ether,
+        lastRewardBlock: block.number,
+        accZeroPerShare: 0
+      })
+    );
   }
 
   function poolLength() external view returns (uint256) {
     return poolInfo.length;
-  }
-
-  // Add a new lp to the pool. Can only be called by the owner.
-  // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
-  function add(
-    uint256 _allocPoint,
-    IERC20 _lpToken,
-    bool _withUpdate
-  ) public onlyOwner {
-    if (_withUpdate) {
-      massUpdatePools();
-    }
-    uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
-    totalAllocPoint = totalAllocPoint.add(_allocPoint);
-    poolInfo.push(
-      PoolInfo({ lpToken: _lpToken, allocPoint: _allocPoint, lastRewardBlock: lastRewardBlock, accZeroPerShare: 0 })
-    );
   }
 
   // Update the given pool's SUSHI allocation point. Can only be called by the owner.
@@ -127,7 +142,8 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     bool _withUpdate
   ) public onlyOwner {
     if (_withUpdate) {
-      massUpdatePools();
+      //massUpdatePools();
+      updateZeroPool();
     }
     totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(_allocPoint);
     poolInfo[_pid].allocPoint = _allocPoint;
@@ -175,17 +191,17 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     return user.amount.mul(accZeroPerShare).div(1e12).sub(user.rewardDebt);
   }
 
-  // Update reward vairables for all pools. Be careful of gas spending!
-  function massUpdatePools() public {
-    uint256 length = poolInfo.length;
-    for (uint256 pid = 0; pid < length; ++pid) {
-      updatePool(pid);
-    }
-  }
+  // // Update reward vairables for all pools. Be careful of gas spending!
+  // function massUpdatePools() public {
+  //   uint256 length = poolInfo.length;
+  //   for (uint256 pid = 0; pid < length; ++pid) {
+  //     updatePool(pid);
+  //   }
+  // }
 
   // Update reward variables of the given pool to be up-to-date.
-  function updatePool(uint256 _pid) public {
-    PoolInfo storage pool = poolInfo[_pid];
+  function updateZeroPool() public {
+    PoolInfo storage pool = poolInfo[0];
     if (block.number <= pool.lastRewardBlock) {
       return;
     }
@@ -196,6 +212,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     }
     uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
     uint256 zeroReward = multiplier.mul(zeroPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
+    //TODO: add another polynomial boost here
     zero.mint(devaddr, zeroReward.div(10));
     zero.mint(address(this), zeroReward);
     pool.accZeroPerShare = pool.accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
@@ -203,10 +220,10 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   }
 
   // Deposit LP tokens to MasterChef for SUSHI allocation.
-  function deposit(uint256 _pid, uint256 _amount) public {
+  function deposit(uint256 _pid, uint256 _amount) internal {
     PoolInfo storage pool = poolInfo[_pid];
     UserInfo storage user = userInfo[_pid][msg.sender];
-    updatePool(_pid);
+    updateZeroPool();
     if (user.amount > 0) {
       uint256 pending = user.amount.mul(pool.accZeroPerShare).div(1e12).sub(user.rewardDebt);
       safeZeroTransfer(msg.sender, pending);
@@ -220,6 +237,20 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   function enterStaking(uint256 zeroAmount) public {
     deposit(ZERO_POOL, zeroAmount);
     _mint(msg.sender, zeroAmount);
+  }
+
+  function enterStakingWithPermit(uint256 zeroAmount, bytes memory sig) public {
+    (uint8 v, bytes32 r, bytes32 s) = SplitSignatureLib.splitSignature(sig);
+    zero.permit(
+      msg.sender,
+      address(this),
+      zeroAmount,
+      uint256(keccak256(abi.encodePacked(msg.sender, address(this), zeroAmount, zero.nonces(msg.sender)))),
+      v,
+      r,
+      s
+    );
+    enterStaking(zeroAmount);
   }
 
   function leaveStaking(uint256 zeroAmount) public {
@@ -240,11 +271,11 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   }
 
   // Withdraw LP tokens from MasterChef.
-  function withdraw(uint256 _pid, uint256 _amount) public {
+  function withdraw(uint256 _pid, uint256 _amount) internal {
     PoolInfo storage pool = poolInfo[_pid];
     UserInfo storage user = userInfo[_pid][msg.sender];
     require(user.amount >= _amount, "withdraw: not good");
-    updatePool(_pid);
+    updateZeroPool();
     uint256 pending = user.amount.mul(pool.accZeroPerShare).div(1e12).sub(user.rewardDebt);
     safeZeroTransfer(msg.sender, pending);
     user.amount = user.amount.sub(_amount);
@@ -254,11 +285,11 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   }
 
   // Withdraw without caring about rewards. EMERGENCY ONLY.
-  function emergencyWithdraw(uint256 _pid) public {
-    PoolInfo storage pool = poolInfo[_pid];
-    UserInfo storage user = userInfo[_pid][msg.sender];
+  function emergencyWithdraw() public {
+    PoolInfo storage pool = poolInfo[ZERO_POOL];
+    UserInfo storage user = userInfo[ZERO_POOL][msg.sender];
     pool.lpToken.safeTransfer(address(msg.sender), user.amount);
-    emit EmergencyWithdraw(msg.sender, _pid, user.amount);
+    emit EmergencyWithdraw(msg.sender, ZERO_POOL, user.amount);
     user.amount = 0;
     user.rewardDebt = 0;
   }
