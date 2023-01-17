@@ -59,6 +59,13 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     uint256 lastRewardBlock; // Last block number that SUSHIs distribution occurs.
     uint256 accZeroPerShare; // Accumulated SUSHIs per share, times 1e12. See below.
   }
+
+  struct ZAssets {
+    IERC20 token;
+    uint256 rewardsToBeMinted;
+    uint256 multiplier;
+  }
+
   // The ZERO TOKEN!
   ZERO public zero;
   // Dev address.
@@ -73,12 +80,15 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   IMigratorChef public migrator;
   // Info of each pool.
   PoolInfo[] public poolInfo;
+
+  ZAssets[] public zassets;
   // Info of each user that stakes LP tokens.
   mapping(uint256 => mapping(address => UserInfo)) public userInfo;
   // Total allocation poitns. Must be the sum of all allocation points in all pools.
   uint256 public totalAllocPoint = 0;
   // The block number when SUSHI mining starts.
   //
+  mapping(address => bool) isZAsset;
   uint256 constant ZERO_POOL = 0;
   uint256 public startBlock;
   event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
@@ -198,6 +208,12 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   //     updatePool(pid);
   //   }
   // }
+  // callback on transfer/transferfrom of the zasset token
+  function updateZAssetReward(uint256 idx, uint256 amount) external {
+    ZAsset storage zAsset = zassets[idx];
+    require(msg.sender == address(zAsset.token));
+    zAsset.rewardsToBeMinted = zAsset.rewardsToBeMinted.add(amount);
+  }
 
   // Update reward variables of the given pool to be up-to-date.
   function updateZeroPool() public {
@@ -213,6 +229,10 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
     uint256 zeroReward = multiplier.mul(zeroPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
     //TODO: add another polynomial boost here
+    for (uint256 i = 0; i < zassets.length; i++) {
+      ZAsset storage zAsset = zassets[i];
+      zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
+    }
     zero.mint(devaddr, zeroReward.div(10));
     zero.mint(address(this), zeroReward);
     pool.accZeroPerShare = pool.accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
@@ -258,6 +278,11 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     _burn(msg.sender, zeroAmount);
   }
 
+  function restake() public {
+    withdraw(ZERO_POOL, balanceOf(msg.sender));
+    deposit(ZERO_POOL, balanceOf(msg.sender));
+  }
+
   function transfer(address sender, uint256 amount) public override returns (bool) {
     return true;
   }
@@ -276,9 +301,11 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     UserInfo storage user = userInfo[_pid][msg.sender];
     require(user.amount >= _amount, "withdraw: not good");
     updateZeroPool();
+    // calculate accrued share and remove previously withdrawn rewards
     uint256 pending = user.amount.mul(pool.accZeroPerShare).div(1e12).sub(user.rewardDebt);
     safeZeroTransfer(msg.sender, pending);
     user.amount = user.amount.sub(_amount);
+    // update previously drawn rewards in terms of current amount
     user.rewardDebt = user.amount.mul(pool.accZeroPerShare).div(1e12);
     pool.lpToken.safeTransfer(address(msg.sender), _amount);
     emit Withdraw(msg.sender, _pid, _amount);
