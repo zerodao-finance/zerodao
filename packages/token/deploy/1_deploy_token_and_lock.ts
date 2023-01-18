@@ -48,11 +48,14 @@ const deploy: DeployFunction = async (hre) => {
           methodName: "initialize",
           args: [
             deployedZero.address,
+            /*devadds*/
+            signer.address,
+            /*treasury*/
             signer.address,
             /*zero per block*/
-            2000,
+            ethers.utils.parseEther("1000"),
             /*bonus end block*/
-            200,
+            5,
           ],
         },
       },
@@ -61,7 +64,8 @@ const deploy: DeployFunction = async (hre) => {
   await deployments.save("ZeroLock", deployedZeroLock);
   await deployments.save("sZERO", deployedSZero);
 
-  await zero.mint(signer.address, ethers.utils.parseEther("1000"));
+  await zero.mint(signer.address, ethers.utils.parseEther("1000000"));
+  await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
 };
 
 export default deploy;
