@@ -12,6 +12,7 @@ import { ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC2
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
+import "hardhat/console.sol";
 
 interface IMigratorChef {
   // Perform LP token migration from legacy UniswapV2 to ZeroSwap.
@@ -130,6 +131,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     zeroPerBlock = _zeroPerBlock;
     bonusEndBlock = block.number + _bonusEndBlock;
     startBlock = block.number;
+    treasury = _treasury;
     __Ownable_init_unchained();
     __ERC20_init_unchained("sZERO", "sZERO");
     // init pool

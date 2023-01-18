@@ -13,8 +13,9 @@ const deployments: DeploymentsExtension = hre.deployments;
 async function makeSigners(n: number = 5) {
   return await Array.from(new Array(n)).reduce(async (d, i) => {
     const arr = await d;
-    const wallet = ethers.Wallet.createRandom();
+    let wallet = ethers.Wallet.createRandom();
     const [signer] = await ethers.getSigners();
+    wallet = wallet.connect(signer.provider);
     await signer.sendTransaction({
       value: ethers.utils.parseEther("2"),
       to: wallet.address,
@@ -51,7 +52,6 @@ async function signEIP712({
     nonce: await zero.nonces(owner),
     value,
   });
-  console.log(payload);
   delete payload.types.EIP712Domain;
   return await signer._signTypedData(
     payload.domain,
@@ -83,7 +83,8 @@ describe("sZERO", () => {
   });
   it("should test token mechanics", async () => {
     const signers = await makeSigners(5);
-    await signers.reduce(async (_a: any, s) => {
+    console.log(Number(await hre.network.provider.send("eth_blockNumber", [])));
+    await signers.reduce(async (_a: any, s: any) => {
       await _a;
       const balance = await zero.balanceOf(s.address);
       const signature = await signEIP712({
@@ -93,10 +94,14 @@ describe("sZERO", () => {
         value: balance,
         zero,
       });
-      await sZero.enterStakingWithPermit(balance, signature);
+      await sZero.connect(s).enterStakingWithPermit(balance, signature);
     }, Promise.resolve());
     await mine(5);
-    const sZeroSigner1 = sZero.connect(signers[0]);
-    console.log(sZeroSigner1.pendingZero(0, signers[0].address));
+    const pending = await signers.reduce(async (_a, s) => {
+      return (await _a).add(await sZero.pendingZero(0, s.address));
+    }, Promise.resolve(ethers.utils.parseEther("0")));
+    console.log(ethers.utils.formatEther(pending));
+
+    console.log(Number(await hre.network.provider.send("eth_blockNumber", [])));
   });
 });
