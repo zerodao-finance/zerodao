@@ -60,7 +60,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     uint256 accZeroPerShare; // Accumulated SUSHIs per share, times 1e12. See below.
   }
 
-  struct ZAssets {
+  struct ZAsset {
     IERC20 token;
     uint256 rewardsToBeMinted;
     uint256 multiplier;
@@ -83,7 +83,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   // Info of each pool.
   PoolInfo[] public poolInfo;
 
-  ZAssets[] public zassets;
+  ZAsset[] public zassets;
   // Info of each user that stakes LP tokens.
   mapping(uint256 => mapping(address => UserInfo)) public userInfo;
   // Total allocation poitns. Must be the sum of all allocation points in all pools.
@@ -282,8 +282,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   }
 
   function restake() public {
-    withdraw(ZERO_POOL, balanceOf(msg.sender));
-    deposit(ZERO_POOL, balanceOf(msg.sender));
+    deposit(ZERO_POOL, 0);
   }
 
   function transfer(address sender, uint256 amount) public override returns (bool) {
