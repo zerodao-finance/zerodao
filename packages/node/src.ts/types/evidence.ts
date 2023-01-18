@@ -68,3 +68,4 @@ export class DuplicateVoteEvidence {
 	
 }
 
+export type Evidence = Buffer[][]

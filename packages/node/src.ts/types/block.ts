@@ -1,8 +1,12 @@
+import { Data } from "../core/types";
+import { Commit } from "./commit";
+import { Evidence } from "./evidence";
+
 export type Block = {
   Header: Header;
-  Data;
-  Evidence;
-  LastCommit;
+  Data: Data
+  Evidence: Evidence
+  LastCommit: Commit
 };
 
 type Header = {
@@ -27,14 +31,14 @@ type Version = {
   App: number;
 };
 
-type BlockID = {
+export type BlockID = {
   Hash: Buffer | Uint8Array;
-  PartSetHeadser: PartSetHeader;
+  PartSetHeader: PartSetHeader;
 };
 
 type PartSetHeader = {
   Total: number;
-  Hsah: Buffer;
+  Hash: Buffer;
 };
 
 function BlockID(hash: Buffer | Uint8Array, psh: PartSetHeader) {
@@ -43,7 +47,7 @@ function BlockID(hash: Buffer | Uint8Array, psh: PartSetHeader) {
 }
 
 BlockID.prototype.isEquals = function (other: BlockID): boolean {
-  if (this.hash === other.hash && this.PartSetHeader === other.PartSetHeader)
+  if (this.hash === other.Hash && this.PartSetHeader === other.PartSetHeader)
     return true;
   return false;
 };

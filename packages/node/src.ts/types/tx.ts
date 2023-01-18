@@ -18,7 +18,7 @@ function Tx({ type, to, data, nonce, signature, chain }: Partial<TX> = {}) {
   this.chain = chain;
 }
 
-TX.prototype.fromProto = function (_buff: Buffer) {
+Tx.prototype.fromProto = function (_buff: Buffer) {
   let body = this.protocol.Transaction.decode(_buff).toObject();
   Object.assign(this, ...body);
 };
