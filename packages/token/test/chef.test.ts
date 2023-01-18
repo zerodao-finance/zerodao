@@ -9,6 +9,21 @@ const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
 //@ts-ignore
 const deployments: DeploymentsExtension = hre.deployments;
 
+async function makeSigners(n: number = 5) {
+  return await Array.from(new Array(n)).reduce(async (d, i) => {
+    const arr = await d;
+    const wallet = ethers.Wallet.createRandom();
+    const [signer] = await ethers.getSigners();
+    await signer.sendTransaction({
+      value: ethers.utils.parseEther("2"),
+      to: wallet.address,
+    });
+    const z = (await ethers.getContract("ZERO")) as ZERO;
+    z.transfer(wallet.address, ethers.utils.parseEther("5000"));
+    arr.push(wallet);
+  }, Promise.resolve([]));
+}
+
 describe("sZERO", () => {
   let zero: ZERO, sZero: SZERO;
   beforeEach(async () => {
@@ -46,5 +61,8 @@ describe("sZERO", () => {
       payload.message
     );
     await sZero.enterStakingWithPermit(balance, signature);
+  });
+  it("should test token mechanics", async () => {
+    const signers = await makeSigners(5);
   });
 });

@@ -74,6 +74,8 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   uint256 public bonusEndBlock;
   // SUSHI tokens created per block.
   uint256 public zeroPerBlock;
+  // Treasury
+  address public treasury;
   // Bonus muliplier for early zero makers.
   uint256 public constant BONUS_MULTIPLIER = 10;
   // The migrator contract. It has a lot of power. Can only be set through governance (owner).
@@ -119,6 +121,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   function initialize(
     ZERO _zero,
     address _devaddr,
+    address _treasury,
     uint256 _zeroPerBlock,
     uint256 _bonusEndBlock
   ) public initializer {
@@ -233,8 +236,8 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
       ZAsset storage zAsset = zassets[i];
       zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
     }
-    zero.mint(devaddr, zeroReward.div(10));
-    zero.mint(address(this), zeroReward);
+    zero.transferFrom(treasury, devaddr, zeroReward.div(10));
+    zero.transferFrom(treasury, address(this), zeroReward);
     pool.accZeroPerShare = pool.accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
     pool.lastRewardBlock = block.number;
   }
