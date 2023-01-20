@@ -171,7 +171,6 @@ const config: any = {
       {
         version: "0.8.15",
         settings: {
-          viaIR: true,
           optimizer: {
             enabled: true,
             runs: 50000,

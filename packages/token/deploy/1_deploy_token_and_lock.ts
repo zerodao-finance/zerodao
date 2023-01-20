@@ -17,7 +17,16 @@ const deploy: DeployFunction = async (hre) => {
 
   const deployedZero = await deployments.deploy("ZERO", {
     from: signer.address,
-    proxy: defaultProxyOptions,
+    proxy: {
+      owner: signer.address,
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [ethers.utils.parseEther("10000000")],
+        },
+      },
+    },
   });
   await deployments.save("ZERO", deployedZero);
   const zero = new ethers.Contract(
@@ -50,10 +59,8 @@ const deploy: DeployFunction = async (hre) => {
             deployedZero.address,
             /*devadds*/
             signer.address,
-            /*treasury*/
-            signer.address,
             /*zero per block*/
-            ethers.utils.parseEther("1000"),
+            ethers.utils.parseEther("0.1"),
             /*bonus end block*/
             await hre.network.provider.send("eth_blockNumber", []),
           ],
@@ -64,11 +71,9 @@ const deploy: DeployFunction = async (hre) => {
   await deployments.save("ZeroLock", deployedZeroLock);
   await deployments.save("sZERO", deployedSZero);
 
-  await zero.mint(signer.address, ethers.utils.parseEther("1000000"));
-  await zero.approve(
-    deployedSZero.address,
-    ethers.utils.parseEther("100000000")
-  );
+  await zero.mint(signer.address, ethers.utils.parseEther("100000"));
+  await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
+  await zero.transferOwnership(deployedSZero.address);
 };
 
 export default deploy;

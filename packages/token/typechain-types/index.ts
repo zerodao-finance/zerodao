@@ -12,6 +12,8 @@ export type { GovernorUpgradeable } from "./@openzeppelin/contracts-upgradeable/
 export { GovernorUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/governance/GovernorUpgradeable__factory";
 export type { IGovernorUpgradeable } from "./@openzeppelin/contracts-upgradeable/governance/IGovernorUpgradeable";
 export { IGovernorUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/governance/IGovernorUpgradeable__factory";
+export type { IVotesUpgradeable } from "./@openzeppelin/contracts-upgradeable/governance/utils/IVotesUpgradeable";
+export { IVotesUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/governance/utils/IVotesUpgradeable__factory";
 export type { Initializable } from "./@openzeppelin/contracts-upgradeable/proxy/utils/Initializable";
 export { Initializable__factory } from "./factories/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable__factory";
 export type { IERC1155ReceiverUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC1155/IERC1155ReceiverUpgradeable";
@@ -22,6 +24,10 @@ export type { ERC20PermitUpgradeable } from "./@openzeppelin/contracts-upgradeab
 export { ERC20PermitUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol/ERC20PermitUpgradeable__factory";
 export type { IERC20PermitUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol/IERC20PermitUpgradeable";
 export { IERC20PermitUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol/IERC20PermitUpgradeable__factory";
+export type { ERC20CappedUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable";
+export { ERC20CappedUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable__factory";
+export type { ERC20VotesUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable";
+export { ERC20VotesUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable__factory";
 export type { IERC20MetadataUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable";
 export { IERC20MetadataUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable__factory";
 export type { IERC20Upgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable";

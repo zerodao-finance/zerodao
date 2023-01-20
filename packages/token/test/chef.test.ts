@@ -83,7 +83,6 @@ describe("sZERO", () => {
   });
   it("should test token mechanics", async () => {
     const signers = await makeSigners(5);
-    console.log(Number(await hre.network.provider.send("eth_blockNumber", [])));
     await signers.reduce(async (_a: any, s: any) => {
       await _a;
       const balance = await zero.balanceOf(s.address);
@@ -97,7 +96,7 @@ describe("sZERO", () => {
       await sZero.connect(s).enterStakingWithPermit(balance, signature);
     }, Promise.resolve());
     await mine(5);
-    const pending = await signers.reduce(async (_a, s) => {
+    const pending = await signers.reduce(async (_a: any, s: any) => {
       return (await _a).add(await sZero.pendingZero(0, s.address));
     }, Promise.resolve(ethers.utils.parseEther("0")));
     console.log(ethers.utils.formatEther(pending));

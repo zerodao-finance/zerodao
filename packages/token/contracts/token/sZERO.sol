@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import { ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import { ERC20VotesUpgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
@@ -34,7 +34,7 @@ interface IMigratorChef {
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
+contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
   // Info of each user.
@@ -75,8 +75,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   uint256 public bonusEndBlock;
   // SUSHI tokens created per block.
   uint256 public zeroPerBlock;
-  // Treasury
-  address public treasury;
   // Bonus muliplier for early zero makers.
   uint256 public constant BONUS_MULTIPLIER = 10;
   // The migrator contract. It has a lot of power. Can only be set through governance (owner).
@@ -122,7 +120,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
   function initialize(
     ZERO _zero,
     address _devaddr,
-    address _treasury,
     uint256 _zeroPerBlock,
     uint256 _bonusEndBlock
   ) public initializer {
@@ -131,7 +128,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     zeroPerBlock = _zeroPerBlock;
     bonusEndBlock = block.number + _bonusEndBlock;
     startBlock = block.number;
-    treasury = _treasury;
     __Ownable_init_unchained();
     __ERC20_init_unchained("sZERO", "sZERO");
     // init pool
@@ -192,6 +188,16 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     }
   }
 
+  //TODO: rework this a bit
+  function calculateZeroReward(uint256 multiplier) public view returns (uint256 zeroReward) {
+    uint256 availableSupply = zero.cap().sub(zero.totalSupply());
+    zeroReward = (multiplier.mul(zeroPerBlock).div(1 ether)).mul(availableSupply).div(1 ether);
+    for (uint256 i = 0; i < zassets.length; i++) {
+      ZAsset storage zAsset = zassets[i];
+      zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
+    }
+  }
+
   // View function to see pending SUSHIs on frontend.
   function pendingZero(uint256 _pid, address _user) external view returns (uint256) {
     PoolInfo storage pool = poolInfo[_pid];
@@ -200,7 +206,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
     uint256 lpSupply = pool.lpToken.balanceOf(address(this));
     if (block.number > pool.lastRewardBlock && lpSupply != 0) {
       uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-      uint256 zeroReward = multiplier.mul(zeroPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
+      uint256 zeroReward = calculateZeroReward(multiplier);
       accZeroPerShare = accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
     }
     return user.amount.mul(accZeroPerShare).div(1e12).sub(user.rewardDebt);
@@ -232,14 +238,9 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20Upgradeable {
       return;
     }
     uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-    uint256 zeroReward = multiplier.mul(zeroPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-    //TODO: add another polynomial boost here
-    for (uint256 i = 0; i < zassets.length; i++) {
-      ZAsset storage zAsset = zassets[i];
-      zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
-    }
-    zero.transferFrom(treasury, devaddr, zeroReward.div(10));
-    zero.transferFrom(treasury, address(this), zeroReward);
+    uint256 zeroReward = calculateZeroReward(multiplier);
+    zero.mint(devaddr, zeroReward.div(10));
+    zero.mint(address(this), zeroReward);
     pool.accZeroPerShare = pool.accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
     pool.lastRewardBlock = block.number;
   }
