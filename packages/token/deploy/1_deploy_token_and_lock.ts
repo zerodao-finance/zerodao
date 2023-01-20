@@ -60,7 +60,7 @@ const deploy: DeployFunction = async (hre) => {
             /*devadds*/
             signer.address,
             /*zero per block*/
-            ethers.utils.parseEther("0.1"),
+            ethers.utils.parseEther("0.01"),
             /*bonus end block*/
             await hre.network.provider.send("eth_blockNumber", []),
           ],

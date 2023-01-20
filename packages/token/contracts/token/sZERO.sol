@@ -12,6 +12,7 @@ import { ERC20VotesUpgradeable } from "@openzeppelin/contracts-upgradeable/token
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
+import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 import "hardhat/console.sol";
 
 interface IMigratorChef {
@@ -53,6 +54,12 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     //   3. User's `amount` gets updated.
     //   4. User's `rewardDebt` gets updated.
   }
+
+  struct VotingInfo {
+    uint256 lastBlock;
+    uint256 power;
+    uint256 previousPower;
+  }
   // Info of each pool.
   struct PoolInfo {
     IERC20 lpToken; // Address of LP token contract.
@@ -75,6 +82,8 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   uint256 public bonusEndBlock;
   // SUSHI tokens created per block.
   uint256 public zeroPerBlock;
+
+  address public ZEROFROST;
   // Bonus muliplier for early zero makers.
   uint256 public constant BONUS_MULTIPLIER = 10;
   // The migrator contract. It has a lot of power. Can only be set through governance (owner).
@@ -82,6 +91,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   // Info of each pool.
   PoolInfo[] public poolInfo;
 
+  mapping(address => VotingInfo) votingInfo;
   ZAsset[] public zassets;
   // Info of each user that stakes LP tokens.
   mapping(uint256 => mapping(address => UserInfo)) public userInfo;
@@ -142,6 +152,20 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     );
   }
 
+  function _mint(address account, uint256 amount) internal override {
+    VotingInfo storage vinfo = votingInfo[account];
+    vinfo.previousPower = vinfo.power;
+    vinfo.power = vinfo.previousPower.add(amount);
+    super._mint(account, amount);
+  }
+
+  function _burn(address account, uint256 amount) internal override {
+    VotingInfo storage vinfo = votingInfo[account];
+    vinfo.previousPower = vinfo.power;
+    vinfo.power = vinfo.previousPower.sub(amount);
+    super._burn(account, amount);
+  }
+
   function poolLength() external view returns (uint256) {
     return poolInfo.length;
   }
@@ -191,7 +215,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   //TODO: rework this a bit
   function calculateZeroReward(uint256 multiplier) public view returns (uint256 zeroReward) {
     uint256 availableSupply = zero.cap().sub(zero.totalSupply());
-    zeroReward = (multiplier.mul(zeroPerBlock).div(1 ether)).mul(availableSupply).div(1 ether);
+    zeroReward = (multiplier.mul(zeroPerBlock)).mul(availableSupply).div(1 ether).div(100);
     for (uint256 i = 0; i < zassets.length; i++) {
       ZAsset storage zAsset = zassets[i];
       zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
