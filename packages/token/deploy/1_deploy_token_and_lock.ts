@@ -23,7 +23,7 @@ const deploy: DeployFunction = async (hre) => {
       execute: {
         init: {
           methodName: "initialize",
-          args: [ethers.utils.parseEther("10000000")],
+          args: [],
         },
       },
     },
@@ -47,6 +47,7 @@ const deploy: DeployFunction = async (hre) => {
       },
     },
   });
+  console.log(Number(await hre.network.provider.send("eth_blockNumber", [])));
   const deployedSZero = await deployments.deploy("sZERO", {
     from: signer.address,
     proxy: {
@@ -60,7 +61,7 @@ const deploy: DeployFunction = async (hre) => {
             /*devadds*/
             signer.address,
             /*zero per block*/
-            ethers.utils.parseEther("0.01"),
+            ethers.utils.parseEther("2000"),
             /*bonus end block*/
             await hre.network.provider.send("eth_blockNumber", []),
           ],

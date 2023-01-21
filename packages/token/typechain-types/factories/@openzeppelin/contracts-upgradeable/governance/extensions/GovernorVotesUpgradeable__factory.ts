@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  Governance,
-  GovernanceInterface,
-} from "../../../contracts/governance/Governance";
+  GovernorVotesUpgradeable,
+  GovernorVotesUpgradeableInterface,
+} from "../../../../../@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesUpgradeable";
 
 const _abi = [
   {
@@ -555,19 +555,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_szero",
-        type: "address",
-      },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "name",
     outputs: [
@@ -915,15 +902,19 @@ const _abi = [
   },
 ];
 
-export class Governance__factory {
+export class GovernorVotesUpgradeable__factory {
   static readonly abi = _abi;
-  static createInterface(): GovernanceInterface {
-    return new utils.Interface(_abi) as GovernanceInterface;
+  static createInterface(): GovernorVotesUpgradeableInterface {
+    return new utils.Interface(_abi) as GovernorVotesUpgradeableInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): Governance {
-    return new Contract(address, _abi, signerOrProvider) as Governance;
+  ): GovernorVotesUpgradeable {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as GovernorVotesUpgradeable;
   }
 }

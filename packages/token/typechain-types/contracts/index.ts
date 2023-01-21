@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as governance from "./governance";
 export type { governance };
+import type * as interfaces from "./interfaces";
+export type { interfaces };
 import type * as token from "./token";
 export type { token };
 import type * as util from "./util";

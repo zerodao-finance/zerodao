@@ -4,7 +4,8 @@ import { ethers as _ethers } from "ethers";
 import { ZERO, ZeroLock, SZERO } from "../typechain-types";
 import { HardhatEthersHelpers } from "hardhat-deploy-ethers/types";
 import { toEIP712 } from "../src.ts";
-import { mine } from "@nomicfoundation/hardhat-network-helpers";
+import { mine, time } from "@nomicfoundation/hardhat-network-helpers";
+import { expect } from "chai";
 //@ts-ignore
 const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
 //@ts-ignore
@@ -68,39 +69,63 @@ describe("sZERO", () => {
     sZero = (await ethers.getContract("sZERO")) as SZERO;
   });
 
-  it("should stake tokens", async () => {
-    const [signer] = await ethers.getSigners();
-    //@ts-ignore
-    const balance = await zero.balanceOf(await signer.getAddress());
+  it("should check if rewards are being correctly minted and redeemed", async () => {
+    const signers = await makeSigners(5);
+    const s = signers[0];
+    const balance = await zero.balanceOf(s.address);
     const signature = await signEIP712({
-      signer: signer as any,
-      owner: signer.address,
+      signer: s as any,
+      owner: s.address,
       spender: sZero.address,
       value: balance,
       zero,
     });
-    await sZero.enterStakingWithPermit(balance, signature);
-  });
-  it("should test token mechanics", async () => {
-    const signers = await makeSigners(5);
-    await signers.reduce(async (_a: any, s: any) => {
-      await _a;
-      const balance = await zero.balanceOf(s.address);
-      const signature = await signEIP712({
-        signer: s as any,
-        owner: s.address,
-        spender: sZero.address,
-        value: balance,
-        zero,
-      });
-      await sZero.connect(s).enterStakingWithPermit(balance, signature);
-    }, Promise.resolve());
+    await sZero.connect(s).enterStakingWithPermit(balance, signature);
     await mine(5);
-    const pending = await signers.reduce(async (_a: any, s: any) => {
-      return (await _a).add(await sZero.pendingZero(0, s.address));
-    }, Promise.resolve(ethers.utils.parseEther("0")));
-    console.log(ethers.utils.formatEther(pending));
-
-    console.log(Number(await hre.network.provider.send("eth_blockNumber", [])));
+    const pending = await sZero.pendingZero(0, s.address);
+    expect(pending).to.be.equal(ethers.utils.parseEther("10000"));
+    await sZero.connect(s).leaveStaking(sZero.balanceOf(s.address));
+    expect(await zero.balanceOf(s.address)).to.be.equal(
+      ethers.utils.parseEther("17000")
+    );
+    expect(await sZero.pendingZero(0, s.address)).to.be.equal(0);
+    await zero
+      .connect(s)
+      .approve(sZero.address, ethers.utils.parseEther("5000"));
+    await sZero.connect(s).enterStaking(ethers.utils.parseEther("5000"));
+    await zero
+      .connect(signers[1])
+      .approve(sZero.address, ethers.utils.parseEther("5000"));
+    await sZero
+      .connect(signers[1])
+      .enterStaking(ethers.utils.parseEther("5000"));
+    // because approve and stake take up one block each
+    expect(await sZero.pendingZero(0, s.address)).to.be.equal(
+      ethers.utils.parseEther("4000")
+    );
+    await mine(1);
+    // expect
+    expect(
+      (await sZero.pendingZero(0, s.address)).lt(
+        ethers.utils.parseEther("5000")
+      )
+    ).to.be.equal(true);
+    const prevBalance = await zero.balanceOf(s.address);
+    await sZero.connect(s).restake();
+    const bal = (await zero.balanceOf(s.address)).sub(prevBalance);
+    await sZero.connect(signers[1]).restake();
+    await mine(1);
+    console.log(
+      ethers.utils.formatEther(await sZero.pendingZero(0, signers[1].address))
+    );
+    console.log(
+      ethers.utils.formatEther(await sZero.pendingZero(0, s.address))
+    );
+    await sZero.connect(s).leaveStaking(await sZero.balanceOf(s.address));
+    await sZero
+      .connect(signers[1])
+      .leaveStaking(await sZero.balanceOf(signers[1].address));
+    console.log(ethers.utils.formatEther(await zero.balanceOf(sZero.address)));
+    console.log(await sZero.totalSupply());
   });
 });

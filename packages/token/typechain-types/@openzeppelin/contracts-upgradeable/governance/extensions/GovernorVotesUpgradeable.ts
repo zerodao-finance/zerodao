@@ -26,9 +26,9 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from "../../../../common";
 
-export interface GovernanceInterface extends utils.Interface {
+export interface GovernorVotesUpgradeableInterface extends utils.Interface {
   functions: {
     "BALLOT_TYPEHASH()": FunctionFragment;
     "COUNTING_MODE()": FunctionFragment;
@@ -43,7 +43,6 @@ export interface GovernanceInterface extends utils.Interface {
     "getVotesWithParams(address,uint256,bytes)": FunctionFragment;
     "hasVoted(uint256,address)": FunctionFragment;
     "hashProposal(address[],uint256[],bytes[],bytes32)": FunctionFragment;
-    "initialize(address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
@@ -77,7 +76,6 @@ export interface GovernanceInterface extends utils.Interface {
       | "getVotesWithParams"
       | "hasVoted"
       | "hashProposal"
-      | "initialize"
       | "name"
       | "onERC1155BatchReceived"
       | "onERC1155Received"
@@ -184,10 +182,6 @@ export interface GovernanceInterface extends utils.Interface {
       PromiseOrValue<BytesLike>[],
       PromiseOrValue<BytesLike>
     ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -311,7 +305,6 @@ export interface GovernanceInterface extends utils.Interface {
     functionFragment: "hashProposal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
@@ -460,12 +453,12 @@ export type VoteCastWithParamsEvent = TypedEvent<
 export type VoteCastWithParamsEventFilter =
   TypedEventFilter<VoteCastWithParamsEvent>;
 
-export interface Governance extends BaseContract {
+export interface GovernorVotesUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: GovernanceInterface;
+  interface: GovernorVotesUpgradeableInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -568,11 +561,6 @@ export interface Governance extends BaseContract {
       descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    initialize(
-      _szero: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -735,11 +723,6 @@ export interface Governance extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  initialize(
-    _szero: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   onERC1155BatchReceived(
@@ -900,11 +883,6 @@ export interface Governance extends BaseContract {
       descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    initialize(
-      _szero: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1134,11 +1112,6 @@ export interface Governance extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    initialize(
-      _szero: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC1155BatchReceived(
@@ -1301,11 +1274,6 @@ export interface Governance extends BaseContract {
       calldatas: PromiseOrValue<BytesLike>[],
       descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      _szero: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
