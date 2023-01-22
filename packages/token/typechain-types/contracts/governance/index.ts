@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Governance } from "./Governance";
+export type { ZeroGovernor } from "./ZeroGovernor";

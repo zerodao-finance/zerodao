@@ -6,9 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import { ERC20VotesUpgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
+import { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable.sol";
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
@@ -336,6 +337,14 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     } else {
       zero.transfer(_to, _amount);
     }
+  }
+
+  function getPastVotes(address account, uint256 blockNumber) public view virtual override returns (uint256) {
+    require(blockNumber < block.number, "ERC20Votes: block not yet mined");
+    uint256 votesAtBlock = ERC20VotesUpgradeable._checkpointsLookup(_checkpoints[account], blockNumber);
+    uint256 blockAtEpochStart = IZEROFROST(ZEROFROST).epochAt(blockNumber);
+    uint256 votesAtEpochStart = ERC20VotesUpgradeable._checkpointsLookup(_checkpoints[account], blockNumber);
+    return Math.min(votesAtEpochStart, votesAtBlock);
   }
 
   // Update dev address by the previous dev.

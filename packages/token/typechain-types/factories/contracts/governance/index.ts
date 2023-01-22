@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Governance__factory } from "./Governance__factory";
+export { ZeroGovernor__factory } from "./ZeroGovernor__factory";

@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as sZeroSol from "./sZERO.sol";
+export { ERC20VotesUpgradeable__factory } from "./ERC20VotesUpgradeable__factory";
 export { ZERO__factory } from "./ZERO__factory";

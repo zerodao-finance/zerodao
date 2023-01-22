@@ -3,4 +3,5 @@
 /* eslint-disable */
 import type * as sZeroSol from "./sZERO.sol";
 export type { sZeroSol };
+export type { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable";
 export type { ZERO } from "./ZERO";

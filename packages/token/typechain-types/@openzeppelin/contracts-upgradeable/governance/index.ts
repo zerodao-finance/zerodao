@@ -7,3 +7,4 @@ import type * as utils from "./utils";
 export type { utils };
 export type { GovernorUpgradeable } from "./GovernorUpgradeable";
 export type { IGovernorUpgradeable } from "./IGovernorUpgradeable";
+export type { TimelockControllerUpgradeable } from "./TimelockControllerUpgradeable";
