@@ -7,5 +7,5 @@ interface IZEROFROST {
 
   function nextEpoch() external view returns (uint256);
 
-  function epochAt(uint256) external view returns (uint256);
+  function epochLength() external view returns (uint256);
 }

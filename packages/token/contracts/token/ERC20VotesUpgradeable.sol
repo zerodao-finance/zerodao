@@ -4,11 +4,12 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/governance/utils/IVotesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 
 /**
  * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
@@ -25,14 +26,24 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
  *
  * _Available since v4.2._
  */
-abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC20PermitUpgradeable {
-  function __ERC20Votes_init() internal onlyInitializing {}
 
-  function __ERC20Votes_init_unchained() internal onlyInitializing {}
+abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC20PermitUpgradeable {
+  IZEROFROST public zerofrost;
+  using SafeMathUpgradeable for uint256;
+
+  function __ERC20Votes_init(address _zerofrost) internal onlyInitializing {
+    zerofrost = IZEROFROST(_zerofrost);
+  }
+
+  function __ERC20Votes_init_unchained(address _zerofrost) internal onlyInitializing {
+    zerofrost = IZEROFROST(_zerofrost);
+  }
 
   struct Checkpoint {
     uint32 fromBlock;
     uint224 votes;
+    uint256 timestamp; //
+    uint256 baseVotes; // timestamp
   }
 
   bytes32 private constant _DELEGATION_TYPEHASH =
@@ -56,6 +67,11 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     return SafeCastUpgradeable.toUint32(_checkpoints[account].length);
   }
 
+  function getVoteCount(Checkpoint storage ckpt) internal view returns (uint256 votes) {
+    if (ckpt.timestamp >= block.timestamp) votes = (ckpt.baseVotes + ckpt.votes);
+    else votes = ckpt.baseVotes + block.timestamp.sub(ckpt.timestamp).mul(ckpt.votes).div(ckpt.timestamp);
+  }
+
   /**
    * @dev Get the address `account` is currently delegating to.
    */
@@ -69,7 +85,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function getVotes(address account) public view virtual override returns (uint256) {
     uint256 pos = _checkpoints[account].length;
     unchecked {
-      return pos == 0 ? 0 : _checkpoints[account][pos - 1].votes;
+      return pos == 0 ? 0 : getVoteCount(_checkpoints[account][pos - 1]);
     }
   }
 
@@ -138,7 +154,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     }
 
     unchecked {
-      return high == 0 ? 0 : _unsafeAccess(ckpts, high - 1).votes;
+      return high == 0 ? 0 : getVoteCount(_unsafeAccess(ckpts, high - 1));
     }
   }
 
@@ -234,55 +250,103 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   ) private {
     if (src != dst && amount > 0) {
       if (src != address(0)) {
-        (uint256 oldWeight, uint256 newWeight) = _writeCheckpoint(_checkpoints[src], _subtract, amount);
-        emit DelegateVotesChanged(src, oldWeight, newWeight);
+        (uint256 oldWeight, uint256 oldBaseWeight, uint256 newBaseWeight, uint256 newWeight) = _writeCheckpoint(
+          _checkpoints[src],
+          _subtract,
+          amount
+        );
+        emit DelegateVotesChanged(src, oldBaseWeight, newBaseWeight);
       }
 
       if (dst != address(0)) {
-        (uint256 oldWeight, uint256 newWeight) = _writeCheckpoint(_checkpoints[dst], _add, amount);
-        emit DelegateVotesChanged(dst, oldWeight, newWeight);
+        (uint256 oldWeight, uint256 oldBaseWeight, uint256 newBaseWeight, uint256 newWeight) = _writeCheckpoint(
+          _checkpoints[dst],
+          _add,
+          amount
+        );
+        emit DelegateVotesChanged(dst, oldBaseWeight, newBaseWeight);
       }
     }
   }
 
   function _writeCheckpoint(
     Checkpoint[] storage ckpts,
-    function(uint256, uint256) view returns (uint256) op,
+    function(uint256, uint256, uint256, uint256, uint256) view returns (uint256, uint256) op,
     uint256 delta
-  ) private returns (uint256 oldWeight, uint256 newWeight) {
+  )
+    private
+    returns (
+      uint256 oldBaseWeight,
+      uint256 oldWeight,
+      uint256 newBaseWeight,
+      uint256 newWeight
+    )
+  {
     uint256 pos = ckpts.length;
 
     unchecked {
-      Checkpoint memory oldCkpt = pos == 0 ? Checkpoint(0, 0) : _unsafeAccess(ckpts, pos - 1);
-
+      Checkpoint memory oldCkpt = pos == 0 ? Checkpoint(0, 0, 0, 0) : _unsafeAccess(ckpts, pos - 1);
+      uint256 epochEnd = block.timestamp + zerofrost.epochLength();
+      oldBaseWeight = oldCkpt.baseVotes;
       oldWeight = oldCkpt.votes;
-      newWeight = op(oldWeight, delta);
-
+      (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochEnd, oldCkpt.timestamp);
       if (pos > 0 && oldCkpt.fromBlock == block.number) {
-        _unsafeAccess(ckpts, pos - 1).votes = SafeCastUpgradeable.toUint224(newWeight);
+        Checkpoint storage ckpt = _unsafeAccess(ckpts, pos - 1);
+        ckpt.votes = SafeCastUpgradeable.toUint224(newWeight);
+        ckpt.baseVotes = (newBaseWeight);
       } else {
         ckpts.push(
-          Checkpoint({
-            fromBlock: SafeCastUpgradeable.toUint32(block.number),
-            votes: SafeCastUpgradeable.toUint224(newWeight)
-          })
+          Checkpoint(
+            SafeCastUpgradeable.toUint32(block.number),
+            SafeCastUpgradeable.toUint224(newWeight),
+            epochEnd,
+            (newBaseWeight)
+          )
         );
       }
     }
   }
 
-  function _add(uint256 a, uint256 b) private pure returns (uint256) {
-    return a + b;
+  function _add(
+    uint256 oldBaseVotes,
+    uint256 oldVotes,
+    uint256 delta,
+    uint256 epochEnd,
+    uint256 prevEpochEnd
+  ) private view returns (uint256 newVotes, uint256 newBaseVotes) {
+    if (block.timestamp >= prevEpochEnd) {
+      newBaseVotes = oldBaseVotes + oldVotes;
+      newVotes = delta;
+    } else {
+      uint256 oldVotesAdded = prevEpochEnd.sub(block.timestamp).mul(oldVotes).div(prevEpochEnd);
+      newBaseVotes = oldBaseVotes.add(oldVotesAdded);
+      newVotes = (oldVotes - oldVotesAdded) + delta;
+    }
   }
 
-  function _subtract(uint256 a, uint256 b) private pure returns (uint256) {
-    return a - b;
+  function _subtract(
+    uint256 oldBaseVotes,
+    uint256 oldVotes,
+    uint256 delta,
+    uint256 epochEnd,
+    uint256 prevEpochEnd
+  ) private view returns (uint256 newVotes, uint256 newBaseVotes) {
+    if (delta == (oldVotes + oldBaseVotes)) return (0, 0);
+    if (block.timestamp >= prevEpochEnd) {
+      newBaseVotes = (oldBaseVotes + oldVotes) - delta;
+      newVotes = 0;
+    } else {
+      uint256 oldVotesAdded = prevEpochEnd.sub(block.timestamp).mul(oldVotes).div(prevEpochEnd);
+      newBaseVotes = oldBaseVotes.add(oldVotesAdded).sub(delta);
+      newVotes = (oldVotes - oldVotesAdded);
+    }
   }
 
   function _unsafeAccess(Checkpoint[] storage ckpts, uint256 pos) private pure returns (Checkpoint storage result) {
+    uint256 target = pos.mul(3);
     assembly {
       mstore(0, ckpts.slot)
-      result.slot := add(keccak256(0, 0x20), pos)
+      result.slot := add(keccak256(0, 0x20), target)
     }
   }
 

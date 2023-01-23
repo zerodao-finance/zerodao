@@ -9,3 +9,5 @@ import type * as token from "./token";
 export type { token };
 import type * as util from "./util";
 export type { util };
+import type * as zero from "./zero";
+export type { zero };

@@ -5,3 +5,4 @@ export * as governance from "./governance";
 export * as interfaces from "./interfaces";
 export * as token from "./token";
 export * as util from "./util";
+export * as zero from "./zero";

@@ -31,11 +31,20 @@ export declare namespace ERC20VotesUpgradeable {
   export type CheckpointStruct = {
     fromBlock: PromiseOrValue<BigNumberish>;
     votes: PromiseOrValue<BigNumberish>;
+    timestamp: PromiseOrValue<BigNumberish>;
+    baseVotes: PromiseOrValue<BigNumberish>;
   };
 
-  export type CheckpointStructOutput = [number, BigNumber] & {
+  export type CheckpointStructOutput = [
+    number,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] & {
     fromBlock: number;
     votes: BigNumber;
+    timestamp: BigNumber;
+    baseVotes: BigNumber;
   };
 }
 
@@ -43,7 +52,6 @@ export interface SZEROInterface extends utils.Interface {
   functions: {
     "BONUS_MULTIPLIER()": FunctionFragment;
     "DOMAIN_SEPARATOR()": FunctionFragment;
-    "ZEROFROST()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -65,7 +73,7 @@ export interface SZEROInterface extends utils.Interface {
     "getPastVotes(address,uint256)": FunctionFragment;
     "getVotes(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(address,address,uint256,uint256)": FunctionFragment;
+    "initialize(address,address,address,uint256,uint256)": FunctionFragment;
     "leaveStaking(uint256)": FunctionFragment;
     "migrate(uint256)": FunctionFragment;
     "migrator()": FunctionFragment;
@@ -94,13 +102,13 @@ export interface SZEROInterface extends utils.Interface {
     "zassets(uint256)": FunctionFragment;
     "zero()": FunctionFragment;
     "zeroPerBlock()": FunctionFragment;
+    "zerofrost()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "BONUS_MULTIPLIER"
       | "DOMAIN_SEPARATOR"
-      | "ZEROFROST"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -151,6 +159,7 @@ export interface SZEROInterface extends utils.Interface {
       | "zassets"
       | "zero"
       | "zeroPerBlock"
+      | "zerofrost"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -161,7 +170,6 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "DOMAIN_SEPARATOR",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "ZEROFROST", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -250,6 +258,7 @@ export interface SZEROInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
@@ -366,6 +375,7 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "zeroPerBlock",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "zerofrost", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "BONUS_MULTIPLIER",
@@ -375,7 +385,6 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "DOMAIN_SEPARATOR",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "ZEROFROST", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -498,6 +507,7 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "zeroPerBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "zerofrost", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -658,8 +668,6 @@ export interface SZERO extends BaseContract {
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    ZEROFROST(overrides?: CallOverrides): Promise<[string]>;
-
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -770,6 +778,7 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
@@ -911,13 +920,13 @@ export interface SZERO extends BaseContract {
     zero(overrides?: CallOverrides): Promise<[string]>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    zerofrost(overrides?: CallOverrides): Promise<[string]>;
   };
 
   BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-  ZEROFROST(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -1029,6 +1038,7 @@ export interface SZERO extends BaseContract {
 
   initialize(
     _zero: PromiseOrValue<string>,
+    zerofrost: PromiseOrValue<string>,
     _devaddr: PromiseOrValue<string>,
     _zeroPerBlock: PromiseOrValue<BigNumberish>,
     _bonusEndBlock: PromiseOrValue<BigNumberish>,
@@ -1171,12 +1181,12 @@ export interface SZERO extends BaseContract {
 
   zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+  zerofrost(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-    ZEROFROST(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1286,6 +1296,7 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
@@ -1421,6 +1432,8 @@ export interface SZERO extends BaseContract {
     zero(overrides?: CallOverrides): Promise<string>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    zerofrost(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -1518,8 +1531,6 @@ export interface SZERO extends BaseContract {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ZEROFROST(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1631,6 +1642,7 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
@@ -1757,14 +1769,14 @@ export interface SZERO extends BaseContract {
     zero(overrides?: CallOverrides): Promise<BigNumber>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    zerofrost(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ZEROFROST(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1876,6 +1888,7 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
@@ -2002,5 +2015,7 @@ export interface SZERO extends BaseContract {
     zero(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    zerofrost(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

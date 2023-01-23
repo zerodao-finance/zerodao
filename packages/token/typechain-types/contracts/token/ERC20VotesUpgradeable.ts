@@ -31,11 +31,20 @@ export declare namespace ERC20VotesUpgradeable {
   export type CheckpointStruct = {
     fromBlock: PromiseOrValue<BigNumberish>;
     votes: PromiseOrValue<BigNumberish>;
+    timestamp: PromiseOrValue<BigNumberish>;
+    baseVotes: PromiseOrValue<BigNumberish>;
   };
 
-  export type CheckpointStructOutput = [number, BigNumber] & {
+  export type CheckpointStructOutput = [
+    number,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] & {
     fromBlock: number;
     votes: BigNumber;
+    timestamp: BigNumber;
+    baseVotes: BigNumber;
   };
 }
 
@@ -63,6 +72,7 @@ export interface ERC20VotesUpgradeableInterface extends utils.Interface {
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "zerofrost()": FunctionFragment;
   };
 
   getFunction(
@@ -89,6 +99,7 @@ export interface ERC20VotesUpgradeableInterface extends utils.Interface {
       | "totalSupply"
       | "transfer"
       | "transferFrom"
+      | "zerofrost"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -189,6 +200,7 @@ export interface ERC20VotesUpgradeableInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(functionFragment: "zerofrost", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
@@ -242,6 +254,7 @@ export interface ERC20VotesUpgradeableInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "zerofrost", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -455,6 +468,8 @@ export interface ERC20VotesUpgradeable extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    zerofrost(overrides?: CallOverrides): Promise<[string]>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
@@ -572,6 +587,8 @@ export interface ERC20VotesUpgradeable extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  zerofrost(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
@@ -687,6 +704,8 @@ export interface ERC20VotesUpgradeable extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    zerofrost(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -853,6 +872,8 @@ export interface ERC20VotesUpgradeable extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    zerofrost(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -970,5 +991,7 @@ export interface ERC20VotesUpgradeable extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    zerofrost(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -230,6 +230,16 @@ const _abi = [
             name: "votes",
             type: "uint224",
           },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "baseVotes",
+            type: "uint256",
+          },
         ],
         internalType: "struct ERC20VotesUpgradeable.Checkpoint",
         name: "",
@@ -603,6 +613,19 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "zerofrost",
+    outputs: [
+      {
+        internalType: "contract IZEROFROST",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];

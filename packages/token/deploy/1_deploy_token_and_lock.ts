@@ -28,6 +28,19 @@ const deploy: DeployFunction = async (hre) => {
       },
     },
   });
+  const deployedZeroFrost = await deployments.deploy("ZEROFROST", {
+    from: signer.address,
+    proxy: {
+      owner: signer.address,
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [],
+        },
+      },
+    },
+  });
   await deployments.save("ZERO", deployedZero);
   const zero = new ethers.Contract(
     deployedZero.address,
@@ -58,7 +71,9 @@ const deploy: DeployFunction = async (hre) => {
           methodName: "initialize",
           args: [
             deployedZero.address,
-            /*devadds*/
+            /*zerofrost*/
+            deployedZeroFrost.address,
+            /*devaddr*/
             signer.address,
             /*zero per block*/
             ethers.utils.parseEther("2000"),

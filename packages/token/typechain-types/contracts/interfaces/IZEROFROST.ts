@@ -4,7 +4,6 @@
 import type {
   BaseContract,
   BigNumber,
-  BigNumberish,
   BytesLike,
   CallOverrides,
   PopulatedTransaction,
@@ -24,23 +23,26 @@ import type {
 export interface IZEROFROSTInterface extends utils.Interface {
   functions: {
     "epoch()": FunctionFragment;
-    "epochAt(uint256)": FunctionFragment;
+    "epochLength()": FunctionFragment;
     "nextEpoch()": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "epoch" | "epochAt" | "nextEpoch"
+    nameOrSignatureOrTopic: "epoch" | "epochLength" | "nextEpoch"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "epochAt",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "epochLength",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "nextEpoch", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "epochAt", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "epochLength",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "nextEpoch", data: BytesLike): Result;
 
   events: {};
@@ -75,30 +77,21 @@ export interface IZEROFROST extends BaseContract {
   functions: {
     epoch(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    epochAt(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    epochLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     nextEpoch(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-  epochAt(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-    epochAt(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -108,10 +101,7 @@ export interface IZEROFROST extends BaseContract {
   estimateGas: {
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-    epochAt(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -119,10 +109,7 @@ export interface IZEROFROST extends BaseContract {
   populateTransaction: {
     epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    epochAt(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    epochLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nextEpoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

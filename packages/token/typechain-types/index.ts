@@ -64,8 +64,6 @@ export type { IERC20Permit } from "./@openzeppelin/contracts/token/ERC20/extensi
 export { IERC20Permit__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol/IERC20Permit__factory";
 export type { IERC20 } from "./@openzeppelin/contracts/token/ERC20/IERC20";
 export { IERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/IERC20__factory";
-export type { Governance } from "./contracts/governance/Governance";
-export { Governance__factory } from "./factories/contracts/governance/Governance__factory";
 export type { ZeroGovernor } from "./contracts/governance/ZeroGovernor";
 export { ZeroGovernor__factory } from "./factories/contracts/governance/ZeroGovernor__factory";
 export type { IZEROFROST } from "./contracts/interfaces/IZEROFROST";
@@ -80,3 +78,5 @@ export type { ZERO } from "./contracts/token/ZERO";
 export { ZERO__factory } from "./factories/contracts/token/ZERO__factory";
 export type { ZeroLock } from "./contracts/util/ZeroLock";
 export { ZeroLock__factory } from "./factories/contracts/util/ZeroLock__factory";
+export type { ZEROFROST } from "./contracts/zero/ZEROFROST";
+export { ZEROFROST__factory } from "./factories/contracts/zero/ZEROFROST__factory";

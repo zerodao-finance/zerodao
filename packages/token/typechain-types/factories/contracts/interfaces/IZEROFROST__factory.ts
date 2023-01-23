@@ -24,14 +24,8 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "epochAt",
+    inputs: [],
+    name: "epochLength",
     outputs: [
       {
         internalType: "uint256",

@@ -13,7 +13,6 @@ import { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable.sol";
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
-import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 
 interface IMigratorChef {
   // Perform LP token migration from legacy UniswapV2 to ZeroSwap.
@@ -78,7 +77,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   // SUSHI tokens created per block.
   uint256 public zeroPerBlock;
 
-  address public ZEROFROST;
   // Bonus muliplier for early zero makers.
   uint256 public constant BONUS_MULTIPLIER = 10;
   // The migrator contract. It has a lot of power. Can only be set through governance (owner).
@@ -123,6 +121,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
 
   function initialize(
     ZERO _zero,
+    address zerofrost,
     address _devaddr,
     uint256 _zeroPerBlock,
     uint256 _bonusEndBlock
@@ -134,6 +133,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     startBlock = block.number;
     __Ownable_init_unchained();
     __ERC20_init_unchained("sZERO", "sZERO");
+    __ERC20Votes_init_unchained(zerofrost);
     // init pool
     totalAllocPoint = totalAllocPoint.add(1 ether);
     poolInfo.push(
@@ -337,14 +337,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     } else {
       zero.transfer(_to, _amount);
     }
-  }
-
-  function getPastVotes(address account, uint256 blockNumber) public view virtual override returns (uint256) {
-    require(blockNumber < block.number, "ERC20Votes: block not yet mined");
-    uint256 votesAtBlock = ERC20VotesUpgradeable._checkpointsLookup(_checkpoints[account], blockNumber);
-    uint256 blockAtEpochStart = IZEROFROST(ZEROFROST).epochAt(blockNumber);
-    uint256 votesAtEpochStart = ERC20VotesUpgradeable._checkpointsLookup(_checkpoints[account], blockNumber);
-    return Math.min(votesAtEpochStart, votesAtBlock);
   }
 
   // Update dev address by the previous dev.
