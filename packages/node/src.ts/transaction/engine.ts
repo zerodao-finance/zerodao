@@ -28,14 +28,15 @@ export class TransactionEngine {
   constructor(trie: StateTrie) {
     this.trie = trie;
   }
+  /* accepts a block as an object, runs each transaction and returns the app state root as well as the results(success or revert) and messages which need signed by FROST */
   async runBlock(block) {
-   // await this.trie.trie.checkpoint();
+    await this.trie.trie.checkpoint();
     for (const tx of block.Data.Txs) {
         const txObject: any =  tx.type == 1 ? transfer.decode(tx.data) : tx.type == 2 ? stake.decode(tx.data) : release.decode(tx.data);
         console.log(txObject);
         await this.runTransaction(txObject);
     }
-    // await this.trie.trie.commit();
+     await this.trie.trie.commit();
     const results = this.receipts;
     const toSign = this.messages;
     this.receipts = [];
@@ -46,8 +47,9 @@ export class TransactionEngine {
       messages: toSign
     }
   }
+  // Takes each transaction, validates it and carries out its changes on the state trie
   async runTransaction(tx) {
-    // await this.trie.trie.checkpoint();
+     await this.trie.trie.checkpoint();
     if (tx.type == "Transfer") {
       try {
         await this.validateTransaction(tx);
@@ -103,6 +105,7 @@ export class TransactionEngine {
       }
     } 
   }
+  // validates a tx, causes revert if fails
   async validateTransaction(tx) {
     const oldFromAccount: Account = (await this.trie.getAccount(
       tx.from
