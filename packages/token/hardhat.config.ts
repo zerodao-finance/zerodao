@@ -79,6 +79,7 @@ const config: any = {
       live: false,
       saveDeployments: true,
       tags: ["local"],
+      chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID)
     },
     hardhat: {
       live: false,
