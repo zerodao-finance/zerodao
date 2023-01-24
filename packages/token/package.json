@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "node:ethereum": "CHAIN=ETHEREUM hardhat node",
+    "node:ethereum:dev": "TEST=1 yarn node:ethereum",
     "test": "CHAIN=ETHEREUM hardhat test",
     "compile": "CHAIN=ETHEREUM hardhat compile"
   },
