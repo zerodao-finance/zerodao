@@ -4,8 +4,6 @@ import { ZERO, SZERO } from "../typechain-types";
 import { ethers as _ethers } from "ethers";
 
 const deploy: DeployFunction = async (hre) => {
-  if(process.env.TEST) return;
-
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
   //@ts-ignore
