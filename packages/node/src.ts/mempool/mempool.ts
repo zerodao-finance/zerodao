@@ -1,141 +1,194 @@
+import { WrappedTx } from "./tx";
+import _ from "lodash";
 import { ethers } from "ethers";
-import * as _ from "lodash";
 import { logger } from "../logger";
-import { ZeroP2P } from "@zerodao/p2p";
-import { Message } from "protobufjs";
+import { protocol } from "@zerodao/protobuf";
 import { Sketch } from "./sketch";
-import { protocol } from "../proto";
-import { Transaction } from "../core/types";
-import { checkTransaction } from "../transaction";
-export interface MempoolConfig {
-  _len: number;
-  _cleanupInterval: any;
-  _gossipInterval: any;
-  peer: any;
-  protocol: any;
-  sketch: Sketch;
-  POOL_GOSSIP_TIME: number;
-  MAX_POOL_SIZE: number;
-  MAX_MSG_BYTES: number; // 1kb max message limit;
-  POOL_STORAGE_TIME_LIMIT: number;
-  POOL_GOSSIP_TOPIC: string;
+
+type MempoolConfig = {
+  MAX_BYTES: number;
+};
+
+const abci = {
+  CodeTypeOk: 1
+};
+
+const OkMessage = { Code: abci.CodeTypeOk, value: "something" };
+const proxyAppTest = {
+  checkTxSync: function (tx: Buffer) {
+    return [OkMessage, null];
+  },
+};
+
+
+
+export type Mempool = {
+  // properties
+  txs: Map<string, WrappedTx>;
+  cache: typeof Set;
+  height: number;
+  config: MempoolConfig;
+  proxy: any;
+  sketch: any;
+  
+  //constructor
+  new(config, height);
+
+  //methods
+  length(): number;
+  flushPool(): void;
+  deleteByHash(hash: string): void;
+  reapMax(max?: number): Buffer[];
+  checkTx(tx: Buffer): Error | void;
+  addTx(wtx: WrappedTx, checkResponse): void;
+  serialize(): Buffer 
+  resolveSketch(sketch: Buffer): any;
+  merge(pool: Buffer): void;
+};
+
+export function Mempool(
+  height,
+  proxyApp,
+  config
+) {
+  // constructor
+  this.txs = new Map();
+  this.cache = new Set();
+  this.height = height;
+  this.config = config;
+  this.proxy = proxyApp;
+  this.sketch = undefined;
 }
 
-export interface MempoolMessage {
-  messageType: "SKETCH" | "MEMORY" | "TX";
-  data: Buffer & Buffer[];
-}
+Mempool.prototype.length = function () {
+  return this.txs.size;
+};
 
-export class Mempool {
-  public running: boolean = false;
-  public state: Map<string, Buffer>;
-  public handled: Map<string, any>;
+Mempool.prototype.flushPool = function () {
+  this.txs.clear();
+  return;
+};
 
-  private _len: number = 0;
-  private _cleanupInterval: any;
-  private _gossipInterval: any;
-  private peer: ZeroP2P;
-  private protocol: any;
-  private sketch: Sketch;
-  private POOL_GOSSIP_TOPIC: string = "zerodao:xnode:gossip:v1";
-  private POOL_GOSSIP_TIME: number = 5;
-  private MEMORY_CLEANUP_TIME: number = 10;
-  private MAX_POOL_SIZE: number = 10000;
-  private MAX_MSG_BYTES: number = 1000; // 1kb max message limit;
-  private POOL_STORAGE_TIME_LIMIT: number;
+Mempool.prototype.deleteByHash = function (hash: string) {
+  if (this.cache.has(hash)) this.cache.delete(hash);
+  if (this.txs.hash(hash)) this.txs.delete(hash);
+  return;
+};
 
-  static async init(config: Partial<MempoolConfig>) {
-    const sketch = await Sketch.init(20);
-    return new Mempool({ ...config, sketch });
+Mempool.prototype.reapMax = function (max?: number) {
+  var txs = _.map([...this.txs.values()], (w) => w.tx);
+  if (max == undefined || max == 0) return txs;
+  return _.take(txs, max);
+};
+
+Mempool.prototype.checkTx = function (tx: any) {
+  tx = protocol.Transaction.encode(tx).finish()
+  var hash = ethers.utils.keccak256(tx);
+  var time = Date.now().toString();
+
+  if (tx.length > this.config.MAX_BYTES) {
+    return [ null, new Error("transaction exceeds MAX_BYTES") ];
   }
-
-  constructor(
-    config: Partial<MempoolConfig> = {
-      _len: 0,
-      _cleanupInterval: 3600,
-      _gossipInterval: 3600,
-      peer: null,
-      protocol: null,
-
-      POOL_GOSSIP_TIME: 5,
-      MAX_POOL_SIZE: 10000,
-      MAX_MSG_BYTES: 1000, // 1kb max message limit;
-      POOL_STORAGE_TIME_LIMIT: 3600,
-      POOL_GOSSIP_TOPIC: "/zeropool/0.0.1",
+  
+  if ( this.cache.has(hash) ) {
+    if ( this.txs.has(hash) ) {
+      // recheck the transaction
+      // if invalid remove from the pool
+      // leave in the cache
     }
-  ) {
-    Object.assign(this, config);
-    this.protocol = protocol;
+    return [ null, new Error("transaction exists in cache") ]
   }
 
-  async validate(tx: Buffer) {
-    if (tx.length > this.MAX_MSG_BYTES) {
-      throw new Error("Transaction exceeded memory limit");
-    }
-    try {
-    await checkTransaction(tx);
-    }
-    catch (err){
-      throw err
-    }
-    //TODO: pass transaction to vm or equivilant
-  }
+  this.cache.add(hash);
 
-  get length() {
-    return Array.from(this.state.keys()).length;
-  }
+  let wtx = new WrappedTx(tx, time, this.height); 
+  let [rsp, err] = this.proxy.checkTxSync(tx);
 
-  async addTransaction(tx: Buffer) {
-    const timestamp = Date.now();
-    const hash: string = ethers.utils.keccak256(tx);
-    try {
-      await this.validate(tx);
-      this.state.set(hash, tx);
-      this.sketch.storeTx(hash);
-    } catch (error) {
-      this.handled.set(hash, {
-        tx,
-        timestamp,
-        hash: hash,
-        error: error as Error,
-      });
-    }
-  }
-
-  cleanup() {
-    this.sketch.clear();
-    this.state.clear();
-    this.handled.clear();
-  }
-
-  async synchronize(serializedSketch: Buffer) {
-    return await this.sketch.calculateDifferences(serializedSketch);
-  }
-
-  async resetMempool(mempool: Buffer[]) {
-    this.cleanup();
-    await mempool.reduce(async (a, d) => {
-      await a;
-      await this.addTransaction(d);
-    }, Promise.resolve());
-  }
-
-  handlers = {
-    SKETCH: this.synchronize,
-    TX: this.addTransaction,
-    MEMORY: this.resetMempool,
+  if (err) {
+    return [ null, err ]; 
   };
 
-  async handleBroadcast(msg: MempoolMessage) {
-    this.handlers[msg.messageType](msg.data);
+  this.addTx(wtx, rsp);
+
+  return [{ status: "SUCCESS" }, null]
+};
+
+Mempool.prototype.addTx = function (wtx: WrappedTx, checkResponse) {
+  if (checkResponse.Code != abci.CodeTypeOk) {
+    logger.info('rejected bad transaction');
+    throw new Error("rejected bad transaction");
+    return;
   }
 
-  async broadcastValues() {
-    let m = Array.from(this.state.values());
-    return this.protocol.Mempool.encode({ txs: m }).finish();
-  }
+  this.txs.set(wtx.Hash(), wtx);
+};
 
-  _hashMempool() {
-    return this.sketch.serialize();
-  }
+Mempool.prototype.merge = function (otherMap: Buffer) {
+  return;
+  // merge other pool into this pool
+  // use lodash merge()
 }
+
+Mempool.prototype.serialize = async function () {
+  this.sketch = await Sketch.fromTxs([...this.txs.values()]);
+  console.log(this.sketch);
+  return this.sketch.serialize();
+};
+
+Mempool.prototype.resolveSketch = async function (sketch) {
+  // = await Sketch.fromTxs([...this.txs.values()]);
+  return await this.sketch.calculateDifferences(sketch);
+};
+
+
+function startInjesting( mp ) {
+  setInterval((mp) => {
+    let encoded = protocol.BalanceQuery.encode({ address: ethers.utils.randomBytes(8) }).finish()
+    mp.checkTx(encoded);
+
+    logger.info(`mempool size ${mp.length()}`)
+  }, 5000, mp)
+}
+
+function fillMock( times: number, mp ) {
+  return new Promise((resolve) => {
+    for ( let y = 0; y < times; y++ ) {
+      let encoded = protocol.BalanceQuery.encode({ address: ethers.utils.randomBytes(8) }).finish();
+      mp.checkTx(encoded);
+    }
+
+    setTimeout(resolve, 10000);
+  })
+}
+
+function logdata (mp) {
+  setInterval((mp) => {
+    console.log(`reaping transactions`, mp.reapMax());
+  }, 1000, mp);
+  
+  setInterval(async (mp) => {
+    console.log(`creating sketch`, await mp.serialize());
+  }, 1000, mp);
+}
+
+
+
+(async () => {
+
+  let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
+  let mp2 = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
+
+  await Promise.all(
+    [fillMock( 10, mp ),
+    fillMock( 19, mp2 )]
+  ).then();
+
+
+  let mp_buffer = await mp.serialize();
+  let mp2_buffer = await mp2.serialize();
+  console.log(await mp.resolveSketch(mp2_buffer));
+  
+
+
+});
+

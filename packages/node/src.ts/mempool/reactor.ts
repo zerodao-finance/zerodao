@@ -1,34 +1,32 @@
+import { ZeroP2P } from "@zerodao/p2p";
 import { Mempool } from "./mempool";
-import { EventEmitter } from "events";
+import { protocol } from "@zerodao/protobuf";
+import { pipe } from "it-pipe";
+import * as lp from "it-length-prefixed";
 
-type Reactor = {
-  p2p: typeof ZeroP2P;
-  config: MempoolConfig;
-  mempool: typeof Mempool;
+export type MempoolReactor = {
+  proxy: Mempool;
+  serviceMethods: string[]
+
+  new(proxy: Mempool): MempoolReactor;
+
+  zero_sendTransaction(call, callback): void;
+} 
+
+export function MempoolReactor(proxy) {
+  this.proxy = proxy;
+  this.serviceMethods = ['zero_sendTransaction']
 }
 
-class MempoolReactor {
- p2p: ZeroP2P;
- config: MempoolConfig;
- mempool: typeof Mempool;
+MempoolReactor.prototype.zero_sendTransaction = function (call, callback) {
+  let [rsp, err] = this.proxy.checkTx(call.request);
 
- constructor() {
-   super();
- }
-  
- /*
-  * broadcast handler recieves broadcasts from peers and 
-  * passes data to the mempool impl
-  */
- onUpdateBroadcast(data: Buffer) {
-    var message = (protocol.Mempool.decode(data)).toObject();
-     
- }
-
-
-
- 
-}
+  if (!err) { 
+    callback(null, (msg) => rsp);
+  } else {
+    callback(null, { status: "ERROR" });
+  }
+};
 
 
 

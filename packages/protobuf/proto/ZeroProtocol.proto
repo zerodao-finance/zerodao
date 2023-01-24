@@ -59,7 +59,26 @@ message TransactionReply {
 
 }
 
+message MessageRequest {
+  enum ChannelType {
+    MEMPOOL = 0;
+    CONSENSUS = 1;
+  }
 
+  enum MessageType {
+    REQUEST_SKETCH = 0;
+    REQUEST_MEMPOOL = 1;
+    RESPONSE_SKETCH = 3;
+    RESPONSE_MEMPOOL = 4;
+  }
+
+  required MessageType type = 0;
+  required ChannelType channel = 1; 
+  oneof data {
+    string value = 2;
+    bytes bytes_data = 3;
+  };
+}
 /*
    used for encoding and decoding the Mempool for broadcasting over pubsub to other peers
 */
@@ -114,7 +133,6 @@ message BalanceReply {
 
 service RpcService{
   rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
-<<<<<<< HEAD
   rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
   rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
   rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}

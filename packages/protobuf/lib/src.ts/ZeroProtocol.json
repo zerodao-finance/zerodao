@@ -57,9 +57,106 @@
                 }
             }
         },
+        "Stake": {
+            "fields": {
+                "from": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 0
+                },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 1
+                },
+                "amount": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 2
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 3
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 4
+                },
+                "asset": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 6
+                }
+            }
+        },
+        "Release": {
+            "fields": {
+                "from": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 0
+                },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 1
+                },
+                "amount": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 2
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 3
+                },
+                "chain": {
+                    "rule": "required",
+                    "type": "Chain",
+                    "id": 4
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 5
+                },
+                "asset": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 6
+                }
+            }
+        },
         "Account": {
             "fields": {
                 "address": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 0
+                },
+                "unStakedBalance": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 1
+                },
+                "stakedBalance": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 2
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 3
+                }
+            }
+        },
+        "Balance": {
+            "fields": {
+                "hash": {
                     "rule": "required",
                     "type": "bytes",
                     "id": 0
@@ -68,11 +165,6 @@
                     "rule": "required",
                     "type": "uint64",
                     "id": 1
-                },
-                "nonce": {
-                    "rule": "required",
-                    "type": "uint64",
-                    "id": 2
                 }
             }
         },
@@ -103,6 +195,52 @@
                     "values": {
                         "SUCCESS": 0,
                         "ERROR": 1
+                    }
+                }
+            }
+        },
+        "MessagePacket": {
+            "oneofs": {
+                "data": {
+                    "oneof": [
+                        "value",
+                        "bytesData"
+                    ]
+                }
+            },
+            "fields": {
+                "type": {
+                    "rule": "required",
+                    "type": "MessageType",
+                    "id": 0
+                },
+                "channel": {
+                    "rule": "required",
+                    "type": "ChannelType",
+                    "id": 1
+                },
+                "value": {
+                    "type": "string",
+                    "id": 2
+                },
+                "bytesData": {
+                    "type": "bytes",
+                    "id": 3
+                }
+            },
+            "nested": {
+                "ChannelType": {
+                    "values": {
+                        "MEMPOOL": 0,
+                        "CONSENSUS": 1
+                    }
+                },
+                "MessageType": {
+                    "values": {
+                        "REQUEST_SKETCH": 0,
+                        "REQUEST_MEMPOOL": 1,
+                        "RESPONSE_SKETCH": 3,
+                        "RESPONSE_MEMPOOL": 4
                     }
                 }
             }
@@ -279,7 +417,15 @@
                 },
                 "zero_getBalance": {
                     "requestType": "BalanceQuery",
-                    "responseType": "BalanceResponse"
+                    "responseType": "BalanceReply"
+                },
+                "zero_stakeTransaction": {
+                    "requestType": "Stake",
+                    "responseType": "TransactionReply"
+                },
+                "zero_releaseTransaction": {
+                    "requestType": "Release",
+                    "responseType": "TransactionReply"
                 }
             }
         }

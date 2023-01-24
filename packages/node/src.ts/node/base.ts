@@ -13,6 +13,7 @@ import {
 	NODE_STATUS,
 	CONSENSUS_ENGINE
 } from "./types";
+import { RPC } from "../rpc";
 import lp from "it-length-prefixed";
 import pipe from "it-pipe";
 import yargs from "yargs";
@@ -23,44 +24,46 @@ import yargs from "yargs";
  * @param (stateSync: boolean) whether a node should stateSync on startup (defaults: false);
  */
 export class Node {	
-	// config
-	config: types.Config;
-	genesisDoc: types.GenesisDoc; // initial validator set
-	privValidator: types.PrivValidator; // nodes private validator key
-
-	// network
-	nodeKey: p2p.NodeKey
-	
-	// running-services
-	consensusReactor // for participating in consensus ( implements EventEmitter and a P2P instance );
-	blockStore // store the blockchain to disk
-	eventBus // pub/sub for services
-	stateStore
-	bcReactor // for block-syncing
-	stateSync: boolean = false;
-
-	/*
-	 * creates new node with default settings
-	 */
-	static default() {}
-
-	/*
-	 * creates new node with passed node settings
-	 */
-	static init(
-		config: types.Config,
-		privValidator: types.PrivValidator,
-		nodeKey: p2p.NodeKey,
-		genesisDocProvider: genesisDocProvider
-		logger: log.Logger,
-		...options
-	) {
-		
+	static init() {
+		let rpc = RPC.init();
+		return new Node({ rpc: rpc });
 	}
 
-	constructor(
-		
-	) {
+	constructor({
+		rpc,
+	}) {
 
+		this.rpc = rpc;
 	}
 }
+
+const addService = ({
+	//TODO: refactor for ease of development
+	// adding services
+	zero_sendTransaction: this.wrapServiceMethod("zero_sendTransaction", (call, callback) => {
+		callback(null, (message) => {
+			return { status: "SUCCESS" }; 
+		})
+	}),
+	
+	zero_getBalance: this.wrapServiceMethod("zero_getBalance", (call, callback) => {
+		callback(null, (message) => {
+			return { status: "SUCCESS" };
+		})
+	}),
+
+	zero_stakeTransaction: this.wrapServiceMethod("zero_stakeTransaction",  (call, callback) => {
+		callback(null, (message) => {
+			return { status: "SUCCESS" };
+		})
+	}),
+
+	zero_releaseTranasction: this.wrapServiceMethod("zero_releaseTransaction", (call, callback) => {
+		callback(null, (message) => {
+			return { status: "SUCCESS" };
+		})
+	})
+
+});
+
+

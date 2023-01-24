@@ -2,6 +2,7 @@ import { Minisketch, resolve } from "libminisketch-wasm";
 import { ethers } from "ethers";
 import type { Hexable } from "@ethersproject/bytes";
 import { chunk } from "lodash";
+import _ from "lodash";
 
 export class Sketch {
   private _sketch: Minisketch;
@@ -15,15 +16,15 @@ export class Sketch {
     });
   }
 
-  static async fromTxs(wtxs: any[]): Sketch {
-    let _valHash = _.map(txs, (i) => { 
-      let _val = ethers.BigNumber.from(ethers.utils.arrayify(i.hash).slice(24, 32)).toString()
+  static async fromTxs(wtxs: any[]): Promise<Sketch> {
+    let _valHash = _.map(wtxs, (i) => { 
+      let _val = Number(ethers.utils.hexlify(ethers.utils.arrayify(i.hash).slice(24, 27)))
      return [_val, i.hash]
     })
 
-    var sketch = Sketch.init(wtxs.length);
+    var sketch = await Sketch.init(wtxs.length);
     
-    for ( let val, hash of _valHash ) {
+    for ( let [val, hash] of _valHash ) {
       sketch.storeWrappedTxs(val, hash); 
     }
    
@@ -49,7 +50,6 @@ export class Sketch {
     this.TxMap[sketchValue] = txHash;
   }
 
-
   rebuild() {
     this._sketch.rebuild();
     Object.keys(this.TxMap).map((d) => this._sketch.addUint(d));
@@ -72,10 +72,17 @@ export class Sketch {
     otherSketch.deserialize(serializedSketch);
     let missing: string[] = [],
       found: string[] = [];
+
+
     this._sketch.merge(otherSketch);
+
+
     const [length, res] = resolve(
       chunk(this._sketch.decode() as Uint8Array, 8)
     );
+
+    console.log(length, res);
+    console.log(this.capacity);
     if (length > this.capacity) {
       return { missing, found, rebuild: true };
     } else {

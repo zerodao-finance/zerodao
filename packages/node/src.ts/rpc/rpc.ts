@@ -1,62 +1,96 @@
 import { loadPackageDefinition, Server, ServerCredentials } from "grpc";
 import { EventEmitter } from "node:events";
-import type { UnaryCallHandler } from "./services";
 import { logger } from "../logger";
 import { protocol, packageDef } from "@zerodao/protobuf";
+import { MempoolReactor } from "../mempool/v1/new_reactor";
+import { Mempool } from "../mempool/v1/mempool_v2";
 
-
-export class RPCServer extends EventEmitter {
+export class RPC extends EventEmitter {
   self: any = undefined;
 
   service: any = undefined;
   pkg: any = undefined;
+  proxy_peer: any = undefined;
 
-  static PORT: string = "50051";
+  implementations = {};
+
+  static DEFAULT_PORT: string = "50051";
+  static LOCAL_ADDRESS: string = "0.0.0.0";
+
+  static ServiceCallbackWrapper = (returnMsg) => {
+    return (call, callback) => {
+      return returnMsg;
+    }
+  }
 
   static init() {
-    return new RPCServer();
+    return new RPC();
   }
 
   constructor() {
     super();
     this.self = new Server();
-  }
-
-  start({ port }: any = {}) {
     this.pkg = loadPackageDefinition(
       packageDef
     );
 
-    this.service = (this.pkg as any).RpcService;
+    this.service = this.pkg.RpcService;
+  }
 
-    this.self.addService((this.service as any).service, {
-      zero_sendTransaction: this._handleTransaction,
-      zero_getBalance: this._handleTransaction
-    });
+  addService(proxy) {
+    for ( let i of proxy.serviceMethods ) {
+      this.implementations[i] = this.wrapServiceMethod(i, proxy);
+    }
+    this.self.addService(this.service.service, this.implementations);
+  }
 
+  start({ address, port }: any = {}) {
     this.self.bindAsync(
-      `0.0.0.0:${port || RPCServer.PORT}`,
+      `${address || RPC.LOCAL_ADDRESS}:${port || RPC.DEFAULT_PORT}`,
       ServerCredentials.createInsecure(),
       () => {
         this.self.start();
       }
     );
-    return { success: true };
+
+    logger.info("server started...");
   }
 
-  _handleTransaction(call: any, callback: any) {
-    callback(null, (message) => {
-      try {
-        this._emit("zero_sendTransaction", message);
-        return { status: 0 };
-      } catch (error) {
-        return { status: 1, errorMsg: new TextEncoder().encode(error.message) };
-      }
-    });
+  stop() {
+    this.self.stop();
+    logger.info("server stopped...");
   }
 
-  _emit(eventName, msg) {
-    logger.info(`EMIT: <${event},${msg}>`);
-    super.emit(eventName, msg);
+  wrapServiceMethod(methodName, proxy) {
+    return (call, callback) => {
+      this.emit(methodName, call.request);
+      proxy[methodName](call, callback); 
+    }
+  }
+
+  handler(method: string, func: (message) => any) {
+    this.on(method, func);
+    return function unsubscribe(server: RPC) {
+      logger.info(`stopped handling ${method}`);
+      server.off(method, func);
+    }
   }
 }
+
+const proxyAppTest = {
+  checkTxSync: function (tx: Buffer) {
+    return [{ Code: 1, value: "something" }, null]
+  }
+};
+
+(async () =>  {
+  let server = RPC.init();
+  let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
+  let reactor = new MempoolReactor(mp);
+
+  server.addService(reactor)
+  server.start({ port: 50051 });
+  
+  let unsubscribe = server.handler("zero_sendTransaction", (message) => logger.info('transaction recieved via gRPC'));
+
+})()
