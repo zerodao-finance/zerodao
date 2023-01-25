@@ -22,7 +22,7 @@ interface MerkleDistributorInfo {
   }
 }
 
-type OldFormat = { [account: string]: number | string }
+type OldFormat = { [account: string]: string }
 type NewFormat = { address: string; earnings: string; reasons: string }
 
 export function parseBalanceMap(balances: OldFormat | NewFormat[]): MerkleDistributorInfo {
@@ -32,7 +32,7 @@ export function parseBalanceMap(balances: OldFormat | NewFormat[]): MerkleDistri
     : Object.keys(balances).map(
         (account): NewFormat => ({
           address: account,
-          earnings: `0x${balances[account].toString(16)}`,
+          earnings: `0x${parseFloat(balances[account]).toString(16)}`, // CHANGE: parsing string to convert to number
           reasons: '',
         })
       )

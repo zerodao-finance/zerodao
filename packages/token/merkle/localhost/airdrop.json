@@ -1,10 +1,10 @@
 {
-  "merkleRoot": "0x25b9b6d90ec23038c37b0473f6312d5126cc1927dbb6aa977185358a464740b4",
-  "tokenTotal": "0x0100",
+  "merkleRoot": "0x563aaee0cfa1e27101085a73e5fdda1560963f40f47245027b4afccf07f39442",
+  "tokenTotal": "0x64",
   "claims": {
     "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": {
       "index": 0,
-      "amount": "0x0100",
+      "amount": "0x64",
       "proof": []
     }
   }

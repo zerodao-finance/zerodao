@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import { Buffer } from 'buffer';
 import BalanceTree from "./balance-tree";
 import { parseBalanceMap } from "./parse-balance-map";
-const fs = require("fs-extra");
 
 function genLeaf(address, value) {
     return Buffer.from(
