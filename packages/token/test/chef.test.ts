@@ -141,7 +141,7 @@ describe("sZERO", () => {
     await sZero.connect(s).enterStakingWithPermit(balance, signature);
     const votes = await sZero.getVotes(s.address);
     expect(votes).to.be.lte(await sZero.balanceOf(s.address));
-    await time.increase(3600);
+    await time.increase(3598);
     await mine(1);
     console.log(ethers.utils.formatEther(await sZero.getVotes(s.address)));
   });

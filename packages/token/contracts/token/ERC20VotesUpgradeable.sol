@@ -10,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
+import "hardhat/console.sol";
 
 /**
  * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
@@ -68,8 +69,10 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   }
 
   function getVoteCount(Checkpoint storage ckpt) internal view returns (uint256 votes) {
-    if (ckpt.timestamp <= block.timestamp) votes = (ckpt.baseVotes + ckpt.votes);
-    else votes = ckpt.baseVotes + ckpt.timestamp.sub(block.timestamp).mul(ckpt.votes).div(ckpt.timestamp);
+    uint256 epochLength = zerofrost.epochLength();
+    if (ckpt.timestamp <= block.timestamp || ckpt.timestamp.sub(block.timestamp) >= epochLength)
+      votes = (ckpt.baseVotes + ckpt.votes);
+    else votes = ckpt.baseVotes + epochLength.sub(ckpt.timestamp.sub(block.timestamp)).mul(ckpt.votes).div(epochLength);
   }
 
   /**
@@ -285,10 +288,11 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
 
     unchecked {
       Checkpoint memory oldCkpt = pos == 0 ? Checkpoint(0, 0, 0, 0) : _unsafeAccess(ckpts, pos - 1);
-      uint256 epochEnd = block.timestamp + zerofrost.epochLength();
+      uint256 epochLength = zerofrost.epochLength();
+      uint256 epochEnd = block.timestamp + epochLength;
       oldBaseWeight = oldCkpt.baseVotes;
       oldWeight = oldCkpt.votes;
-      (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochEnd, oldCkpt.timestamp);
+      (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochLength, oldCkpt.timestamp);
       if (pos > 0 && oldCkpt.fromBlock == block.number) {
         Checkpoint storage ckpt = _unsafeAccess(ckpts, pos - 1);
         ckpt.votes = SafeCastUpgradeable.toUint224(newWeight);
@@ -310,14 +314,14 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     uint256 oldBaseVotes,
     uint256 oldVotes,
     uint256 delta,
-    uint256 epochEnd,
+    uint256 epochLength,
     uint256 prevEpochEnd
   ) private view returns (uint256 newVotes, uint256 newBaseVotes) {
-    if (block.timestamp >= prevEpochEnd) {
+    if (block.timestamp >= prevEpochEnd || prevEpochEnd.sub(block.timestamp) >= epochLength) {
       newBaseVotes = oldBaseVotes + oldVotes;
       newVotes = delta;
     } else {
-      uint256 oldVotesAdded = prevEpochEnd.sub(block.timestamp).mul(oldVotes).div(prevEpochEnd);
+      uint256 oldVotesAdded = epochLength.sub(prevEpochEnd.sub(block.timestamp)).mul(oldVotes).div(epochLength);
       newBaseVotes = oldBaseVotes.add(oldVotesAdded);
       newVotes = (oldVotes - oldVotesAdded) + delta;
     }
@@ -327,15 +331,15 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     uint256 oldBaseVotes,
     uint256 oldVotes,
     uint256 delta,
-    uint256 epochEnd,
+    uint256 epochLength,
     uint256 prevEpochEnd
   ) private view returns (uint256 newVotes, uint256 newBaseVotes) {
     if (delta == (oldVotes + oldBaseVotes)) return (0, 0);
-    if (block.timestamp >= prevEpochEnd) {
+    if (block.timestamp >= prevEpochEnd || prevEpochEnd.sub(block.timestamp) >= epochLength) {
       newBaseVotes = (oldBaseVotes + oldVotes) - delta;
       newVotes = 0;
     } else {
-      uint256 oldVotesAdded = prevEpochEnd.sub(block.timestamp).mul(oldVotes).div(prevEpochEnd);
+      uint256 oldVotesAdded = epochLength.sub(prevEpochEnd.sub(block.timestamp)).mul(oldVotes).div(epochLength);
       newBaseVotes = oldBaseVotes.add(oldVotesAdded).sub(delta);
       newVotes = (oldVotes - oldVotesAdded);
     }
