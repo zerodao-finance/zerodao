@@ -20,6 +20,6 @@ contract ZEROFROST is Initializable, OwnableUpgradeable, IZEROFROST {
   }
 
   function epochLength() public view returns (uint256) {
-    return 0;
+    return 3600;
   }
 }

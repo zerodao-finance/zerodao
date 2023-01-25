@@ -68,8 +68,8 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   }
 
   function getVoteCount(Checkpoint storage ckpt) internal view returns (uint256 votes) {
-    if (ckpt.timestamp >= block.timestamp) votes = (ckpt.baseVotes + ckpt.votes);
-    else votes = ckpt.baseVotes + block.timestamp.sub(ckpt.timestamp).mul(ckpt.votes).div(ckpt.timestamp);
+    if (ckpt.timestamp <= block.timestamp) votes = (ckpt.baseVotes + ckpt.votes);
+    else votes = ckpt.baseVotes + ckpt.timestamp.sub(block.timestamp).mul(ckpt.votes).div(ckpt.timestamp);
   }
 
   /**
@@ -200,8 +200,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function _mint(address account, uint256 amount) internal virtual override {
     super._mint(account, amount);
     require(totalSupply() <= _maxSupply(), "ERC20Votes: total supply risks overflowing votes");
-
-    _writeCheckpoint(_totalSupplyCheckpoints, _add, amount);
+    _writeCheckpoint(_checkpoints[account], _add, amount);
   }
 
   /**
@@ -210,7 +209,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function _burn(address account, uint256 amount) internal virtual override {
     super._burn(account, amount);
 
-    _writeCheckpoint(_totalSupplyCheckpoints, _subtract, amount);
+    _writeCheckpoint(_checkpoints[account], _subtract, amount);
   }
 
   /**

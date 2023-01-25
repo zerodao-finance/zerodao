@@ -112,7 +112,6 @@ describe("sZERO", () => {
     ).to.be.equal(true);
     const prevBalance = await zero.balanceOf(s.address);
     await sZero.connect(s).restake();
-    const bal = (await zero.balanceOf(s.address)).sub(prevBalance);
     await sZero.connect(signers[1]).restake();
     await mine(1);
     console.log(
@@ -127,5 +126,23 @@ describe("sZERO", () => {
       .leaveStaking(await sZero.balanceOf(signers[1].address));
     console.log(ethers.utils.formatEther(await zero.balanceOf(sZero.address)));
     console.log(await sZero.totalSupply());
+  });
+  it("should test governance", async () => {
+    const signers = await makeSigners(5);
+    const s = signers[0];
+    const balance = await zero.balanceOf(s.address);
+    const signature = await signEIP712({
+      signer: s as any,
+      owner: s.address,
+      spender: sZero.address,
+      value: balance,
+      zero,
+    });
+    await sZero.connect(s).enterStakingWithPermit(balance, signature);
+    const votes = await sZero.getVotes(s.address);
+    expect(votes).to.be.lte(await sZero.balanceOf(s.address));
+    await time.increase(3600);
+    await mine(1);
+    console.log(ethers.utils.formatEther(await sZero.getVotes(s.address)));
   });
 });
