@@ -4,12 +4,10 @@ import { MempoolReactor } from "./reactor";
 export function MempoolConstructor(
   height,
   appProxy,
-  MempoolConstructor,
-  MempoolReactorConstructor,
   mempoolConfig,
 ) {
-  let mp = new MempoolConstructor(height, appProxy, mempoolConfig);
-  let reactor = new MempoolReactorConstructor(mp);
+  let mp = new Mempool(height, appProxy, mempoolConfig);
+  let reactor = new MempoolReactor(mp);
 
   return [ mp, reactor ];
 }
@@ -21,6 +19,6 @@ const testApp = {
 };
 
 (() => {
-  let [ mp, reactor ] = MempoolConstructor(0, testApp, Mempool, MempoolReactor, { MAX_BYTES: 10000 });  
+  let [ mp, reactor ] = MempoolConstructor(0, testApp, { MAX_BYTES: 10000 });  
   console.log(mp, reactor)
 })()
