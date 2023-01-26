@@ -1,0 +1,11 @@
+{
+  "merkleRoot": "0x563aaee0cfa1e27101085a73e5fdda1560963f40f47245027b4afccf07f39442",
+  "tokenTotal": "0x64",
+  "claims": {
+    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": {
+      "index": 0,
+      "amount": "0x64",
+      "proof": []
+    }
+  }
+}
