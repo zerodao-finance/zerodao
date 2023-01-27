@@ -33,6 +33,8 @@ export class Peer extends ZeroP2P {
 		return await PeerId.create()
 	}
 
+	
+
 	static createSigner() {
 		return ethers.Wallet.createRandom();
 	}
@@ -54,6 +56,18 @@ export class Peer extends ZeroP2P {
 		this.saveConfig(options);
 	}
 
+	async createPubsubProtocol(topic, callback) {
+	 let publish = function (topic, msg) {
+			// publish message
+			this.pubsub.publish(topic, msg);
+			logger.info(`publishing message: ${msg} \n  on topic ${topic}`);
+		}
+		publish = publish.bind(this);
+
+		await (this.pubsub as any).subscribe(topic, callback)
+
+		return publish;
+	} 
 
 	saveConfig(options) {
 		let config = {

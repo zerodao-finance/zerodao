@@ -20,6 +20,12 @@ export function MempoolReactor(proxy, p2p) {
   this.serviceMethods = ['zero_sendTransaction']
 }
 
+MempoolReactor.prototype.listenForGossip = function () {
+  this.p2p.pubsub.subscribe('zero_sendTransaction', (msg) => {
+
+  });
+}
+
 MempoolReactor.prototype.zero_sendTransaction = function (call, callback) {
   let [rsp, err] = this.proxy.checkTx(call.request);
   let encoded_msg = protocol.Transaction.encode(call.request).finish();

@@ -1,6 +1,7 @@
 import lp from "it-length-prefixed";
 import pipe from "it-pipe";
 import yargs from "yargs";
+import { ethers } from "ethers";
 import { logger } from "../logger";
 import { MempoolConstructor } from "../mempool";
 import { RPC } from "../rpc";
@@ -8,7 +9,6 @@ import { Peer } from "../p2p";
 import { EventEmitter } from "events";
 
 class Node extends EventEmitter {
-
 	mempool; 
 	mempoolReactor;
 	peer: Peer;
@@ -76,6 +76,32 @@ class Node extends EventEmitter {
 
 (async () => {
 	let peer = await Peer.fromMultiaddr('mainnet');
-  let node = Node.initNode({ peer });
-	await node.startNode();
+	let peer2 = await Peer.fromMultiaddr('mainnet', 'second');
+	await new Promise((resolve) => {
+		peer.start();
+		peer2.start();
+		setTimeout(resolve, 2000);
+	});
+
+	let rsp: any[] = await new Promise(async (resolve) =>	{
+			let peer_publish = await peer.createPubsubProtocol('test', async (msg) => console.log("heard msg on peer"));
+			let peer2_publish = await peer.createPubsubProtocol('test', async (msg) => console.log("heard msg on peer2"));
+
+			await setTimeout(() => {
+				resolve([peer_publish, peer2_publish])
+			}, 5000);
+
+	});
+
+	let [ p1, p2 ] = rsp;
+	p1('test', ethers.utils.randomBytes(8)) 
+  p2('test', ethers.utils.randomBytes(8)) 
+
+	// TODO: fix this test still not calling callback on topic subscription
+
+
+  // let node = Node.initNode({ peer });
+	// await node.startNode();
+
+	
 })()

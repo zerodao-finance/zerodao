@@ -199,7 +199,7 @@
                 }
             }
         },
-        "MessagePacket": {
+        "MessageRequest": {
             "oneofs": {
                 "data": {
                     "oneof": [
