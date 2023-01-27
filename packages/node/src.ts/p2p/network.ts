@@ -1,54 +1,75 @@
 import { ZeroP2P } from "@zerodao/p2p";
 import { ethers } from "ethers";
+import { logger } from "../logger";
 import PeerId from "peer-id";
 import os from "node:os";
 import fs from "node:fs";
 
 export class Peer extends ZeroP2P {
 
+	peerId: any;
+	wallet_key: any;
+
 	static async peerIdFromNodeKey(nodeKey) {
-		return await PeerId.createFromPrivKey(nodeKey);
+		return await PeerId.createFromJSON(nodeKey);
 	}
 
-	static async fromNetworkConfigFile(path: string) {
+	static async fromConfig(path: string = 'default.config.json') {
 		var json = fs.readFileSync(path, 'utf8');
 
 		let config = JSON.parse(json);
-
-		if (config["node_key"] === undefined || config["multiaddr"] === undefined) throw new Error("cannot initialize without node_key");
-
-		var signer = config["wallet_key"] ? new ethers.Wallet(config["wallet_key"]) : ethers.Wallet.createRandom();
+		var signer = new ethers.Wallet(config.wallet.private_key);	
+		logger.info(`successfully loaded node: ${config['node_id']} `)
 
 		return new this({
-			peerId: await this.peerIdFromNodeKey(config["node_key"]),
+			nodeId: config["node_id"],
+			peerId: await this.peerIdFromNodeKey(config["peer_id"]),
 			multiaddr: config["multiaddrs"],
 			signer
 		});
 	}
 
-	static async generateNodeKey() {
-		let peerId = await PeerId.create()
-		let json = peerId.toJSON()	
-		console.log(json)
+	static async createKey() {
+		return await PeerId.create()
 	}
 
-	static createEmptySigner() {
+	static createSigner() {
 		return ethers.Wallet.createRandom();
 	}
 
-	static async toConfigFile() {
-		return
+	static async fromMultiaddr(multiaddr: string, profile: string = 'defualt') {
+		let nodeKey = await Peer.createKey();
+		let signer = Peer.createSigner();
+		
+		return new this({
+			nodeId: profile,
+			peerId: nodeKey,
+			signer: signer,
+			multiaddr: multiaddr
+		});
 	}
 
 	constructor(options){
 		super(options);
+		this.saveConfig(options);
 	}
-					
+
+
+	saveConfig(options) {
+		let config = {
+			node_id: options.nodeId,
+			peer_id: options.peerId.toJSON(),
+			wallet: {
+				private_key: options.signer.privateKey,
+				public_key: options.signer.publicKey
+			}
+		}
+		let json = JSON.stringify(config);
+
+		fs.writeFile(`${options.nodeId}.config.json`, json, 'utf8', () => {logger.info("current node config saved...")})
+	}
 }
 
 
-(async () => {
-	await Peer.createNodeKey();
-})()
 
 

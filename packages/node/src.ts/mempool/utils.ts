@@ -5,9 +5,10 @@ export function MempoolConstructor(
   height,
   appProxy,
   mempoolConfig,
+  p2p
 ) {
   let mp = new Mempool(height, appProxy, mempoolConfig);
-  let reactor = new MempoolReactor(mp);
+  let reactor = new MempoolReactor(mp, p2p);
 
   return [ mp, reactor ];
 }
@@ -19,6 +20,6 @@ const testApp = {
 };
 
 (() => {
-  let [ mp, reactor ] = MempoolConstructor(0, testApp, { MAX_BYTES: 10000 });  
-  console.log(mp, reactor)
-})()
+  // let [ mp, reactor ] = MempoolConstructor(0, testApp, { MAX_BYTES: 10000 });  
+  // console.log(mp, reactor)
+})

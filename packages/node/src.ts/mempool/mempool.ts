@@ -20,8 +20,6 @@ const proxyAppTest = {
   },
 };
 
-
-
 export type Mempool = {
   // properties
   txs: Map<string, WrappedTx>;

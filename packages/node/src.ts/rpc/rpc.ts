@@ -2,8 +2,8 @@ import { loadPackageDefinition, Server, ServerCredentials } from "grpc";
 import { EventEmitter } from "node:events";
 import { logger } from "../logger";
 import { protocol, packageDef } from "@zerodao/protobuf";
-import { MempoolReactor } from "../mempool/v1/new_reactor";
-import { Mempool } from "../mempool/v1/mempool_v2";
+import { MempoolReactor } from "../mempool";
+import { Mempool } from "../mempool";
 
 export class RPC extends EventEmitter {
   self: any = undefined;
@@ -84,13 +84,13 @@ const proxyAppTest = {
 };
 
 (async () =>  {
-  let server = RPC.init();
-  let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
-  let reactor = new MempoolReactor(mp);
+  // let server = RPC.init();
+  // let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
+  // let reactor = new MempoolReactor(mp);
 
-  server.addService(reactor)
-  server.start({ port: 50051 });
+  // server.addService(reactor)
+  // server.start({ port: 50051 });
   
-  let unsubscribe = server.handler("zero_sendTransaction", (message) => logger.info('transaction recieved via gRPC'));
+  // let unsubscribe = server.handler("zero_sendTransaction", (message) => logger.info('transaction recieved via gRPC'));
 
-})()
+})
