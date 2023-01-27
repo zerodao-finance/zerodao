@@ -69,9 +69,14 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   }
 
   function getVoteCount(Checkpoint storage ckpt) internal view returns (uint256 votes) {
+    console.log(block.timestamp, ckpt.timestamp, ckpt.timestamp > block.timestamp);
     uint256 epochLength = zerofrost.epochLength();
-    if (ckpt.timestamp <= block.timestamp || ckpt.timestamp.sub(block.timestamp) >= epochLength)
+    if (block.timestamp > ckpt.timestamp) {
+      console.log(ckpt.timestamp.sub(block.timestamp));
       votes = (ckpt.baseVotes + ckpt.votes);
+    }
+    //TODO: recheck this
+    else if (ckpt.timestamp.sub(block.timestamp) >= epochLength) votes = ckpt.baseVotes;
     else votes = ckpt.baseVotes + epochLength.sub(ckpt.timestamp.sub(block.timestamp)).mul(ckpt.votes).div(epochLength);
   }
 
@@ -292,6 +297,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
       uint256 epochEnd = block.timestamp + epochLength;
       oldBaseWeight = oldCkpt.baseVotes;
       oldWeight = oldCkpt.votes;
+      console.log(block.timestamp);
       (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochLength, oldCkpt.timestamp);
       if (pos > 0 && oldCkpt.fromBlock == block.number) {
         Checkpoint storage ckpt = _unsafeAccess(ckpts, pos - 1);

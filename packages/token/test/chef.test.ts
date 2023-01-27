@@ -123,7 +123,6 @@ describe("sZERO", () => {
     const s = signers[0];
     const s2 = signers[1];
     const balance = await zero.balanceOf(s.address);
-    const balanceS2 = await zero.balanceOf(s.address);
     const signature2 = await signEIP712({
       signer: s2 as any,
       owner: s2.address,
@@ -142,18 +141,15 @@ describe("sZERO", () => {
     const votes = await sZero.getVotes(s.address);
     expect(votes).to.be.lte(await sZero.balanceOf(s.address));
     await time.increase(1800);
-    await mine(1);
     expect(await sZero.getVotes(s.address)).to.be.lt(
       await sZero.balanceOf(s.address)
     );
 
     await time.increase(1800);
-    await mine(1);
 
     expect(await sZero.getVotes(s.address)).to.be.equal(
       await sZero.balanceOf(s.address)
     );
-
     await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
     expect(await sZero.getVotes(s2.address)).to.be.equal(0);
   });
