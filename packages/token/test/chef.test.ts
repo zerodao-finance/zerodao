@@ -110,27 +110,27 @@ describe("sZERO", () => {
         ethers.utils.parseEther("5000")
       )
     ).to.be.equal(true);
-    const prevBalance = await zero.balanceOf(s.address);
     await sZero.connect(s).restake();
     await sZero.connect(signers[1]).restake();
     await mine(1);
-    console.log(
-      ethers.utils.formatEther(await sZero.pendingZero(0, signers[1].address))
-    );
-    console.log(
-      ethers.utils.formatEther(await sZero.pendingZero(0, s.address))
-    );
     await sZero.connect(s).leaveStaking(await sZero.balanceOf(s.address));
     await sZero
       .connect(signers[1])
       .leaveStaking(await sZero.balanceOf(signers[1].address));
-    console.log(ethers.utils.formatEther(await zero.balanceOf(sZero.address)));
-    console.log(await sZero.totalSupply());
   });
   it("should test governance", async () => {
     const signers = await makeSigners(5);
     const s = signers[0];
+    const s2 = signers[1];
     const balance = await zero.balanceOf(s.address);
+    const balanceS2 = await zero.balanceOf(s.address);
+    const signature2 = await signEIP712({
+      signer: s2 as any,
+      owner: s2.address,
+      spender: sZero.address,
+      value: balance,
+      zero,
+    });
     const signature = await signEIP712({
       signer: s as any,
       owner: s.address,
@@ -141,8 +141,20 @@ describe("sZERO", () => {
     await sZero.connect(s).enterStakingWithPermit(balance, signature);
     const votes = await sZero.getVotes(s.address);
     expect(votes).to.be.lte(await sZero.balanceOf(s.address));
-    await time.increase(3598);
+    await time.increase(1800);
     await mine(1);
-    console.log(ethers.utils.formatEther(await sZero.getVotes(s.address)));
+    expect(await sZero.getVotes(s.address)).to.be.lt(
+      await sZero.balanceOf(s.address)
+    );
+
+    await time.increase(1800);
+    await mine(1);
+
+    expect(await sZero.getVotes(s.address)).to.be.equal(
+      await sZero.balanceOf(s.address)
+    );
+
+    await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
+    expect(await sZero.getVotes(s2.address)).to.be.equal(0);
   });
 });
