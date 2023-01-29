@@ -23,6 +23,8 @@ const deploy: DeployFunction = async (hre) => {
 
   console.log("\n---- DEPLOYED ZERO HEROES ----")
   console.log("Address:", zeroHero.address);
+  await zeroHero.startPublicMint();
+  console.log("\n---- PUBLIC MINT STARTED ----")
 };
 
 export default deploy;
