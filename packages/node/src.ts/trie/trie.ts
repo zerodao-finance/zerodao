@@ -61,11 +61,11 @@ export class StateTrie {
 //     await this.trie.get(Buffer.from(hash))
 //   }
 
-//   public async setStakeBalance(accountAddress: string, tokenAddress: string, balance: any): Promise<void> {
-//     const balanceData = Buffer.from(JSON.stringify(balance));
-//     const hash = ethers.utils.solidityKeccak256([accountAddress], [tokenAddress])
-//     await this.trie.put(Buffer.from(hash), balanceData);
-//   }
+  public async setReleaseBalance(accountAddress: string, tokenAddress: string, balance: any): Promise<void> {
+    const balanceData = Buffer.from(JSON.stringify(balance));
+    const hash = ethers.utils.solidityKeccak256([accountAddress], [tokenAddress])
+    await this.trie.put(Buffer.from(hash), balanceData);
+  }
  }
 
 export type PromisifiedTrie = {

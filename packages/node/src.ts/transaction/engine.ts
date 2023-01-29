@@ -98,10 +98,20 @@ export class TransactionEngine {
        const pHash = keccak256(tx.data)
        this.messages.push(utils.solidityKeccak256(["string", "string", "uint64", "uint64"], [tx.destination, pHash, tx.nonce, tx.amount ]))
        this.receipts.push(true)
-        await this.trie.trie.commit();
+       await this.trie.setAccount(tx.from.toString(), account)
+       await this.trie.trie.commit();
       } catch (error) {
         this.receipts.push(false)
         await this.trie.trie.revert();
+      }
+    }
+    if (tx.type == "Burn") {
+      try {
+        await this.validateTransaction(tx)
+        
+      }
+      catch (error){
+
       }
     } 
   }
