@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { StateTrie } from "../src.ts/trie/trie";
-import { TransactionEngine, validateTransaction } from "../src.ts/transaction";
+import { TransactionEngine, validateTransaction } from "../src.ts/application";
 import { Account } from "@zerodao/protobuf";
 
 describe("TransactionEngine", () => {

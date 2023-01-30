@@ -39,11 +39,6 @@ MempoolReactor.prototype.zero_sendTransaction = function (call, callback) {
 };
 
 
-
-<<<<<<< HEAD
-
-=======
-=======
 type Reactor = {
   p2p: typeof ZeroP2P;
   config: MempoolConfig;
