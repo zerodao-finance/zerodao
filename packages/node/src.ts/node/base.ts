@@ -77,6 +77,9 @@ class Node extends EventEmitter {
 (async () => {
 	let peer = await Peer.fromMultiaddr('mainnet');
 	let peer2 = await Peer.fromMultiaddr('mainnet', 'second');
+	const callbackPromise = async (msg) => {
+		logger.info("heard message");
+	};
 	await new Promise((resolve) => {
 		peer.start();
 		peer2.start();
@@ -84,9 +87,8 @@ class Node extends EventEmitter {
 	});
 
 	let rsp: any[] = await new Promise(async (resolve) =>	{
-			let peer_publish = await peer.createPubsubProtocol('test', async (msg) => console.log("heard msg on peer"));
-			let peer2_publish = await peer.createPubsubProtocol('test', async (msg) => console.log("heard msg on peer2"));
-
+			let peer_publish = await peer.createPubsubProtocol('test', callbackPromise);
+			let peer2_publish = await peer2.createPubsubProtocol('test', callbackPromise);
 			await setTimeout(() => {
 				resolve([peer_publish, peer2_publish])
 			}, 5000);
@@ -94,14 +96,6 @@ class Node extends EventEmitter {
 	});
 
 	let [ p1, p2 ] = rsp;
-	p1('test', ethers.utils.randomBytes(8)) 
-  p2('test', ethers.utils.randomBytes(8)) 
+	p2('test', new TextEncoder().encode("ping")) 
 
-	// TODO: fix this test still not calling callback on topic subscription
-
-
-  // let node = Node.initNode({ peer });
-	// await node.startNode();
-
-	
 })()

@@ -20,10 +20,11 @@ export function MempoolReactor(proxy, p2p) {
   this.serviceMethods = ['zero_sendTransaction']
 }
 
-MempoolReactor.prototype.listenForGossip = function () {
-  this.p2p.pubsub.subscribe('zero_sendTransaction', (msg) => {
-
-  });
+MempoolReactor.prototype.initTxGossip = async function () {
+  // TODO: implement async checkTx function
+  // pass func to callback of createPubsubProtocol
+  // call this.gossipTx on handler fot zero_sendTransaction
+  this.gossipTx = await this.p2p.createPubsubProtocol("zero_sendTransaction", async (msg) => {});
 }
 
 MempoolReactor.prototype.zero_sendTransaction = function (call, callback) {

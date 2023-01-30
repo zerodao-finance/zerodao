@@ -4,6 +4,7 @@ import { logger } from "../logger";
 import PeerId from "peer-id";
 import os from "node:os";
 import fs from "node:fs";
+import _ from "lodash";
 
 export class Peer extends ZeroP2P {
 
@@ -57,16 +58,13 @@ export class Peer extends ZeroP2P {
 	}
 
 	async createPubsubProtocol(topic, callback) {
-	 let publish = function (topic, msg) {
-			// publish message
-			this.pubsub.publish(topic, msg);
+		await (this.pubsub.subscribe as any)(topic, callback);
+
+		return (function (topic, msg) {
+			(this.pubsub.publish as any)(topic, msg);
 			logger.info(`publishing message: ${msg} \n  on topic ${topic}`);
-		}
-		publish = publish.bind(this);
+		}).bind(this);
 
-		await (this.pubsub as any).subscribe(topic, callback)
-
-		return publish;
 	} 
 
 	saveConfig(options) {
