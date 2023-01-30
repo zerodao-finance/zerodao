@@ -10,7 +10,6 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
-import "hardhat/console.sol";
 
 /**
  * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
@@ -69,10 +68,8 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   }
 
   function getVoteCount(Checkpoint storage ckpt) internal view returns (uint256 votes) {
-    console.log(block.timestamp, ckpt.timestamp, ckpt.timestamp > block.timestamp);
     uint256 epochLength = zerofrost.epochLength();
     if (block.timestamp > ckpt.timestamp) {
-      console.log(ckpt.timestamp.sub(block.timestamp));
       votes = (ckpt.baseVotes + ckpt.votes);
     }
     //TODO: recheck this
@@ -297,7 +294,6 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
       uint256 epochEnd = block.timestamp + epochLength;
       oldBaseWeight = oldCkpt.baseVotes;
       oldWeight = oldCkpt.votes;
-      console.log(block.timestamp);
       (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochLength, oldCkpt.timestamp);
       if (pos > 0 && oldCkpt.fromBlock == block.number) {
         Checkpoint storage ckpt = _unsafeAccess(ckpts, pos - 1);

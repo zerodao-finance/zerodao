@@ -44,6 +44,8 @@ export type { IERC20PermitUpgradeable } from "./@openzeppelin/contracts-upgradea
 export { IERC20PermitUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol/IERC20PermitUpgradeable__factory";
 export type { ERC20CappedUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable";
 export { ERC20CappedUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable__factory";
+export type { ERC20VotesUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable";
+export { ERC20VotesUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable__factory";
 export type { IERC20MetadataUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable";
 export { IERC20MetadataUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable__factory";
 export type { IERC20Upgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable";
@@ -68,8 +70,6 @@ export type { ZeroGovernor } from "./contracts/governance/ZeroGovernor";
 export { ZeroGovernor__factory } from "./factories/contracts/governance/ZeroGovernor__factory";
 export type { IZEROFROST } from "./contracts/interfaces/IZEROFROST";
 export { IZEROFROST__factory } from "./factories/contracts/interfaces/IZEROFROST__factory";
-export type { ERC20VotesUpgradeable } from "./contracts/token/ERC20VotesUpgradeable";
-export { ERC20VotesUpgradeable__factory } from "./factories/contracts/token/ERC20VotesUpgradeable__factory";
 export type { IMigratorChef } from "./contracts/token/sZERO.sol/IMigratorChef";
 export { IMigratorChef__factory } from "./factories/contracts/token/sZERO.sol/IMigratorChef__factory";
 export type { SZERO } from "./contracts/token/sZERO.sol/SZERO";

@@ -69,6 +69,13 @@ describe("sZERO", () => {
     sZero = (await ethers.getContract("sZERO")) as SZERO;
   });
 
+  it("should check basics", async () => {
+    expect(await sZero.name()).to.be.equal("sZERO");
+    expect(await sZero.decimals()).to.be.equal(18);
+    expect(await sZero.zero()).to.be.equal(
+      ethers.utils.getAddress(zero.address)
+    );
+  });
   it("should check if rewards are being correctly minted and redeemed", async () => {
     const signers = await makeSigners(5);
     const s = signers[0];
@@ -80,11 +87,27 @@ describe("sZERO", () => {
       value: balance,
       zero,
     });
-    await sZero.connect(s).enterStakingWithPermit(balance, signature);
+    let tx = sZero.connect(s).enterStakingWithPermit(balance, signature);
+    await expect(tx)
+      .to.emit(sZero, "Transfer")
+      .withArgs(ethers.constants.AddressZero, s.address, balance);
+    await expect(tx)
+      .to.emit(zero, "Transfer")
+      .withArgs(s.address, sZero.address, balance);
     await mine(5);
     const pending = await sZero.pendingZero(0, s.address);
     expect(pending).to.be.equal(ethers.utils.parseEther("10000"));
-    await sZero.connect(s).leaveStaking(sZero.balanceOf(s.address));
+    tx = sZero.connect(s).leaveStaking(sZero.balanceOf(s.address));
+    await expect(tx)
+      .to.emit(zero, "Transfer")
+      .withArgs(
+        ethers.constants.AddressZero,
+        sZero.address,
+        ethers.utils.parseEther("12000")
+      );
+    await expect(tx)
+      .to.emit(sZero, "Transfer")
+      .withArgs(s.address, ethers.constants.AddressZero, balance);
     expect(await zero.balanceOf(s.address)).to.be.equal(
       ethers.utils.parseEther("17000")
     );
@@ -152,5 +175,9 @@ describe("sZERO", () => {
     );
     await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
     expect(await sZero.getVotes(s2.address)).to.be.equal(0);
+    await time.increase(1800);
+    expect(await sZero.getVotes(s2.address)).to.be.equal(
+      (await sZero.balanceOf(s2.address)).div(2)
+    );
   });
 });
