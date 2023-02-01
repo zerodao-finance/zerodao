@@ -54,48 +54,52 @@ class Node extends EventEmitter {
 		logger.info("mempool & reactor configured...");
 	}
 
-	async startNode() {
+	async startNode(port) {
 		// start mempool and connect mempool service to rpc
 		await new Promise((resolve) => {
 			this.initializeMempoolAndReactor({ MAX_BYTES: 10000 });
 			setTimeout(resolve, 2000);
 			logger.info("initialize mempool & mempool reactor");
 		});
+
 		// start libp2p
 		await new Promise((resolve) => {
 			this.peer.start();
-			this.rpc.start({address: '0.0.0.0', port: 50051})
+			this.rpc.start({address: '0.0.0.0', port: port})
 			setTimeout(resolve, 2000);
-			logger.info("started rpc listening on 0.0.0.0:50051");
+			logger.info(`started rpc listening on 0.0.0.0:${port}`);
 			logger.info("started libp2p module...");
 		});
+
+		await new Promise(async (resolve) => {
+			await this.mempoolReactor.initTxGossip()
+			setTimeout(resolve, 2000);
+			logger.info("gossiping incoming transactions started...");
+		})
 
 	}
 	
 }
 
 (async () => {
-	let peer = await Peer.fromMultiaddr('mainnet');
+	let peer = await Peer.fromMultiaddr('mainnet', 'first');
 	let peer2 = await Peer.fromMultiaddr('mainnet', 'second');
 	const callbackPromise = async (msg) => {
-		logger.info("heard message");
+		logger.info(`heard message, ${msg}`);
 	};
-	await new Promise((resolve) => {
-		peer.start();
-		peer2.start();
+
+	
+	await new Promise(async (resolve) => {
+		let node_1 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "first") });
+		let node_2 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "second") });
+
+		await node_2.startNode('50052');
+		await node_1.startNode('50051');	
+
 		setTimeout(resolve, 2000);
 	});
 
-	let rsp: any[] = await new Promise(async (resolve) =>	{
-			let peer_publish = await peer.createPubsubProtocol('test', callbackPromise);
-			let peer2_publish = await peer2.createPubsubProtocol('test', callbackPromise);
-			await setTimeout(() => {
-				resolve([peer_publish, peer2_publish])
-			}, 5000);
+	logger.info("ready to go...")
 
-	});
-
-	let [ p1, p2 ] = rsp;
-	p2('test', new TextEncoder().encode("ping")) 
 
 })()

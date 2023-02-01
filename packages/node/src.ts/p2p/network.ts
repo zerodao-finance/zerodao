@@ -62,7 +62,6 @@ export class Peer extends ZeroP2P {
 
 		return (function (topic, msg) {
 			(this.pubsub.publish as any)(topic, msg);
-			logger.info(`publishing message: ${msg} \n  on topic ${topic}`);
 		}).bind(this);
 
 	} 

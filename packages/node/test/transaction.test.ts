@@ -57,6 +57,3 @@ describe("TransactionEngine", () => {
 });
 <<<<<<< HEAD
  */
-=======
-*/
->>>>>>> proto/zero-network

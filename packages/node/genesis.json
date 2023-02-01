@@ -1,0 +1,14 @@
+{
+  "genesis_time": "100000",
+  "chain_id": "1000",
+  "consensus_params": {
+    "block": {
+    },
+    "evidence": {
+    },
+    "validators": {
+    }
+  },
+  "validators": [],
+  "appHash": ""
+}

@@ -79,11 +79,17 @@ class ValidatorSet {
 		}
 	}
 
-	computeAvgProposerPriority(): number {}
+	computeAvgProposerPriority(): number {
+		return
+	}
 
-	computeMaxMinPriorityDiff(): number {}
+	computeMaxMinPriorityDiff(): number {
+		return
+	}
 
-	getValWithMostPriority(): Validator {}
+	getValWithMostPriority(): Validator {
+		return
+	}
 	
 	shiftByAvgProposerPriority(): void {
 		// center priority values around zero
@@ -93,22 +99,40 @@ class ValidatorSet {
 		});
 	}
 
-	validatorListCopy(): Validator[] {}
+	validatorListCopy(): Validator[] {
+		return
+	}
 
-	copy(): ValidatorSet {}
+	copy(): ValidatorSet {
+		return
+	}
 
-	hasAddress(): boolean {}
+	hasAddress(): boolean {
+		return
+	}
 
-	getByIndex(): <number, Validator> {}
+	getByIndex(): <number, Validator> {
+		return
+	}
 
-	size(): number {}
+	size(): number {
+		return
+	}
 
-	updateTotalVotingPower(): number {}
+	updateTotalVotingPower(): number {
+		return
+	}
 
-	getProposer(): Validator {}
+	getProposer(): Validator {
+		return
+	}
 
-	findProposer(): Validator {}
+	findProposer(): Validator {
+		return
+	}
 
-	hash(): Uint8Array | Buffer {}
+	hash(): Uint8Array | Buffer {
+		return
+	}
 
 }
