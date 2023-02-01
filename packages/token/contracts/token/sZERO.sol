@@ -13,6 +13,7 @@ import { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable.sol";
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
+import "hardhat/console.sol";
 
 interface IMigratorChef {
   // Perform LP token migration from legacy UniswapV2 to ZeroSwap.
@@ -194,7 +195,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
 
   //TODO: rework this a bit
   function calculateZeroReward(uint256 multiplier) public view returns (uint256 zeroReward) {
-    zeroReward = (multiplier.mul(zeroPerBlock));
+    zeroReward = (multiplier.mul(zeroPerBlock).mul(totalSupply())).div(1 ether);
     for (uint256 i = 0; i < zassets.length; i++) {
       ZAsset storage zAsset = zassets[i];
       zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
