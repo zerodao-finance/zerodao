@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+message Transaction {
+  enum Type {
+    TRANSFER = 0; // Transfer asset from one chain to another
+    SLASH = 1; // Remove darknode from peers
+  }
+  enum Chain {
+    ETHEREUM = 0;
+    MONERO = 1;
+  }
+  required Type type = 0;
+  required bytes to = 1; // Address to send to
+  required bytes data = 2;
+  required uint64 nonce = 3;
+  required bytes signature = 4;
+  optional Chain chain = 5; // Only used for TRANSFER types
+}
+
+message Transfer {
+  required bytes from = 0;
+  required bytes to = 1; // Address to send to
+  required bytes data = 2;
+  required uint64 nonce = 3;
+  required bytes signature = 4;
+  optional string chain = 5; // Only used for TRANSFER types
+  required uint64 amount = 6;
+  required string type = 7;
+}
+
+message Stake {
+  required bytes from = 0;
+  required bytes data = 1;
+  required uint64 amount = 2;
+  required bytes signature = 3;
+  required uint64 nonce = 4;
+  required bytes asset = 6;
+  required string type = 7;
+}
+
+message Release {
+  required bytes from = 0;
+  required bytes data = 1;
+  required uint64 amount = 2;
+  required bytes signature = 3;
+  required string chain = 4;
+  required uint64 nonce = 5;
+  required bytes asset = 6;
+  required string type = 7;
+  required bytes destination = 8;
+}
+
+message Account {
+  string address = 1;
+  repeated TokenBalance stakedBalance = 4;
+  repeated TokenBalance unStakedBalance = 5;
+  uint64 nonce = 6;
+}
+
+message TokenBalance {
+  string tokenAddress = 1;
+  double balance = 2;
+}
+
+message Balance {
+  required bytes hash = 0;
+  required uint64 balance = 1;
+}
+
+message TransactionReply {
+  enum STATUS {
+    SUCCESS = 0;
+    ERROR = 1;
+  }
+
+  required STATUS status = 0;
+  optional bytes errorMsg = 1;
+
+}
+
+message MessageRequest {
+  enum ChannelType {
+    MEMPOOL = 0;
+    CONSENSUS = 1;
+  }
+
+  enum MessageType {
+    REQUEST_SKETCH = 0;
+    REQUEST_MEMPOOL = 1;
+    RESPONSE_SKETCH = 3;
+    RESPONSE_MEMPOOL = 4;
+  }
+
+  required MessageType type = 0;
+  required ChannelType channel = 1; 
+  oneof data {
+    string value = 2;
+    bytes bytes_data = 3;
+  };
+}
+/*
+   used for encoding and decoding the Mempool for broadcasting over pubsub to other peers
+*/
+message Mempool {
+  map<string, Transaction> data = 0;
+}
+
+/*
+
+Transactions submitted REBASE block and signed during BASE block:
+
+1. Sign over to new mint authority message
+2. Sign Monero UTXOs over to new gateway
+
+*/
+
+message BlockHeader {
+  enum BlockType {
+    STANDARD = 0;
+    BASE = 1; // Define the signatories responsible for proposing, prevoting, and precommitting blocks up to and including the next base block.
+    REBASE = 2;
+  }
+  required BlockType type = 0;
+  required bytes parentHash = 1; // BASE must reference REBASE. REBASE must reference STANDARD. 
+  required bytes baseHash = 2; // Hash of the most recently committed BASE block. In event of BASE block, should reference previous block.
+  optional bytes txRoot = 3; // Transactions are only allowed in REBASE and STANDARD types.
+  optional bytes planRoot = 4; // Optional for STANDARD and REBASE. Stores application specific data (needed by sMPC)
+  required bytes prevStateRoot = 5;
+  required uint64 height = 6;
+  required uint64 round = 7;
+  required uint64 timestamp = 8;
+  optional bytes signatories = 9; // Can only be defined in BASE and REBASE types. BASE signatories must be same as parent (REBASE).
+  required uint64 fee = 10; // Network block fee
+}
+
+message BalanceQuery {
+  required bytes address = 0;
+}
+
+message BalanceReply {
+  enum STATUS {
+    SUCCESS = 0;
+    ERROR = 1;
+  }
+
+  required STATUS status = 0;
+  optional uint64 balance = 1;
+  optional bytes address = 2;
+  optional bytes errorMsg = 3;
+
+}
+
+service RpcService{
+  rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
+  rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
+  rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
+  rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}
+}
