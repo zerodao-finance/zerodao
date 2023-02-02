@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-class ValidatorSet {
+export class ValidatorSet {
 	public validators: Validator[];
 	public proposer: Validator;
 

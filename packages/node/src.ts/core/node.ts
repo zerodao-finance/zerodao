@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
-import chalk = require("chalk");
+const chalk = require("chalk");
 import { logger } from "../logger";
-import { Mempool, MempoolConfig } from "../memory";
+import { Mempool, MempoolConfig } from "../mempool";
 import { Consensus } from "../consensus";
 import { Proposer } from "../proposal";
 import { RPCServer } from "../rpc";
-import { Marshaller } from './marshall'
+import { Marshaller } from "./marshall";
 import { TransactionEngine } from "../transaction";
 import { StateTrie } from "../trie";
 const timeout = async (time) => {
@@ -35,13 +35,15 @@ export class ZeroNode {
 
   private marshaller;
   private engine;
-  private db
+  private db;
   private isValidator: boolean = false;
 
-  static async init({ signer, consensus, multiaddr }: Partial<NodeConfig> = {
-    signer: ethers.Wallet.createRandom(),
-    consensus: new Consensus()
-  }) {
+  static async init(
+    { signer, consensus, multiaddr }: Partial<NodeConfig> = {
+      signer: ethers.Wallet.createRandom(),
+      consensus: new Consensus(),
+    }
+  ) {
     let marshaller = await Marshaller.init(signer, multiaddr || undefined);
     return new ZeroNode({
       signer,
@@ -50,18 +52,18 @@ export class ZeroNode {
     });
   }
 
-  constructor({ signer, consensus, marshaller}: NodeConfig) {
+  constructor({ signer, consensus, marshaller }: NodeConfig) {
     Object.assign(this, {
       consensus,
       signer,
       marshaller,
     });
   }
-  
-  async loadBLSKey(privateKey: string | Uint8Array ) {
+
+  async loadBLSKey(privateKey: string | Uint8Array) {
     //storeBLSKey
   }
-  
+
   async start() {
     try {
       await new Promise((resolve, reject) => {
@@ -76,8 +78,6 @@ export class ZeroNode {
     } catch (error) {
       this.status = NODE_STATUS.FAILED;
       throw error;
-    }    
-     
+    }
   }
-
 }

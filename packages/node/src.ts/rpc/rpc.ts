@@ -6,7 +6,11 @@ import { MempoolReactor } from "../mempool";
 import chalk from "chalk";
 import { Mempool } from "../mempool";
 
+<<<<<<< HEAD
 export class RPC extends EventEmitter {
+=======
+export class RPCServer extends EventEmitter {
+>>>>>>> 17959a14 (basic state store and block store)
   self: any = undefined;
 
   service: any = undefined;
@@ -31,19 +35,33 @@ export class RPC extends EventEmitter {
   constructor() {
     super();
     this.self = new Server();
+<<<<<<< HEAD
     this.pkg = loadPackageDefinition(
       packageDef
     );
+=======
+  }
+
+  start({ port }: any = {}) {
+    this.pkg = loadPackageDefinition(packageDef);
+>>>>>>> 17959a14 (basic state store and block store)
 
     this.service = this.pkg.RpcService;
   }
 
+<<<<<<< HEAD
   addService(proxy) {
     for ( let i of proxy.serviceMethods ) {
       this.implementations[i] = this.wrapServiceMethod(i, proxy);
     }
     this.self.addService(this.service.service, this.implementations);
   }
+=======
+    this.self.addService((this.service as any).service, {
+      zero_sendTransaction: this._handleTransaction,
+      zero_getBalance: this._handleTransaction,
+    });
+>>>>>>> 17959a14 (basic state store and block store)
 
   start({ address, port }: any = {}) {
     this.self.bindAsync(

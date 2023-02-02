@@ -6,5 +6,3 @@ export const TRANSACTIONS_TYPE = {
 export const CHAINS = {
   ETHEREUM: "https://rpc.flashbots.net",
 } as const;
-
-
