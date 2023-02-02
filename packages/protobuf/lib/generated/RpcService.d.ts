@@ -1,10 +1,10 @@
-import type * as grpc from '@grpc/grpc-js';
-import type { MethodDefinition } from '@grpc/proto-loader';
-import type { BalanceQuery as _BalanceQuery, BalanceQuery__Output as _BalanceQuery__Output } from './BalanceQuery';
-import type { BalanceReply as _BalanceReply, BalanceReply__Output as _BalanceReply__Output } from './BalanceReply';
-import type { Stake as _Stake, Stake__Output as _Stake__Output } from './Stake';
-import type { Transaction as _Transaction, Transaction__Output as _Transaction__Output } from './Transaction';
-import type { TransactionReply as _TransactionReply, TransactionReply__Output as _TransactionReply__Output } from './TransactionReply';
+import type * as grpc from "@grpc/grpc-js";
+import type { MethodDefinition } from "@grpc/proto-loader";
+import type { BalanceQuery as _BalanceQuery, BalanceQuery__Output as _BalanceQuery__Output } from "./BalanceQuery";
+import type { BalanceReply as _BalanceReply, BalanceReply__Output as _BalanceReply__Output } from "./BalanceReply";
+import type { Stake as _Stake, Stake__Output as _Stake__Output } from "./Stake";
+import type { Transaction as _Transaction, Transaction__Output as _Transaction__Output } from "./Transaction";
+import type { TransactionReply as _TransactionReply, TransactionReply__Output as _TransactionReply__Output } from "./TransactionReply";
 export interface RpcServiceClient extends grpc.Client {
     zero_getBalance(argument: _BalanceQuery, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_BalanceReply__Output>): grpc.ClientUnaryCall;
     zero_getBalance(argument: _BalanceQuery, metadata: grpc.Metadata, callback: grpc.requestCallback<_BalanceReply__Output>): grpc.ClientUnaryCall;

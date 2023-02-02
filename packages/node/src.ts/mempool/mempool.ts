@@ -103,20 +103,7 @@ Mempool.prototype.checkTx = function (tx: any) {
     return [ null, new Error("transaction exists in cache") ]
   }
 
-<<<<<<< HEAD
   this.cache.add(hash);
-=======
-  async validate(tx: Buffer) {
-    if (tx.length > this.MAX_MSG_BYTES) {
-      throw new Error("Transaction exceeded memory limit");
-    }
-    try {
-      await checkTx(tx);
-    } catch (err) {
-      throw err;
-    }
-  }
->>>>>>> 02962a55 (stake type)
 
   let wtx = new WrappedTx(tx, time, this.height); 
   let [rsp, err] = this.proxy.checkTxSync(tx);
