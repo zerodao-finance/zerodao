@@ -1,11 +1,11 @@
-import type { Transaction as _Transaction, Transaction__Output as _Transaction__Output } from './Transaction';
+import type { Transaction as _Transaction, Transaction__Output as _Transaction__Output } from "./Transaction";
 export interface Mempool {
-    'data'?: ({
+    data?: {
         [key: string]: _Transaction;
-    });
+    };
 }
 export interface Mempool__Output {
-    'data': ({
+    data: {
         [key: string]: _Transaction__Output;
-    });
+    };
 }

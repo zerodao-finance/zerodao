@@ -1,15 +1,7 @@
-/* import { ZeroP2P } from "@zerodao/p2p";
-import { Mempool } from "../lib/memory";
+import { ZeroP2P } from "@zerodao/p2p";
+import { Mempool } from "../lib/mempool";
 import { ethers } from "ethers";
 
-/*
- * Transaction:
- * type: number
- * to: Uint8Array
- * data: Uint8Array
- * nonce: number
- * signature: Uint8Array
- * chain: number
 describe("Mempool Test", () => {
   const signer = ethers.Wallet.createRandom();
   const peer = new Promise(async (resolve) => {
@@ -32,5 +24,3 @@ describe("Mempool Test", () => {
     console.log(state);
   });
 });
-
-*/

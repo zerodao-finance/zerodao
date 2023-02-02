@@ -3,6 +3,7 @@
 import { protocol } from "../proto";
 import { ethers } from "ethers";
 import _ from "lodash";
+import { realpath } from "fs";
 
 interface Peer {
   peerId: string;
@@ -16,7 +17,6 @@ export function Proposer() {
   this.PENALTY = -1.125;
   this.protocol = protocol;
 }
-
 Proposer.prototype._hash = function () {
   let buf = this.protocol.ProposerProposer.encode({ peers: this.peers });
   this.hash = ethers.utils.keccak256(buf);
@@ -27,6 +27,9 @@ Proposer.prototype.initialize = function (peers: Peer[], hash: string) {
   this._hash();
 };
 
+Proposer.prototype.reap = function () {
+  
+}
 Proposer.prototype.add = function (new_peer: Peer) {
   // add a way of verifying the initial priority of a peer
   new_peer.priority =

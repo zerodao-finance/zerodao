@@ -17,6 +17,17 @@ message Transaction {
   optional Chain chain = 5; // Only used for TRANSFER types
 }
 
+message Transfer {
+  required bytes from = 0;
+  required bytes to = 1; // Address to send to
+  required bytes data = 2;
+  required uint64 nonce = 3;
+  required bytes signature = 4;
+  optional string chain = 5; // Only used for TRANSFER types
+  required uint64 amount = 6;
+  required string type = 7;
+}
+
 message Stake {
   required bytes from = 0;
   required bytes data = 1;
@@ -24,6 +35,7 @@ message Stake {
   required bytes signature = 3;
   required uint64 nonce = 4;
   required bytes asset = 6;
+  required string type = 7;
 }
 
 message Release {
@@ -31,16 +43,23 @@ message Release {
   required bytes data = 1;
   required uint64 amount = 2;
   required bytes signature = 3;
-  required Chain chain = 4;
+  required string chain = 4;
   required uint64 nonce = 5;
   required bytes asset = 6;
+  required string type = 7;
+  required bytes destination = 8;
 }
 
 message Account {
-  required bytes address = 0;
-  required uint64 unStakedBalance = 1;
-  required uint64 stakedBalance = 2;
-  required uint64 nonce = 3;
+  string address = 1;
+  repeated TokenBalance stakedBalance = 4;
+  repeated TokenBalance unStakedBalance = 5;
+  uint64 nonce = 6;
+}
+
+message TokenBalance {
+  string tokenAddress = 1;
+  double balance = 2;
 }
 
 message Balance {

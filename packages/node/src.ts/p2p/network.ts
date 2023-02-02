@@ -91,6 +91,7 @@ export class Peer extends ZeroP2P {
 
 		fs.writeFile(`${this.savePath}${options.nodeId}.config.json`, json, 'utf8', () => {logger.info(`${chalk.magenta(`${chalk.green("Libp2p Startup") }|=> node config saved...`)}`)})
 	}
+
 }
 
 

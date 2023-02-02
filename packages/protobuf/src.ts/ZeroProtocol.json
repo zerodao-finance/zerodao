@@ -57,6 +57,59 @@
         }
       }
     },
+    "Transfer": {
+      "oneofs": {
+        "_chain": {
+          "oneof": [
+            "chain"
+          ]
+        }
+      },
+      "fields": {
+        "from": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 0
+        },
+        "to": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        },
+        "data": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 2
+        },
+        "nonce": {
+          "rule": "required",
+          "type": "uint64",
+          "id": 3
+        },
+        "signature": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 4
+        },
+        "chain": {
+          "type": "string",
+          "id": 5,
+          "options": {
+            "proto3_optional": true
+          }
+        },
+        "amount": {
+          "rule": "required",
+          "type": "uint64",
+          "id": 6
+        },
+        "type": {
+          "rule": "required",
+          "type": "string",
+          "id": 7
+        }
+      }
+    },
     "Stake": {
       "fields": {
         "from": {
@@ -88,6 +141,11 @@
           "rule": "required",
           "type": "bytes",
           "id": 6
+        },
+        "type": {
+          "rule": "required",
+          "type": "string",
+          "id": 7
         }
       }
     },
@@ -115,7 +173,7 @@
         },
         "chain": {
           "rule": "required",
-          "type": "Chain",
+          "type": "string",
           "id": 4
         },
         "nonce": {
@@ -127,30 +185,50 @@
           "rule": "required",
           "type": "bytes",
           "id": 6
+        },
+        "type": {
+          "rule": "required",
+          "type": "string",
+          "id": 7
+        },
+        "destination": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 8
         }
       }
     },
     "Account": {
       "fields": {
         "address": {
-          "rule": "required",
-          "type": "bytes",
-          "id": 0
-        },
-        "unStakedBalance": {
-          "rule": "required",
-          "type": "uint64",
+          "type": "string",
           "id": 1
         },
         "stakedBalance": {
-          "rule": "required",
-          "type": "uint64",
-          "id": 2
+          "rule": "repeated",
+          "type": "TokenBalance",
+          "id": 4
+        },
+        "unStakedBalance": {
+          "rule": "repeated",
+          "type": "TokenBalance",
+          "id": 5
         },
         "nonce": {
-          "rule": "required",
           "type": "uint64",
-          "id": 3
+          "id": 6
+        }
+      }
+    },
+    "TokenBalance": {
+      "fields": {
+        "tokenAddress": {
+          "type": "string",
+          "id": 1
+        },
+        "balance": {
+          "type": "double",
+          "id": 2
         }
       }
     },
