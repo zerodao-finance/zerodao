@@ -1,1 +1,1 @@
-export declare type UserTypes = "zero.keeper" | "zero.user";
+export type UserTypes = "zero.keeper" | "zero.user";

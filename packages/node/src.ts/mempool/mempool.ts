@@ -4,10 +4,7 @@ import { ethers } from "ethers";
 import { logger } from "../logger";
 import { protocol } from "@zerodao/protobuf";
 import { Sketch } from "./sketch";
-
-type MempoolConfig = {
-  MAX_BYTES: number;
-};
+import { MempoolConfig } from "./types";
 
 const abci = {
   CodeTypeOk: 1
@@ -30,7 +27,7 @@ export type Mempool = {
   sketch: any;
   
   //constructor
-  new(config, height);
+  new(height: number, proxyApp: any, config: MempoolConfig): Mempool;
 
   //methods
   length(): number;
@@ -49,7 +46,6 @@ export function Mempool(
   proxyApp,
   config
 ) {
-  // constructor
   this.txs = new Map();
   this.cache = new Set();
   this.height = height;
@@ -58,27 +54,37 @@ export function Mempool(
   this.sketch = undefined;
 }
 
+// returns length of the current mempool (ie. number of txs in pool)
 Mempool.prototype.length = function () {
   return this.txs.size;
 };
 
+// clears current mempool
 Mempool.prototype.flushPool = function () {
   this.txs.clear();
   return;
 };
 
+// removes a transaction from the mempool by the transaction hash
 Mempool.prototype.deleteByHash = function (hash: string) {
   if (this.cache.has(hash)) this.cache.delete(hash);
   if (this.txs.hash(hash)) this.txs.delete(hash);
   return;
 };
 
+/*
+ * pulls up to (max) transactions from the mempool
+ * does not modify mempool
+ * if max is undefined or 0 returns all transactions in the mempool
+ */
 Mempool.prototype.reapMax = function (max?: number) {
   var txs = _.map([...this.txs.values()], (w) => w.tx);
   if (max == undefined || max == 0) return txs;
   return _.take(txs, max);
 };
 
+
+// check transaction function
 Mempool.prototype.checkTx = function (tx: any) {
   tx = protocol.Transaction.encode(tx).finish()
   var hash = ethers.utils.keccak256(tx);
@@ -138,6 +144,7 @@ Mempool.prototype.resolveSketch = async function (sketch) {
   return await this.sketch.calculateDifferences(sketch);
 };
 
+// testing stuff >>>>>>>>>>>>>>
 
 function startInjesting( mp ) {
   setInterval((mp) => {

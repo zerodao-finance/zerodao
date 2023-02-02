@@ -50,9 +50,10 @@ const createLogger = (proc?: string) => {
       new transports.Console({
         level: "verbose",
         format: format.combine(
+          format.colorize(),
           format.label({ label: proc }),
           format.timestamp(),
-          format.printf(customFormatter)
+          format.printf(customFormatter),
         ),
       }),
     ],

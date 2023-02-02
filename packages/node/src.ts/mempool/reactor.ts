@@ -15,6 +15,7 @@ export type MempoolReactor = {
   new(proxy: Mempool, p2p: Peer): MempoolReactor;
 
   zero_sendTransaction(call, callback): void;
+  initTxGossip(): Promise<void>;
 } 
 
 export function MempoolReactor(proxy, p2p) {
@@ -27,13 +28,15 @@ export function MempoolReactor(proxy, p2p) {
 }
 
 MempoolReactor.prototype.initTxGossip = async function () {
-  // TODO: implement async checkTx function
   this.gossip = await this.p2p.createPubsubProtocol(this.gossipService, async (msg) => {
     let { data, from } = msg;
     let tx = protocol.Transaction.decode(data);
     let [rsp, err] = this.proxy.checkTx(tx);
-    if ( err ) throw new Error(`got error: ${ err } from transaction recieved from ${ from }`);
-    logger.info(`heard message by: ${this.p2p.peerId} \n From Peer ${ from }  \n Message Recieved ${ msg } with response ${ rsp }`);
+    if ( err ) logger.error(`got error: ${ err } from transaction recieved from ${ from }`);
+    logger.log({
+      level: "verbose",
+      message: `heard message by: ${this.p2p.peerId} \n From Peer ${ from }  \n Message Recieved ${ msg } with response ${ rsp }`
+    });
   });
   this.canGossip = true;
 }

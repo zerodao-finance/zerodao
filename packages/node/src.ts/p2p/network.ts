@@ -5,22 +5,22 @@ import PeerId from "peer-id";
 import os from "node:os";
 import fs from "node:fs";
 import _ from "lodash";
+import chalk from "chalk";
 
 export class Peer extends ZeroP2P {
 
 	peerId: any;
 	wallet_key: any;
+	savePath: string = `${os.homedir()}/.zeronode/config/profiles/`
 
-	static async peerIdFromNodeKey(nodeKey) {
-		return await PeerId.createFromJSON(nodeKey);
-	}
 
 	static async fromConfig(path: string = 'default.config.json') {
 		var json = fs.readFileSync(path, 'utf8');
 
 		let config = JSON.parse(json);
+
+		logger.info(`loading ${chalk.yellow("PEER")} from config file ${ chalk.yellow(`${ config['node_id'] }` ) } \n `);
 		var signer = new ethers.Wallet(config.wallet.private_key);	
-		logger.info(`successfully loaded node: ${config['node_id']} `)
 
 		return new this({
 			nodeId: config["node_id"],
@@ -30,19 +30,11 @@ export class Peer extends ZeroP2P {
 		});
 	}
 
-	static async createKey() {
-		return await PeerId.create()
-	}
-
-	
-
-	static createSigner() {
-		return ethers.Wallet.createRandom();
-	}
-
-	static async fromMultiaddr(multiaddr: string, profile: string = 'defualt') {
+	static async fromMultiaddr(multiaddr: string, profile: string = 'default') {
 		let nodeKey = await Peer.createKey();
 		let signer = Peer.createSigner();
+
+		logger.info(`creating ${chalk.yellow("PEER")} with node key ${chalk.yellow(`${ nodeKey }`)} \n`);
 		
 		return new this({
 			nodeId: profile,
@@ -52,10 +44,30 @@ export class Peer extends ZeroP2P {
 		});
 	}
 
+	static async peerIdFromNodeKey(nodeKey) {
+		return await PeerId.createFromJSON(nodeKey);
+	}
+
+	static createSigner() {
+		return ethers.Wallet.createRandom();
+	}
+
+	static async createKey() {
+		return await PeerId.create()
+	}
+
+	static createConfigDir() {
+		if (fs.existsSync(`${os.homedir()}/.zeronode/config/profiles`)) return
+		fs.mkdirSync(`${os.homedir()}/.zeronode/config/profiles/`, { recursive: true });
+	}
+
+	// constructor ===============>
 	constructor(options){
 		super(options);
+		Peer.createConfigDir();
 		this.saveConfig(options);
 	}
+
 
 	async createPubsubProtocol(topic, callback) {
 		await (this.pubsub.subscribe as any)(topic, callback);
@@ -77,9 +89,11 @@ export class Peer extends ZeroP2P {
 		}
 		let json = JSON.stringify(config);
 
-		fs.writeFile(`${options.nodeId}.config.json`, json, 'utf8', () => {logger.info("current node config saved...")})
+		fs.writeFile(`${this.savePath}${options.nodeId}.config.json`, json, 'utf8', () => {logger.info(`${chalk.magenta(`${chalk.green("Libp2p Startup") }|=> node config saved...`)}`)})
 	}
 }
+
+
 
 
 

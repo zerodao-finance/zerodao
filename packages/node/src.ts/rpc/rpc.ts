@@ -3,6 +3,7 @@ import { EventEmitter } from "node:events";
 import { logger } from "../logger";
 import { protocol, packageDef } from "@zerodao/protobuf";
 import { MempoolReactor } from "../mempool";
+import chalk from "chalk";
 import { Mempool } from "../mempool";
 
 export class RPC extends EventEmitter {
@@ -53,7 +54,7 @@ export class RPC extends EventEmitter {
       }
     );
 
-    logger.info("server started...");
+    logger.info(chalk.magenta(`${chalk.green("RPC Startup")}|=> server started...`));
   }
 
   stop() {
