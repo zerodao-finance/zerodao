@@ -2,6 +2,9 @@ import { DeployFunction } from "hardhat-deploy/types";
 import type { HardhatEthersHelpers } from "hardhat-deploy-ethers/types";
 import { ZeroHeroNFT } from "../typechain-types";
 import { ethers as _ethers } from "ethers";
+import { useMerkleGenerator } from "../merkle/use-merkle";
+import path from "path";
+import fs from 'fs';
 
 const deploy: DeployFunction = async (hre) => {
   if(!process.env.TEST) return;
@@ -23,8 +26,21 @@ const deploy: DeployFunction = async (hre) => {
 
   console.log("\n---- DEPLOYED ZERO HEROES ----")
   console.log("Address:", zeroHero.address);
-  await zeroHero.startPublicMint();
-  console.log("\n---- PUBLIC MINT STARTED ----")
+
+  // Merkle tree creation
+  console.log('\n\n---- ZHERO Merkle Tree Started ----');
+  const merkleDir = path.join(__dirname, '..', 'merkle', process.env.TEST ? 'localhost' : 'mainnet');
+  const merkleInput = require(path.join(merkleDir, 'zhero-input'));
+  const merkleTree = useMerkleGenerator(merkleInput);
+  console.log(merkleTree);
+  await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
+  console.log('---- ZHERO Merkle Tree Created ----');
+  
+  if(process.env.PRIVATE_MINT) {
+    await zeroHero.setPresaleMerkleRoot(merkleTree.merkleRoot)
+    await zeroHero.startPrivateMint();
+    console.log("\n---- PRIVATE MINT STARTED ----")
+  }
 };
 
 export default deploy;

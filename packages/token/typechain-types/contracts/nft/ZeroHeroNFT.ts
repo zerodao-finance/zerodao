@@ -35,11 +35,12 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     "devMint(uint8)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint(uint8)": FunctionFragment;
+    "mint(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
-    "privateMint(bytes32[],uint8)": FunctionFragment;
+    "presaleMerkleRoot()": FunctionFragment;
+    "privateMint(uint256,address,uint256,bytes32[],uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
@@ -71,6 +72,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
       | "name"
       | "owner"
       | "ownerOf"
+      | "presaleMerkleRoot"
       | "privateMint"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
@@ -123,8 +125,18 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "presaleMerkleRoot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "privateMint",
-    values: [PromiseOrValue<BytesLike>[], PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -221,6 +233,10 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "presaleMerkleRoot",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "privateMint",
     data: BytesLike
@@ -434,7 +450,12 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    presaleMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
+
     privateMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       proof: PromiseOrValue<BytesLike>[],
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -570,7 +591,12 @@ export interface ZeroHeroNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  presaleMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
   privateMint(
+    _index: PromiseOrValue<BigNumberish>,
+    _account: PromiseOrValue<string>,
+    _amount: PromiseOrValue<BigNumberish>,
     proof: PromiseOrValue<BytesLike>[],
     quantity: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -706,7 +732,12 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    presaleMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
     privateMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       proof: PromiseOrValue<BytesLike>[],
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -892,7 +923,12 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    presaleMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
+
     privateMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       proof: PromiseOrValue<BytesLike>[],
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1029,7 +1065,12 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    presaleMerkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     privateMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       proof: PromiseOrValue<BytesLike>[],
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }

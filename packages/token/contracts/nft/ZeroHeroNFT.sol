@@ -1,5 +1,3 @@
-
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
@@ -8,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "hardhat/console.sol";
 
 error PrivateMintNotStarted();
 error PublicMintNotStarted();
@@ -20,21 +19,21 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     using MerkleProof for bytes32[];
 
     // ===== Variables =====
-    uint16 constant devSupply = 3;
-    uint16 constant presaleSupply = 0;
-    uint16 constant collectionSupply = 1000;
+    uint16 constant devSupply = 5;
+    uint16 constant presaleSupply = 2000;
+    uint16 constant collectionSupply = 0;
 
     bool private privateMintStarted;
     bool private publicMintStarted;
 
-    uint8 private presaleMaxItemsPerWallet = 0;
+    uint8 private presaleMaxItemsPerWallet = 3;
 
-    uint256 private presalePrice = 0 ether;
-    uint256 private mintPrice = 1 ether;
+    uint256 private presalePrice = 0.3 ether;
+    uint256 private mintPrice = 0.3 ether;
 
     string private baseTokenURI;
 
-    bytes32 private presaleMerkleRoot;
+    bytes32 public presaleMerkleRoot;
 
     // ===== Constructor =====
     constructor() ERC721A("ZeroHeroNFT", "ZHERO") {}
@@ -58,17 +57,17 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     // ===== Private mint =====
-    function privateMint(bytes32[] memory proof, uint8 quantity) external payable nonReentrant whenPrivateMint {
+    function privateMint(uint256 _index, address _account, uint256 _amount, bytes32[] memory proof, uint256 quantity) external payable nonReentrant whenPrivateMint {
         if(msg.value < presalePrice * quantity) revert InsufficientPayment();
         if(totalSupply() + quantity > presaleSupply) revert ExceedSupply();
         if(_numberMinted(msg.sender) + quantity > presaleMaxItemsPerWallet) revert ExceedMaxPerWallet();
-        if(!isAddressWhitelisted(proof, msg.sender)) revert NotInWhitelist();
+        if(!isAddressWhitelisted(proof, _index, _account, _amount)) revert NotInWhitelist();
 
-        _mint(msg.sender, quantity);        
+        _mint(_account, quantity);        
     }
 
     // ===== Public mint =====
-    function mint(uint8 quantity) external payable nonReentrant whenPublicMint {
+    function mint(uint256 quantity) external payable nonReentrant whenPublicMint {
         if(msg.value < mintPrice * quantity) revert InsufficientPayment();
         if(totalSupply() + quantity > collectionSupply) revert ExceedSupply();
 
@@ -76,8 +75,8 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     // ===== Whitelisting =====
-    function isAddressWhitelisted(bytes32[] memory proof, address _address) internal view returns (bool) {
-        return proof.verify(presaleMerkleRoot, keccak256(abi.encodePacked(_address)));
+    function isAddressWhitelisted(bytes32[] memory proof, uint256 _index, address _account, uint256 _amount) internal view returns (bool) {
+        return proof.verify(presaleMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
     }
 
     // ===== Withdraw =====

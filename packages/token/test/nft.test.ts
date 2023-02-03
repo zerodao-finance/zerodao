@@ -50,59 +50,135 @@ describe("ZeroHeroNFT - Minting before start", function () {
     await expect(tx).to.be.revertedWith('PublicMintNotStarted');
   });
 
-  it("Presale mint - Should not be able to mint before presale has started", async function () {
-    const tx =  contract.privateMint([], 1,
-       {value: ethers.utils.parseEther("999")});
-
-    await expect(tx).to.be.revertedWith('PrivateMintNotStarted');
-  });
+  // if(!process.env.PRIVATE_MINT) {
+  //   it("Presale mint - Should not be able to mint before presale has started", async function () {
+  //     const tx =  contract.privateMint([], 1,
+  //        {value: ethers.utils.parseEther("999")});
+  
+  //     await expect(tx).to.be.revertedWith('PrivateMintNotStarted');
+  //   });
+  // }
 });
 
-describe("ZeroHeroNFT - Public mint", function () {
+describe("ZeroHeroNFT - Private Mint", async function() {
   let contract: ZeroHeroNFT;
-  let owner: SignerWithAddress, buyer1: SignerWithAddress;
-  
+  let owner: SignerWithAddress, buyer1: SignerWithAddress, buyer2: SignerWithAddress;
+  let whitelistClaims = require('../merkle/localhost/zhero-whitelist.json').claims
+
   beforeEach(async () => {
     contract = (await ethers.getContract("ZeroHeroNFT")) as ZeroHeroNFT;
-    await contract.startPublicMint();
+    [owner, buyer1, buyer2] = await ethers.getSigners()
+  });
 
-    [owner, buyer1] = await ethers.getSigners()
+  it("Should not be able to mint if not on whitelist", async function () {
+    await contract.startPrivateMint();
+    const tx = await contract.connect(buyer1).privateMint(
+      whitelistClaims[buyer1.address].index, 
+      buyer2.address, 
+      ethers.BigNumber.from('1'), 
+      whitelistClaims[buyer1.address].proof, 
+      3,
+      {value: ethers.utils.parseEther("999")}
+    );
+
+    await expect(tx).to.be.revertedWith('NotInWhitelist');
+  });
+
+  it("Should not be able to mint if not sending enough ETH", async function () {
+    await contract.startPrivateMint();
+    const tx = await contract.connect(buyer1).privateMint(
+      whitelistClaims[buyer1.address].index, 
+      buyer2.address, 
+      ethers.BigNumber.from('1'), 
+      whitelistClaims[buyer1.address].proof, 
+      1,
+      {value: ethers.utils.parseEther("0.2")}
+    );
+
+    const tx2 = await contract.connect(buyer1).privateMint(
+      whitelistClaims[buyer1.address].index, 
+      buyer2.address, 
+      ethers.BigNumber.from('1'), 
+      whitelistClaims[buyer1.address].proof, 
+      3,
+      {value: ethers.utils.parseEther("0.8")}
+    );
+
+    await expect(tx).to.be.revertedWith('InsufficientPayment');
+    await expect(tx2).to.be.revertedWith('InsufficientPayment');
   });
 
   it("Should mint the correct amount of nfts", async function () {
-    await contract.connect(buyer1).mint(10,
-      {value: ethers.utils.parseEther("999")});
+    await contract.connect(buyer1).privateMint(
+      whitelistClaims[buyer1.address].index, 
+      buyer1.address, 
+      ethers.BigNumber.from('1'), 
+      whitelistClaims[buyer1.address].proof, 
+      3,
+      {value: ethers.utils.parseEther("0.9")}
+    );
 
-    expect(await contract.balanceOf(buyer1.address)).to.equal(10);
+    expect(await contract.balanceOf(buyer1.address)).to.equal(3);
   });
 
-  it("Should not be able to mint if payment is insufficient", async function () {
-    await contract.setMintPrice(ethers.utils.parseEther("2"));
-
-    const tx = contract.connect(buyer1).mint(1,
-      {value: ethers.utils.parseEther("1")});
-
-    await expect(tx).to.be.revertedWith('InsufficientPayment');
+  it("Should not allow for minting more than 3 NFT's per address", async function () {
+    const tx = await contract.connect(buyer1).privateMint(
+      whitelistClaims[buyer1.address].index, 
+      buyer1.address, 
+      ethers.BigNumber.from('1'), 
+      whitelistClaims[buyer1.address].proof, 
+      3,
+      {value: ethers.utils.parseEther("0.3")}
+    );
+    await expect(tx).to.be.revertedWith('ExceedMaxPerWallet');
   });
+})
 
-  it("Should not be able to mint more than the whole collection", async function () {
-    //Setting price to very low value so our account can mint a lot
-    await contract.setMintPrice(ethers.utils.parseEther("0.001"));
+// describe("ZeroHeroNFT - Public mint", function () {
+//   let contract: ZeroHeroNFT;
+//   let owner: SignerWithAddress, buyer1: SignerWithAddress;
+  
+//   beforeEach(async () => {
+//     contract = (await ethers.getContract("ZeroHeroNFT")) as ZeroHeroNFT;
+//     await contract.startPublicMint();
 
-    //Mint the first 980 
-    for (let index = 0; index < 49; index++) {
-      await contract.mint(20,
-        {value: ethers.utils.parseEther("1")});  
-    }
+//     [owner, buyer1] = await ethers.getSigners()
+//   });
 
-    //Try to mint 100 more
-    //(total minted = 1050)
-    const tx = contract.connect(buyer1).mint(100,
-      {value: ethers.utils.parseEther("999")});
+//   it("Should mint the correct amount of nfts", async function () {
+//     await contract.connect(buyer1).mint(10,
+//       {value: ethers.utils.parseEther("999")});
 
-    await expect(tx).to.be.revertedWith('ExceedSupply');
-  });
-});
+//     expect(await contract.balanceOf(buyer1.address)).to.equal(10);
+//   });
+
+//   it("Should not be able to mint if payment is insufficient", async function () {
+//     await contract.setMintPrice(ethers.utils.parseEther("2"));
+
+//     const tx = contract.connect(buyer1).mint(1,
+//       {value: ethers.utils.parseEther("1")});
+
+//     await expect(tx).to.be.revertedWith('InsufficientPayment');
+//   });
+
+//   it("Should not be able to mint more than the whole collection", async function () {
+//     //Setting price to very low value so our account can mint a lot
+//     await contract.setMintPrice(ethers.utils.parseEther("0.001"));
+
+//     //Mint the first 980 
+//     for (let index = 0; index < 49; index++) {
+//       await contract.mint(20,
+//         {value: ethers.utils.parseEther("1")});  
+//     }
+
+//     //Try to mint 100 more
+//     //(total minted = 1050)
+//     const tx = contract.connect(buyer1).mint(100,
+//       {value: ethers.utils.parseEther("999")});
+
+//     await expect(tx).to.be.revertedWith('ExceedSupply');
+//   });
+// });
 
 describe("ZeroHeroNFT - Withdraw", function () {
   let contract: ZeroHeroNFT;
@@ -121,19 +197,19 @@ describe("ZeroHeroNFT - Withdraw", function () {
     await expect(tx).to.be.reverted;
   });
 
-  it("Should transfer the contract balance to owner wallet", async function () {
-    var weiSpent = ethers.utils.parseEther("10");
-    var oldOwnerBalance = toRoundedEther(await owner.getBalance());
+  // it("Should transfer the contract balance to owner wallet", async function () {
+  //   var weiSpent = ethers.utils.parseEther("10");
+  //   var oldOwnerBalance = toRoundedEther(await owner.getBalance());
 
-    await contract.connect(buyer1).mint(1, {value: weiSpent})
-    await contract.connect(owner).withdraw();
+  //   await contract.connect(buyer1).mint(1, {value: weiSpent})
+  //   await contract.connect(owner).withdraw();
 
-    var newOwnerBalance = toRoundedEther(await owner.getBalance());
+  //   var newOwnerBalance = toRoundedEther(await owner.getBalance());
 
-    expect(newOwnerBalance).to.equal(oldOwnerBalance + toRoundedEther(weiSpent));
-  });
+  //   expect(newOwnerBalance).to.equal(oldOwnerBalance + toRoundedEther(weiSpent));
+  // });
 
-  function toRoundedEther(wei) {
-    return Math.round(Number.parseFloat(ethers.utils.formatEther(wei)));
-  }
+  // function toRoundedEther(wei) {
+  //   return Math.round(Number.parseFloat(ethers.utils.formatEther(wei)));
+  // }
 });

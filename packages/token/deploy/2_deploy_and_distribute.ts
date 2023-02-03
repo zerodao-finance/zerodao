@@ -77,13 +77,13 @@ const deploy: DeployFunction = async (hre) => {
   ) as SZERO
 
   // Merkle tree creation
-  console.log('\n\n---- Merkle Tree Started ----');
+  console.log('\n\n---- ZERO Merkle Tree Started ----');
   const merkleDir = path.join(__dirname, '..', 'merkle', process.env.TEST ? 'localhost' : 'mainnet');
-  const merkleInput = require(path.join(merkleDir, 'input'));
+  const merkleInput = require(path.join(merkleDir, 'zero-input'));
   const merkleTree = useMerkleGenerator(merkleInput);
   console.log(merkleTree);
-  await fs.writeFileSync(path.join(merkleDir, 'airdrop.json'), JSON.stringify(merkleTree, null, 2));
-  console.log('---- Merkle Tree Created ----');
+  await fs.writeFileSync(path.join(merkleDir, 'zero-airdrop.json'), JSON.stringify(merkleTree, null, 2));
+  console.log('---- ZERO Merkle Tree Created ----');
 
   // Distribution for staking tests
   console.log('\n\n---- ZERO Distribution Started ----');
