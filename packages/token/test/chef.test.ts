@@ -80,21 +80,22 @@ describe("sZERO", () => {
     const signers = await makeSigners(5);
     const s = signers[0];
     const balance = await zero.balanceOf(s.address);
+    const amt = ethers.utils.parseEther("1000");
     const signature = await signEIP712({
       signer: s as any,
       owner: s.address,
       spender: sZero.address,
-      value: balance,
+      value: amt,
       zero,
     });
-    let tx = sZero.connect(s).enterStakingWithPermit(balance, signature);
+    let tx = sZero.connect(s).enterStakingWithPermit(amt, signature);
     await expect(tx)
       .to.emit(sZero, "Transfer")
-      .withArgs(ethers.constants.AddressZero, s.address, balance);
+      .withArgs(ethers.constants.AddressZero, s.address, amt);
     await expect(tx)
       .to.emit(zero, "Transfer")
-      .withArgs(s.address, sZero.address, balance);
-    await mine(5);
+      .withArgs(s.address, sZero.address, amt);
+    await mine(1);
     const pending = await sZero.pendingZero(0, s.address);
     expect(pending).to.be.equal(ethers.utils.parseEther("10000"));
     tx = sZero.connect(s).leaveStaking(sZero.balanceOf(s.address));
