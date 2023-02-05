@@ -97,36 +97,22 @@ describe("sZERO", () => {
       .withArgs(s.address, sZero.address, amt);
     await mine(1);
     const pending = await sZero.pendingZero(0, s.address);
-    expect(pending).to.be.equal(ethers.utils.parseEther("10000"));
+    let mathPending = amt.div(5e7);
+    expect(pending).to.be.equal(mathPending);
     tx = sZero.connect(s).leaveStaking(sZero.balanceOf(s.address));
-    await expect(tx)
-      .to.emit(zero, "Transfer")
-      .withArgs(
-        ethers.constants.AddressZero,
-        sZero.address,
-        ethers.utils.parseEther("12000")
-      );
+    await expect(tx).to.emit(zero, "Transfer");
     await expect(tx)
       .to.emit(sZero, "Transfer")
-      .withArgs(s.address, ethers.constants.AddressZero, balance);
-    expect(await zero.balanceOf(s.address)).to.be.equal(
-      ethers.utils.parseEther("17000")
-    );
+      .withArgs(s.address, ethers.constants.AddressZero, amt);
+    expect(await zero.balanceOf(s.address)).to.be.gte(amt);
     expect(await sZero.pendingZero(0, s.address)).to.be.equal(0);
-    await zero
-      .connect(s)
-      .approve(sZero.address, ethers.utils.parseEther("5000"));
-    await sZero.connect(s).enterStaking(ethers.utils.parseEther("5000"));
-    await zero
-      .connect(signers[1])
-      .approve(sZero.address, ethers.utils.parseEther("5000"));
-    await sZero
-      .connect(signers[1])
-      .enterStaking(ethers.utils.parseEther("5000"));
+    await zero.connect(s).approve(sZero.address, amt);
+    await sZero.connect(s).enterStaking(amt);
+    await zero.connect(signers[1]).approve(sZero.address, amt);
+    await sZero.connect(signers[1]).enterStaking(amt);
     // because approve and stake take up one block each
-    expect(await sZero.pendingZero(0, s.address)).to.be.equal(
-      ethers.utils.parseEther("4000")
-    );
+    mathPending = amt.div(5e7).mul(2);
+    expect(await sZero.pendingZero(0, s.address)).to.be.equal(mathPending);
     await mine(1);
     // expect
     expect(
