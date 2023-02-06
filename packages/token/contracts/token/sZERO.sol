@@ -250,12 +250,12 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   }
 
   // Deposit LP tokens to MasterChef for SUSHI allocation.
-  function deposit(uint256 _pid, uint256 _amount) internal {
+  function deposit(uint256 _pid, uint256 _amount) internal returns (uint256 pending) {
     PoolInfo storage pool = poolInfo[_pid];
     UserInfo storage user = userInfo[_pid][msg.sender];
     updateZeroPool();
     if (user.amount > 0) {
-      uint256 pending = user.amount.mul(pool.accZeroPerShare).div(1e12).sub(user.rewardDebt);
+      pending = user.amount.mul(pool.accZeroPerShare).div(1e12).sub(user.rewardDebt);
       safeZeroTransfer(msg.sender, pending);
     }
     pool.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
@@ -288,7 +288,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     _burn(msg.sender, zeroAmount);
   }
 
-  function restake() public {
+  function redeem() public {
     deposit(ZERO_POOL, 0);
   }
 

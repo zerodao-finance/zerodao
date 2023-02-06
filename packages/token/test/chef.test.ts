@@ -70,11 +70,16 @@ describe("sZERO", () => {
   });
 
   it("should check basics", async () => {
+    const s = await makeSigners(1)[1];
     expect(await sZero.name()).to.be.equal("sZERO");
     expect(await sZero.decimals()).to.be.equal(18);
     expect(await sZero.zero()).to.be.equal(
       ethers.utils.getAddress(zero.address)
     );
+    await expect(sZero.connect(s).enterStaking(ethers.utils.parseEther("5000")))
+      .to.be.reverted;
+    await expect(sZero.connect(s).leaveStaking(ethers.utils.parseEther("5000")))
+      .to.be.reverted;
   });
   it("should check if rewards are being correctly minted and redeemed", async () => {
     const signers = await makeSigners(5);
@@ -113,15 +118,20 @@ describe("sZERO", () => {
     // because approve and stake take up one block each
     mathPending = amt.div(5e7).mul(2);
     expect(await sZero.pendingZero(0, s.address)).to.be.equal(mathPending);
-    await mine(1);
     // expect
     expect(
       (await sZero.pendingZero(0, s.address)).lt(
-        ethers.utils.parseEther("5000")
+        amt.div(5e7).mul(2).add(amt.mul(2).div(5e7))
       )
     ).to.be.equal(true);
-    await sZero.connect(s).restake();
-    await sZero.connect(signers[1]).restake();
+    tx = sZero.connect(s).redeem();
+    //sub 1e9 to account for math issues on masterchef
+    const redeemAmt = mathPending.add(mathPending.div(2)).sub(1e9);
+
+    await expect(tx)
+      .to.emit(zero, "Transfer")
+      .withArgs(sZero.address, s.address, redeemAmt);
+    await sZero.connect(signers[1]).redeem();
     await mine(1);
     await sZero.connect(s).leaveStaking(await sZero.balanceOf(s.address));
     await sZero

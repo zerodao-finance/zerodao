@@ -85,8 +85,8 @@ export interface SZEROInterface extends utils.Interface {
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "poolInfo(uint256)": FunctionFragment;
     "poolLength()": FunctionFragment;
+    "redeem()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "restake()": FunctionFragment;
     "set(uint256,uint256,bool)": FunctionFragment;
     "setMigrator(address)": FunctionFragment;
     "startBlock()": FunctionFragment;
@@ -142,8 +142,8 @@ export interface SZEROInterface extends utils.Interface {
       | "permit"
       | "poolInfo"
       | "poolLength"
+      | "redeem"
       | "renounceOwnership"
-      | "restake"
       | "set"
       | "setMigrator"
       | "startBlock"
@@ -308,11 +308,11 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "poolLength",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "redeem", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "restake", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "set",
     values: [
@@ -463,11 +463,11 @@ export interface SZEROInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolLength", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "restake", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "set", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setMigrator",
@@ -842,11 +842,11 @@ export interface SZERO extends BaseContract {
 
     poolLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    renounceOwnership(
+    redeem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    restake(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1102,11 +1102,11 @@ export interface SZERO extends BaseContract {
 
   poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
-  renounceOwnership(
+  redeem(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  restake(
+  renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1360,9 +1360,9 @@ export interface SZERO extends BaseContract {
 
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+    redeem(overrides?: CallOverrides): Promise<void>;
 
-    restake(overrides?: CallOverrides): Promise<void>;
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     set(
       _pid: PromiseOrValue<BigNumberish>,
@@ -1699,11 +1699,11 @@ export interface SZERO extends BaseContract {
 
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceOwnership(
+    redeem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    restake(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1945,11 +1945,11 @@ export interface SZERO extends BaseContract {
 
     poolLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
+    redeem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    restake(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
