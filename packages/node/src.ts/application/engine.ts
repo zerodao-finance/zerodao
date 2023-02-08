@@ -157,4 +157,4 @@ export const concat = (uint8Arrays: Uint8Array[]): Uint8Array => {
   }, [] as number[]);
 
   return new Uint8Array(concatenated);
-};
+}
