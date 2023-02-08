@@ -56,7 +56,7 @@ export interface SZEROInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "bonusEndBlock()": FunctionFragment;
-    "calculateZeroReward(uint256)": FunctionFragment;
+    "calculateZeroReward(uint256,uint256)": FunctionFragment;
     "checkpoints(address,uint32)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
@@ -188,7 +188,7 @@ export interface SZEROInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "calculateZeroReward",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "checkpoints",
@@ -689,6 +689,7 @@ export interface SZERO extends BaseContract {
 
     calculateZeroReward(
       multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { zeroReward: BigNumber }>;
 
@@ -949,6 +950,7 @@ export interface SZERO extends BaseContract {
 
   calculateZeroReward(
     multiplier: PromiseOrValue<BigNumberish>,
+    lpSupply: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -1209,6 +1211,7 @@ export interface SZERO extends BaseContract {
 
     calculateZeroReward(
       multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1553,6 +1556,7 @@ export interface SZERO extends BaseContract {
 
     calculateZeroReward(
       multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1799,6 +1803,7 @@ export interface SZERO extends BaseContract {
 
     calculateZeroReward(
       multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

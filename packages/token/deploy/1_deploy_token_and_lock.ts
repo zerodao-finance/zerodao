@@ -67,8 +67,8 @@ const deploy: DeployFunction = async (hre) => {
   });
   await deployments.save("sZERO", deployedSZero);
 
-  // await zero.mint(signer.address, ethers.utils.parseEther("100000"));
-  // await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
+  await zero.mint(signer.address, ethers.utils.parseEther("100000"));
+  await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
   await zero.transferOwnership(deployedSZero.address);
 };
 

@@ -126,7 +126,7 @@ describe("sZERO", () => {
     ).to.be.equal(true);
     tx = sZero.connect(s).redeem();
     //sub 1e9 to account for math issues on masterchef
-    const redeemAmt = mathPending.add(mathPending.div(2)).sub(1e9);
+    const redeemAmt = mathPending.add(mathPending.div(2));
 
     await expect(tx)
       .to.emit(zero, "Transfer")

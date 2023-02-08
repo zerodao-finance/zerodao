@@ -194,8 +194,8 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
   }
 
   //TODO: rework this a bit
-  function calculateZeroReward(uint256 multiplier) public view returns (uint256 zeroReward) {
-    zeroReward = (multiplier.mul(zeroPerBlock).mul(totalSupply())).div(1 ether);
+  function calculateZeroReward(uint256 multiplier, uint256 lpSupply) public view returns (uint256 zeroReward) {
+    zeroReward = multiplier.mul(zeroPerBlock).mul(lpSupply).div(1 ether);
     for (uint256 i = 0; i < zassets.length; i++) {
       ZAsset storage zAsset = zassets[i];
       zeroReward = zeroReward.add(zAsset.rewardsToBeMinted.mul(zAsset.multiplier).div(1 ether));
@@ -210,7 +210,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     uint256 lpSupply = pool.lpToken.balanceOf(address(this));
     if (block.number > pool.lastRewardBlock && lpSupply != 0) {
       uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-      uint256 zeroReward = calculateZeroReward(multiplier);
+      uint256 zeroReward = calculateZeroReward(multiplier, lpSupply);
       accZeroPerShare = accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
     }
     return user.amount.mul(accZeroPerShare).div(1e12).sub(user.rewardDebt);
@@ -242,7 +242,7 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
       return;
     }
     uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-    uint256 zeroReward = calculateZeroReward(multiplier);
+    uint256 zeroReward = calculateZeroReward(multiplier, lpSupply);
     zero.mint(devaddr, zeroReward.div(10));
     zero.mint(address(this), zeroReward);
     pool.accZeroPerShare = pool.accZeroPerShare.add(zeroReward.mul(1e12).div(lpSupply));
