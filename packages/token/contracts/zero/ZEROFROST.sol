@@ -6,6 +6,7 @@ import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
+// dummy contract to just return epoch length for now
 contract ZEROFROST is Initializable, OwnableUpgradeable, IZEROFROST {
   function initialize() public initializer {
     __Ownable_init_unchained();
@@ -20,6 +21,6 @@ contract ZEROFROST is Initializable, OwnableUpgradeable, IZEROFROST {
   }
 
   function epochLength() public view returns (uint256) {
-    return 3600;
+    return 3600 * 180;
   }
 }

@@ -160,19 +160,19 @@ describe("sZERO", () => {
     await sZero.connect(s).enterStakingWithPermit(balance, signature);
     const votes = await sZero.getVotes(s.address);
     expect(votes).to.be.lte(await sZero.balanceOf(s.address));
-    await time.increase(1800);
+    await time.increase(3600 * 90);
     expect(await sZero.getVotes(s.address)).to.be.lt(
       await sZero.balanceOf(s.address)
     );
 
-    await time.increase(1800);
+    await time.increase(3600 * 90);
 
     expect(await sZero.getVotes(s.address)).to.be.equal(
       await sZero.balanceOf(s.address)
     );
     await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
     expect(await sZero.getVotes(s2.address)).to.be.equal(0);
-    await time.increase(1800);
+    await time.increase(3600 * 90);
     expect(await sZero.getVotes(s2.address)).to.be.equal(
       (await sZero.balanceOf(s2.address)).div(2)
     );

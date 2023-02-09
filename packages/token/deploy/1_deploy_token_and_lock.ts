@@ -36,6 +36,7 @@ const deploy: DeployFunction = async (hre) => {
       },
     },
   });
+  await deployments.save("ZEROFROST", deployedZeroFrost);
   await deployments.save("ZERO", deployedZero);
   const zero = new ethers.Contract(
     deployedZero.address,
@@ -69,7 +70,7 @@ const deploy: DeployFunction = async (hre) => {
 
   await zero.mint(signer.address, ethers.utils.parseEther("100000"));
   await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
-  await zero.transferOwnership(deployedSZero.address);
+  await zero.changeSZero(deployedSZero.address);
 };
 
 export default deploy;

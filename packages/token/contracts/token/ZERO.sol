@@ -6,17 +6,28 @@ import { ERC20CappedUpgradeable, ERC20Upgradeable } from "@openzeppelin/contract
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
+  address public _sZero;
+
+  modifier onlysZeroOrOwner() {
+    require(msg.sender == owner() || msg.sender == _sZero);
+    _;
+  }
+
   function initialize() public initializer {
     __ERC20Permit_init("ZERO");
     __ERC20_init_unchained("ZERO", "ZERO");
     __Ownable_init_unchained();
   }
 
-  function mint(address account, uint256 amount) public onlyOwner {
+  function changeSZero(address sZero) public onlyOwner {
+    _sZero = sZero;
+  }
+
+  function mint(address account, uint256 amount) public onlysZeroOrOwner {
     _mint(account, amount);
   }
 
-  function burn(address account, uint256 amount) public onlyOwner {
+  function burn(address account, uint256 amount) public onlysZeroOrOwner {
     _burn(account, amount);
   }
 }
