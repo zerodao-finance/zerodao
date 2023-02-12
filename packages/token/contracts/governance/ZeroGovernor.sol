@@ -26,13 +26,13 @@ contract ZeroGovernor is
   function initialize(IVotesUpgradeable _token, TimelockControllerUpgradeable _timelock) public initializer {
     __Governor_init("ZeroGovernor");
     __GovernorSettings_init(
-      1, /* 1 block */
+      300, /* 300 blocks */
       50400, /* 1 week */
-      0
+      5000 ether
     );
     __GovernorCountingSimple_init();
     __GovernorVotes_init(_token);
-    __GovernorVotesQuorumFraction_init(25);
+    __GovernorVotesQuorumFraction_init(50);
     __GovernorTimelockControl_init(_timelock);
   }
 

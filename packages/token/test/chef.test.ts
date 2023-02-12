@@ -1,7 +1,7 @@
 import * as hre from "hardhat";
 import type { DeploymentsExtension } from "hardhat-deploy/types";
 import { ethers as _ethers } from "ethers";
-import { ZERO, ZeroLock, SZERO } from "../typechain-types";
+import { ZERO, ZEROFROST, SZERO } from "../typechain-types";
 import { HardhatEthersHelpers } from "hardhat-deploy-ethers/types";
 import { toEIP712 } from "../src.ts";
 import { mine, time } from "@nomicfoundation/hardhat-network-helpers";
@@ -62,11 +62,12 @@ async function signEIP712({
 }
 
 describe("sZERO", () => {
-  let zero: ZERO, sZero: SZERO;
+  let zero: ZERO, sZero: SZERO, zerofrost: ZEROFROST;
   beforeEach(async () => {
     await deployments.fixture();
     zero = (await ethers.getContract("ZERO")) as ZERO;
     sZero = (await ethers.getContract("sZERO")) as SZERO;
+    zerofrost = (await ethers.getContract("ZEROFROST")) as ZEROFROST;
   });
 
   it("should check basics", async () => {
@@ -160,19 +161,20 @@ describe("sZERO", () => {
     await sZero.connect(s).enterStakingWithPermit(balance, signature);
     const votes = await sZero.getVotes(s.address);
     expect(votes).to.be.lte(await sZero.balanceOf(s.address));
-    await time.increase(3600 * 90);
+    const t = (await zerofrost.epochLength()).div(2);
+    await time.increase(t);
     expect(await sZero.getVotes(s.address)).to.be.lt(
       await sZero.balanceOf(s.address)
     );
 
-    await time.increase(3600 * 90);
+    await time.increase(t);
 
     expect(await sZero.getVotes(s.address)).to.be.equal(
       await sZero.balanceOf(s.address)
     );
     await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
     expect(await sZero.getVotes(s2.address)).to.be.equal(0);
-    await time.increase(3600 * 90);
+    await time.increase(t);
     expect(await sZero.getVotes(s2.address)).to.be.equal(
       (await sZero.balanceOf(s2.address)).div(2)
     );
