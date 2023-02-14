@@ -68,6 +68,22 @@ const deploy: DeployFunction = async (hre) => {
   });
   await deployments.save("sZERO", deployedSZero);
 
+  const deployerGov = await deployments.deploy("ZeroGovernor", {
+    from: signer.address,
+    proxy: {
+      owner: signer.address,
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [deployedSZero.address],
+        },
+      },
+    },
+  });
+
+  await deployments.save("ZeroGovernor", deployerGov);
+
   await zero.mint(signer.address, ethers.utils.parseEther("100000"));
   await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
   await zero.changeSZero(deployedSZero.address);

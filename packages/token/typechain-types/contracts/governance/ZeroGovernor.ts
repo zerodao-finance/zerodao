@@ -43,18 +43,16 @@ export interface ZeroGovernorInterface extends utils.Interface {
     "getVotesWithParams(address,uint256,bytes)": FunctionFragment;
     "hasVoted(uint256,address)": FunctionFragment;
     "hashProposal(address[],uint256[],bytes[],bytes32)": FunctionFragment;
-    "initialize(address,address)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "proposalDeadline(uint256)": FunctionFragment;
-    "proposalEta(uint256)": FunctionFragment;
     "proposalSnapshot(uint256)": FunctionFragment;
     "proposalThreshold()": FunctionFragment;
     "proposalVotes(uint256)": FunctionFragment;
     "propose(address[],uint256[],bytes[],string)": FunctionFragment;
-    "queue(address[],uint256[],bytes[],bytes32)": FunctionFragment;
     "quorum(uint256)": FunctionFragment;
     "quorumDenominator()": FunctionFragment;
     "quorumNumerator(uint256)": FunctionFragment;
@@ -65,10 +63,8 @@ export interface ZeroGovernorInterface extends utils.Interface {
     "setVotingPeriod(uint256)": FunctionFragment;
     "state(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "timelock()": FunctionFragment;
     "token()": FunctionFragment;
     "updateQuorumNumerator(uint256)": FunctionFragment;
-    "updateTimelock(address)": FunctionFragment;
     "version()": FunctionFragment;
     "votingDelay()": FunctionFragment;
     "votingPeriod()": FunctionFragment;
@@ -95,12 +91,10 @@ export interface ZeroGovernorInterface extends utils.Interface {
       | "onERC1155Received"
       | "onERC721Received"
       | "proposalDeadline"
-      | "proposalEta"
       | "proposalSnapshot"
       | "proposalThreshold"
       | "proposalVotes"
       | "propose"
-      | "queue"
       | "quorum"
       | "quorumDenominator"
       | "quorumNumerator(uint256)"
@@ -111,10 +105,8 @@ export interface ZeroGovernorInterface extends utils.Interface {
       | "setVotingPeriod"
       | "state"
       | "supportsInterface"
-      | "timelock"
       | "token"
       | "updateQuorumNumerator"
-      | "updateTimelock"
       | "version"
       | "votingDelay"
       | "votingPeriod"
@@ -211,7 +203,7 @@ export interface ZeroGovernorInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -248,10 +240,6 @@ export interface ZeroGovernorInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "proposalEta",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "proposalSnapshot",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -270,15 +258,6 @@ export interface ZeroGovernorInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>[],
       PromiseOrValue<BytesLike>[],
       PromiseOrValue<string>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "queue",
-    values: [
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[],
-      PromiseOrValue<BytesLike>[],
-      PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
@@ -325,15 +304,10 @@ export interface ZeroGovernorInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "timelock", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "updateQuorumNumerator",
     values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateTimelock",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
   encodeFunctionData(
@@ -404,10 +378,6 @@ export interface ZeroGovernorInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "proposalEta",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "proposalSnapshot",
     data: BytesLike
   ): Result;
@@ -420,7 +390,6 @@ export interface ZeroGovernorInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "propose", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "queue", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "quorum", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "quorumDenominator",
@@ -452,14 +421,9 @@ export interface ZeroGovernorInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "timelock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "updateQuorumNumerator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateTimelock",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
@@ -477,10 +441,8 @@ export interface ZeroGovernorInterface extends utils.Interface {
     "ProposalCanceled(uint256)": EventFragment;
     "ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)": EventFragment;
     "ProposalExecuted(uint256)": EventFragment;
-    "ProposalQueued(uint256,uint256)": EventFragment;
     "ProposalThresholdSet(uint256,uint256)": EventFragment;
     "QuorumNumeratorUpdated(uint256,uint256)": EventFragment;
-    "TimelockChange(address,address)": EventFragment;
     "VoteCast(address,uint256,uint8,uint256,string)": EventFragment;
     "VoteCastWithParams(address,uint256,uint8,uint256,string,bytes)": EventFragment;
     "VotingDelaySet(uint256,uint256)": EventFragment;
@@ -491,10 +453,8 @@ export interface ZeroGovernorInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ProposalCanceled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalExecuted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProposalQueued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalThresholdSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "QuorumNumeratorUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TimelockChange"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteCast"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteCastWithParams"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VotingDelaySet"): EventFragment;
@@ -558,17 +518,6 @@ export type ProposalExecutedEvent = TypedEvent<
 export type ProposalExecutedEventFilter =
   TypedEventFilter<ProposalExecutedEvent>;
 
-export interface ProposalQueuedEventObject {
-  proposalId: BigNumber;
-  eta: BigNumber;
-}
-export type ProposalQueuedEvent = TypedEvent<
-  [BigNumber, BigNumber],
-  ProposalQueuedEventObject
->;
-
-export type ProposalQueuedEventFilter = TypedEventFilter<ProposalQueuedEvent>;
-
 export interface ProposalThresholdSetEventObject {
   oldProposalThreshold: BigNumber;
   newProposalThreshold: BigNumber;
@@ -592,17 +541,6 @@ export type QuorumNumeratorUpdatedEvent = TypedEvent<
 
 export type QuorumNumeratorUpdatedEventFilter =
   TypedEventFilter<QuorumNumeratorUpdatedEvent>;
-
-export interface TimelockChangeEventObject {
-  oldTimelock: string;
-  newTimelock: string;
-}
-export type TimelockChangeEvent = TypedEvent<
-  [string, string],
-  TimelockChangeEventObject
->;
-
-export type TimelockChangeEventFilter = TypedEventFilter<TimelockChangeEvent>;
 
 export interface VoteCastEventObject {
   voter: string;
@@ -767,7 +705,6 @@ export interface ZeroGovernor extends BaseContract {
 
     initialize(
       _token: PromiseOrValue<string>,
-      _timelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -804,11 +741,6 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    proposalEta(
-      proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     proposalSnapshot(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -832,14 +764,6 @@ export interface ZeroGovernor extends BaseContract {
       values: PromiseOrValue<BigNumberish>[],
       calldatas: PromiseOrValue<BytesLike>[],
       description: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    queue(
-      targets: PromiseOrValue<string>[],
-      values: PromiseOrValue<BigNumberish>[],
-      calldatas: PromiseOrValue<BytesLike>[],
-      descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -889,17 +813,10 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    timelock(overrides?: CallOverrides): Promise<[string]>;
-
     token(overrides?: CallOverrides): Promise<[string]>;
 
     updateQuorumNumerator(
       newQuorumNumerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    updateTimelock(
-      newTimelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -994,7 +911,6 @@ export interface ZeroGovernor extends BaseContract {
 
   initialize(
     _token: PromiseOrValue<string>,
-    _timelock: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1031,11 +947,6 @@ export interface ZeroGovernor extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  proposalEta(
-    proposalId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   proposalSnapshot(
     proposalId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -1059,14 +970,6 @@ export interface ZeroGovernor extends BaseContract {
     values: PromiseOrValue<BigNumberish>[],
     calldatas: PromiseOrValue<BytesLike>[],
     description: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  queue(
-    targets: PromiseOrValue<string>[],
-    values: PromiseOrValue<BigNumberish>[],
-    calldatas: PromiseOrValue<BytesLike>[],
-    descriptionHash: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1116,17 +1019,10 @@ export interface ZeroGovernor extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  timelock(overrides?: CallOverrides): Promise<string>;
-
   token(overrides?: CallOverrides): Promise<string>;
 
   updateQuorumNumerator(
     newQuorumNumerator: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  updateTimelock(
-    newTimelock: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1221,7 +1117,6 @@ export interface ZeroGovernor extends BaseContract {
 
     initialize(
       _token: PromiseOrValue<string>,
-      _timelock: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1258,11 +1153,6 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    proposalEta(
-      proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     proposalSnapshot(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1286,14 +1176,6 @@ export interface ZeroGovernor extends BaseContract {
       values: PromiseOrValue<BigNumberish>[],
       calldatas: PromiseOrValue<BytesLike>[],
       description: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    queue(
-      targets: PromiseOrValue<string>[],
-      values: PromiseOrValue<BigNumberish>[],
-      calldatas: PromiseOrValue<BytesLike>[],
-      descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1343,17 +1225,10 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    timelock(overrides?: CallOverrides): Promise<string>;
-
     token(overrides?: CallOverrides): Promise<string>;
 
     updateQuorumNumerator(
       newQuorumNumerator: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateTimelock(
-      newTimelock: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1397,12 +1272,6 @@ export interface ZeroGovernor extends BaseContract {
     "ProposalExecuted(uint256)"(proposalId?: null): ProposalExecutedEventFilter;
     ProposalExecuted(proposalId?: null): ProposalExecutedEventFilter;
 
-    "ProposalQueued(uint256,uint256)"(
-      proposalId?: null,
-      eta?: null
-    ): ProposalQueuedEventFilter;
-    ProposalQueued(proposalId?: null, eta?: null): ProposalQueuedEventFilter;
-
     "ProposalThresholdSet(uint256,uint256)"(
       oldProposalThreshold?: null,
       newProposalThreshold?: null
@@ -1420,15 +1289,6 @@ export interface ZeroGovernor extends BaseContract {
       oldQuorumNumerator?: null,
       newQuorumNumerator?: null
     ): QuorumNumeratorUpdatedEventFilter;
-
-    "TimelockChange(address,address)"(
-      oldTimelock?: null,
-      newTimelock?: null
-    ): TimelockChangeEventFilter;
-    TimelockChange(
-      oldTimelock?: null,
-      newTimelock?: null
-    ): TimelockChangeEventFilter;
 
     "VoteCast(address,uint256,uint8,uint256,string)"(
       voter?: PromiseOrValue<string> | null,
@@ -1566,7 +1426,6 @@ export interface ZeroGovernor extends BaseContract {
 
     initialize(
       _token: PromiseOrValue<string>,
-      _timelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1603,11 +1462,6 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    proposalEta(
-      proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     proposalSnapshot(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1625,14 +1479,6 @@ export interface ZeroGovernor extends BaseContract {
       values: PromiseOrValue<BigNumberish>[],
       calldatas: PromiseOrValue<BytesLike>[],
       description: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    queue(
-      targets: PromiseOrValue<string>[],
-      values: PromiseOrValue<BigNumberish>[],
-      calldatas: PromiseOrValue<BytesLike>[],
-      descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1682,17 +1528,10 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    timelock(overrides?: CallOverrides): Promise<BigNumber>;
-
     token(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateQuorumNumerator(
       newQuorumNumerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    updateTimelock(
-      newTimelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1790,7 +1629,6 @@ export interface ZeroGovernor extends BaseContract {
 
     initialize(
       _token: PromiseOrValue<string>,
-      _timelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1827,11 +1665,6 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    proposalEta(
-      proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     proposalSnapshot(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1849,14 +1682,6 @@ export interface ZeroGovernor extends BaseContract {
       values: PromiseOrValue<BigNumberish>[],
       calldatas: PromiseOrValue<BytesLike>[],
       description: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    queue(
-      targets: PromiseOrValue<string>[],
-      values: PromiseOrValue<BigNumberish>[],
-      calldatas: PromiseOrValue<BytesLike>[],
-      descriptionHash: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1908,17 +1733,10 @@ export interface ZeroGovernor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    timelock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     updateQuorumNumerator(
       newQuorumNumerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateTimelock(
-      newTimelock: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

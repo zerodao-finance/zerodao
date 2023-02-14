@@ -139,7 +139,7 @@ describe("sZERO", () => {
       .connect(signers[1])
       .leaveStaking(await sZero.balanceOf(signers[1].address));
   });
-  it("should test governance", async () => {
+  it("should test whether votes are calculated correctly", async () => {
     const signers = await makeSigners(5);
     const s = signers[0];
     const s2 = signers[1];
@@ -179,4 +179,15 @@ describe("sZERO", () => {
       (await sZero.balanceOf(s2.address)).div(2)
     );
   });
+
+  before(async () => {
+    //
+    const tx = await deployments.deploy("ZeroSuiteDeployer", {
+      from: (await ethers.getSigners())[0].address,
+      args: [],
+      skipIfAlreadyDeployed: false,
+    });
+    console.log(Object.keys(tx));
+  });
+  it("should test the deploy script", async () => {});
 });

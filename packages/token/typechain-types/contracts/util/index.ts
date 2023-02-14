@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ZeroLock } from "./ZeroLock";
+export type { ZeroSuiteDeployer } from "./ZeroSuiteDeployer";
