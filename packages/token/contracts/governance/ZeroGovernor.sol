@@ -23,7 +23,7 @@ contract ZeroGovernor is
   function initialize(IVotesUpgradeable _token) public initializer {
     __Governor_init("ZeroGovernor");
     __GovernorSettings_init(
-      300, /* 300 blocks */
+      7200, /* 1 day */
       50400, /* 1 week */
       5000 ether
     );
