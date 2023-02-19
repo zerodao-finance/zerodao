@@ -244,7 +244,12 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     _delegates[delegator] = delegatee;
 
     emit DelegateChanged(delegator, currentDelegate, delegatee);
-
+    if (currentDelegate == address(0)) {
+      currentDelegate = delegator;
+    }
+    if (delegatee == address(0)) {
+      delegatee = delegator;
+    }
     _moveVotingPower(currentDelegate, delegatee, delegatorBalance);
   }
 
@@ -253,7 +258,6 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     address dst,
     uint256 amount
   ) private {
-    console.log(src, dst, amount);
     if (src != dst && amount > 0) {
       if (src != address(0)) {
         (uint256 oldWeight, uint256 oldBaseWeight, uint256 newBaseWeight, uint256 newWeight) = _writeCheckpoint(
@@ -262,7 +266,6 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
           amount,
           true
         );
-        console.log(oldWeight, oldBaseWeight, newWeight);
         emit DelegateVotesChanged(src, oldBaseWeight, newBaseWeight);
       }
 

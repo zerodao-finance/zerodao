@@ -240,6 +240,7 @@ describe("sZERO", () => {
       expect(await zero.balanceOf(multisig)).to.be.equal(
         ethers.utils.parseEther((88e6).toString())
       );
+      const sig = (await ethers.getSigners())[0];
       await zero.transferOwnership(gov.address);
       await impersonateAccount(multisig);
       (await ethers.getSigners())[0].sendTransaction({
@@ -271,9 +272,13 @@ describe("sZERO", () => {
       expect(await zero.balanceOf(multisig)).to.be.equal(
         ethers.utils.parseEther((88e6).toString())
       );
-      await sZero.connect(signer).delegate(multisig);
-      console.log(await sZero.getVotes(multisig));
-      console.log(await sZero.getVotes(signer.address));
+      await sZero.connect(signer).delegate(sig.address);
+      const block = await hre.network.provider.send("eth_blockNumber", []);
+      await mine(1);
+      expect(await sZero.getPastVotes(sig.address, block)).to.equal(
+        ethers.utils.parseEther("5000")
+      );
+      expect(await sZero.getPastVotes(signer.address, block)).to.equal(0);
     });
   });
 });
