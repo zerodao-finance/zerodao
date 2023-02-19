@@ -10,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
+import "hardhat/console.sol";
 
 /**
  * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
@@ -205,7 +206,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function _mint(address account, uint256 amount) internal virtual override {
     super._mint(account, amount);
     require(totalSupply() <= _maxSupply(), "ERC20Votes: total supply risks overflowing votes");
-    _writeCheckpoint(_checkpoints[account], _add, amount);
+    _writeCheckpoint(_checkpoints[account], _add, amount, false);
   }
 
   /**
@@ -214,7 +215,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function _burn(address account, uint256 amount) internal virtual override {
     super._burn(account, amount);
 
-    _writeCheckpoint(_checkpoints[account], _subtract, amount);
+    _writeCheckpoint(_checkpoints[account], _subtract, amount, false);
   }
 
   /**
@@ -222,15 +223,15 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
    *
    * Emits a {IVotes-DelegateVotesChanged} event.
    */
-  function _afterTokenTransfer(
-    address from,
-    address to,
-    uint256 amount
-  ) internal virtual override {
-    super._afterTokenTransfer(from, to, amount);
+  // function _afterTokenTransfer(
+  //   address from,
+  //   address to,
+  //   uint256 amount
+  // ) internal virtual override {
+  //   super._afterTokenTransfer(from, to, amount);
 
-    _moveVotingPower(delegates(from), delegates(to), amount);
-  }
+  //   _moveVotingPower(delegates(from), delegates(to), amount);
+  // }
 
   /**
    * @dev Change delegation for `delegator` to `delegatee`.
@@ -239,7 +240,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
    */
   function _delegate(address delegator, address delegatee) internal virtual {
     address currentDelegate = delegates(delegator);
-    uint256 delegatorBalance = balanceOf(delegator);
+    uint256 delegatorBalance = getVotes(delegator);
     _delegates[delegator] = delegatee;
 
     emit DelegateChanged(delegator, currentDelegate, delegatee);
@@ -252,13 +253,16 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     address dst,
     uint256 amount
   ) private {
+    console.log(src, dst, amount);
     if (src != dst && amount > 0) {
       if (src != address(0)) {
         (uint256 oldWeight, uint256 oldBaseWeight, uint256 newBaseWeight, uint256 newWeight) = _writeCheckpoint(
           _checkpoints[src],
           _subtract,
-          amount
+          amount,
+          true
         );
+        console.log(oldWeight, oldBaseWeight, newWeight);
         emit DelegateVotesChanged(src, oldBaseWeight, newBaseWeight);
       }
 
@@ -266,7 +270,8 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
         (uint256 oldWeight, uint256 oldBaseWeight, uint256 newBaseWeight, uint256 newWeight) = _writeCheckpoint(
           _checkpoints[dst],
           _add,
-          amount
+          amount,
+          true
         );
         emit DelegateVotesChanged(dst, oldBaseWeight, newBaseWeight);
       }
@@ -276,7 +281,8 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   function _writeCheckpoint(
     Checkpoint[] storage ckpts,
     function(uint256, uint256, uint256, uint256, uint256) view returns (uint256, uint256) op,
-    uint256 delta
+    uint256 delta,
+    bool preservePreviousEpoch
   )
     private
     returns (
@@ -291,7 +297,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     unchecked {
       Checkpoint memory oldCkpt = pos == 0 ? Checkpoint(0, 0, 0, 0) : _unsafeAccess(ckpts, pos - 1);
       uint256 epochLength = zerofrost.epochLength();
-      uint256 epochEnd = block.timestamp + epochLength;
+
       oldBaseWeight = oldCkpt.baseVotes;
       oldWeight = oldCkpt.votes;
       (newWeight, newBaseWeight) = op(oldBaseWeight, oldWeight, delta, epochLength, oldCkpt.timestamp);
@@ -304,7 +310,7 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
           Checkpoint(
             SafeCastUpgradeable.toUint32(block.number),
             SafeCastUpgradeable.toUint224(newWeight),
-            epochEnd,
+            preservePreviousEpoch ? oldCkpt.timestamp : block.timestamp + epochLength,
             (newBaseWeight)
           )
         );

@@ -252,6 +252,7 @@ describe("sZERO", () => {
         .approve(sZero.address, ethers.utils.parseEther("10000000"));
       await sZero.connect(signer).enterStaking(ethers.utils.parseEther("5000"));
       await time.increase(await zerofrost.epochLength());
+
       const descriptionHash = ethers.utils.id("vote");
       const data = zero.interface.encodeFunctionData("mint", [
         multisig,
@@ -262,11 +263,17 @@ describe("sZERO", () => {
       ).wait();
       const id = prop.events[0].args.proposalId;
       await mine(7200);
-      await gov.connect(signer).castVote(id, 1);
-      console.log(await gov.state(id));
+      let t: any = await gov.connect(signer).castVote(id, 1);
+      await mine(50400);
       await gov
         .connect(signer)
         .execute([zero.address], [0], [data], descriptionHash);
+      expect(await zero.balanceOf(multisig)).to.be.equal(
+        ethers.utils.parseEther((88e6).toString())
+      );
+      await sZero.connect(signer).delegate(multisig);
+      console.log(await sZero.getVotes(multisig));
+      console.log(await sZero.getVotes(signer.address));
     });
   });
 });
