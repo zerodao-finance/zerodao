@@ -154,7 +154,11 @@
     "transactionIndex": 0,
     "gasUsed": "859575",
     "logsBloom": "0x00000000000000000400000000000000400000000000000000800000000000000000000000000000000000000000000000000000000040200000000000000000000000000000000000000000000002000001000000000000000000000000000000000000020000000000000100000800000000800000000000000004000000400000000000000000000000000000000000000000000080000000000000800000000000000000000000000002000400000000000000000000000000000000000000000020000000200000000000040000000000002400000000000000000020000000000000000000000000000000000000000000000000400000000000000000",
+<<<<<<< HEAD
     "blockHash": "0x43b1b81dffa0dfcfd99ae3875b463f1850c3075bdecaab97e9299843f15e7081",
+=======
+    "blockHash": "0x3ae98fa8f2ce0dd8c7bfe1af565269e3d58d8f91fd067f44ddb7adab5cebcb83",
+>>>>>>> 962cc617 (added new function to see if privateMint or publicMint is active)
     "transactionHash": "0x38c258409e50c2dd25a64a321c1ed842baa69f452bd1aa31deec981f7144ab65",
     "logs": [
       {
@@ -168,7 +172,11 @@
         ],
         "data": "0x",
         "logIndex": 0,
+<<<<<<< HEAD
         "blockHash": "0x43b1b81dffa0dfcfd99ae3875b463f1850c3075bdecaab97e9299843f15e7081"
+=======
+        "blockHash": "0x3ae98fa8f2ce0dd8c7bfe1af565269e3d58d8f91fd067f44ddb7adab5cebcb83"
+>>>>>>> 962cc617 (added new function to see if privateMint or publicMint is active)
       },
       {
         "transactionIndex": 0,
@@ -182,7 +190,11 @@
         ],
         "data": "0x",
         "logIndex": 1,
+<<<<<<< HEAD
         "blockHash": "0x43b1b81dffa0dfcfd99ae3875b463f1850c3075bdecaab97e9299843f15e7081"
+=======
+        "blockHash": "0x3ae98fa8f2ce0dd8c7bfe1af565269e3d58d8f91fd067f44ddb7adab5cebcb83"
+>>>>>>> 962cc617 (added new function to see if privateMint or publicMint is active)
       },
       {
         "transactionIndex": 0,
@@ -194,7 +206,11 @@
         ],
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
         "logIndex": 2,
+<<<<<<< HEAD
         "blockHash": "0x43b1b81dffa0dfcfd99ae3875b463f1850c3075bdecaab97e9299843f15e7081"
+=======
+        "blockHash": "0x3ae98fa8f2ce0dd8c7bfe1af565269e3d58d8f91fd067f44ddb7adab5cebcb83"
+>>>>>>> 962cc617 (added new function to see if privateMint or publicMint is active)
       },
       {
         "transactionIndex": 0,
@@ -206,7 +222,11 @@
         ],
         "data": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000005fbdb2315678afecb367f032d93f642f64180aa3",
         "logIndex": 3,
+<<<<<<< HEAD
         "blockHash": "0x43b1b81dffa0dfcfd99ae3875b463f1850c3075bdecaab97e9299843f15e7081"
+=======
+        "blockHash": "0x3ae98fa8f2ce0dd8c7bfe1af565269e3d58d8f91fd067f44ddb7adab5cebcb83"
+>>>>>>> 962cc617 (added new function to see if privateMint or publicMint is active)
       }
     ],
     "blockNumber": 3,

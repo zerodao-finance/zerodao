@@ -6,6 +6,8 @@ import { useMerkleGenerator } from "../merkle/use-merkle";
 import path from "path";
 import fs from 'fs';
 
+export const ZHERO_META_CID = 'Qmeba5aAeUQeGMkxRYgh2H4Xt9ySXsy74KX2W3vN5to8fh';
+
 const deploy: DeployFunction = async (hre) => {
   if(!process.env.TEST) return;
   
@@ -41,6 +43,14 @@ const deploy: DeployFunction = async (hre) => {
     await zeroHero.startPrivateMint();
     console.log("\n---- PRIVATE MINT STARTED ----")
   }
+
+  if(process.env.PUBLIC_MINT) {
+    await zeroHero.startPublicMint();
+    console.log("\n---- PUBLIC MINT STARTED ----")
+  }
+
+  zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
+  console.log("\n---- SET METADATA URI ----")
 };
 
 export default deploy;

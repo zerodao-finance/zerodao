@@ -35,6 +35,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     "devMint(uint8)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isPresaleActive()": FunctionFragment;
     "mint(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -68,6 +69,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
       | "devMint"
       | "getApproved"
       | "isApprovedForAll"
+      | "isPresaleActive"
       | "mint"
       | "name"
       | "owner"
@@ -113,6 +115,10 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isPresaleActive",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
@@ -227,6 +233,10 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isPresaleActive",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -436,6 +446,8 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isPresaleActive(overrides?: CallOverrides): Promise<[boolean]>;
+
     mint(
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -577,6 +589,8 @@ export interface ZeroHeroNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  isPresaleActive(overrides?: CallOverrides): Promise<boolean>;
+
   mint(
     quantity: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -717,6 +731,8 @@ export interface ZeroHeroNFT extends BaseContract {
       operator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    isPresaleActive(overrides?: CallOverrides): Promise<boolean>;
 
     mint(
       quantity: PromiseOrValue<BigNumberish>,
@@ -909,6 +925,8 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isPresaleActive(overrides?: CallOverrides): Promise<BigNumber>;
+
     mint(
       quantity: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1050,6 +1068,8 @@ export interface ZeroHeroNFT extends BaseContract {
       operator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    isPresaleActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
       quantity: PromiseOrValue<BigNumberish>,
