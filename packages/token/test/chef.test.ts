@@ -279,6 +279,8 @@ describe("sZERO", () => {
         ethers.utils.parseEther("5000")
       );
       expect(await sZero.getPastVotes(signer.address, block)).to.equal(0);
+      await sZero.connect(signer).delegate(multisig);
+      expect(await sZero.getVotes(sig.address)).to.equal(0);
     });
   });
 });

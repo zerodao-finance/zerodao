@@ -240,7 +240,12 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
    */
   function _delegate(address delegator, address delegatee) internal virtual {
     address currentDelegate = delegates(delegator);
-    uint256 delegatorBalance = getVotes(delegator);
+    uint256 delegatorBalance;
+    if (currentDelegate == address(0)) {
+      delegatorBalance = getVotes(delegator);
+    } else {
+      delegatorBalance = getVotes(currentDelegate);
+    }
     _delegates[delegator] = delegatee;
 
     emit DelegateChanged(delegator, currentDelegate, delegatee);
