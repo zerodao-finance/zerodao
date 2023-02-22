@@ -49,8 +49,10 @@ const deploy: DeployFunction = async (hre) => {
     console.log("\n---- PUBLIC MINT STARTED ----")
   }
 
-  zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
-  console.log("\n---- SET METADATA URI ----")
+  if(process.env.PUBLIC_MINT || process.env.PRIVATE_MINT) {
+    zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
+    console.log("\n---- SET METADATA URI ----")
+  }
 };
 
 export default deploy;
