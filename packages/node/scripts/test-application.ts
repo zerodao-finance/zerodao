@@ -1,7 +1,9 @@
 import { Block } from "../src.ts/types"
-import { TransactionEngine } from "../src.ts/transaction"
+import { TransactionEngine } from "../src.ts/application"
 import { StateTrie } from "../src.ts/trie/trie";
+import { SecureTrie } from "merkle-patricia-tree";
 import * as protobuf from "protobufjs"
+import { Level }from "level";
 const PROTO_PATH: string =
   __dirname + "/../../protobuf/proto/ZeroProtocol.proto";
 const root = protobuf.loadSync(PROTO_PATH);
@@ -127,6 +129,12 @@ const exampleBlock = {
   };
   
 (async () => {
-    const engine = new TransactionEngine(new StateTrie())
+  const db = new Level(
+    __dirname
+  );
+
+  const trie = new SecureTrie(db);
+    const engine = new TransactionEngine(trie) 
     await engine.runBlock(exampleBlock)
  })();
+ 

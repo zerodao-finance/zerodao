@@ -10,6 +10,7 @@ import { Block} from "../types";
 import { TX } from "../types/tx";
 import { keccak_256 as createKeccak256 } from "@noble/hashes/sha3";
 import { utils } from "ethers"
+import { SecureTrie } from "merkle-patricia-tree";
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
 
 const PROTO_PATH: string =
@@ -22,10 +23,10 @@ const stake = root.lookupType("Stake");
 const release = root.lookupType("Release")
 
 export class TransactionEngine {
-  trie: StateTrie;
+  trie: SecureTrie;
   receipts: Array<boolean>;
   messages: Array<string>;
-  constructor(trie: StateTrie) {
+  constructor(trie: SecureTrie) {
     this.trie = trie;
   }
   /* accepts a block as an object, runs each transaction and returns the app state root as well as the results(success or revert) and messages which need signed by FROST */
@@ -91,7 +92,7 @@ export class TransactionEngine {
     }
     if (tx.type == "Release") {
       try {
-        await this.validateTransaction(tx)
+       await this.validateTransaction(tx)
        const account: Account = await this.trie.getAccount(tx.from.toString())
        account.unStakedBalance[tx.asset.toString()] -= Number(tx.amount)
        // add bytestrings into next block header
@@ -115,6 +116,10 @@ export class TransactionEngine {
       }
     } 
   }
+
+  async createAccount(tx) {
+    
+  }
   // validates a tx, causes revert if fails
   async validateTransaction(tx) {
     const oldFromAccount: Account = (await this.trie.getAccount(
@@ -137,6 +142,7 @@ export class TransactionEngine {
     else throw Error;
   }
 }
+
 
 export async function checkTx(tBuf: Buffer) {
   try {
