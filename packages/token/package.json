@@ -7,6 +7,7 @@
   "scripts": {
     "node:ethereum": "CHAIN=ETHEREUM hardhat node",
     "node:ethereum:dev": "TEST=1 CHAIN_ID=31337 yarn node:ethereum",
+    "test:nft": "TEST=1 CHAIN=ETHEREUM hardhat test",
     "test": "CHAIN=ETHEREUM hardhat test",
     "compile": "CHAIN=ETHEREUM hardhat compile"
   },
@@ -17,6 +18,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.8.0",
     "@openzeppelin/hardhat-upgrades": "^1.22.0",
     "dotenv": "^16.0.3",
+    "erc721a": "^4.2.3",
     "hardhat": "^2.12.4",
     "hardhat-deploy": "^0.11.22",
     "hardhat-deploy-ethers": "^0.3.0-beta.13",

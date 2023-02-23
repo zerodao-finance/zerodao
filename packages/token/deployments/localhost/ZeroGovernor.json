@@ -1,5 +1,5 @@
 {
-  "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+  "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
   "abi": [
     {
       "anonymous": false,
@@ -125,129 +125,9 @@
       "type": "receive"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "delegator",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "fromDelegate",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "toDelegate",
-          "type": "address"
-        }
-      ],
-      "name": "DelegateChanged",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "delegate",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "previousBalance",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "newBalance",
-          "type": "uint256"
-        }
-      ],
-      "name": "DelegateVotesChanged",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "pid",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "Deposit",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "pid",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "EmergencyWithdraw",
-      "type": "event"
+      "inputs": [],
+      "name": "Empty",
+      "type": "error"
     },
     {
       "anonymous": false,
@@ -266,19 +146,125 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ProposalCanceled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
           "internalType": "address",
-          "name": "previousOwner",
+          "name": "proposer",
           "type": "address"
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "targets",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "string[]",
+          "name": "signatures",
+          "type": "string[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes[]",
+          "name": "calldatas",
+          "type": "bytes[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "startBlock",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "endBlock",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
         }
       ],
-      "name": "OwnershipTransferred",
+      "name": "ProposalCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ProposalExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldProposalThreshold",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newProposalThreshold",
+          "type": "uint256"
+        }
+      ],
+      "name": "ProposalThresholdSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldQuorumNumerator",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newQuorumNumerator",
+          "type": "uint256"
+        }
+      ],
+      "name": "QuorumNumeratorUpdated",
       "type": "event"
     },
     {
@@ -287,23 +273,35 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
+          "name": "voter",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "value",
+          "name": "proposalId",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "weight",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
         }
       ],
-      "name": "Transfer",
+      "name": "VoteCast",
       "type": "event"
     },
     {
@@ -312,33 +310,89 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "user",
+          "name": "voter",
           "type": "address"
         },
         {
-          "indexed": true,
+          "indexed": false,
           "internalType": "uint256",
-          "name": "pid",
+          "name": "proposalId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "weight",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "params",
+          "type": "bytes"
+        }
+      ],
+      "name": "VoteCastWithParams",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldVotingDelay",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "newVotingDelay",
           "type": "uint256"
         }
       ],
-      "name": "Withdraw",
+      "name": "VotingDelaySet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldVotingPeriod",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newVotingPeriod",
+          "type": "uint256"
+        }
+      ],
+      "name": "VotingPeriodSet",
       "type": "event"
     },
     {
       "inputs": [],
-      "name": "BONUS_MULTIPLIER",
+      "name": "BALLOT_TYPEHASH",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "bytes32",
           "name": "",
-          "type": "uint256"
+          "type": "bytes32"
         }
       ],
       "stateMutability": "view",
@@ -346,7 +400,20 @@
     },
     {
       "inputs": [],
-      "name": "DOMAIN_SEPARATOR",
+      "name": "COUNTING_MODE",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "EXTENDED_BALLOT_TYPEHASH",
       "outputs": [
         {
           "internalType": "bytes32",
@@ -360,185 +427,22 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        }
-      ],
-      "name": "allowance",
-      "outputs": [
-        {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "bonusEndBlock",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "multiplier",
+          "name": "proposalId",
           "type": "uint256"
         },
-        {
-          "internalType": "uint256",
-          "name": "lpSupply",
-          "type": "uint256"
-        }
-      ],
-      "name": "calculateZeroReward",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "zeroReward",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "pos",
-          "type": "uint32"
-        }
-      ],
-      "name": "checkpoints",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint32",
-              "name": "fromBlock",
-              "type": "uint32"
-            },
-            {
-              "internalType": "uint224",
-              "name": "votes",
-              "type": "uint224"
-            },
-            {
-              "internalType": "uint256",
-              "name": "timestamp",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "baseVotes",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct ERC20VotesUpgradeable.Checkpoint",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "decimals",
-      "outputs": [
         {
           "internalType": "uint8",
-          "name": "",
+          "name": "support",
           "type": "uint8"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "subtractedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "decreaseAllowance",
+      "name": "castVote",
       "outputs": [
         {
-          "internalType": "bool",
+          "internalType": "uint256",
           "name": "",
-          "type": "bool"
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -547,32 +451,14 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "delegatee",
-          "type": "address"
-        }
-      ],
-      "name": "delegate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "delegatee",
-          "type": "address"
-        },
-        {
           "internalType": "uint256",
-          "name": "nonce",
+          "name": "proposalId",
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "expiry",
-          "type": "uint256"
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
         },
         {
           "internalType": "uint8",
@@ -590,60 +476,14 @@
           "type": "bytes32"
         }
       ],
-      "name": "delegateBySig",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "delegates",
+      "name": "castVoteBySig",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_devaddr",
-          "type": "address"
-        }
-      ],
-      "name": "dev",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "devaddr",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "emergencyWithdraw",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -651,12 +491,28 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "zeroAmount",
+          "name": "proposalId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "castVoteWithReason",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "enterStaking",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -664,17 +520,33 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "zeroAmount",
+          "name": "proposalId",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
         },
         {
           "internalType": "bytes",
-          "name": "sig",
+          "name": "params",
           "type": "bytes"
         }
       ],
-      "name": "enterStakingWithPermit",
-      "outputs": [],
+      "name": "castVoteWithReasonAndParams",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -682,16 +554,41 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_from",
+          "name": "proposalId",
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "_to",
-          "type": "uint256"
+          "internalType": "uint8",
+          "name": "support",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "params",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint8",
+          "name": "v",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "r",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "s",
+          "type": "bytes32"
         }
       ],
-      "name": "getMultiplier",
+      "name": "castVoteWithReasonAndParamsBySig",
       "outputs": [
         {
           "internalType": "uint256",
@@ -699,18 +596,33 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "blockNumber",
-          "type": "uint256"
+          "internalType": "address[]",
+          "name": "targets",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "calldatas",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "descriptionHash",
+          "type": "bytes32"
         }
       ],
-      "name": "getPastTotalSupply",
+      "name": "execute",
       "outputs": [
         {
           "internalType": "uint256",
@@ -718,7 +630,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -732,25 +644,6 @@
           "internalType": "uint256",
           "name": "blockNumber",
           "type": "uint256"
-        }
-      ],
-      "name": "getPastVotes",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
         }
       ],
       "name": "getVotes",
@@ -768,16 +661,45 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "spender",
+          "name": "account",
           "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "addedValue",
+          "name": "blockNumber",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "params",
+          "type": "bytes"
+        }
+      ],
+      "name": "getVotesWithParams",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "increaseAllowance",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasVoted",
       "outputs": [
         {
           "internalType": "bool",
@@ -785,79 +707,54 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "contract ZERO",
-          "name": "_zero",
-          "type": "address"
+          "internalType": "address[]",
+          "name": "targets",
+          "type": "address[]"
         },
         {
-          "internalType": "address",
-          "name": "zerofrost",
-          "type": "address"
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
         },
         {
-          "internalType": "address",
-          "name": "_devaddr",
-          "type": "address"
+          "internalType": "bytes[]",
+          "name": "calldatas",
+          "type": "bytes[]"
         },
+        {
+          "internalType": "bytes32",
+          "name": "descriptionHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "hashProposal",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "_zeroPerBlock",
+          "name": "",
           "type": "uint256"
-        },
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_bonusEndBlock",
-          "type": "uint256"
+          "internalType": "contract IVotesUpgradeable",
+          "name": "_token",
+          "type": "address"
         }
       ],
       "name": "initialize",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "zeroAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "leaveStaking",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        }
-      ],
-      "name": "migrate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "migrator",
-      "outputs": [
-        {
-          "internalType": "contract IMigratorChef",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -877,11 +774,123 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "owner",
+          "name": "",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
         }
       ],
-      "name": "nonces",
+      "name": "onERC1155BatchReceived",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC1155Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC721Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        }
+      ],
+      "name": "proposalDeadline",
       "outputs": [
         {
           "internalType": "uint256",
@@ -895,17 +904,17 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
         }
       ],
-      "name": "numCheckpoints",
+      "name": "proposalSnapshot",
       "outputs": [
         {
-          "internalType": "uint32",
+          "internalType": "uint256",
           "name": "",
-          "type": "uint32"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -913,31 +922,7 @@
     },
     {
       "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_user",
-          "type": "address"
-        }
-      ],
-      "name": "pendingZero",
+      "name": "proposalThreshold",
       "outputs": [
         {
           "internalType": "uint256",
@@ -951,13 +936,135 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        }
+      ],
+      "name": "proposalVotes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "againstVotes",
+          "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "forVotes",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "abstainVotes",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "targets",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "values",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "calldatas",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        }
+      ],
+      "name": "propose",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "blockNumber",
+          "type": "uint256"
+        }
+      ],
+      "name": "quorum",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "quorumDenominator",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "blockNumber",
+          "type": "uint256"
+        }
+      ],
+      "name": "quorumNumerator",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "quorumNumerator",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
-          "name": "spender",
+          "name": "target",
           "type": "address"
         },
         {
@@ -966,144 +1073,122 @@
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "deadline",
-          "type": "uint256"
-        },
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "relay",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
-          "internalType": "uint8",
-          "name": "v",
+          "internalType": "uint256",
+          "name": "newProposalThreshold",
+          "type": "uint256"
+        }
+      ],
+      "name": "setProposalThreshold",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newVotingDelay",
+          "type": "uint256"
+        }
+      ],
+      "name": "setVotingDelay",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newVotingPeriod",
+          "type": "uint256"
+        }
+      ],
+      "name": "setVotingPeriod",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "proposalId",
+          "type": "uint256"
+        }
+      ],
+      "name": "state",
+      "outputs": [
+        {
+          "internalType": "enum IGovernorUpgradeable.ProposalState",
+          "name": "",
           "type": "uint8"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "r",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "s",
-          "type": "bytes32"
-        }
-      ],
-      "name": "permit",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "poolInfo",
-      "outputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "lpToken",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "allocPoint",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "lastRewardBlock",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "accZeroPerShare",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "poolLength",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "redeem",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_allocPoint",
-          "type": "uint256"
-        },
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
         {
           "internalType": "bool",
-          "name": "_withUpdate",
+          "name": "",
           "type": "bool"
         }
       ],
-      "name": "set",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract IMigratorChef",
-          "name": "_migrator",
-          "type": "address"
-        }
-      ],
-      "name": "setMigrator",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "startBlock",
+      "name": "token",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "contract IVotesUpgradeable",
           "name": "",
-          "type": "uint256"
+          "type": "address"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newQuorumNumerator",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateQuorumNumerator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
-      "name": "symbol",
+      "name": "version",
       "outputs": [
         {
           "internalType": "string",
@@ -1116,7 +1201,7 @@
     },
     {
       "inputs": [],
-      "name": "totalAllocPoint",
+      "name": "votingDelay",
       "outputs": [
         {
           "internalType": "uint256",
@@ -1129,200 +1214,12 @@
     },
     {
       "inputs": [],
-      "name": "totalSupply",
+      "name": "votingPeriod",
       "outputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "idx",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateZAssetReward",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "updateZeroPool",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "userInfo",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "rewardDebt",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "zassets",
-      "outputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "token",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "rewardsToBeMinted",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "multiplier",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "zero",
-      "outputs": [
-        {
-          "internalType": "contract ZERO",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "zeroPerBlock",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "zerofrost",
-      "outputs": [
-        {
-          "internalType": "contract IZEROFROST",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1350,78 +1247,112 @@
       "type": "constructor"
     }
   ],
-  "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
+  "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
   "receipt": {
     "to": null,
     "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "contractAddress": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+    "contractAddress": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
     "transactionIndex": 0,
-    "gasUsed": "1063303",
-    "logsBloom": "0x00000000000000000000000000000000400000000000000000800000000000000000000000000000000000000000000040000000000000000000000000000000001000000000000000000000000002000001000000000000000000000000000000000000020000000000000100000800000000800000000000000000000000440000000000000000000000000000000000000000000080000000000000800000100000000000000000000000000400000000000000000000000000000000000000000024000000200000000000040000000000002400001000000000000020000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0xd0af61850db50f3ca5e48f0c19b75427679d48089b206c655d2a6364bf80e71c",
-    "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
+    "gasUsed": "955984",
+    "logsBloom": "0x000000000000000001000000004010004000000000000000000000000000080000000000000000000000000020100000000000000000000000000000000000000000000000000000000000000000020000000000000000000000100000000000000000000000000800020000000000000000008000000000000000000000000010000000000000000000000000000000000000000000c0000000000000800002000000000000000000000000000440000000000000000000000000002000008000000020000000000000000000040000000000000400000000080000800000000000000000000000000000000800000000000000000000000000000000000000",
+    "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf",
+    "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
     "logs": [
       {
         "transactionIndex": 0,
-        "blockNumber": 7,
-        "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
-        "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
         "topics": [
           "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
-          "0x0000000000000000000000005fc8d32690cc91d4c39d9d3abcbd16989f875707"
+          "0x000000000000000000000000a513e6e4b8f2a923d98304ec87f64353c4d5c853"
         ],
         "data": "0x",
         "logIndex": 0,
-        "blockHash": "0xd0af61850db50f3ca5e48f0c19b75427679d48089b206c655d2a6364bf80e71c"
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
       },
       {
         "transactionIndex": 0,
-        "blockNumber": 7,
-        "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
-        "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
         "topics": [
-          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-          "0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          "0xc565b045403dc03c2eea82b81a0465edad9e2e7fc4d97e11421c209da93d7a93"
         ],
-        "data": "0x",
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001c20",
         "logIndex": 1,
-        "blockHash": "0xd0af61850db50f3ca5e48f0c19b75427679d48089b206c655d2a6364bf80e71c"
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
       },
       {
         "transactionIndex": 0,
-        "blockNumber": 7,
-        "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
-        "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+        "topics": [
+          "0x7e3f7f0708a84de9203036abaa450dccc85ad5ff52f78c170f3edb55cf5e8828"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c4e0",
+        "logIndex": 2,
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+        "topics": [
+          "0xccb45da8d5717e6c4544694297c4ba5cf151d455c9bb0ed4fc7a38411bc05461"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010f0cf064dd59200000",
+        "logIndex": 3,
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+        "topics": [
+          "0x0553476bf02ef2726e8ce5ced78d63e26e602e4a2257b1f559418e24b4633997"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000032",
+        "logIndex": 4,
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
+      },
+      {
+        "transactionIndex": 0,
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
         "topics": [
           "0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498"
         ],
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "logIndex": 2,
-        "blockHash": "0xd0af61850db50f3ca5e48f0c19b75427679d48089b206c655d2a6364bf80e71c"
+        "logIndex": 5,
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
       },
       {
         "transactionIndex": 0,
-        "blockNumber": 7,
-        "transactionHash": "0x7eaf300a6de025476ce87ea0106f44b164e89be8e24227fee5f5a1884a88f01b",
-        "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+        "blockNumber": 9,
+        "transactionHash": "0xed598bc772fe5c682b235cbdad90b62833648cb52b8ea2ad516e912ec5eb1724",
+        "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
         "topics": [
           "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f"
         ],
         "data": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000005fbdb2315678afecb367f032d93f642f64180aa3",
-        "logIndex": 3,
-        "blockHash": "0xd0af61850db50f3ca5e48f0c19b75427679d48089b206c655d2a6364bf80e71c"
+        "logIndex": 6,
+        "blockHash": "0x1408d5f661adcb3f6f8fd64349807454b38f2fba26d2cdc633afce0a84892ddf"
       }
     ],
-    "blockNumber": 7,
-    "cumulativeGasUsed": "1063303",
+    "blockNumber": 9,
+    "cumulativeGasUsed": "955984",
     "status": 1,
     "byzantium": true
   },
   "args": [
-    "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
     "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    "0xa6b63eb80000000000000000000000009fe46736679d2d9a65f0992f2272de9f3c7fa6e0000000000000000000000000dc64a140aa3e981100a9beca4e685f962f0cf6c9000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb9226600000000000000000000000000000000000000000000000000000004a817c8000000000000000000000000000000000000000000000000000000000000000005"
+    "0xc4d66de80000000000000000000000000165878a594ca255338adfa4d48449f69242eb8f"
   ],
   "numDeployments": 2,
   "solcInputHash": "0e89febeebc7444140de8e67c9067d2c",
@@ -1431,17 +1362,10 @@
   "execute": {
     "methodName": "initialize",
     "args": [
-      "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      {
-        "type": "BigNumber",
-        "hex": "0x04a817c800"
-      },
-      "0x5"
+      "0x0165878A594ca255338adfa4d48449f69242Eb8F"
     ]
   },
-  "implementation": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+  "implementation": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
   "devdoc": {
     "details": "This contract implements a proxy that is upgradeable by an admin. To avoid https://medium.com/nomic-labs-blog/malicious-backdoors-in-ethereum-proxies-62629adf3357[proxy selector clashing], which can potentially be used in an attack, this contract uses the https://blog.openzeppelin.com/the-transparent-proxy-pattern/[transparent proxy pattern]. This pattern implies two things that go hand in hand: 1. If any account other than the admin calls the proxy, the call will be forwarded to the implementation, even if that call matches one of the admin functions exposed by the proxy itself. 2. If the admin calls the proxy, it can access the admin functions, but its calls will never be forwarded to the implementation. If the admin tries to call a function on the implementation it will fail with an error that says \"admin cannot fallback to proxy target\". These properties mean that the admin account can only be used for admin actions like upgrading the proxy or changing the admin, so it's best if it's a dedicated account that is not used for anything else. This will avoid headaches due to sudden errors when trying to call a function from the proxy implementation. Our recommendation is for the dedicated account to be an instance of the {ProxyAdmin} contract. If set up this way, you should think of the `ProxyAdmin` instance as the real administrative interface of your proxy.",
     "kind": "dev",

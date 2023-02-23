@@ -70,14 +70,12 @@ export default class MerkleTree {
 
   getProof(el: Buffer) {
     let idx = this.bufferElementPositionIndex[ethers.utils.hexlify(el)]
-
     if (typeof idx !== 'number') {
       throw new Error('Element does not exist in Merkle tree')
     }
 
     return this.layers.reduce((proof, layer) => {
       const pairElement = MerkleTree.getPairElement(idx, layer)
-
       if (pairElement) {
         proof.push(pairElement)
       }
@@ -96,7 +94,6 @@ export default class MerkleTree {
 
   private static getPairElement(idx: number, layer: Buffer[]): Buffer | null {
     const pairIdx = idx % 2 === 0 ? idx + 1 : idx - 1
-
     if (pairIdx < layer.length) {
       return layer[pairIdx]
     } else {
