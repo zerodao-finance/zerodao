@@ -1,4 +1,14 @@
 export type Config = {
+  RPC: any;
+  P2P: any;
+  Mempool: any;
+  StateSync: any;
+  BlockSync: any;
+  Consensus: any;
+  Storage: any;
+  TxIndex: any;
+  Instrumentation?: any;
+}; /*{
   RPC: RPCConfig;
   P2P: P2PConfig;
   Mempool: MempoolConfig;
@@ -8,4 +18,4 @@ export type Config = {
   Storage: StorageConfig;
   TxIndex: TxIndexConfig;
   Intrumentation?: InstrumentationConfig;
-};
+}; */

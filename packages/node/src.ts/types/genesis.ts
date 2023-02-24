@@ -22,7 +22,7 @@ export type GenesisDoc = {
   GenesisTime: UTCDateTime;
   ChainID: string;
   InitialHeight: number;
-  ConsensusParams: ConsensusParams;
+  ConsensusParams: any;
   Validators: GenesisValidator[];
   AppHash: string;
   AppState: any;

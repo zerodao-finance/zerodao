@@ -1,3 +1,11 @@
+import type { BlockID }  from "./block";
+import type { Vote } from "./vote";
+import type { ValidatorSet } from "./validator-set";
+
+type BlockVotes = any;
+
+type p2pid = any;
+
 type VoteSet = {
   chainId: string;
   height: number;

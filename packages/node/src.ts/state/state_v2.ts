@@ -1,3 +1,5 @@
+import { BlockID } from ee
+
 type Version = {
 	version_number: number;
 	software_version: string;
