@@ -3,8 +3,8 @@
 pragma solidity ^0.8.0;
 
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable-new/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/proxy/utils/Initializable.sol";
 
 // dummy contract to just return epoch length for now
 contract ZEROFROST is Initializable, OwnableUpgradeable, IZEROFROST {

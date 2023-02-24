@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.7 <0.9.0;
 
-import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import { ProxyAdmin } from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+import { TransparentUpgradeableProxy } from "@openzeppelin/contracts-new/proxy/transparent/TransparentUpgradeableProxy.sol";
+import { ProxyAdmin } from "@openzeppelin/contracts-new/proxy/transparent/ProxyAdmin.sol";
 import { ZERO } from "../token/ZERO.sol";
 import { sZERO } from "../token/sZERO.sol";
 import { ZeroGovernor } from "../governance/ZeroGovernor.sol";

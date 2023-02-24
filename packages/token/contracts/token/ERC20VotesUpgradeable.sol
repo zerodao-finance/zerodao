@@ -3,12 +3,12 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/utils/IVotesUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable-new/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/utils/IVotesUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/utils/math/SafeCastUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/proxy/utils/Initializable.sol";
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 import "hardhat/console.sol";
 

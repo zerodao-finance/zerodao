@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/governance/GovernorUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorSettingsUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorCountingSimpleUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesQuorumFractionUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/GovernorUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/extensions/GovernorSettingsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/extensions/GovernorCountingSimpleUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/extensions/GovernorVotesUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/governance/extensions/GovernorVotesQuorumFractionUpgradeable.sol";
 
 contract ZeroGovernor is
   Initializable,

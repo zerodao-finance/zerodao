@@ -26,7 +26,12 @@ async function makeSigners(n: number = 5) {
       value: ethers.utils.parseEther("2"),
       to: wallet.address,
     });
-    const z = (await ethers.getContract("ZERO")) as ZERO;
+    const zContract = await deployments.get("ZERO");
+    const z = new ethers.Contract(
+      zContract.address,
+      zContract.abi,
+      signer
+    ) as ZERO;
     z.transfer(wallet.address, ethers.utils.parseEther("5000"));
     arr.push(wallet);
     return arr;
@@ -71,9 +76,25 @@ describe("sZERO", () => {
   describe("contracts stuff", () => {
     beforeEach(async () => {
       await deployments.fixture();
-      zero = (await ethers.getContract("ZERO")) as ZERO;
-      sZero = (await ethers.getContract("sZERO")) as SZERO;
-      zerofrost = (await ethers.getContract("ZEROFROST")) as ZEROFROST;
+      const zerocontract = await deployments.get("ZERO");
+      const szerocontract = await deployments.get("sZERO");
+      const zerofrostcontract = await deployments.get("ZEROFROST");
+      const sig = (await ethers.getSigners())[0];
+      zero = new ethers.Contract(
+        zerocontract.address,
+        zerocontract.abi,
+        sig
+      ) as ZERO;
+      sZero = new ethers.Contract(
+        szerocontract.address,
+        szerocontract.abi,
+        sig
+      ) as SZERO;
+      zerofrost = new ethers.Contract(
+        zerofrostcontract.address,
+        zerofrostcontract.abi,
+        sig
+      ) as ZEROFROST;
     });
 
     it("should check basics", async () => {
@@ -190,7 +211,8 @@ describe("sZERO", () => {
   });
 
   describe("deployer script stuff", async () => {
-    before(async () => {
+    beforeEach(async () => {
+      await deployments.fixture();
       try {
         rmSync("deployments/hardhat/ZeroSuiteDeployer.json");
       } catch (e) {}
@@ -206,7 +228,8 @@ describe("sZERO", () => {
         value: ethers.utils.parseEther("2"),
         to: multisig,
       });
-      const iface = (await ethers.getContract("ZeroSuiteDeployer")).interface;
+      const deployer = await deployments.get("ZeroSuiteDeployer");
+      const iface = new ethers.utils.Interface(deployer.abi);
       const logs = tx.receipt.logs.reduce((a, d) => {
         try {
           return [...a, iface.parseLog(d)];

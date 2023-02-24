@@ -2,17 +2,17 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-new/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-new/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-new/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts-new/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts-new/utils/math/Math.sol";
+import "@openzeppelin/contracts-upgradeable-new/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable-new/proxy/utils/Initializable.sol";
 import { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable.sol";
 import { ZERO } from "./ZERO.sol";
 import { SplitSignatureLib } from "../util/SplitSignatureLib.sol";
-import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
+import { IERC20Permit } from "@openzeppelin/contracts-new/token/ERC20/extensions/draft-IERC20Permit.sol";
 import "hardhat/console.sol";
 
 interface IMigratorChef {

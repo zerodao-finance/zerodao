@@ -3,7 +3,7 @@ import type { HardhatEthersHelpers } from "hardhat-deploy-ethers/types";
 import { ZERO } from "../typechain-types";
 import { ethers as _ethers } from "ethers";
 
-const deploy: DeployFunction = async (hre) => {
+const deploy: DeployFunction = async function (hre) {
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
   //@ts-ignore
@@ -83,7 +83,11 @@ const deploy: DeployFunction = async (hre) => {
   });
 
   await deployments.save("ZeroGovernor", deployerGov);
-
+  const nft = await deployments.deploy("ZeroHeroNFT", {
+    from: signer.address,
+    args: [],
+  });
+  await deployments.save("ZeroHeroNFT", nft);
   await zero.mint(signer.address, ethers.utils.parseEther("100000"));
   await zero.approve(deployedSZero.address, ethers.utils.parseEther("1000000"));
   await zero.changeSZero(deployedSZero.address);

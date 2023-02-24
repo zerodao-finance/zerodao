@@ -1,6 +1,5 @@
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-// import "@nomiclabs/hardhat-ethers";
 import "hardhat-deploy-ethers";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
@@ -79,7 +78,7 @@ const config: any = {
       live: false,
       saveDeployments: true,
       tags: ["local"],
-      chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID)
+      chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID),
     },
     hardhat: {
       live: false,

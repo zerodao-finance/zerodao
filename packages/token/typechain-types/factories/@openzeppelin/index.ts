@@ -2,4 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as contracts from "./contracts";
+export * as contractsNew from "./contracts-new";
 export * as contractsUpgradeable from "./contracts-upgradeable";
+export * as contractsUpgradeableNew from "./contracts-upgradeable-new";
