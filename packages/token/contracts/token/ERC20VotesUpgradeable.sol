@@ -250,6 +250,12 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   ) private {
     if (src != dst && amount > 0) {
       if (src != address(0)) {
+        uint256 pos = _checkpoints[src].length;
+        Checkpoint memory ckpt = pos == 0 ? Checkpoint(0, 0, 0, 0) : _unsafeAccess(_checkpoints[src], pos - 1);
+        require(
+          ckpt.timestamp == 0 || ckpt.timestamp >= block.timestamp,
+          "can't delegate until holding period has passed"
+        );
         (uint256 oldWeight, uint256 newWeight) = _writeCheckpoint(_checkpoints[src], _subtract, amount);
         emit DelegateVotesChanged(src, oldWeight, newWeight);
       }
