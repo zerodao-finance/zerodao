@@ -4,10 +4,14 @@ import { ethers as _ethers } from "ethers";
 import { HardhatEthersHelpers } from "hardhat-deploy-ethers/types";
 import { ZeroHeroNFT } from "../typechain-types";
 import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
+import path from 'path';
+import fs from 'fs';
+import { useMerkleGenerator } from "../merkle/use-merkle";
 
 //@ts-ignore
 const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
 const NFT_COST = 0.3;
+const whitelistClaims = require("../merkle/localhost/zhero-whitelist.json").claims;
 
 describe("ZeroHeroNFT - Dev mint", function () {
   let contract: ZeroHeroNFT;
@@ -44,8 +48,6 @@ describe("ZeroHeroNFT - Dev mint", function () {
 describe("ZeroHeroNFT - Minting before start", function () {
   let contract: ZeroHeroNFT;
   let buyer1: SignerWithAddress, buyer2: SignerWithAddress;
-  let whitelistClaims =
-    require("../merkle/localhost/zhero-whitelist.json").claims;
 
   beforeEach(async () => {
     const nftcontract = await hre.deployments.get("ZeroHeroNFT");
@@ -71,7 +73,7 @@ describe("ZeroHeroNFT - Minting before start", function () {
       .connect(buyer1)
       .privateMint(
         whitelistClaims[buyer1.address].index,
-        buyer1.address,
+        ethers.utils.getAddress(buyer1.address),
         ethers.BigNumber.from("1"),
         whitelistClaims[buyer1.address].proof,
         3,
@@ -87,8 +89,6 @@ describe("ZeroHeroNFT - Private Mint", async function () {
   let owner: SignerWithAddress,
     buyer1: SignerWithAddress,
     buyer2: SignerWithAddress;
-  let whitelistClaims =
-    require("../merkle/localhost/zhero-whitelist.json").claims;
 
   beforeEach(async () => {
     const nftcontract = await hre.deployments.get("ZeroHeroNFT");
@@ -98,6 +98,13 @@ describe("ZeroHeroNFT - Private Mint", async function () {
       nftcontract.abi,
       owner
     ) as ZeroHeroNFT;
+
+    // Merkle
+    const merkleDir = path.join(__dirname, '..', 'merkle', 'localhost');
+    const merkleInput = require(path.join(merkleDir, 'zhero-input'));
+    const merkleTree = useMerkleGenerator(merkleInput);
+    await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
+    await contract.setPresaleMerkleRoot(merkleTree.merkleRoot);
   });
 
   it("Should not be able to mint if not on whitelist", async function () {
@@ -150,9 +157,9 @@ describe("ZeroHeroNFT - Private Mint", async function () {
     expect(await contract.balanceOf(buyer1.address)).to.equal(3);
   });
 
-  it("Should not allow for minting more than 3 NFT's per address", async function () {
+  it("Should not allow for minting more than 5 NFT's per address", async function () {
     const amount = 6;
-    const tx = await contract
+    const tx = contract
       .connect(buyer1)
       .privateMint(
         whitelistClaims[buyer1.address].index,

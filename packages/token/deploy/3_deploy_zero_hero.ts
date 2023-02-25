@@ -37,9 +37,9 @@ const deploy: DeployFunction = async (hre) => {
   console.log(merkleTree);
   await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
   console.log('---- ZHERO Merkle Tree Created ----');
+  await zeroHero.setPresaleMerkleRoot(merkleTree.merkleRoot);
   
   if(process.env.PRIVATE_MINT) {
-    await zeroHero.setPresaleMerkleRoot(merkleTree.merkleRoot)
     await zeroHero.startPrivateMint();
     console.log("\n---- PRIVATE MINT STARTED ----")
   }
