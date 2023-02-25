@@ -32,7 +32,7 @@ export declare namespace ERC20VotesUpgradeable {
     fromBlock: PromiseOrValue<BigNumberish>;
     votes: PromiseOrValue<BigNumberish>;
     timestamp: PromiseOrValue<BigNumberish>;
-    baseVotes: PromiseOrValue<BigNumberish>;
+    balance: PromiseOrValue<BigNumberish>;
   };
 
   export type CheckpointStructOutput = [
@@ -44,7 +44,7 @@ export declare namespace ERC20VotesUpgradeable {
     fromBlock: number;
     votes: BigNumber;
     timestamp: BigNumber;
-    baseVotes: BigNumber;
+    balance: BigNumber;
   };
 }
 

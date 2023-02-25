@@ -203,9 +203,9 @@ describe("sZERO", () => {
       );
       await sZero.connect(s2).enterStakingWithPermit(balance, signature2);
       expect(await sZero.getVotes(s2.address)).to.be.equal(0);
-      await time.increase(t);
+      await time.increase(t.mul(2));
       expect(await sZero.getVotes(s2.address)).to.be.equal(
-        (await sZero.balanceOf(s2.address)).div(2)
+        await sZero.balanceOf(s2.address)
       );
     });
   });
@@ -297,7 +297,7 @@ describe("sZERO", () => {
       await sZero.connect(signer).delegate(sig.address);
       const block = await hre.network.provider.send("eth_blockNumber", []);
       await mine(1);
-      expect(await sZero.getPastVotes(sig.address, block)).to.equal(
+      expect(await sZero.getVotes(sig.address)).to.equal(
         ethers.utils.parseEther("5000")
       );
       expect(await sZero.getPastVotes(signer.address, block)).to.equal(0);

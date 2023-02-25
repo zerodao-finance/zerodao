@@ -237,7 +237,7 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "baseVotes",
+            name: "balance",
             type: "uint256",
           },
         ],

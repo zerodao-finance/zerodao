@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ZeroGovernor__factory } from "./ZeroGovernor__factory";
-export { ZeroTimelockController__factory } from "./ZeroTimelockController__factory";

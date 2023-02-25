@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ZeroGovernor } from "./ZeroGovernor";
-export type { ZeroTimelockController } from "./ZeroTimelockController";
