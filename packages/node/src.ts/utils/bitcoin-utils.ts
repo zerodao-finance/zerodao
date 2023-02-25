@@ -1,4 +1,4 @@
-import bitcoin from 'bitcoinjs-lib';
+import { bitcoin } from 'bitcoinjs-lib';
 
 // Create a transaction
 const tx = new bitcoin.TransactionBuilder();
