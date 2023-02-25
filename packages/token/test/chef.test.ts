@@ -211,6 +211,7 @@ describe("sZERO", () => {
   });
 
   describe("deployer script stuff", async () => {
+    const multisig = "0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC";
     beforeEach(async () => {
       await deployments.fixture();
       try {
@@ -223,7 +224,6 @@ describe("sZERO", () => {
         skipIfAlreadyDeployed: false,
       });
 
-      const multisig = "0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC";
       await sig.sendTransaction({
         value: ethers.utils.parseEther("2"),
         to: multisig,
@@ -257,14 +257,13 @@ describe("sZERO", () => {
         (await ethers.getContractFactory("ZeroGovernor")).interface,
         sig
       ) as ZeroGovernor;
+      await zero.transferOwnership(gov.address);
     });
-    it("should test the deploy script", async () => {
-      const multisig = "0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC";
+    it("should test the deploy script and check if governance works", async () => {
       expect(await zero.balanceOf(multisig)).to.be.equal(
         ethers.utils.parseEther((88e6).toString())
       );
       const sig = (await ethers.getSigners())[0];
-      await zero.transferOwnership(gov.address);
       await impersonateAccount(multisig);
       (await ethers.getSigners())[0].sendTransaction({
         to: multisig,
@@ -287,7 +286,7 @@ describe("sZERO", () => {
       ).wait();
       const id = prop.events[0].args.proposalId;
       await mine(7200);
-      let t: any = await gov.connect(signer).castVote(id, 1);
+      await gov.connect(signer).castVote(id, 1);
       await mine(50400);
       await gov
         .connect(signer)
@@ -304,6 +303,26 @@ describe("sZERO", () => {
       expect(await sZero.getPastVotes(signer.address, block)).to.equal(0);
       await sZero.connect(signer).delegate(multisig);
       expect(await sZero.getVotes(sig.address)).to.equal(0);
+    });
+    it("should test governance and if the votes revert when they should", async () => {
+      expect(await zero.balanceOf(multisig)).to.be.equal(
+        ethers.utils.parseEther((88e6).toString())
+      );
+      const sig = (await ethers.getSigners())[0];
+      await impersonateAccount(multisig);
+      (await ethers.getSigners())[0].sendTransaction({
+        to: multisig,
+        value: ethers.utils.parseEther("2"),
+      });
+      const signer = await ethers.getSigner(multisig);
+      await zero
+        .connect(signer)
+        .approve(sZero.address, ethers.utils.parseEther("10000000"));
+      await sZero.connect(signer).enterStaking(ethers.utils.parseEther("5000"));
+      await time.increase((await zerofrost.epochLength()).div(2));
+      console.log(await sZero.getVotes(multisig));
+      await sZero.delegate(sig.address);
+      console.log(await sZero.getVotes(multisig));
     });
   });
 });
