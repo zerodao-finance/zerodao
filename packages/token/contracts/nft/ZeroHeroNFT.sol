@@ -20,16 +20,16 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
   // ===== Variables =====
   uint16 constant devSupply = 5;
-  uint16 constant presaleSupply = 2000; // TODO: Determine whitelist supply
-  uint16 constant collectionSupply = 2000; // TODO: Determine public supply
+  uint16 constant presaleSupply = 2000; 
+  uint16 constant collectionSupply = 0; 
 
   bool private privateMintStarted;
   bool private publicMintStarted;
 
-  uint8 private presaleMaxItemsPerWallet = 100; // TODO: Determine max per wallet
+  uint8 private presaleMaxItemsPerWallet = 5; 
 
-  uint256 private presalePrice = 0.3 ether; // TODO: Determine price per NFT
-  uint256 private mintPrice = 0.3 ether; // TODO: Determine price per NFT
+  uint256 private presalePrice = 0.3 ether; 
+  uint256 private mintPrice = 0.3 ether; 
 
   string private baseTokenURI;
 
