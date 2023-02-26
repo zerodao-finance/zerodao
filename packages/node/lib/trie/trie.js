@@ -12,7 +12,7 @@ const yargs_1 = __importDefault(require("yargs/yargs"));
 const ethers_1 = __importDefault(require("ethers"));
 class StateTrie {
     constructor() {
-        const db = new level_1.Level((0, yargs_1.default)().argv["db-path"] || path_1.default.join(process.env.HOME, ".zero"));
+        const db = new level_1.Level((0, yargs_1.default)().argv["db-path"] || path_1.default.join(process.env.HOME, ".zeronode/config/db"));
         const trie = new merkle_patricia_tree_1.SecureTrie(db);
         this.trie = (0, exports.promisifyTrie)(trie);
     }

@@ -58,7 +58,7 @@
     "chai": "^4.3.7",
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
-    "prettier": "^2.8.0",
+    "prettier": "2.8.4",
     "sparse-merkle-tree": "^1.0.0",
     "ts-node": "^10.9.1"
   }

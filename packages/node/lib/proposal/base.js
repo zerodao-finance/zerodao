@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Proposer = void 0;
-const proto_1 = require("../proto");
+const protobuf_1 = require("@zerodao/protobuf");
 const ethers_1 = require("ethers");
 const lodash_1 = __importDefault(require("lodash"));
 function Proposer() {
     this.peers = [];
     this.hash = undefined;
     this.PENALTY = -1.125;
-    this.protocol = proto_1.protocol;
+    this.protocol = protobuf_1.protocol;
 }
 exports.Proposer = Proposer;
 Proposer.prototype._hash = function () {
-    let buf = this.protocol.ProposerProposer.encode({ peers: this.peers });
+    let buf = this.protocol.Proposer.encode({ peers: this.peers });
     this.hash = ethers_1.ethers.utils.keccak256(buf);
 };
 Proposer.prototype.initialize = function (peers, hash) {

@@ -11,8 +11,11 @@ export declare class TransactionEngine {
         messages: string[];
     }>;
     runTransaction(tx: any): Promise<void>;
+    checkTxSync(tBuf: Buffer): Promise<Error[] | {
+        Code: number;
+        value: Buffer;
+    }[]>;
     validateTransaction(tx: any): Promise<void>;
 }
-export declare function checkTx(tBuf: Buffer): Promise<void>;
 export declare const keccak256: (...msg: Uint8Array[]) => Uint8Array;
 export declare const concat: (uint8Arrays: Uint8Array[]) => Uint8Array;

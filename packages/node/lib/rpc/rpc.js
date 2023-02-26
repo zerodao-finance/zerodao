@@ -41,9 +41,9 @@ class RPC extends node_events_1.EventEmitter {
         logger_1.logger.info("server stopped...");
     }
     wrapServiceMethod(methodName, proxy) {
-        return (call, callback) => {
+        return async (call, callback) => {
             this.emit(methodName, call.request);
-            proxy[methodName](call, callback);
+            await proxy[methodName](call, callback);
         };
     }
     handler(method, func) {
@@ -62,17 +62,4 @@ RPC.ServiceCallbackWrapper = (returnMsg) => {
         return returnMsg;
     };
 };
-const proxyAppTest = {
-    checkTxSync: function (tx) {
-        return [{ Code: 1, value: "something" }, null];
-    }
-};
-(async () => {
-    // let server = RPC.init();
-    // let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
-    // let reactor = new MempoolReactor(mp);
-    // server.addService(reactor)
-    // server.start({ port: 50051 });
-    // let unsubscribe = server.handler("zero_sendTransaction", (message) => logger.info('transaction recieved via gRPC'));
-});
 //# sourceMappingURL=rpc.js.map

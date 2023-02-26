@@ -1,6 +1,5 @@
 import { Level } from "level";
-import { Block } from "../types"
-import { protocol } from "../proto";
+import { protocol } from "@zerodao/protobuf";
 
 export class BlockStore {
   private _base: number = 0;
@@ -20,7 +19,7 @@ export class BlockStore {
     return this._height;
   }
 
-  async saveBlock(block: Block, seenCommit) {
+  async saveBlock(block: any, seenCommit) {
     this.blockType = protocol.lookupType("Block");
     await this._db.put(block.Header.Height.toString(), await this.blockType.encode(block));
   }

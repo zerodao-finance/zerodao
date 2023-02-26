@@ -25,7 +25,7 @@ export type Mempool = {
   config: MempoolConfig;
   proxy: any;
   sketch: any;
-  
+
   //constructor
   new(height: number, proxyApp: any, config: MempoolConfig): Mempool;
 
@@ -85,7 +85,7 @@ Mempool.prototype.reapMax = function (max?: number) {
 
 
 // check transaction function
-Mempool.prototype.checkTx = function (tx: any) {
+Mempool.prototype.checkTx = async function (tx: any) {
   tx = protocol.Transaction.encode(tx).finish()
   var hash = ethers.utils.keccak256(tx);
   var time = Date.now().toString();
@@ -93,7 +93,7 @@ Mempool.prototype.checkTx = function (tx: any) {
   if (tx.length > this.config.MAX_BYTES) {
     return [ null, new Error("transaction exceeds MAX_BYTES") ];
   }
-  
+
   if ( this.cache.has(hash) ) {
     if ( this.txs.has(hash) ) {
       // recheck the transaction
@@ -106,7 +106,7 @@ Mempool.prototype.checkTx = function (tx: any) {
   this.cache.add(hash);
 
   let wtx = new WrappedTx(tx, time, this.height); 
-  let [rsp, err] = this.proxy.checkTxSync(tx);
+  let [rsp, err] = await this.proxy.checkTxSync(tx);
 
   if (err) {
     return [ null, err ]; 

@@ -57,7 +57,7 @@ Mempool.prototype.reapMax = function (max) {
     return lodash_1.default.take(txs, max);
 };
 // check transaction function
-Mempool.prototype.checkTx = function (tx) {
+Mempool.prototype.checkTx = async function (tx) {
     tx = protobuf_1.protocol.Transaction.encode(tx).finish();
     var hash = ethers_1.ethers.utils.keccak256(tx);
     var time = Date.now().toString();
@@ -74,7 +74,7 @@ Mempool.prototype.checkTx = function (tx) {
     }
     this.cache.add(hash);
     let wtx = new tx_1.WrappedTx(tx, time, this.height);
-    let [rsp, err] = this.proxy.checkTxSync(tx);
+    let [rsp, err] = await this.proxy.checkTxSync(tx);
     if (err) {
         return [null, err];
     }

@@ -13,7 +13,7 @@ export class Peer extends ZeroP2P {
 	wallet_key: any;
 	savePath: string = `${os.homedir()}/.zeronode/config/profiles/`
 
-
+	
 	static async fromConfig(path: string = 'default.config.json') {
 		var json = fs.readFileSync(path, 'utf8');
 

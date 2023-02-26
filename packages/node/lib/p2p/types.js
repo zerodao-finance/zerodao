@@ -9,15 +9,11 @@ const MessageChannel = {
     //Evidence
     EvidenceChannel: 56,
     //Block Sync
-    BlockchainChannel: 64
-    // State Sync 
-    ,
-    // State Sync 
+    BlockchainChannel: 64,
+    // State Sync
     ParamsChannel: 99,
-    SnapshotChannel: 96
-    //Mempool 
-    ,
-    //Mempool 
+    SnapshotChannel: 96,
+    //Mempool
     MempoolChannel: 48,
 };
 //# sourceMappingURL=types.js.map

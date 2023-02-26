@@ -5,12 +5,14 @@ import yargs from "yargs/yargs";
 // import { Account, Balance } from "@zerodao/protobuf";
 import ethers from "ethers"
 import { Account } from "../types/account";
+
 export class StateTrie {
   trie: PromisifiedTrie;
 
+
   constructor() {
     const db = new Level(
-      yargs().argv["db-path"] || path.join(process.env.HOME as string, ".zero")
+      yargs().argv["db-path"] || path.join(process.env.HOME as string, ".zeronode/config/db")
     );
 
     const trie = new SecureTrie(db);

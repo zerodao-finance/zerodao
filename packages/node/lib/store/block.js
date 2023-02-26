@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlockStore = void 0;
 const level_1 = require("level");
-const proto_1 = require("../proto");
+const protobuf_1 = require("@zerodao/protobuf");
 class BlockStore {
     constructor(path) {
         this._base = 0;
@@ -16,7 +16,7 @@ class BlockStore {
         return this._height;
     }
     async saveBlock(block, seenCommit) {
-        this.blockType = proto_1.protocol.lookupType("Block");
+        this.blockType = protobuf_1.protocol.lookupType("Block");
         await this._db.put(block.Header.Height.toString(), await this.blockType.encode(block));
     }
     async getBlock(height) {

@@ -26,8 +26,8 @@ MempoolReactor.prototype.initTxGossip = async function () {
     });
     this.canGossip = true;
 };
-MempoolReactor.prototype.zero_sendTransaction = function (call, callback) {
-    let [rsp, err] = this.proxy.checkTx(call.request);
+MempoolReactor.prototype.zero_sendTransaction = async function (call, callback) {
+    let [rsp, err] = await this.proxy.checkTx(call.request);
     let encoded_msg = protobuf_1.protocol.Transaction.encode(call.request).finish();
     if (this.canGossip) {
         logger_1.logger.info(`broadcasting message by: ${this.p2p.peerId} \n Message Gossipped: ${rsp}`);

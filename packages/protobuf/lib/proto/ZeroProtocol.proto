@@ -1,53 +1,61 @@
 syntax = "proto3";
 
-message Transaction {
-  enum Type {
-    TRANSFER = 0; // Transfer asset from one chain to another
-    SLASH = 1; // Remove darknode from peers
-  }
-  enum Chain {
-    ETHEREUM = 0;
-    MONERO = 1;
-  }
-  required Type type = 0;
-  required bytes to = 1; // Address to send to
-  required bytes data = 2;
-  required uint64 nonce = 3;
-  required bytes signature = 4;
-  optional Chain chain = 5; // Only used for TRANSFER types
+enum Type {
+  TRANSFER = 0;
+  STAKE = 1;
+  RELEASE = 2;
+}
+
+enum Chain {
+  ETHEREUM = 0;
+  MONERO = 1;
+  BITCOIN = 2;
 }
 
 message Transfer {
-  required bytes from = 0;
-  required bytes to = 1; // Address to send to
-  required bytes data = 2;
-  required uint64 nonce = 3;
-  required bytes signature = 4;
-  optional string chain = 5; // Only used for TRANSFER types
-  required uint64 amount = 6;
-  required string type = 7;
+  required Type type = 0;
+  optional Chain chain = 1; // Only used for TRANSFER/RELEASE types
+  required bytes from = 2;
+  required bytes to = 3; // Only used for TRANSFER types
+  required bytes data = 4;
+  required uint64 amount = 5;
+  required bytes signature = 6;
+  required uint64 nonce = 7;
 }
 
 message Stake {
-  required bytes from = 0;
-  required bytes data = 1;
-  required uint64 amount = 2;
-  required bytes signature = 3;
-  required uint64 nonce = 4;
+  required Type type = 0;
+  required bytes from = 1;
+  required bytes data = 2;
+  required uint64 amount = 3;
+  required bytes signature = 4;
+  required uint64 nonce = 5;
   required bytes asset = 6;
-  required string type = 7;
 }
 
 message Release {
-  required bytes from = 0;
-  required bytes data = 1;
-  required uint64 amount = 2;
-  required bytes signature = 3;
-  required string chain = 4;
-  required uint64 nonce = 5;
-  required bytes asset = 6;
-  required string type = 7;
+  optional Chain chain = 0; // Only used for RELEASE/TRANSFER types 
+  required Type type = 1;
+  required bytes from = 2;
+  required bytes data = 3;
+  required uint64 amount = 4;
+  required bytes signature = 5;
+  required uint64 nonce = 6;
+  required bytes asset = 7;
   required bytes destination = 8;
+}
+
+message Transaction {
+  required Type type = 0;
+  optional Chain chain = 1; // Only used for RELEASE/TRANSFER types 
+  optional bytes to = 2; // Only used for TRANSFER types
+  required bytes from = 3;
+  required bytes data = 4;
+  required uint64 amount = 5;
+  required bytes signature = 6;
+  required uint64 nonce = 7;
+  required bytes asset = 8;
+  required bytes destination = 9;
 }
 
 message Account {
@@ -151,8 +159,9 @@ message BalanceReply {
 }
 
 service RpcService{
-  rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
   rpc zero_getBalance( BalanceQuery ) returns (BalanceReply) {};
+  rpc zero_sendTransaction( Transaction ) returns (TransactionReply) {};
+  rpc zero_transferTransaction( Transfer ) returns (TransactionReply) {};
   rpc zero_stakeTransaction( Stake ) returns (TransactionReply) {}
   rpc zero_releaseTransaction( Release ) returns (TransactionReply) {}
 }

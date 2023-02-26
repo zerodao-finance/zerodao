@@ -22,21 +22,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.concat = exports.keccak256 = exports.checkTx = exports.TransactionEngine = void 0;
-const protobuf = __importStar(require("protobufjs"));
+exports.concat = exports.keccak256 = exports.TransactionEngine = void 0;
 const bip21 = __importStar(require("bip21"));
 const bitcoin_address_validation_1 = require("bitcoin-address-validation");
+const protobuf_1 = require("@zerodao/protobuf");
 const sha3_1 = require("@noble/hashes/sha3");
 const ethers_1 = require("ethers");
+const chalk_1 = __importDefault(require("chalk"));
+const lodash_1 = __importDefault(require("lodash"));
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
-const PROTO_PATH = __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
-const root = protobuf.loadSync(PROTO_PATH);
-__dirname + "@zerodao/protobuf";
-// const root = protocol;
-const transfer = root.lookupType("Transfer");
-const stake = root.lookupType("Stake");
-const release = root.lookupType("Release");
+const transfer = protobuf_1.protocol.Transfer;
+const stake = protobuf_1.protocol.Stake;
+const release = protobuf_1.protocol.Release;
 class TransactionEngine {
     constructor(trie) {
         this.trie = trie;
@@ -123,12 +124,22 @@ class TransactionEngine {
             }
         }
     }
+    // checkTx
+    async checkTxSync(tBuf) {
+        let _decoded = protobuf_1.protocol.Transaction.decode(tBuf);
+        let tx = protobuf_1.protocol.Transaction.toObject(_decoded, { longs: String, bytes: String, enums: String });
+        let res = await this.validateTransaction(tx);
+        if (lodash_1.default.isError(res))
+            return [null, new Error("Transaction will revert against state trie")];
+        return [{ Code: 1, value: tBuf }, null];
+    }
     // validates a tx, causes revert if fails
     async validateTransaction(tx) {
+        console.log(chalk_1.default.red("from logger => "), tx);
         const oldFromAccount = (await this.trie.getAccount(tx.from));
         if (tx.destination && tx.chain == "BTC") {
             if (bip21.validate(tx.destination)) {
-                if (tx.destination.startsWith("bc1t")) {
+                if (tx.destination.startsWith("bc1")) {
                     console.log("It's a taproot address");
                 }
                 else {
@@ -150,15 +161,6 @@ class TransactionEngine {
     }
 }
 exports.TransactionEngine = TransactionEngine;
-async function checkTx(tBuf) {
-    try {
-        transfer.decode(tBuf) || stake.decode(tBuf) || release.decode(tBuf);
-    }
-    catch (error) {
-        throw "Transaction not a valid protobuf type";
-    }
-}
-exports.checkTx = checkTx;
 const keccak256 = (...msg) => {
     return new Uint8Array((0, sha3_1.keccak_256)((0, exports.concat)(msg)));
 };

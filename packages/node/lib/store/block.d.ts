@@ -1,4 +1,3 @@
-import { Block } from "../types";
 export declare class BlockStore {
     private _base;
     private _height;
@@ -7,6 +6,6 @@ export declare class BlockStore {
     constructor(path: string);
     get base(): number;
     get height(): number;
-    saveBlock(block: Block, seenCommit: any): Promise<void>;
+    saveBlock(block: any, seenCommit: any): Promise<void>;
     getBlock(height: number): Promise<void>;
 }
