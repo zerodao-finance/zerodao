@@ -80,6 +80,12 @@ const config: any = {
       tags: ["local"],
       chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID),
     },
+    goerli: {
+      url: process.env.GOERLI_URL,
+      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      saveDeployments: true,
+      chainId: process.env.CHAIN_ID || 5
+    },
     hardhat: {
       live: false,
       saveDeployments: true,
