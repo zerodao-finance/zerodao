@@ -10,7 +10,6 @@ import "@openzeppelin/contracts-upgradeable-new/utils/math/SafeCastUpgradeable.s
 import "@openzeppelin/contracts-upgradeable-new/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable-new/proxy/utils/Initializable.sol";
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
-import "hardhat/console.sol";
 
 /**
  * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
@@ -233,7 +232,6 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
   //   uint256 amount
   // ) internal virtual override {
   //   super._afterTokenTransfer(from, to, amount);
-  //   console.log(delegates(from), delegates(to), amount);
   //   _moveVotingPower(delegates(from), delegates(to), amount);
   // }
 
