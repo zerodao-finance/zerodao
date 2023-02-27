@@ -314,9 +314,12 @@ abstract contract ERC20VotesUpgradeable is Initializable, IVotesUpgradeable, ERC
     uint256 prevEpochEnd,
     uint256 balance
   ) private view returns (uint256 newVotes, uint256 newBalance) {
+    uint256 prevVoteStr;
+    unchecked {
+      prevVoteStr = balance - delta;
+    }
     if (block.timestamp >= prevEpochEnd || prevEpochEnd.sub(block.timestamp) >= epochLength) {
-      if (balance == delta) newVotes = 0;
-      else newVotes = balance - delta;
+      newVotes = prevVoteStr;
     } else {
       newVotes = oldVotes;
     }
