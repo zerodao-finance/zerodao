@@ -4,13 +4,14 @@ pragma solidity >=0.8.7 <0.9.0;
 import { ERC20PermitUpgradeable } from "@openzeppelin/contracts-upgradeable-new/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
 import { ERC20CappedUpgradeable, ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable-new/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable-new/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-new/utils/cryptography/MerkleProof.sol";
+import { MerkleProofUpgradeable as MerkleProof } from "@openzeppelin/contracts-upgradeable-new/utils/cryptography/MerkleProofUpgradeable.sol";
 
 contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
   using MerkleProof for bytes32[];
 
   address public _sZero;
   bytes32 public airdropMerkleRoot;
+  mapping(address => bool) airdropClaimed;
 
   modifier onlysZeroOrOwner() {
     require(msg.sender == owner() || msg.sender == _sZero);
@@ -36,7 +37,7 @@ contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
   }
 
   // ===== Airdrop =====
-  function setAirdropMerkleRoot(bytes32 value) external onlysZeroOrOwner {
+  function setAirdropMerkleRoot(bytes32 value) external onlyOwner {
     airdropMerkleRoot = value;
   }
 
@@ -47,5 +48,17 @@ contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
     uint256 _amount
   ) internal view returns (bool) {
     return proof.verify(airdropMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
+  }
+
+  function mintAirdrop(
+    bytes32[] memory proof,
+    uint256 _index,
+    address _account,
+    uint256 _amount
+  ) public {
+    require(isAddressWhitelisted(proof, _index, _account, _amount), "address not part of airdrop");
+    require(!airdropClaimed[_account], "airdrop already claimed");
+    airdropClaimed[_account] = true;
+    _mint(_account, _amount);
   }
 }
