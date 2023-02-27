@@ -31,6 +31,7 @@ export interface ZEROInterface extends utils.Interface {
   functions: {
     "DOMAIN_SEPARATOR()": FunctionFragment;
     "_sZero()": FunctionFragment;
+    "airdropMerkleRoot()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -46,6 +47,7 @@ export interface ZEROInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setAirdropMerkleRoot(bytes32)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -57,6 +59,7 @@ export interface ZEROInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "DOMAIN_SEPARATOR"
       | "_sZero"
+      | "airdropMerkleRoot"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -72,6 +75,7 @@ export interface ZEROInterface extends utils.Interface {
       | "owner"
       | "permit"
       | "renounceOwnership"
+      | "setAirdropMerkleRoot"
       | "symbol"
       | "totalSupply"
       | "transfer"
@@ -84,6 +88,10 @@ export interface ZEROInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "_sZero", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "airdropMerkleRoot",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -143,6 +151,10 @@ export interface ZEROInterface extends utils.Interface {
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "setAirdropMerkleRoot",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -170,6 +182,10 @@ export interface ZEROInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "_sZero", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "airdropMerkleRoot",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -195,6 +211,10 @@ export interface ZEROInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAirdropMerkleRoot",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -299,6 +319,8 @@ export interface ZERO extends BaseContract {
 
     _sZero(overrides?: CallOverrides): Promise<[string]>;
 
+    airdropMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -375,6 +397,11 @@ export interface ZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setAirdropMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -401,6 +428,8 @@ export interface ZERO extends BaseContract {
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
   _sZero(overrides?: CallOverrides): Promise<string>;
+
+  airdropMerkleRoot(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -478,6 +507,11 @@ export interface ZERO extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setAirdropMerkleRoot(
+    value: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
@@ -504,6 +538,8 @@ export interface ZERO extends BaseContract {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
     _sZero(overrides?: CallOverrides): Promise<string>;
+
+    airdropMerkleRoot(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -577,6 +613,11 @@ export interface ZERO extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    setAirdropMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
@@ -640,6 +681,8 @@ export interface ZERO extends BaseContract {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
     _sZero(overrides?: CallOverrides): Promise<BigNumber>;
+
+    airdropMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -717,6 +760,11 @@ export interface ZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setAirdropMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
@@ -744,6 +792,8 @@ export interface ZERO extends BaseContract {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _sZero(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    airdropMerkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -818,6 +868,11 @@ export interface ZERO extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setAirdropMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

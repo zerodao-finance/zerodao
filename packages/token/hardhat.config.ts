@@ -82,7 +82,7 @@ const config: any = {
     },
     goerli: {
       url: `https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [process.env.PRIVATE_KEY],
       saveDeployments: true,
       chainId: 5
     },
