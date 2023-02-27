@@ -10,7 +10,8 @@
     "node:ethereum:dev": "TEST=1 CHAIN_ID=31337 yarn node:ethereum",
     "test": "CHAIN=ETHEREUM hardhat test",
     "compile": "CHAIN=ETHEREUM hardhat compile",
-    "deploy:goerli:nft": "CHAIN=ETHEREUM CHAIN_ID=5 NFT_ONLY=1 hardhat --network goerli deploy"
+    "deploy:goerli:nft": "CHAIN=ETHEREUM CHAIN_ID=5 NFT_ONLY=1 hardhat --network goerli deploy",
+    "deploy:goerli:token": "CHAIN=ETHEREUM CHAIN_ID=5 TOKEN_ONLY=1 hardhat --network goerli deploy"
   },
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",

@@ -4,7 +4,7 @@ import { ZERO } from "../typechain-types";
 import { ethers as _ethers } from "ethers";
 
 const deploy: DeployFunction = async function (hre) {
-  if(process.env.NFT_ONLY) return;
+  if(process.env.NFT_ONLY && !process.env.TOKEN_ONLY) return;
 
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
