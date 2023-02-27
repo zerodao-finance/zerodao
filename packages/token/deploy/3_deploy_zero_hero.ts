@@ -36,8 +36,11 @@ const deploy: DeployFunction = async (hre) => {
   const merkleTree = useMerkleGenerator(merkleInput);
   console.log(merkleTree);
   await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
-  console.log('---- ZHERO Merkle Tree Created ----');
   await zeroHero.setPresaleMerkleRoot(merkleTree.merkleRoot);
+  console.log('---- ZHERO Merkle Tree Created ----');
+
+  zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
+  console.log("\n---- SET METADATA URI ----")
   
   if(process.env.PRIVATE_MINT) {
     await zeroHero.startPrivateMint();
@@ -47,11 +50,6 @@ const deploy: DeployFunction = async (hre) => {
   if(process.env.PUBLIC_MINT) {
     await zeroHero.startPublicMint();
     console.log("\n---- PUBLIC MINT STARTED ----")
-  }
-
-  if(process.env.PUBLIC_MINT || process.env.PRIVATE_MINT) {
-    zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
-    console.log("\n---- SET METADATA URI ----")
   }
 };
 
