@@ -321,7 +321,8 @@ describe("sZERO", () => {
       await sZero.connect(signer).enterStaking(ethers.utils.parseEther("5000"));
       await time.increase((await zerofrost.epochLength()).div(2));
       console.log(await sZero.getVotes(multisig));
-      await sZero.delegate(sig.address);
+      await expect(sZero.connect(signer).delegate(sig.address)).to.be.reverted;
+      await time.increase((await zerofrost.epochLength()).div(2));
       console.log(await sZero.getVotes(multisig));
     });
   });
