@@ -7,7 +7,7 @@ import fs from 'fs';
 import { useMerkleGenerator } from "../merkle/use-merkle";
 
 const deploy: DeployFunction = async (hre) => {
-  if(!process.env.TEST) return;
+  if(!process.env.TEST || process.env.NFT_ONLY) return;
   
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
