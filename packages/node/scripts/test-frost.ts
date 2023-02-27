@@ -1,19 +1,18 @@
 import bitcore from 'bitcore-lib';
 
-export function getTxHash(utxo, destination, amount, gateway) {
 // Create inputs
 const tx = new bitcore.Transaction();
 
-tx.from(utxo);
+tx.from(/*UTXO*/);
 
 // Create outputs
-tx.to(destination, amount);
-tx.change(gateway);
+tx.to(/*destination, amount*/);
+tx.change(/*Original UTXO Address*/);
 
 // Sign transaction, pass hash of TX to FROST
 const hash = tx.getHash()
-return hash;
+const privateKey = new bitcore.PrivateKey();
+tx.sign(privateKey);
 
 // Print transaction
 console.log(tx.toString());
-}
