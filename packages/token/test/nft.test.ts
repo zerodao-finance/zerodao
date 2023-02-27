@@ -115,7 +115,7 @@ describe("ZeroHeroNFT - Private Mint", async function () {
       .privateMint(
         whitelistClaims[buyer1.address].index,
         buyer2.address,
-        ethers.BigNumber.from("1"),
+        whitelistClaims[buyer1.address].amount,
         whitelistClaims[buyer1.address].proof,
         amount,
         { value: ethers.utils.parseEther("999") }
@@ -132,7 +132,7 @@ describe("ZeroHeroNFT - Private Mint", async function () {
       .privateMint(
         whitelistClaims[buyer1.address].index,
         buyer1.address,
-        ethers.BigNumber.from("1"),
+        whitelistClaims[buyer1.address].amount,
         whitelistClaims[buyer1.address].proof,
         amount,
         { value: ethers.utils.parseEther((NFT_COST).toString()) }
@@ -148,7 +148,7 @@ describe("ZeroHeroNFT - Private Mint", async function () {
       .privateMint(
         whitelistClaims[buyer1.address].index,
         buyer1.address,
-        ethers.BigNumber.from("1"),
+        whitelistClaims[buyer1.address].amount,
         whitelistClaims[buyer1.address].proof,
         amount,
         { value: ethers.utils.parseEther("999") }
@@ -164,7 +164,7 @@ describe("ZeroHeroNFT - Private Mint", async function () {
       .privateMint(
         whitelistClaims[buyer1.address].index,
         buyer1.address,
-        ethers.BigNumber.from("1"),
+        whitelistClaims[buyer1.address].amount,
         whitelistClaims[buyer1.address].proof,
         amount,
         { value: ethers.utils.parseEther("999") }
