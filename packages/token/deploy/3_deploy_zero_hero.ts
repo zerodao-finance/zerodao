@@ -8,9 +8,7 @@ import fs from 'fs';
 
 export const ZHERO_META_CID = 'Qmeba5aAeUQeGMkxRYgh2H4Xt9ySXsy74KX2W3vN5to8fh';
 
-const deploy: DeployFunction = async (hre) => {
-  if(!process.env.TEST) return;
-  
+const deploy: DeployFunction = async (hre) => {  
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
   //@ts-ignore
@@ -30,14 +28,12 @@ const deploy: DeployFunction = async (hre) => {
   console.log("Address:", zeroHero.address);
 
   // Merkle tree creation
-  console.log('\n\n---- ZHERO Merkle Tree Started ----');
   const merkleDir = path.join(__dirname, '..', 'merkle', process.env.TEST ? 'localhost' : 'mainnet');
   const merkleInput = require(path.join(merkleDir, 'zhero-input'));
   const merkleTree = useMerkleGenerator(merkleInput);
-  console.log(merkleTree);
   await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
   await zeroHero.setPresaleMerkleRoot(merkleTree.merkleRoot);
-  console.log('---- ZHERO Merkle Tree Created ----');
+  console.log('\n---- ZHERO MERKLE TREE CONFIGURED ----');
 
   zeroHero.setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
   console.log("\n---- SET METADATA URI ----")
