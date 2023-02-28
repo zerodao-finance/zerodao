@@ -8,7 +8,7 @@ import { MerkleProofUpgradeable as MerkleProof } from "@openzeppelin/contracts-u
 
 contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
   using MerkleProof for bytes32[];
-
+  address constant multisig = 0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC;
   address public _sZero;
   bytes32 public airdropMerkleRoot;
   mapping(address => bool) airdropClaimed;
@@ -50,15 +50,14 @@ contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
     return proof.verify(airdropMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
   }
 
-  function mintAirdrop(
+  function redeemAirdrop(
     bytes32[] memory proof,
     uint256 _index,
-    address _account,
     uint256 _amount
   ) public {
-    require(isAddressWhitelisted(proof, _index, _account, _amount), "address not part of airdrop");
-    require(!airdropClaimed[_account], "airdrop already claimed");
-    airdropClaimed[_account] = true;
-    _mint(_account, _amount);
+    require(isAddressWhitelisted(proof, _index, msg.sender, _amount), "address not part of airdrop");
+    require(!airdropClaimed[msg.sender], "airdrop already claimed");
+    airdropClaimed[msg.sender] = true;
+    _transfer(multisig, msg.sender, _amount);
   }
 }

@@ -80,12 +80,12 @@ const config: any = {
       tags: ["local"],
       chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID),
     },
-    goerli: {
-      url: `https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`,
-      accounts: [process.env.PRIVATE_KEY],
-      saveDeployments: true,
-      chainId: 5
-    },
+    // goerli: {
+    //   url: `https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`,
+    //   accounts: [process.env.PRIVATE_KEY],
+    //   saveDeployments: true,
+    //   chainId: 5
+    // },
     hardhat: {
       live: false,
       saveDeployments: true,

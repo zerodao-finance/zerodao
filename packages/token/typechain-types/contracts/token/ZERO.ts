@@ -42,11 +42,11 @@ export interface ZEROInterface extends utils.Interface {
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize()": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
-    "mintAirdrop(bytes32[],uint256,address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "redeemAirdrop(bytes32[],uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setAirdropMerkleRoot(bytes32)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -71,11 +71,11 @@ export interface ZEROInterface extends utils.Interface {
       | "increaseAllowance"
       | "initialize"
       | "mint"
-      | "mintAirdrop"
       | "name"
       | "nonces"
       | "owner"
       | "permit"
+      | "redeemAirdrop"
       | "renounceOwnership"
       | "setAirdropMerkleRoot"
       | "symbol"
@@ -131,15 +131,6 @@ export interface ZEROInterface extends utils.Interface {
     functionFragment: "mint",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "mintAirdrop",
-    values: [
-      PromiseOrValue<BytesLike>[],
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "nonces",
@@ -156,6 +147,14 @@ export interface ZEROInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemAirdrop",
+    values: [
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
@@ -216,14 +215,14 @@ export interface ZEROInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "mintAirdrop",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemAirdrop",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -388,14 +387,6 @@ export interface ZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    mintAirdrop(
-      proof: PromiseOrValue<BytesLike>[],
-      _index: PromiseOrValue<BigNumberish>,
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nonces(
@@ -413,6 +404,13 @@ export interface ZERO extends BaseContract {
       v: PromiseOrValue<BigNumberish>,
       r: PromiseOrValue<BytesLike>,
       s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    redeemAirdrop(
+      proof: PromiseOrValue<BytesLike>[],
+      _index: PromiseOrValue<BigNumberish>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -506,14 +504,6 @@ export interface ZERO extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  mintAirdrop(
-    proof: PromiseOrValue<BytesLike>[],
-    _index: PromiseOrValue<BigNumberish>,
-    _account: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   nonces(
@@ -531,6 +521,13 @@ export interface ZERO extends BaseContract {
     v: PromiseOrValue<BigNumberish>,
     r: PromiseOrValue<BytesLike>,
     s: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  redeemAirdrop(
+    proof: PromiseOrValue<BytesLike>[],
+    _index: PromiseOrValue<BigNumberish>,
+    _amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -622,14 +619,6 @@ export interface ZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    mintAirdrop(
-      proof: PromiseOrValue<BytesLike>[],
-      _index: PromiseOrValue<BigNumberish>,
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
     nonces(
@@ -647,6 +636,13 @@ export interface ZERO extends BaseContract {
       v: PromiseOrValue<BigNumberish>,
       r: PromiseOrValue<BytesLike>,
       s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    redeemAirdrop(
+      proof: PromiseOrValue<BytesLike>[],
+      _index: PromiseOrValue<BigNumberish>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -775,14 +771,6 @@ export interface ZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    mintAirdrop(
-      proof: PromiseOrValue<BytesLike>[],
-      _index: PromiseOrValue<BigNumberish>,
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nonces(
@@ -800,6 +788,13 @@ export interface ZERO extends BaseContract {
       v: PromiseOrValue<BigNumberish>,
       r: PromiseOrValue<BytesLike>,
       s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    redeemAirdrop(
+      proof: PromiseOrValue<BytesLike>[],
+      _index: PromiseOrValue<BigNumberish>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -894,14 +889,6 @@ export interface ZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    mintAirdrop(
-      proof: PromiseOrValue<BytesLike>[],
-      _index: PromiseOrValue<BigNumberish>,
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nonces(
@@ -919,6 +906,13 @@ export interface ZERO extends BaseContract {
       v: PromiseOrValue<BigNumberish>,
       r: PromiseOrValue<BytesLike>,
       s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    redeemAirdrop(
+      proof: PromiseOrValue<BytesLike>[],
+      _index: PromiseOrValue<BigNumberish>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

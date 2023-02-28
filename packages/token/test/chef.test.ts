@@ -11,6 +11,7 @@ import {
 } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { rmSync } from "fs";
+import { useMerkleGenerator } from "../merkle/use-merkle";
 //@ts-ignore
 const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
 //@ts-ignore
@@ -257,7 +258,6 @@ describe("sZERO", () => {
         (await ethers.getContractFactory("ZeroGovernor")).interface,
         sig
       ) as ZeroGovernor;
-      await zero.transferOwnership(gov.address);
     });
     it("should test the deploy script and check if governance works", async () => {
       expect(await zero.balanceOf(multisig)).to.be.equal(
@@ -270,6 +270,7 @@ describe("sZERO", () => {
         value: ethers.utils.parseEther("2"),
       });
       const signer = await ethers.getSigner(multisig);
+      await zero.connect(signer).transferOwnership(gov.address);
       await zero
         .connect(signer)
         .approve(sZero.address, ethers.utils.parseEther("10000000"));
@@ -304,6 +305,44 @@ describe("sZERO", () => {
       await sZero.connect(signer).delegate(multisig);
       expect(await sZero.getVotes(sig.address)).to.equal(0);
     });
+    it("should test merkle drop", async () => {
+      const [sig1, sig2] = await ethers.getSigners();
+      const tree = useMerkleGenerator({
+        decimals: 18,
+        airdrop: {
+          [sig1.address]: ethers.utils.parseEther("5000").toString(),
+          [sig2.address]: ethers.utils.parseEther("5000").toString(),
+        },
+      });
+
+      await impersonateAccount(multisig);
+      (await ethers.getSigners())[0].sendTransaction({
+        to: multisig,
+        value: ethers.utils.parseEther("2"),
+      });
+      const signer = await ethers.getSigner(multisig);
+      await zero.connect(signer).setAirdropMerkleRoot(tree.merkleRoot);
+      let tx = zero
+        .connect(sig1)
+        .redeemAirdrop(
+          tree.claims[sig1.address].proof,
+          tree.claims[sig1.address].index,
+          tree.claims[sig1.address].amount
+        );
+      expect(tx)
+        .to.emit(zero, "Transfer")
+        .withArgs(multisig, sig1.address, ethers.utils.parseEther("5000"));
+      tx = zero
+        .connect(sig2)
+        .redeemAirdrop(
+          tree.claims[sig2.address].proof,
+          tree.claims[sig2.address].index,
+          tree.claims[sig2.address].amount
+        );
+      expect(tx)
+        .to.emit(zero, "Transfer")
+        .withArgs(multisig, sig2.address, ethers.utils.parseEther("5000"));
+    });
     it("should test governance and if the votes revert when they should", async () => {
       expect(await zero.balanceOf(multisig)).to.be.equal(
         ethers.utils.parseEther((88e6).toString())
@@ -315,6 +354,7 @@ describe("sZERO", () => {
         value: ethers.utils.parseEther("2"),
       });
       const signer = await ethers.getSigner(multisig);
+      await zero.connect(signer).transferOwnership(gov.address);
       await zero
         .connect(signer)
         .approve(sZero.address, ethers.utils.parseEther("10000000"));

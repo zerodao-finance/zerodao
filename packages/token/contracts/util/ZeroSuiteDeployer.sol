@@ -25,7 +25,7 @@ contract ZeroSuiteDeployer {
     address zerofrost = address(
       new TransparentUpgradeableProxy(logic, proxyadmin, abi.encodeWithSelector(ZEROFROST.initialize.selector))
     );
-    ZEROFROST(zerofrost).transferOwnership(msg.sender);
+    ZEROFROST(zerofrost).transferOwnership(multisig);
     emit Deployment(zerofrost);
 
     logic = address(new sZERO());
@@ -36,7 +36,7 @@ contract ZeroSuiteDeployer {
         abi.encodeWithSelector(sZERO.initialize.selector, zero, zerofrost, multisig, (1 ether / 50000000), 0)
       )
     );
-    sZERO(szero).transferOwnership(msg.sender);
+    sZERO(szero).transferOwnership(multisig);
     emit Deployment(szero);
 
     logic = address(new ZeroGovernor());
@@ -52,7 +52,7 @@ contract ZeroSuiteDeployer {
     ZERO(zero).mint(multisig, 88000000 ether);
 
     ZERO(zero).changeSZero(szero);
-    ZERO(zero).transferOwnership(msg.sender);
+    ZERO(zero).transferOwnership(multisig);
     selfdestruct(payable(msg.sender));
   }
 }
