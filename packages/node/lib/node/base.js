@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -52,39 +61,41 @@ class Node extends events_1.EventEmitter {
         this.rpc.addService(this.mempoolReactor);
         logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> mempool & reactor created...`));
     }
-    async startNode(height, port) {
-        // start application layer
-        this.initializeApplicationLayer();
-        // start mempool and connect mempool service to rpc
-        await new Promise((resolve) => {
-            this.initializeMempoolAndReactor(height, { MAX_BYTES: 10000 });
-            setTimeout(resolve, 2000);
-            logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> mempool & reactor initialized`));
-        });
-        // start libp2p
-        await new Promise((resolve) => {
-            this.peer.start();
-            this.rpc.start({ address: "0.0.0.0", port: port });
-            setTimeout(resolve, 2000);
-            logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> started rpc listening on 0.0.0.0:${port}`));
-            logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> started libp2p module...`));
-        });
-        // start transaction gossip from mempool reactor
-        await new Promise(async (resolve) => {
-            await this.mempoolReactor.initTxGossip();
-            setTimeout(resolve, 2000);
-            logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> Peer transaction gossip started...`));
+    startNode(height, port) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // start application layer
+            this.initializeApplicationLayer();
+            // start mempool and connect mempool service to rpc
+            yield new Promise((resolve) => {
+                this.initializeMempoolAndReactor(height, { MAX_BYTES: 10000 });
+                setTimeout(resolve, 2000);
+                logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> mempool & reactor initialized`));
+            });
+            // start libp2p
+            yield new Promise((resolve) => {
+                this.peer.start();
+                this.rpc.start({ address: "0.0.0.0", port: port });
+                setTimeout(resolve, 2000);
+                logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> started rpc listening on 0.0.0.0:${port}`));
+                logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> started libp2p module...`));
+            });
+            // start transaction gossip from mempool reactor
+            yield new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                yield this.mempoolReactor.initTxGossip();
+                setTimeout(resolve, 2000);
+                logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> Peer transaction gossip started...`));
+            }));
         });
     }
 }
-(async () => {
-    await new Promise(async (resolve) => {
-        let node_1 = Node.initNode({ peer: await p2p_1.Peer.fromMultiaddr("mainnet", "first") });
-        let node_2 = Node.initNode({ peer: await p2p_1.Peer.fromMultiaddr("mainnet", "second") });
-        await node_2.startNode(0, '50052');
-        await node_1.startNode(0, '50051');
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+        let node_1 = Node.initNode({ peer: yield p2p_1.Peer.fromMultiaddr("mainnet", "first") });
+        let node_2 = Node.initNode({ peer: yield p2p_1.Peer.fromMultiaddr("mainnet", "second") });
+        yield node_2.startNode(0, '50052');
+        yield node_1.startNode(0, '50051');
         setTimeout(resolve, 2000);
-    });
+    }));
     logger_1.logger.info("ready to go...");
-})();
+}))();
 //# sourceMappingURL=base.js.map

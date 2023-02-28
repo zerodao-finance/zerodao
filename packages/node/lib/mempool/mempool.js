@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -57,30 +66,32 @@ Mempool.prototype.reapMax = function (max) {
     return lodash_1.default.take(txs, max);
 };
 // check transaction function
-Mempool.prototype.checkTx = async function (tx) {
-    tx = protobuf_1.protocol.Transaction.encode(tx).finish();
-    var hash = ethers_1.ethers.utils.keccak256(tx);
-    var time = Date.now().toString();
-    if (tx.length > this.config.MAX_BYTES) {
-        return [null, new Error("transaction exceeds MAX_BYTES")];
-    }
-    if (this.cache.has(hash)) {
-        if (this.txs.has(hash)) {
-            // recheck the transaction
-            // if invalid remove from the pool
-            // leave in the cache
+Mempool.prototype.checkTx = function (tx) {
+    return __awaiter(this, void 0, void 0, function* () {
+        tx = protobuf_1.protocol.Transaction.encode(tx).finish();
+        var hash = ethers_1.ethers.utils.keccak256(tx);
+        var time = Date.now().toString();
+        if (tx.length > this.config.MAX_BYTES) {
+            return [null, new Error("transaction exceeds MAX_BYTES")];
         }
-        return [null, new Error("transaction exists in cache")];
-    }
-    this.cache.add(hash);
-    let wtx = new tx_1.WrappedTx(tx, time, this.height);
-    let [rsp, err] = await this.proxy.checkTxSync(tx);
-    if (err) {
-        return [null, err];
-    }
-    ;
-    this.addTx(wtx, rsp);
-    return [{ status: "SUCCESS" }, null];
+        if (this.cache.has(hash)) {
+            if (this.txs.has(hash)) {
+                // recheck the transaction
+                // if invalid remove from the pool
+                // leave in the cache
+            }
+            return [null, new Error("transaction exists in cache")];
+        }
+        this.cache.add(hash);
+        let wtx = new tx_1.WrappedTx(tx, time, this.height);
+        let [rsp, err] = yield this.proxy.checkTxSync(tx);
+        if (err) {
+            return [null, err];
+        }
+        ;
+        this.addTx(wtx, rsp);
+        return [{ status: "SUCCESS" }, null];
+    });
 };
 Mempool.prototype.addTx = function (wtx, checkResponse) {
     if (checkResponse.Code != abci.CodeTypeOk) {
@@ -95,14 +106,18 @@ Mempool.prototype.merge = function (otherMap) {
     // merge other pool into this pool
     // use lodash merge()
 };
-Mempool.prototype.serialize = async function () {
-    this.sketch = await sketch_1.Sketch.fromTxs([...this.txs.values()]);
-    console.log(this.sketch);
-    return this.sketch.serialize();
+Mempool.prototype.serialize = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        this.sketch = yield sketch_1.Sketch.fromTxs([...this.txs.values()]);
+        console.log(this.sketch);
+        return this.sketch.serialize();
+    });
 };
-Mempool.prototype.resolveSketch = async function (sketch) {
-    // = await Sketch.fromTxs([...this.txs.values()]);
-    return await this.sketch.calculateDifferences(sketch);
+Mempool.prototype.resolveSketch = function (sketch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // = await Sketch.fromTxs([...this.txs.values()]);
+        return yield this.sketch.calculateDifferences(sketch);
+    });
 };
 // testing stuff >>>>>>>>>>>>>>
 function startInjesting(mp) {
@@ -125,17 +140,17 @@ function logdata(mp) {
     setInterval((mp) => {
         console.log(`reaping transactions`, mp.reapMax());
     }, 1000, mp);
-    setInterval(async (mp) => {
-        console.log(`creating sketch`, await mp.serialize());
-    }, 1000, mp);
+    setInterval((mp) => __awaiter(this, void 0, void 0, function* () {
+        console.log(`creating sketch`, yield mp.serialize());
+    }), 1000, mp);
 }
-(async () => {
+(() => __awaiter(void 0, void 0, void 0, function* () {
     let mp = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
     let mp2 = new Mempool(0, proxyAppTest, { MAX_BYTES: 10000 });
-    await Promise.all([fillMock(10, mp),
+    yield Promise.all([fillMock(10, mp),
         fillMock(19, mp2)]).then();
-    let mp_buffer = await mp.serialize();
-    let mp2_buffer = await mp2.serialize();
-    console.log(await mp.resolveSketch(mp2_buffer));
-});
+    let mp_buffer = yield mp.serialize();
+    let mp2_buffer = yield mp2.serialize();
+    console.log(yield mp.resolveSketch(mp2_buffer));
+}));
 //# sourceMappingURL=mempool.js.map

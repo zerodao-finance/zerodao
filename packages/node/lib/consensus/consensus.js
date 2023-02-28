@@ -192,10 +192,11 @@ class Consensus extends EventEmitter {
      * ```
      */
     L22(value) {
+        var _a;
         logger.debug("L22: <PROPOSAL, height, round, value, -1>");
         // <PROPOSAL, height, round, *, -1> from PROPOSER
         let rule = [PROPOSE, this.height, this.round, value, -1];
-        if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
+        if (!this.hasLogs(rule, ((_a = this.messageLog) === null || _a === void 0 ? void 0 : _a[this.proposer()]) || {}))
             return;
         if (this.step !== PROPOSE)
             return;
@@ -217,10 +218,11 @@ class Consensus extends EventEmitter {
      * ```
      */
     L28() {
+        var _a;
         logger.debug("L28: <PROPOSAL, height, round, value, validRound>");
         // <PROPOSAL, height, round, value, validRound> from PROPOSER
         let rule = [PROPOSE, this.height, this.round, this.value, this.validRound];
-        if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
+        if (!this.hasLogs(rule, ((_a = this.messageLog) === null || _a === void 0 ? void 0 : _a[this.proposer()]) || {}))
             return;
         // 2f + 1 <PREVOTE, height, validRound, id(value)>
         rule = [PREVOTE, this.height, this.validRound, this.id(this.value)];
@@ -245,8 +247,9 @@ class Consensus extends EventEmitter {
      * ```
      */
     L34() {
+        var _a, _b;
         logger.debug("L34: MAJORITY (2f + 1) HAVE <PREVOTE, height, round, *>");
-        if (this.messageLog?.L34?.[this.round] !== undefined ||
+        if (((_b = (_a = this.messageLog) === null || _a === void 0 ? void 0 : _a.L34) === null || _b === void 0 ? void 0 : _b[this.round]) !== undefined ||
             this.step !== PREVOTE)
             return;
         this.setLog(true, "L34", this.round);
@@ -272,12 +275,13 @@ class Consensus extends EventEmitter {
      * ```
      */
     L36() {
+        var _a, _b, _c;
         logger.debug("<PROPOSAL, height, round, value, *>");
-        if (this.messageLog?.L36?.[this.round] !== undefined)
+        if (((_b = (_a = this.messageLog) === null || _a === void 0 ? void 0 : _a.L36) === null || _b === void 0 ? void 0 : _b[this.round]) !== undefined)
             return;
         this.setLog(true, "L36", this.round);
         let rule = [PROPOSE, this.height, this.round, this.value, "*"];
-        if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
+        if (!this.hasLogs(rule, ((_c = this.messageLog) === null || _c === void 0 ? void 0 : _c[this.proposer()]) || {}))
             return;
         if (!(this.valid(this.value) && this.step >= PREVOTE))
             return;
@@ -324,8 +328,9 @@ class Consensus extends EventEmitter {
      * ```
      */
     L47() {
+        var _a, _b;
         logger.debug("L47: <2f + 1 <PRECOMMIT, height, round, *>");
-        if (this.messageLog?.L47?.[this.round] !== undefined)
+        if (((_b = (_a = this.messageLog) === null || _a === void 0 ? void 0 : _a.L47) === null || _b === void 0 ? void 0 : _b[this.round]) !== undefined)
             return;
         this.setLog(true, "L47", this.round);
         let rule = [PRECOMMIT, this.height, this.round, "*"];
@@ -347,14 +352,15 @@ class Consensus extends EventEmitter {
      *  ```
      */
     L49() {
+        var _a, _b;
         logger.info("L49: <PROPOSAL, height, round, value, *>");
         let rule = [PROPOSE, this.height, this.round, this.value, "*"];
-        if (!this.hasLogs(rule, this.messageLog?.[this.proposer()] || {}))
+        if (!this.hasLogs(rule, ((_a = this.messageLog) === null || _a === void 0 ? void 0 : _a[this.proposer()]) || {}))
             return logger.error(`<PROPOSE,${this.height},${this.round},${this.value},'*'> NOT DETECTED`);
         rule = [PRECOMMIT, this.height, this.round, this.id(this.value)];
         if (!this.sufficient(rule, 2 * this.f + 1))
             return logger.error(`MAJORITY (2f+1) <PRECOMMIT,${this.height},${this.round},${this.id(this.value)}> NOT DETECTED`);
-        if (this.decision?.[this.height] !== undefined)
+        if (((_b = this.decision) === null || _b === void 0 ? void 0 : _b[this.height]) !== undefined)
             return logger.error(`DECISION ALREADY EXISTS AT ${this.height}`);
         if (this.valid(this.value)) {
             this.decision[this.height] = this.value;
