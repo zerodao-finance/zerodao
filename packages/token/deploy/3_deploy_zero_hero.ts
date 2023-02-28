@@ -9,6 +9,8 @@ import fs from 'fs';
 export const ZHERO_META_CID = 'Qmeba5aAeUQeGMkxRYgh2H4Xt9ySXsy74KX2W3vN5to8fh';
 
 const deploy: DeployFunction = async (hre) => {  
+  if(!process.env.NFT_ONLY && process.env.TOKEN_ONLY) return;
+
   //@ts-ignore
   const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
   //@ts-ignore
