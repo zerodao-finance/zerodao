@@ -47,6 +47,7 @@ contract ZERO is OwnableUpgradeable, ERC20PermitUpgradeable {
     address _account,
     uint256 _amount
   ) internal view returns (bool) {
+    require(airdropMerkleRoot != bytes32(0), "merkle root not initialized");
     return proof.verify(airdropMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
   }
 

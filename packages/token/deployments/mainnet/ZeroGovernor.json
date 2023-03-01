@@ -1,0 +1,996 @@
+{
+  "address": "0xFfC26a1Dc749b086532D15E8e68790f8f1c45579",
+  "abi": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Empty",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Initialized",
+      "inputs": [
+        {
+          "type": "uint8",
+          "name": "version",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ProposalCanceled",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ProposalCreated",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId",
+          "indexed": false
+        },
+        {
+          "type": "address",
+          "name": "proposer",
+          "indexed": false
+        },
+        {
+          "type": "address[]",
+          "name": "targets",
+          "indexed": false
+        },
+        {
+          "type": "uint256[]",
+          "name": "values",
+          "indexed": false
+        },
+        {
+          "type": "string[]",
+          "name": "signatures",
+          "indexed": false
+        },
+        {
+          "type": "bytes[]",
+          "name": "calldatas",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "startBlock",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "endBlock",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "description",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ProposalExecuted",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ProposalThresholdSet",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "oldProposalThreshold",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "newProposalThreshold",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "QuorumNumeratorUpdated",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "oldQuorumNumerator",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "newQuorumNumerator",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "VoteCast",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "voter",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "proposalId",
+          "indexed": false
+        },
+        {
+          "type": "uint8",
+          "name": "support",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "weight",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "reason",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "VoteCastWithParams",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "voter",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "proposalId",
+          "indexed": false
+        },
+        {
+          "type": "uint8",
+          "name": "support",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "weight",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "reason",
+          "indexed": false
+        },
+        {
+          "type": "bytes",
+          "name": "params",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "VotingDelaySet",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "oldVotingDelay",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "newVotingDelay",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "VotingPeriodSet",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "oldVotingPeriod",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "newVotingPeriod",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "BALLOT_TYPEHASH",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "COUNTING_MODE",
+      "constant": true,
+      "stateMutability": "pure",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "EXTENDED_BALLOT_TYPEHASH",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "castVote",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "uint8",
+          "name": "support"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "castVoteBySig",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "uint8",
+          "name": "support"
+        },
+        {
+          "type": "uint8",
+          "name": "v"
+        },
+        {
+          "type": "bytes32",
+          "name": "r"
+        },
+        {
+          "type": "bytes32",
+          "name": "s"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "castVoteWithReason",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "uint8",
+          "name": "support"
+        },
+        {
+          "type": "string",
+          "name": "reason"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "castVoteWithReasonAndParams",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "uint8",
+          "name": "support"
+        },
+        {
+          "type": "string",
+          "name": "reason"
+        },
+        {
+          "type": "bytes",
+          "name": "params"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "castVoteWithReasonAndParamsBySig",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "uint8",
+          "name": "support"
+        },
+        {
+          "type": "string",
+          "name": "reason"
+        },
+        {
+          "type": "bytes",
+          "name": "params"
+        },
+        {
+          "type": "uint8",
+          "name": "v"
+        },
+        {
+          "type": "bytes32",
+          "name": "r"
+        },
+        {
+          "type": "bytes32",
+          "name": "s"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "execute",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [
+        {
+          "type": "address[]",
+          "name": "targets"
+        },
+        {
+          "type": "uint256[]",
+          "name": "values"
+        },
+        {
+          "type": "bytes[]",
+          "name": "calldatas"
+        },
+        {
+          "type": "bytes32",
+          "name": "descriptionHash"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getVotes",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        },
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getVotesWithParams",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        },
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        },
+        {
+          "type": "bytes",
+          "name": "params"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "hasVoted",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        },
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "hashProposal",
+      "constant": true,
+      "stateMutability": "pure",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address[]",
+          "name": "targets"
+        },
+        {
+          "type": "uint256[]",
+          "name": "values"
+        },
+        {
+          "type": "bytes[]",
+          "name": "calldatas"
+        },
+        {
+          "type": "bytes32",
+          "name": "descriptionHash"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "initialize",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_token"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "name",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "onERC1155BatchReceived",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address"
+        },
+        {
+          "type": "address"
+        },
+        {
+          "type": "uint256[]"
+        },
+        {
+          "type": "uint256[]"
+        },
+        {
+          "type": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bytes4"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "onERC1155Received",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address"
+        },
+        {
+          "type": "address"
+        },
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bytes4"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "onERC721Received",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address"
+        },
+        {
+          "type": "address"
+        },
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bytes4"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "proposalDeadline",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "proposalSnapshot",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "proposalThreshold",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "proposalVotes",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "againstVotes"
+        },
+        {
+          "type": "uint256",
+          "name": "forVotes"
+        },
+        {
+          "type": "uint256",
+          "name": "abstainVotes"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "propose",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address[]",
+          "name": "targets"
+        },
+        {
+          "type": "uint256[]",
+          "name": "values"
+        },
+        {
+          "type": "bytes[]",
+          "name": "calldatas"
+        },
+        {
+          "type": "string",
+          "name": "description"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "quorum",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "quorumDenominator",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "quorumNumerator",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "quorumNumerator",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "relay",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "target"
+        },
+        {
+          "type": "uint256",
+          "name": "value"
+        },
+        {
+          "type": "bytes",
+          "name": "data"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setProposalThreshold",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "newProposalThreshold"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setVotingDelay",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "newVotingDelay"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setVotingPeriod",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "newVotingPeriod"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "state",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "proposalId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint8"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "supportsInterface",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "bytes4",
+          "name": "interfaceId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "token",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "updateQuorumNumerator",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "newQuorumNumerator"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "version",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "votingDelay",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "votingPeriod",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "numDeployments": 1,
+  "implementation": "0xE95B8730F454D39a52F0039e72D05F85bF7Da06f"
+}

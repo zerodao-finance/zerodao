@@ -58,8 +58,8 @@ const ETHERSCAN_API_KEYS: any = {
 };
 
 const ETHERSCAN_API_KEY =
-  ETHERSCAN_API_KEYS[process.env.CHAIN || "ARBITRUM"] ||
-  ETHERSCAN_API_KEYS["ARBITRUM"];
+  ETHERSCAN_API_KEYS[process.env.CHAIN || "ETHEREUM"] ||
+  ETHERSCAN_API_KEYS["ETHEREUM"];
 
 const config: any = {
   defaultNetwork: "hardhat",
@@ -198,7 +198,9 @@ const config: any = {
     grep: process.env.GREP,
   },
   etherscan: {
-    apiKey: ETHERSCAN_API_KEY,
+    apiKey: {
+      mainnet: ETHERSCAN_API_KEYS.ETHEREUM,
+    },
   },
 };
 

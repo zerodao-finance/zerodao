@@ -10,7 +10,7 @@ import { ZeroGovernor } from "../governance/ZeroGovernor.sol";
 import { ZEROFROST } from "../zero/ZEROFROST.sol";
 
 contract ZeroSuiteDeployer {
-  event Deployment(address indexed proxy);
+  event Deployment(address indexed proxy, address impl);
   address constant proxyadmin = 0xFF727BDFa7608d7Fd12Cd2cDA1e7736ACbfCdB7B;
   address constant multisig = 0x5E9B37149b7d7611bD0Eb070194dDA78EB11EfdC;
 
@@ -19,14 +19,14 @@ contract ZeroSuiteDeployer {
     address zero = address(
       new TransparentUpgradeableProxy(logic, proxyadmin, abi.encodeWithSelector(ZERO.initialize.selector))
     );
-    emit Deployment(zero);
+    emit Deployment(zero, logic);
 
     logic = address(new ZEROFROST());
     address zerofrost = address(
       new TransparentUpgradeableProxy(logic, proxyadmin, abi.encodeWithSelector(ZEROFROST.initialize.selector))
     );
     ZEROFROST(zerofrost).transferOwnership(multisig);
-    emit Deployment(zerofrost);
+    emit Deployment(zerofrost, logic);
 
     logic = address(new sZERO());
     address szero = address(
@@ -37,7 +37,7 @@ contract ZeroSuiteDeployer {
       )
     );
     sZERO(szero).transferOwnership(multisig);
-    emit Deployment(szero);
+    emit Deployment(szero, logic);
 
     logic = address(new ZeroGovernor());
     address gov = address(
@@ -47,7 +47,7 @@ contract ZeroSuiteDeployer {
         abi.encodeWithSelector(ZeroGovernor.initialize.selector, szero)
       )
     );
-    emit Deployment(gov);
+    emit Deployment(gov, logic);
 
     ZERO(zero).mint(multisig, 88000000 ether);
 

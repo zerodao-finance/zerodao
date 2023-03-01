@@ -16,7 +16,7 @@ export interface ZeroSuiteDeployerInterface extends utils.Interface {
   functions: {};
 
   events: {
-    "Deployment(address)": EventFragment;
+    "Deployment(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Deployment"): EventFragment;
@@ -24,8 +24,12 @@ export interface ZeroSuiteDeployerInterface extends utils.Interface {
 
 export interface DeploymentEventObject {
   proxy: string;
+  impl: string;
 }
-export type DeploymentEvent = TypedEvent<[string], DeploymentEventObject>;
+export type DeploymentEvent = TypedEvent<
+  [string, string],
+  DeploymentEventObject
+>;
 
 export type DeploymentEventFilter = TypedEventFilter<DeploymentEvent>;
 
@@ -60,10 +64,14 @@ export interface ZeroSuiteDeployer extends BaseContract {
   callStatic: {};
 
   filters: {
-    "Deployment(address)"(
-      proxy?: PromiseOrValue<string> | null
+    "Deployment(address,address)"(
+      proxy?: PromiseOrValue<string> | null,
+      impl?: null
     ): DeploymentEventFilter;
-    Deployment(proxy?: PromiseOrValue<string> | null): DeploymentEventFilter;
+    Deployment(
+      proxy?: PromiseOrValue<string> | null,
+      impl?: null
+    ): DeploymentEventFilter;
   };
 
   estimateGas: {};
