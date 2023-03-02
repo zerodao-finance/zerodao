@@ -5,7 +5,6 @@ import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-preprocessor";
-import "@openzeppelin/hardhat-upgrades";
 import { readFileSync } from "fs";
 import { ethers } from "ethers";
 require("dotenv").config();
