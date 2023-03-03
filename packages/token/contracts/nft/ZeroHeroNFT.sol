@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-new/access/Ownable.sol";
 import "@openzeppelin/contracts-new/utils/Address.sol";
 import "@openzeppelin/contracts-new/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-new/utils/cryptography/MerkleProof.sol";
-import "hardhat/console.sol";
 
 error PrivateMintNotStarted();
 error PublicMintNotStarted();
@@ -50,6 +49,30 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     _;
   }
 
+  // ===== Utils =====
+  function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len;
+        while (_i != 0) {
+            k = k-1;
+            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[k] = b1;
+            _i /= 10;
+        }
+        return string(bstr);
+    }
+
+  // ===== Checks =====
   function isPresaleActive() external view returns (bool) {
     if (privateMintStarted || !publicMintStarted) return true;
     return false;
@@ -128,7 +151,7 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
     string memory currentBaseURI = _baseURI();
     return bytes(currentBaseURI).length > 0
-        ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension))
+        ? string(abi.encodePacked(currentBaseURI, uint2str(tokenId), baseExtension))
         : "";
   }
 
