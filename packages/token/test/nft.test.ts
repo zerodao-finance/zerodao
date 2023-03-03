@@ -7,6 +7,7 @@ import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
 import path from 'path';
 import fs from 'fs';
 import { useMerkleGenerator } from "../merkle/use-merkle";
+import { ZHERO_META_CID } from "../deploy/3_deploy_zero_hero";
 
 //@ts-ignore
 const ethers: typeof _ethers & HardhatEthersHelpers = hre.ethers;
@@ -105,6 +106,9 @@ describe("ZeroHeroNFT - Private Mint", async function () {
     const merkleTree = useMerkleGenerator(merkleInput);
     await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(merkleTree, null, 2));
     await contract.setPresaleMerkleRoot(merkleTree.merkleRoot);
+    
+    // Set Token URI
+    await contract.connect(owner).setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`);
   });
 
   it("Should not be able to mint if not on whitelist", async function () {
@@ -170,6 +174,21 @@ describe("ZeroHeroNFT - Private Mint", async function () {
         { value: ethers.utils.parseEther("999") }
       );
     await expect(tx).to.be.revertedWith("ExceedMaxPerWallet");
+  });
+
+  it("Should retrieve the correct URI with a .json extension", async function () {
+    const amount = 2;
+    const tx = await contract
+      .connect(buyer1)
+      .privateMint(
+        whitelistClaims[buyer1.address].index,
+        buyer1.address,
+        whitelistClaims[buyer1.address].amount,
+        whitelistClaims[buyer1.address].proof,
+        amount,
+        { value: ethers.utils.parseEther("999") }
+      );
+    expect(await contract.tokenURI(0)).to.equal(`ipfs://${ZHERO_META_CID}/0.json`)
   });
 });
 
