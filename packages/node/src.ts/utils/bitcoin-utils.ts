@@ -10,7 +10,7 @@ tx.from(utxo);
 tx.to(destination, amount);
 tx.change(gateway);
 
-// Sign transaction, pass hash of TX to FROST
+// pass hash of TX to FROST
 const hash = tx.getHash()
 return hash;
 
