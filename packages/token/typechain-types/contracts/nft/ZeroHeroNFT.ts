@@ -52,7 +52,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     "setMintPrice(uint256)": FunctionFragment;
     "setPresaleMaxItemsPerWallet(uint8)": FunctionFragment;
     "setPresaleMerkleRoot(bytes32)": FunctionFragment;
-    "setPresalePrice(uint256)": FunctionFragment;
+    "setmintPrice(uint256)": FunctionFragment;
     "startPrivateMint()": FunctionFragment;
     "startPublicMint()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
@@ -88,7 +88,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
       | "setMintPrice"
       | "setPresaleMaxItemsPerWallet"
       | "setPresaleMerkleRoot"
-      | "setPresalePrice"
+      | "setmintPrice"
       | "startPrivateMint"
       | "startPublicMint"
       | "supportsInterface"
@@ -198,7 +198,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setPresalePrice",
+    functionFragment: "setmintPrice",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -304,7 +304,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setPresalePrice",
+    functionFragment: "setmintPrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -545,7 +545,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setPresalePrice(
+    setmintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -695,7 +695,7 @@ export interface ZeroHeroNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setPresalePrice(
+  setmintPrice(
     value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -843,7 +843,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setPresalePrice(
+    setmintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1045,7 +1045,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setPresalePrice(
+    setmintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1196,7 +1196,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setPresalePrice(
+    setmintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

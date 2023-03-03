@@ -27,7 +27,6 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
   uint8 private presaleMaxItemsPerWallet = 5; 
 
-  uint256 private presalePrice = 0.3 ether; 
   uint256 private mintPrice = 0.3 ether; 
 
   string private baseTokenURI;
@@ -93,7 +92,7 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     bytes32[] memory proof,
     uint256 quantity
   ) external payable nonReentrant whenPrivateMint {
-    if (msg.value < presalePrice * quantity) revert InsufficientPayment();
+    if (msg.value < mintPrice * quantity) revert InsufficientPayment();
     if (totalSupply() + quantity > presaleSupply) revert ExceedSupply();
     if (_numberMinted(msg.sender) + quantity > presaleMaxItemsPerWallet) revert ExceedMaxPerWallet();
     if (!isAddressWhitelisted(proof, _index, _account, _amount)) revert NotInWhitelist();
@@ -168,8 +167,8 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     presaleMaxItemsPerWallet = value;
   }
 
-  function setPresalePrice(uint256 value) external onlyOwner {
-    presalePrice = value;
+  function setmintPrice(uint256 value) external onlyOwner {
+    mintPrice = value;
   }
 
   function setMintPrice(uint256 value) external onlyOwner {
