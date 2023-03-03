@@ -35,7 +35,7 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
   bytes32 public presaleMerkleRoot;
 
   // ===== Constructor =====
-  constructor() ERC721A("ZeroHeroNFT", "ZHERO") {}
+  constructor() ERC721A("Zero Hero", "ZHERO") {}
 
   // ===== Modifiers =====
   modifier whenPrivateMint() {
