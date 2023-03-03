@@ -32,6 +32,7 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
   uint256 private mintPrice = 0.3 ether; 
 
   string private baseTokenURI;
+  string public baseExtension = ".json";
 
   bytes32 public presaleMerkleRoot;
 
@@ -107,6 +108,28 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
   function setBaseTokenURI(string memory value) external onlyOwner {
     baseTokenURI = value;
+  }
+
+  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+    baseExtension = _newBaseExtension;
+  }
+
+  function tokenURI(uint256 tokenId)
+    public
+    view
+    virtual
+    override
+    returns (string memory)
+  {
+    require(
+      _exists(tokenId),
+      "ERC721Metadata: URI query for nonexistent token"
+    );
+
+    string memory currentBaseURI = _baseURI();
+    return bytes(currentBaseURI).length > 0
+        ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension))
+        : "";
   }
 
   // ===== Setters =====
