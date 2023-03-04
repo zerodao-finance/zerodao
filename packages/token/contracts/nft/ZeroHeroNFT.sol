@@ -42,12 +42,12 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
   // ===== Modifiers =====
   modifier whenPrivateMint() {
-    if (!privateMintStarted || publicMintStarted) revert PrivateMintNotStarted();
+    if (!privateMintStarted) revert PrivateMintNotStarted();
     _;
   }
 
   modifier whenWhitelistMint() {
-    if (!whitelistMintStarted || publicMintStarted) revert WhitelistMintNotStarted();
+    if (!whitelistMintStarted) revert WhitelistMintNotStarted();
     _;
   }
 
@@ -80,8 +80,13 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
   // ===== Checks =====
-  function isPresaleActive() external view returns (bool) {
-    if (privateMintStarted || !publicMintStarted) return true;
+  function isPrivateActive() external view returns (bool) {
+    if (privateMintStarted) return true;
+    return false;
+  }
+
+  function isWhitelistActive() external view returns (bool) {
+    if (whitelistMintStarted) return true;
     return false;
   }
 

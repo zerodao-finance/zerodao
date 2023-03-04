@@ -35,14 +35,14 @@ const deploy: DeployFunction = async (hre) => {
   // Private Merkle tree
   const privateMerkleInput = require(path.join(merkleDir, 'zhero-privatelist-input'));
   const privateMerkleTree = useMerkleGenerator(privateMerkleInput);
-  await fs.writeFileSync(path.join(merkleDir, 'zhero-privatelist.json'), JSON.stringify(privateMerkleTree, null, 2));
+  fs.writeFileSync(path.join(merkleDir, 'zhero-privatelist.json'), JSON.stringify(privateMerkleTree, null, 2));
   await zeroHero.setPrivateMerkleRoot(privateMerkleTree.merkleRoot);
   console.log('\n---- NFT PRIVATE MERKLE CONFIGURED ----');
 
   // Whitelist Merkle tree
   const whitelistMerkleInput = require(path.join(merkleDir, 'zhero-whitelist-input'));
   const whitelistMerkleTree = useMerkleGenerator(whitelistMerkleInput);
-  await fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(whitelistMerkleTree, null, 2));
+  fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(whitelistMerkleTree, null, 2));
   await zeroHero.setWhitelistMerkleRoot(whitelistMerkleTree.merkleRoot);
   console.log('\n---- NFT WHITELIST MERKLE CONFIGURED ----');
 
