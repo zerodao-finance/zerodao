@@ -38,6 +38,7 @@
     "it-pipe": "1.1.0",
     "level": "^8.0.0",
     "libminisketch-wasm": "https://github.com/zerodao-finance/libminisketch-wasm",
+    "frost-taproot-wasm": "git+https://github.com/zerodao-finance/frost-taproot-wasm/pkg",
     "lodash": "^4.17.21",
     "memory-level": "^1.0.0",
     "merkle-patricia-tree": "^4.2.4",
