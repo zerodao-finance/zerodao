@@ -73,15 +73,15 @@ class Node extends EventEmitter {
 		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> mempool & reactor created...`));
 	}
 
-	async startNode(height: number, port: string | number) {
+	async startNode({ height, port }: any) {
     // start application layer
     this.initializeApplicationLayer();
 
     // start mempool and connect mempool service to rpc
     await new Promise((resolve) => {
       this.initializeMempoolAndReactor(height, { MAX_BYTES: 10000 });
-      setTimeout(resolve, 2000);
-      logger.info(
+			setTimeout(resolve, 2000);
+			logger.info(
         chalk.magenta(
           `${chalk.green("Node Startup")}|=> mempool & reactor initialized`
         )
@@ -126,8 +126,8 @@ class Node extends EventEmitter {
 		let node_1 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "first") });
 		let node_2 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "second") });
 
-		await node_2.startNode(0, '50052');
-		await node_1.startNode(0, '50051');
+		await node_2.startNode({ height: 0, port: '50052' });
+		await node_1.startNode({ height: 0, port: '50051' });
 
 		setTimeout(resolve, 2000);
 	});

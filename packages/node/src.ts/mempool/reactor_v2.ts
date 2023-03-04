@@ -1,13 +1,16 @@
 import { Service } from "../rpc/service";
 import { Peer } from "../p2p";
+import { logger } from "../logger";
+import { protocol } from "@zerodao/protobuf";
 
 export class MempoolReactor extends Service {
   gossipService: string = "zero/v.1/gossip/transaction";
-  canGossip: boolean = true; // @defaults true
-  p2p: ZeroP2P | Peer = undefined;
+  canGossip: boolean = false; // @defaults false
+  p2p: Peer = undefined;
   proxy: any = undefined; // change to proxy app abstract class instance
+  gossip: any = undefined;
   
-  constructor( proxyApp, peer ) {
+  constructor({ proxyApp, peer, canGossip }: any) {
     super();
     this.p2p = peer;
     this.proxy = proxyApp;
@@ -33,12 +36,11 @@ export class MempoolReactor extends Service {
     let [rsp, err] = await this.proxy.checkTx(call.request);
     let encoded_msg = protocol.Transaction.encode(call.request).finish();
     if (err) callback(null, { status: "ERROR" });
-    if (this.canGossip && !err) {
+    if (this.canGossip && !err && typeof this.gossip != 'undefined') {
       logger.info(`broadcasting message by: ${this.p2p.peerId} \n Message Gossiped: ${ rsp }`);
       this.gossip(this.gossipService, encoded_msg);
       callback(null, (msg) => rsp);
     }
-
   }
   
 }

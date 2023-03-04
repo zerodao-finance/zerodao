@@ -30,7 +30,7 @@ export class Peer extends ZeroP2P {
 		});
 	}
 
-	static async fromMultiaddr(multiaddr: string, profile: string = 'default') {
+	static async fromMultiaddr( multiaddr: string, profile: string = 'default' ) {
 		let nodeKey = await Peer.createKey();
 		let signer = Peer.createSigner();
 

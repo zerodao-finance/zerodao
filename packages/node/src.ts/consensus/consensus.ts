@@ -75,6 +75,7 @@ export class Consensus extends EventEmitter {
   proposer() {
     return "NODE2"; // TODO replace with actual proposer
   }
+  
   id(value) {
     return 1;
   }

@@ -61,7 +61,7 @@ class Node extends events_1.EventEmitter {
         this.rpc.addService(this.mempoolReactor);
         logger_1.logger.info(chalk_1.default.magenta(`${chalk_1.default.green("Node Startup")}|=> mempool & reactor created...`));
     }
-    startNode(height, port) {
+    startNode({ height, port }) {
         return __awaiter(this, void 0, void 0, function* () {
             // start application layer
             this.initializeApplicationLayer();
@@ -92,8 +92,8 @@ class Node extends events_1.EventEmitter {
     yield new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
         let node_1 = Node.initNode({ peer: yield p2p_1.Peer.fromMultiaddr("mainnet", "first") });
         let node_2 = Node.initNode({ peer: yield p2p_1.Peer.fromMultiaddr("mainnet", "second") });
-        yield node_2.startNode(0, '50052');
-        yield node_1.startNode(0, '50051');
+        yield node_2.startNode({ height: 0, port: '50052' });
+        yield node_1.startNode({ height: 0, port: '50051' });
         setTimeout(resolve, 2000);
     }));
     logger_1.logger.info("ready to go...");

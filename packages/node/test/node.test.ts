@@ -2,12 +2,12 @@ import { ethers } from "ethers";
 import { ZeroNode } from "../src.ts/index";
 
 describe("node", () => {
-  let node: ZeroNode, signer: ethers.Signer;
-  before(async () => {
-    signer = ethers.Wallet.createRandom();
-    // jfnode = await ZeroNode.fromSigner(signer, "DEV-MAINNET");
+  let node = Node.initNode({
+    peer: await Peer.fromMultiaddr({ "mainnet", "first" })
   });
-  it("should test the node", async () => {
-    //await node.init();
+
+  await node.startNode({
+    height: 0,
+    port: "4545"
   });
 });
