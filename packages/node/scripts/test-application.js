@@ -126,6 +126,11 @@ const exampleBlock = {
   };
   
 (async () => {
-    const engine = new TransactionEngine(new StateTrie())
+  const db = new Level(
+    __dirname
+  );
+
+  const trie = new SecureTrie(db);
+    const engine = new TransactionEngine(trie) 
     await engine.runBlock(exampleBlock)
  })();

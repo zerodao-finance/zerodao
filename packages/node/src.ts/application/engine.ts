@@ -4,9 +4,8 @@ import { validate } from 'bitcoin-address-validation';
 import { protocol } from "@zerodao/protobuf";
 import { Account } from "../types/account";
 import { keccak_256 as createKeccak256 } from "@noble/hashes/sha3";
-import { utils } from "ethers";
-import chalk from "chalk";
-import _ from "lodash";
+import { utils } from "ethers"
+import { SecureTrie } from "merkle-patricia-tree";
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
 
 const transfer = protocol.Transfer;
@@ -17,7 +16,6 @@ export class TransactionEngine {
   trie: StateTrie;
   receipts: Array<boolean>;
   messages: Array<string>;
-
   constructor(trie: StateTrie) {
     this.trie = trie;
   }
@@ -86,7 +84,7 @@ export class TransactionEngine {
     }
     if (tx.type == "Release") {
       try {
-        await this.validateTransaction(tx)
+       await this.validateTransaction(tx)
        const account: Account = await this.trie.getAccount(tx.from.toString())
        account.unStakedBalance[tx.asset.toString()] -= Number(tx.amount)
        // add bytestrings into next block header
@@ -155,4 +153,4 @@ export const concat = (uint8Arrays: Uint8Array[]): Uint8Array => {
   }, [] as number[]);
 
   return new Uint8Array(concatenated);
-};
+}
