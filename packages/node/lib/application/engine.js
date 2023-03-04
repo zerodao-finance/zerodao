@@ -31,9 +31,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.concat = exports.keccak256 = exports.TransactionEngine = void 0;
 const bip21 = __importStar(require("bip21"));
@@ -41,8 +38,6 @@ const bitcoin_address_validation_1 = require("bitcoin-address-validation");
 const protobuf_1 = require("@zerodao/protobuf");
 const sha3_1 = require("@noble/hashes/sha3");
 const ethers_1 = require("ethers");
-const chalk_1 = __importDefault(require("chalk"));
-const lodash_1 = __importDefault(require("lodash"));
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
 const transfer = protobuf_1.protocol.Transfer;
 const stake = protobuf_1.protocol.Stake;
@@ -143,7 +138,7 @@ class TransactionEngine {
             let _decoded = protobuf_1.protocol.Transaction.decode(tBuf);
             let tx = protobuf_1.protocol.Transaction.toObject(_decoded, { longs: String, bytes: String, enums: String });
             let res = yield this.validateTransaction(tx);
-            if (lodash_1.default.isError(res))
+            if (_.isError(res))
                 return [null, new Error("Transaction will revert against state trie")];
             return [{ Code: 1, value: tBuf }, null];
         });
@@ -151,7 +146,7 @@ class TransactionEngine {
     // validates a tx, causes revert if fails
     validateTransaction(tx) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(chalk_1.default.red("from logger => "), tx);
+            console.log(chalk.red("from logger => "), tx);
             const oldFromAccount = (yield this.trie.getAccount(tx.from));
             if (tx.destination && tx.chain == "BTC") {
                 if (bip21.validate(tx.destination)) {

@@ -6,7 +6,7 @@ export declare class TransactionEngine {
     messages: Array<string>;
     constructor(trie: StateTrie);
     runBlock(block: any): Promise<{
-        root: Buffer;
+        root: any;
         results: boolean[];
         messages: string[];
     }>;

@@ -14,7 +14,7 @@ export declare class Sketch {
     storeTx(txHash: string, addToSketch?: boolean): void;
     rebuild(): void;
     clear(): void;
-    serialize(): Buffer;
+    serialize(): any;
     calculateDifferences(serializedSketch: Buffer): Promise<{
         missing: string[];
         found: string[];
