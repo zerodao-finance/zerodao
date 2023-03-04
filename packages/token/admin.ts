@@ -13,9 +13,9 @@ async function main() {
     wallet
   ) as ZeroHeroNFT;
   
-  // await contract.connect(wallet).setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
-  const tokenUri = await contract.connect(wallet).tokenURI(0);
-  console.log(tokenUri);
+  await contract.connect(wallet).setBaseTokenURI(`ipfs://${ZHERO_META_CID}/`)
+  // const tokenUri = await contract.connect(wallet).tokenURI(0);
+  // console.log(tokenUri);
 }
 
 main().then(() => process.exit(0)).catch((err) => {
