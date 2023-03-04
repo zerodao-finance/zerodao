@@ -41,7 +41,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
-    "presaleMerkleRoot()": FunctionFragment;
+    "privateMerkleRoot()": FunctionFragment;
     "privateMint(uint256,address,uint256,bytes32[],uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -49,18 +49,21 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseExtension(string)": FunctionFragment;
     "setBaseTokenURI(string)": FunctionFragment;
+    "setMaxItemsPerWallet(uint8)": FunctionFragment;
     "setMintPrice(uint256)": FunctionFragment;
-    "setPresaleMaxItemsPerWallet(uint8)": FunctionFragment;
-    "setPresaleMerkleRoot(bytes32)": FunctionFragment;
-    "setmintPrice(uint256)": FunctionFragment;
+    "setPrivateMerkleRoot(bytes32)": FunctionFragment;
+    "setWhitelistMerkleRoot(bytes32)": FunctionFragment;
     "startPrivateMint()": FunctionFragment;
     "startPublicMint()": FunctionFragment;
+    "startWhitelistMint()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "whitelistMerkleRoot()": FunctionFragment;
+    "whitelistMint(uint256,address,uint256,bytes32[],uint256)": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
@@ -77,7 +80,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
       | "name"
       | "owner"
       | "ownerOf"
-      | "presaleMerkleRoot"
+      | "privateMerkleRoot"
       | "privateMint"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
@@ -85,18 +88,21 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
       | "setApprovalForAll"
       | "setBaseExtension"
       | "setBaseTokenURI"
+      | "setMaxItemsPerWallet"
       | "setMintPrice"
-      | "setPresaleMaxItemsPerWallet"
-      | "setPresaleMerkleRoot"
-      | "setmintPrice"
+      | "setPrivateMerkleRoot"
+      | "setWhitelistMerkleRoot"
       | "startPrivateMint"
       | "startPublicMint"
+      | "startWhitelistMint"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
       | "totalSupply"
       | "transferFrom"
       | "transferOwnership"
+      | "whitelistMerkleRoot"
+      | "whitelistMint"
       | "withdraw"
   ): FunctionFragment;
 
@@ -139,7 +145,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "presaleMerkleRoot",
+    functionFragment: "privateMerkleRoot",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -186,20 +192,20 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setMaxItemsPerWallet",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setMintPrice",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setPresaleMaxItemsPerWallet",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setPresaleMerkleRoot",
+    functionFragment: "setPrivateMerkleRoot",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setmintPrice",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "setWhitelistMerkleRoot",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "startPrivateMint",
@@ -207,6 +213,10 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "startPublicMint",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "startWhitelistMint",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -234,6 +244,20 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "whitelistMerkleRoot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "whitelistMint",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -260,7 +284,7 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "presaleMerkleRoot",
+    functionFragment: "privateMerkleRoot",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -292,19 +316,19 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setMaxItemsPerWallet",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setMintPrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setPresaleMaxItemsPerWallet",
+    functionFragment: "setPrivateMerkleRoot",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setPresaleMerkleRoot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setmintPrice",
+    functionFragment: "setWhitelistMerkleRoot",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -313,6 +337,10 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "startPublicMint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "startWhitelistMint",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -331,6 +359,14 @@ export interface ZeroHeroNFTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "whitelistMerkleRoot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "whitelistMint",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -484,7 +520,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    presaleMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
+    privateMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
 
     privateMint(
       _index: PromiseOrValue<BigNumberish>,
@@ -530,23 +566,23 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setMaxItemsPerWallet(
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setMintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setPresaleMaxItemsPerWallet(
-      value: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setPresaleMerkleRoot(
+    setPrivateMerkleRoot(
       value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setmintPrice(
-      value: PromiseOrValue<BigNumberish>,
+    setWhitelistMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -555,6 +591,10 @@ export interface ZeroHeroNFT extends BaseContract {
     ): Promise<ContractTransaction>;
 
     startPublicMint(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    startWhitelistMint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -582,6 +622,17 @@ export interface ZeroHeroNFT extends BaseContract {
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    whitelistMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
+
+    whitelistMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      proof: PromiseOrValue<BytesLike>[],
+      quantity: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     withdraw(
@@ -634,7 +685,7 @@ export interface ZeroHeroNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  presaleMerkleRoot(overrides?: CallOverrides): Promise<string>;
+  privateMerkleRoot(overrides?: CallOverrides): Promise<string>;
 
   privateMint(
     _index: PromiseOrValue<BigNumberish>,
@@ -680,23 +731,23 @@ export interface ZeroHeroNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setMaxItemsPerWallet(
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setMintPrice(
     value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setPresaleMaxItemsPerWallet(
-    value: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setPresaleMerkleRoot(
+  setPrivateMerkleRoot(
     value: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setmintPrice(
-    value: PromiseOrValue<BigNumberish>,
+  setWhitelistMerkleRoot(
+    value: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -705,6 +756,10 @@ export interface ZeroHeroNFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   startPublicMint(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  startWhitelistMint(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -732,6 +787,17 @@ export interface ZeroHeroNFT extends BaseContract {
   transferOwnership(
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  whitelistMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
+  whitelistMint(
+    _index: PromiseOrValue<BigNumberish>,
+    _account: PromiseOrValue<string>,
+    _amount: PromiseOrValue<BigNumberish>,
+    proof: PromiseOrValue<BytesLike>[],
+    quantity: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   withdraw(
@@ -784,7 +850,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    presaleMerkleRoot(overrides?: CallOverrides): Promise<string>;
+    privateMerkleRoot(overrides?: CallOverrides): Promise<string>;
 
     privateMint(
       _index: PromiseOrValue<BigNumberish>,
@@ -828,29 +894,31 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setMaxItemsPerWallet(
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setMintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setPresaleMaxItemsPerWallet(
-      value: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setPresaleMerkleRoot(
+    setPrivateMerkleRoot(
       value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setmintPrice(
-      value: PromiseOrValue<BigNumberish>,
+    setWhitelistMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     startPrivateMint(overrides?: CallOverrides): Promise<void>;
 
     startPublicMint(overrides?: CallOverrides): Promise<void>;
+
+    startWhitelistMint(overrides?: CallOverrides): Promise<void>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -875,6 +943,17 @@ export interface ZeroHeroNFT extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    whitelistMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
+    whitelistMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      proof: PromiseOrValue<BytesLike>[],
+      quantity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -984,7 +1063,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    presaleMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
+    privateMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
 
     privateMint(
       _index: PromiseOrValue<BigNumberish>,
@@ -1030,23 +1109,23 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setMaxItemsPerWallet(
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setMintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setPresaleMaxItemsPerWallet(
-      value: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setPresaleMerkleRoot(
+    setPrivateMerkleRoot(
       value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setmintPrice(
-      value: PromiseOrValue<BigNumberish>,
+    setWhitelistMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1055,6 +1134,10 @@ export interface ZeroHeroNFT extends BaseContract {
     ): Promise<BigNumber>;
 
     startPublicMint(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    startWhitelistMint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1082,6 +1165,17 @@ export interface ZeroHeroNFT extends BaseContract {
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    whitelistMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
+
+    whitelistMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      proof: PromiseOrValue<BytesLike>[],
+      quantity: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     withdraw(
@@ -1135,7 +1229,7 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    presaleMerkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    privateMerkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     privateMint(
       _index: PromiseOrValue<BigNumberish>,
@@ -1181,23 +1275,23 @@ export interface ZeroHeroNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    setMaxItemsPerWallet(
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setMintPrice(
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setPresaleMaxItemsPerWallet(
-      value: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setPresaleMerkleRoot(
+    setPrivateMerkleRoot(
       value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setmintPrice(
-      value: PromiseOrValue<BigNumberish>,
+    setWhitelistMerkleRoot(
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1206,6 +1300,10 @@ export interface ZeroHeroNFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     startPublicMint(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    startWhitelistMint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1233,6 +1331,19 @@ export interface ZeroHeroNFT extends BaseContract {
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    whitelistMerkleRoot(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    whitelistMint(
+      _index: PromiseOrValue<BigNumberish>,
+      _account: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      proof: PromiseOrValue<BytesLike>[],
+      quantity: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     withdraw(

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import * as hre from "hardhat";
 import { ZeroHeroNFT } from './typechain-types';
-import { ZHERO_META_CID } from './deploy/3_deploy_zero_hero';
+import { ZHERO_META_CID } from './deploy/2_deploy_zero_hero';
 
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`)
