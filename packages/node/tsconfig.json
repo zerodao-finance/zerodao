@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "lib": ["ES2015", "es5", "dom"],
-    "preserveWatchOutput": true,
-    "pretty": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "nodenext",
+    "module": "commonjs",
+    "skipLibCheck": true,
     "moduleResolution": "node",
-    "target": "ES2015",
+    "target": "es6",
     "noImplicitAny": false,
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
-    "skipLibCheck": true
+    "types": ["node"]
   },
-  "include": ["src.ts/**/*", "test/*"],
-  "exclude": ["node_modules"]
+  "include": ["./src.ts/**/*.ts"]
 }

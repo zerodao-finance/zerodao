@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /* import { expect } from "chai";
 import { StateTrie } from "../src.ts/trie/trie";
 import { TransactionEngine, validateTransaction } from "../src.ts/transaction";
@@ -59,4 +58,5 @@ describe("TransactionEngine", () => {
 });
 <<<<<<< HEAD
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 //# sourceMappingURL=transaction.test.js.map

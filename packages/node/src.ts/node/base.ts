@@ -7,107 +7,131 @@ import { MempoolConstructor } from "../mempool";
 import { RPC } from "../rpc";
 import { Peer } from "../p2p";
 import { EventEmitter } from "events";
+import { StateTrie } from "../trie/trie";
+import { TransactionEngine } from "../application/engine";
 import chalk from "chalk";
+import path from "path";
 import fs from "node:fs";
 import os from "node:os";
+import {MempoolConfig} from "../mempool/types";
 
 class Node extends EventEmitter {
-	mempool; 
+	mempool;
 	mempoolReactor;
 	peer: Peer;
 	rpc: RPC;
+	trie: StateTrie
+	proxyApp: TransactionEngine;
 
-	configPath = `${os.homedir()}/.zeronode/config`; 
-
-	// testing only need to fix this
-	proxyApp: any = {
-		checkTxSync: function (tx) {
-			return [{ Code: 1, value: "something" }, null];
-		}
-	};
+	configPath = `${os.homedir()}/.zeronode/config`;
 
 	// initialize new node from an instance of a libp2p peer
 	// @params { peer: Peer } takes a libp2p instance
 	// @returns { node: Node } returns new instance of this class
 	static initNode({ peer }: any = {}) {
 		// get env variables and start a new peer
-		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> initializing node & configs...`));
-		return new this({ 
-			rpc: RPC.init(), 
-			peer: peer 
+		logger.info(
+      chalk.magenta(
+        `${chalk.green("Node Startup")}|=> initializing node & configs...`
+      )
+    );
+		return new this({
+			rpc: RPC.init(),
+			peer: peer
 		});
 	}
-	
 
 	constructor({ peer, rpc }) {
 		super();
 		this.peer = peer;
 		this.rpc = rpc;
-		this.createConfigDir();
+		if (!fs.existsSync(this.configPath)) fs.mkdirSync(this.configPath, { recursive: true });
+		if (!fs.existsSync(path.join(this.configPath, 'db'))) fs.mkdirSync(path.join(this.configPath, 'db'));
+		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> creating storage directories if needed...`));
+		this.trie = new StateTrie();
 	}
-	
-	// creates .zeronode/config directory if one doesn't exist in the home dir
-	createConfigDir() {
-		if (fs.existsSync(this.configPath)) return;
-		fs.mkdirSync(this.configPath, { recursive: true });
+
+	initializeApplicationLayer() {
+		this.proxyApp = new TransactionEngine(this.trie);
+		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> app proxy initialized...`));
 	}
 
 	// initializes mempool and mempool reactor
 	// connects reactor to the rpc via .addService() method
-	initializeMempoolAndReactor(config) {
+	initializeMempoolAndReactor(height: number, config: MempoolConfig) {
 		// 0, should be replaced by this.state.height
 		const [ mp, reactor ] = MempoolConstructor(
-			0,
+			height,
 			this.proxyApp,
 			config,
 			this.peer
 		);
 
 		this.mempool = mp;
-		this.mempoolReactor = reactor;
-		this.rpc.addService(this.mempoolReactor);
+    this.mempoolReactor = reactor;
+    this.rpc.addService(this.mempoolReactor);
 		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> mempool & reactor created...`));
 	}
 
-	async startNode(port) {
-		// start mempool and connect mempool service to rpc
-		await new Promise((resolve) => {
-			this.initializeMempoolAndReactor({ MAX_BYTES: 10000 });
-			setTimeout(resolve, 2000);
-			logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> mempool & reactor initialized`));
-		});
+	async startNode(height: number, port: string | number) {
+    // start application layer
+    this.initializeApplicationLayer();
 
-		// start libp2p
-		await new Promise((resolve) => {
-			this.peer.start();
-			this.rpc.start({address: '0.0.0.0', port: port})
-			setTimeout(resolve, 2000);
-			logger.info(chalk.magenta(`${chalk.green("Node Startup")}|=> started rpc listening on 0.0.0.0:${port}`));
-			logger.info(chalk.magenta(`${chalk.green("Node Startup") }|=> started libp2p module...`));
-		});
+    // start mempool and connect mempool service to rpc
+    await new Promise((resolve) => {
+      this.initializeMempoolAndReactor(height, { MAX_BYTES: 10000 });
+      setTimeout(resolve, 2000);
+      logger.info(
+        chalk.magenta(
+          `${chalk.green("Node Startup")}|=> mempool & reactor initialized`
+        )
+      );
+    });
 
-		// start transaction gossip from mempool reactor
-		await new Promise(async (resolve) => {
-			await this.mempoolReactor.initTxGossip()
-			setTimeout(resolve, 2000);
-			logger.info(chalk.magenta(`${chalk.green("Node Startup") }|=> Peer transaction gossip started...`));
-		});
+    // start libp2p
+    await new Promise((resolve) => {
+      this.peer.start();
+      this.rpc.start({ address: "0.0.0.0", port: port });
+      setTimeout(resolve, 2000);
+      logger.info(
+        chalk.magenta(
+          `${chalk.green(
+            "Node Startup"
+          )}|=> started rpc listening on 0.0.0.0:${port}`
+        )
+      );
+      logger.info(
+        chalk.magenta(
+          `${chalk.green("Node Startup")}|=> started libp2p module...`
+        )
+      );
+    });
 
-	}
+    // start transaction gossip from mempool reactor
+    await new Promise(async (resolve) => {
+      await this.mempoolReactor.initTxGossip();
+      setTimeout(resolve, 2000);
+      logger.info(
+        chalk.magenta(
+          `${chalk.green("Node Startup")}|=> Peer transaction gossip started...`
+        )
+      );
+    });
+  }
 }
 
 (async () => {
-	
+
 	await new Promise(async (resolve) => {
 		let node_1 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "first") });
 		let node_2 = Node.initNode({ peer: await Peer.fromMultiaddr("mainnet", "second") });
 
-		await node_2.startNode('50052');
-		await node_1.startNode('50051');	
+		await node_2.startNode(0, '50052');
+		await node_1.startNode(0, '50051');
 
 		setTimeout(resolve, 2000);
 	});
 
 	logger.info("ready to go...")
-	
+
 })()

@@ -1,34 +1,25 @@
 import { StateTrie } from "../trie/trie";
-import * as protobuf from "protobufjs";
-import ethers from "ethers";
 import * as bip21 from 'bip21';
-import { validate } from 'bitcoin-address-validation'
-// import { protocol } from "@zerodao/protobuf";
+import { validate } from 'bitcoin-address-validation';
+import { protocol } from "@zerodao/protobuf";
 import { Account } from "../types/account";
-import { Balance } from "../types/balance";
-import { Block} from "../types";
-import { TX } from "../types/tx";
 import { keccak_256 as createKeccak256 } from "@noble/hashes/sha3";
 import { utils } from "ethers"
 import { SecureTrie } from "merkle-patricia-tree";
 /* Receive a block, and run its transactions on the application state, validating each transaction and using checkpoints and reverts. */
 
-const PROTO_PATH: string =
-   __dirname + "/../../../protobuf/proto/ZeroProtocol.proto";
-   const root = protobuf.loadSync(PROTO_PATH);
-  __dirname + "@zerodao/protobuf";
-// const root = protocol;
-const transfer = root.lookupType("Transfer");
-const stake = root.lookupType("Stake");
-const release = root.lookupType("Release")
+const transfer = protocol.Transfer;
+const stake = protocol.Stake;
+const release = protocol.Release;
 
 export class TransactionEngine {
-  trie: SecureTrie;
+  trie: StateTrie;
   receipts: Array<boolean>;
   messages: Array<string>;
-  constructor(trie: SecureTrie) {
+  constructor(trie: StateTrie) {
     this.trie = trie;
   }
+
   /* accepts a block as an object, runs each transaction and returns the app state root as well as the results(success or revert) and messages which need signed by FROST */
   async runBlock(block) {
     await this.trie.trie.checkpoint();
@@ -37,7 +28,7 @@ export class TransactionEngine {
         console.log(txObject);
         await this.runTransaction(txObject);
     }
-     await this.trie.trie.commit();
+    await this.trie.trie.commit();
     const results = this.receipts;
     const toSign = this.messages;
     this.receipts = [];
@@ -48,9 +39,10 @@ export class TransactionEngine {
       messages: toSign
     }
   }
+
   // Takes each transaction, validates it and carries out its changes on the state trie
   async runTransaction(tx) {
-     await this.trie.trie.checkpoint();
+    await this.trie.trie.checkpoint();
     if (tx.type == "Transfer") {
       try {
         await this.validateTransaction(tx);
@@ -72,7 +64,7 @@ export class TransactionEngine {
         await this.trie.trie.revert();
         // mark as failure in the next block header
       }
-    } 
+    }
     if (tx.type == "Stake") {
       try {
         await this.validateTransaction(tx);
@@ -109,51 +101,49 @@ export class TransactionEngine {
     if (tx.type == "Burn") {
       try {
         await this.validateTransaction(tx)
-        
       }
       catch (error){
 
       }
-    } 
+    }
   }
 
-  async createAccount(tx) {
-    
+  // checkTx
+  async checkTxSync(tBuf: Buffer) {
+    let _decoded = protocol.Transaction.decode(tBuf);
+    let tx = protocol.Transaction.toObject(_decoded, { longs: String, bytes: String, enums: String });
+    let res = await this.validateTransaction(tx);
+    if (_.isError(res)) return [null, new Error("Transaction will revert against state trie")];
+    return [{ Code: 1, value: tBuf }, null];
   }
+
   // validates a tx, causes revert if fails
   async validateTransaction(tx) {
+    console.log(chalk.red("from logger => "), tx);
     const oldFromAccount: Account = (await this.trie.getAccount(
       tx.from
     )) as Account;
     if (tx.destination && tx.chain == "BTC") {
-    if (bip21.validate(tx.destination)) {
-      if(tx.destination.startsWith("bc1t")){
-          console.log("It's a taproot address")
+      if (bip21.validate(tx.destination)) {
+        if(tx.destination.startsWith("bc1")){
+            console.log("It's a taproot address")
+        } else {
+            console.log("It's a bech32 address")
+        }
+      } else if (validate(tx.address)) {
+          console.log("It's a regular BTC address");
       } else {
-          console.log("It's a bech32 address")
+          throw new Error(`Invalid address: ${tx.destination}`);
       }
-  } else if (validate(tx.address)) {
-      console.log("It's a regular BTC address");
-  } else {
-      throw new Error(`Invalid address: ${tx.destination}`);
-  }}
+    }
     const fromBalance = Number(oldFromAccount.unStakedBalance[tx.asset]);
     if (fromBalance >= tx.amount) return;
     else throw Error;
   }
 }
 
-
-export async function checkTx(tBuf: Buffer) {
-  try {
-    transfer.decode(tBuf) || stake.decode(tBuf) || release.decode(tBuf);
-  } catch (error) {
-    throw "Transaction not a valid protobuf type";
-  }
-}
-
 export const keccak256 = (...msg: Uint8Array[]): Uint8Array => {
-    return new Uint8Array(createKeccak256(concat(msg)));
+  return new Uint8Array(createKeccak256(concat(msg)));
 };
 
 export const concat = (uint8Arrays: Uint8Array[]): Uint8Array => {

@@ -55,11 +55,11 @@
     "@types/level": "^6.0.1",
     "@types/lodash": "^4.14.190",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.11.10",
+    "@types/node": "^18.14.2",
     "chai": "^4.3.7",
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
-    "prettier": "^2.8.0",
+    "prettier": "2.8.4",
     "sparse-merkle-tree": "^1.0.0",
     "ts-node": "^10.9.1"
   }

@@ -1,6 +1,20 @@
 {
     "nested": {
-        "Transaction": {
+        "Type": {
+            "values": {
+                "TRANSFER": 0,
+                "STAKE": 1,
+                "RELEASE": 2
+            }
+        },
+        "Chain": {
+            "values": {
+                "ETHEREUM": 0,
+                "MONERO": 1,
+                "BITCOIN": 2
+            }
+        },
+        "Transfer": {
             "oneofs": {
                 "_chain": {
                     "oneof": [
@@ -14,166 +28,70 @@
                     "type": "Type",
                     "id": 0
                 },
-                "to": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 1
-                },
-                "data": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 2
-                },
-                "nonce": {
-                    "rule": "required",
-                    "type": "uint64",
-                    "id": 3
-                },
-                "signature": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 4
-                },
                 "chain": {
                     "type": "Chain",
-                    "id": 5,
+                    "id": 1,
                     "options": {
                         "proto3_optional": true
                     }
-                }
-            },
-            "nested": {
-                "Type": {
-                    "values": {
-                        "TRANSFER": 0,
-                        "SLASH": 1
-                    }
                 },
-                "Chain": {
-                    "values": {
-                        "ETHEREUM": 0,
-                        "MONERO": 1
-                    }
-                }
-            }
-        },
-        "Transfer": {
-            "oneofs": {
-                "_chain": {
-                    "oneof": [
-                        "chain"
-                    ]
-                }
-            },
-            "fields": {
                 "from": {
                     "rule": "required",
                     "type": "bytes",
-                    "id": 0
+                    "id": 2
                 },
                 "to": {
                     "rule": "required",
                     "type": "bytes",
-                    "id": 1
+                    "id": 3
                 },
                 "data": {
                     "rule": "required",
                     "type": "bytes",
-                    "id": 2
-                },
-                "nonce": {
-                    "rule": "required",
-                    "type": "uint64",
-                    "id": 3
-                },
-                "signature": {
-                    "rule": "required",
-                    "type": "bytes",
                     "id": 4
-                },
-                "chain": {
-                    "type": "string",
-                    "id": 5,
-                    "options": {
-                        "proto3_optional": true
-                    }
                 },
                 "amount": {
                     "rule": "required",
                     "type": "uint64",
+                    "id": 5
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
                     "id": 6
                 },
-                "type": {
+                "nonce": {
                     "rule": "required",
-                    "type": "string",
+                    "type": "uint64",
                     "id": 7
                 }
             }
         },
         "Stake": {
             "fields": {
-                "from": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 0
-                },
-                "data": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 1
-                },
-                "amount": {
-                    "rule": "required",
-                    "type": "uint64",
-                    "id": 2
-                },
-                "signature": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 3
-                },
-                "nonce": {
-                    "rule": "required",
-                    "type": "uint64",
-                    "id": 4
-                },
-                "asset": {
-                    "rule": "required",
-                    "type": "bytes",
-                    "id": 6
-                },
                 "type": {
                     "rule": "required",
-                    "type": "string",
-                    "id": 7
-                }
-            }
-        },
-        "Release": {
-            "fields": {
-                "from": {
-                    "rule": "required",
-                    "type": "bytes",
+                    "type": "Type",
                     "id": 0
                 },
-                "data": {
+                "from": {
                     "rule": "required",
                     "type": "bytes",
                     "id": 1
                 },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 2
+                },
                 "amount": {
                     "rule": "required",
                     "type": "uint64",
-                    "id": 2
+                    "id": 3
                 },
                 "signature": {
                     "rule": "required",
                     "type": "bytes",
-                    "id": 3
-                },
-                "chain": {
-                    "rule": "required",
-                    "type": "string",
                     "id": 4
                 },
                 "nonce": {
@@ -185,16 +103,134 @@
                     "rule": "required",
                     "type": "bytes",
                     "id": 6
+                }
+            }
+        },
+        "Release": {
+            "oneofs": {
+                "_chain": {
+                    "oneof": [
+                        "chain"
+                    ]
+                }
+            },
+            "fields": {
+                "chain": {
+                    "type": "Chain",
+                    "id": 0,
+                    "options": {
+                        "proto3_optional": true
+                    }
                 },
                 "type": {
                     "rule": "required",
-                    "type": "string",
+                    "type": "Type",
+                    "id": 1
+                },
+                "from": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 2
+                },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 3
+                },
+                "amount": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 4
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 5
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 6
+                },
+                "asset": {
+                    "rule": "required",
+                    "type": "bytes",
                     "id": 7
                 },
                 "destination": {
                     "rule": "required",
                     "type": "bytes",
                     "id": 8
+                }
+            }
+        },
+        "Transaction": {
+            "oneofs": {
+                "_chain": {
+                    "oneof": [
+                        "chain"
+                    ]
+                },
+                "_to": {
+                    "oneof": [
+                        "to"
+                    ]
+                }
+            },
+            "fields": {
+                "type": {
+                    "rule": "required",
+                    "type": "Type",
+                    "id": 0
+                },
+                "chain": {
+                    "type": "Chain",
+                    "id": 1,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "to": {
+                    "type": "bytes",
+                    "id": 2,
+                    "options": {
+                        "proto3_optional": true
+                    }
+                },
+                "from": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 3
+                },
+                "data": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 4
+                },
+                "amount": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 5
+                },
+                "signature": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 6
+                },
+                "nonce": {
+                    "rule": "required",
+                    "type": "uint64",
+                    "id": 7
+                },
+                "asset": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 8
+                },
+                "destination": {
+                    "rule": "required",
+                    "type": "bytes",
+                    "id": 9
                 }
             }
         },
@@ -489,13 +525,17 @@
         },
         "RpcService": {
             "methods": {
+                "zero_getBalance": {
+                    "requestType": "BalanceQuery",
+                    "responseType": "BalanceReply"
+                },
                 "zero_sendTransaction": {
                     "requestType": "Transaction",
                     "responseType": "TransactionReply"
                 },
-                "zero_getBalance": {
-                    "requestType": "BalanceQuery",
-                    "responseType": "BalanceReply"
+                "zero_transferTransaction": {
+                    "requestType": "Transfer",
+                    "responseType": "TransactionReply"
                 },
                 "zero_stakeTransaction": {
                     "requestType": "Stake",

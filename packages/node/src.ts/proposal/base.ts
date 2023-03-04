@@ -1,6 +1,6 @@
 "use strict";
 
-import { protocol } from "../proto";
+import { protocol } from "@zerodao/protobuf";
 import { ethers } from "ethers";
 import _ from "lodash";
 import { realpath } from "fs";
@@ -18,7 +18,7 @@ export function Proposer() {
   this.protocol = protocol;
 }
 Proposer.prototype._hash = function () {
-  let buf = this.protocol.ProposerProposer.encode({ peers: this.peers });
+  let buf = this.protocol.Proposer.encode({ peers: this.peers });
   this.hash = ethers.utils.keccak256(buf);
 };
 
@@ -28,7 +28,7 @@ Proposer.prototype.initialize = function (peers: Peer[], hash: string) {
 };
 
 Proposer.prototype.reap = function () {
-  
+
 }
 Proposer.prototype.add = function (new_peer: Peer) {
   // add a way of verifying the initial priority of a peer
