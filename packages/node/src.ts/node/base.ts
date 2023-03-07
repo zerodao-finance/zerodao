@@ -14,6 +14,7 @@ import path from "path";
 import fs from "node:fs";
 import os from "node:os";
 import {MempoolConfig} from "../mempool/types";
+import { isForStatement } from "typescript";
 
 class Node extends EventEmitter {
 	mempool;
@@ -22,6 +23,7 @@ class Node extends EventEmitter {
 	rpc: RPC;
 	trie: StateTrie
 	proxyApp: TransactionEngine;
+	frost;
 
 	configPath = `${os.homedir()}/.zeronode/config`;
 
@@ -55,7 +57,9 @@ class Node extends EventEmitter {
 		this.proxyApp = new TransactionEngine(this.trie);
 		logger.info(chalk.magenta(`${ chalk.green("Node Startup") }|=> app proxy initialized...`));
 	}
+	initializeFROST() {
 
+	}
 	// initializes mempool and mempool reactor
 	// connects reactor to the rpc via .addService() method
 	initializeMempoolAndReactor(height: number, config: MempoolConfig) {
@@ -117,6 +121,18 @@ class Node extends EventEmitter {
         )
       );
     });
+	
+	// check if frost node and then init
+	await new Promise(async (resolve) => {
+		if (true) {
+		await this.frost.init();
+		setTimeout(resolve, 2000);
+		logger.info(
+		  chalk.magenta(
+			`${chalk.green("Node Startup")}|=> Peer transaction gossip started...`
+		  )
+		); }
+	  }); 
   }
 }
 
