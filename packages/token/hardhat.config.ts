@@ -1,12 +1,10 @@
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-// import "@nomiclabs/hardhat-ethers";
 import "hardhat-deploy-ethers";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-preprocessor";
-import "@openzeppelin/hardhat-upgrades";
 import { readFileSync } from "fs";
 import { ethers } from "ethers";
 require("dotenv").config();
@@ -59,8 +57,8 @@ const ETHERSCAN_API_KEYS: any = {
 };
 
 const ETHERSCAN_API_KEY =
-  ETHERSCAN_API_KEYS[process.env.CHAIN || "ARBITRUM"] ||
-  ETHERSCAN_API_KEYS["ARBITRUM"];
+  ETHERSCAN_API_KEYS[process.env.CHAIN || "ETHEREUM"] ||
+  ETHERSCAN_API_KEYS["ETHEREUM"];
 
 const config: any = {
   defaultNetwork: "hardhat",
@@ -79,6 +77,13 @@ const config: any = {
       live: false,
       saveDeployments: true,
       tags: ["local"],
+      chainId: process.env.CHAIN_ID && Number(process.env.CHAIN_ID),
+    },
+    goerli: {
+      url: `https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`,
+      accounts: [process.env.PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 5
     },
     hardhat: {
       live: false,
@@ -171,7 +176,6 @@ const config: any = {
       {
         version: "0.8.15",
         settings: {
-          viaIR: true,
           optimizer: {
             enabled: true,
             runs: 50000,
@@ -193,7 +197,9 @@ const config: any = {
     grep: process.env.GREP,
   },
   etherscan: {
-    apiKey: ETHERSCAN_API_KEY,
+    apiKey: {
+      mainnet: ETHERSCAN_API_KEYS.ETHEREUM,
+    },
   },
 };
 

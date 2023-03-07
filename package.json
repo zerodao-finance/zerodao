@@ -5,7 +5,8 @@
   "repository": "https://github.com/zerodao-finance/zerodao",
   "scripts": {
     "contracts": "yarn workspace @zerodao/contracts",
-    "protocol-old": "yarn workspace @zerodao/protocol"
+    "protocol-old": "yarn workspace @zerodao/protocol",
+    "token": "yarn workspace @zerodao/token"
   },
   "author": "zeroDAO",
   "license": "MIT",

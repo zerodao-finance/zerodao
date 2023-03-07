@@ -27,33 +27,65 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
+export declare namespace ERC20VotesUpgradeable {
+  export type CheckpointStruct = {
+    fromBlock: PromiseOrValue<BigNumberish>;
+    votes: PromiseOrValue<BigNumberish>;
+    timestamp: PromiseOrValue<BigNumberish>;
+    balance: PromiseOrValue<BigNumberish>;
+  };
+
+  export type CheckpointStructOutput = [
+    number,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] & {
+    fromBlock: number;
+    votes: BigNumber;
+    timestamp: BigNumber;
+    balance: BigNumber;
+  };
+}
+
 export interface SZEROInterface extends utils.Interface {
   functions: {
     "BONUS_MULTIPLIER()": FunctionFragment;
-    "add(uint256,address,bool)": FunctionFragment;
+    "DOMAIN_SEPARATOR()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "bonusEndBlock()": FunctionFragment;
+    "calculateZeroReward(uint256,uint256)": FunctionFragment;
+    "checkpoints(address,uint32)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deposit(uint256,uint256)": FunctionFragment;
+    "delegate(address)": FunctionFragment;
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "delegates(address)": FunctionFragment;
     "dev(address)": FunctionFragment;
     "devaddr()": FunctionFragment;
-    "emergencyWithdraw(uint256)": FunctionFragment;
+    "emergencyWithdraw()": FunctionFragment;
     "enterStaking(uint256)": FunctionFragment;
+    "enterStakingWithPermit(uint256,bytes)": FunctionFragment;
     "getMultiplier(uint256,uint256)": FunctionFragment;
+    "getPastTotalSupply(uint256)": FunctionFragment;
+    "getPastVotes(address,uint256)": FunctionFragment;
+    "getVotes(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(address,address,uint256,uint256,uint256)": FunctionFragment;
+    "initialize(address,address,address,uint256,uint256)": FunctionFragment;
     "leaveStaking(uint256)": FunctionFragment;
-    "massUpdatePools()": FunctionFragment;
     "migrate(uint256)": FunctionFragment;
     "migrator()": FunctionFragment;
     "name()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
+    "numCheckpoints(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pendingZero(uint256,address)": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "poolInfo(uint256)": FunctionFragment;
     "poolLength()": FunctionFragment;
+    "redeem()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "set(uint256,uint256,bool)": FunctionFragment;
     "setMigrator(address)": FunctionFragment;
@@ -64,40 +96,53 @@ export interface SZEROInterface extends utils.Interface {
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updatePool(uint256)": FunctionFragment;
+    "updateZAssetReward(uint256,uint256)": FunctionFragment;
+    "updateZeroPool()": FunctionFragment;
     "userInfo(uint256,address)": FunctionFragment;
-    "withdraw(uint256,uint256)": FunctionFragment;
+    "zassets(uint256)": FunctionFragment;
     "zero()": FunctionFragment;
     "zeroPerBlock()": FunctionFragment;
+    "zerofrost()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "BONUS_MULTIPLIER"
-      | "add"
+      | "DOMAIN_SEPARATOR"
       | "allowance"
       | "approve"
       | "balanceOf"
       | "bonusEndBlock"
+      | "calculateZeroReward"
+      | "checkpoints"
       | "decimals"
       | "decreaseAllowance"
-      | "deposit"
+      | "delegate"
+      | "delegateBySig"
+      | "delegates"
       | "dev"
       | "devaddr"
       | "emergencyWithdraw"
       | "enterStaking"
+      | "enterStakingWithPermit"
       | "getMultiplier"
+      | "getPastTotalSupply"
+      | "getPastVotes"
+      | "getVotes"
       | "increaseAllowance"
       | "initialize"
       | "leaveStaking"
-      | "massUpdatePools"
       | "migrate"
       | "migrator"
       | "name"
+      | "nonces"
+      | "numCheckpoints"
       | "owner"
       | "pendingZero"
+      | "permit"
       | "poolInfo"
       | "poolLength"
+      | "redeem"
       | "renounceOwnership"
       | "set"
       | "setMigrator"
@@ -108,11 +153,13 @@ export interface SZEROInterface extends utils.Interface {
       | "transfer"
       | "transferFrom"
       | "transferOwnership"
-      | "updatePool"
+      | "updateZAssetReward"
+      | "updateZeroPool"
       | "userInfo"
-      | "withdraw"
+      | "zassets"
       | "zero"
       | "zeroPerBlock"
+      | "zerofrost"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -120,12 +167,8 @@ export interface SZEROInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "add",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<boolean>
-    ]
+    functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -143,14 +186,37 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "bonusEndBlock",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "calculateZeroReward",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkpoints",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "deposit",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    functionFragment: "delegate",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegateBySig",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegates",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "dev",
@@ -159,15 +225,31 @@ export interface SZEROInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "devaddr", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "emergencyWithdraw",
-    values: [PromiseOrValue<BigNumberish>]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "enterStaking",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "enterStakingWithPermit",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getMultiplier",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPastTotalSupply",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPastVotes",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVotes",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -178,7 +260,7 @@ export interface SZEROInterface extends utils.Interface {
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
@@ -188,19 +270,35 @@ export interface SZEROInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "massUpdatePools",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "migrate",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "migrator", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nonces",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "numCheckpoints",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "pendingZero",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "poolInfo",
@@ -210,6 +308,7 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "poolLength",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "redeem", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -256,28 +355,36 @@ export interface SZEROInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "updatePool",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "updateZAssetReward",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateZeroPool",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "userInfo",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    functionFragment: "zassets",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "zero", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "zeroPerBlock",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "zerofrost", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "BONUS_MULTIPLIER",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "add", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -285,12 +392,25 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "bonusEndBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateZeroReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkpoints",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "delegateBySig",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "dev", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "devaddr", data: BytesLike): Result;
   decodeFunctionResult(
@@ -302,9 +422,22 @@ export interface SZEROInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "enterStakingWithPermit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getMultiplier",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPastTotalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPastVotes",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -314,20 +447,23 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "leaveStaking",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "massUpdatePools",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "migrate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "migrator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "numCheckpoints",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pendingZero",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolLength", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -356,17 +492,27 @@ export interface SZEROInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "updatePool", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "updateZAssetReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateZeroPool",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "userInfo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "zassets", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "zero", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "zeroPerBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "zerofrost", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
+    "DelegateChanged(address,address,address)": EventFragment;
+    "DelegateVotesChanged(address,uint256,uint256)": EventFragment;
     "Deposit(address,uint256,uint256)": EventFragment;
     "EmergencyWithdraw(address,uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
@@ -376,6 +522,8 @@ export interface SZEROInterface extends utils.Interface {
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegateChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegateVotesChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EmergencyWithdraw"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
@@ -395,6 +543,31 @@ export type ApprovalEvent = TypedEvent<
 >;
 
 export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+
+export interface DelegateChangedEventObject {
+  delegator: string;
+  fromDelegate: string;
+  toDelegate: string;
+}
+export type DelegateChangedEvent = TypedEvent<
+  [string, string, string],
+  DelegateChangedEventObject
+>;
+
+export type DelegateChangedEventFilter = TypedEventFilter<DelegateChangedEvent>;
+
+export interface DelegateVotesChangedEventObject {
+  delegate: string;
+  previousBalance: BigNumber;
+  newBalance: BigNumber;
+}
+export type DelegateVotesChangedEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  DelegateVotesChangedEventObject
+>;
+
+export type DelegateVotesChangedEventFilter =
+  TypedEventFilter<DelegateVotesChangedEvent>;
 
 export interface DepositEventObject {
   user: string;
@@ -493,12 +666,7 @@ export interface SZERO extends BaseContract {
   functions: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    add(
-      _allocPoint: PromiseOrValue<BigNumberish>,
-      _lpToken: PromiseOrValue<string>,
-      _withUpdate: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -519,6 +687,18 @@ export interface SZERO extends BaseContract {
 
     bonusEndBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    calculateZeroReward(
+      multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { zeroReward: BigNumber }>;
+
+    checkpoints(
+      account: PromiseOrValue<string>,
+      pos: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[ERC20VotesUpgradeable.CheckpointStructOutput]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
@@ -527,11 +707,25 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    deposit(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
+    delegate(
+      delegatee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    delegateBySig(
+      delegatee: PromiseOrValue<string>,
+      nonce: PromiseOrValue<BigNumberish>,
+      expiry: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    delegates(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     dev(
       _devaddr: PromiseOrValue<string>,
@@ -541,7 +735,6 @@ export interface SZERO extends BaseContract {
     devaddr(overrides?: CallOverrides): Promise<[string]>;
 
     emergencyWithdraw(
-      _pid: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -550,9 +743,31 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    enterStakingWithPermit(
+      zeroAmount: PromiseOrValue<BigNumberish>,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     getMultiplier(
       _from: PromiseOrValue<BigNumberish>,
       _to: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getPastTotalSupply(
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getPastVotes(
+      account: PromiseOrValue<string>,
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getVotes(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -564,19 +779,15 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
-      _startBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     leaveStaking(
       zeroAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    massUpdatePools(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -589,6 +800,16 @@ export interface SZERO extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    nonces(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    numCheckpoints(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pendingZero(
@@ -596,6 +817,17 @@ export interface SZERO extends BaseContract {
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     poolInfo(
       arg0: PromiseOrValue<BigNumberish>,
@@ -610,6 +842,10 @@ export interface SZERO extends BaseContract {
     >;
 
     poolLength(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -653,8 +889,13 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    updatePool(
-      _pid: PromiseOrValue<BigNumberish>,
+    updateZAssetReward(
+      idx: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    updateZeroPool(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -666,25 +907,27 @@ export interface SZERO extends BaseContract {
       [BigNumber, BigNumber] & { amount: BigNumber; rewardDebt: BigNumber }
     >;
 
-    withdraw(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    zassets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber] & {
+        token: string;
+        rewardsToBeMinted: BigNumber;
+        multiplier: BigNumber;
+      }
+    >;
 
     zero(overrides?: CallOverrides): Promise<[string]>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    zerofrost(overrides?: CallOverrides): Promise<[string]>;
   };
 
   BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
-  add(
-    _allocPoint: PromiseOrValue<BigNumberish>,
-    _lpToken: PromiseOrValue<string>,
-    _withUpdate: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -705,6 +948,18 @@ export interface SZERO extends BaseContract {
 
   bonusEndBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+  calculateZeroReward(
+    multiplier: PromiseOrValue<BigNumberish>,
+    lpSupply: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  checkpoints(
+    account: PromiseOrValue<string>,
+    pos: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<ERC20VotesUpgradeable.CheckpointStructOutput>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
@@ -713,11 +968,25 @@ export interface SZERO extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  deposit(
-    _pid: PromiseOrValue<BigNumberish>,
-    _amount: PromiseOrValue<BigNumberish>,
+  delegate(
+    delegatee: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  delegateBySig(
+    delegatee: PromiseOrValue<string>,
+    nonce: PromiseOrValue<BigNumberish>,
+    expiry: PromiseOrValue<BigNumberish>,
+    v: PromiseOrValue<BigNumberish>,
+    r: PromiseOrValue<BytesLike>,
+    s: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  delegates(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   dev(
     _devaddr: PromiseOrValue<string>,
@@ -727,7 +996,6 @@ export interface SZERO extends BaseContract {
   devaddr(overrides?: CallOverrides): Promise<string>;
 
   emergencyWithdraw(
-    _pid: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -736,9 +1004,31 @@ export interface SZERO extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  enterStakingWithPermit(
+    zeroAmount: PromiseOrValue<BigNumberish>,
+    sig: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   getMultiplier(
     _from: PromiseOrValue<BigNumberish>,
     _to: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getPastTotalSupply(
+    blockNumber: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getPastVotes(
+    account: PromiseOrValue<string>,
+    blockNumber: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getVotes(
+    account: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -750,19 +1040,15 @@ export interface SZERO extends BaseContract {
 
   initialize(
     _zero: PromiseOrValue<string>,
+    zerofrost: PromiseOrValue<string>,
     _devaddr: PromiseOrValue<string>,
     _zeroPerBlock: PromiseOrValue<BigNumberish>,
-    _startBlock: PromiseOrValue<BigNumberish>,
     _bonusEndBlock: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   leaveStaking(
     zeroAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  massUpdatePools(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -775,6 +1061,16 @@ export interface SZERO extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  nonces(
+    owner: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  numCheckpoints(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   pendingZero(
@@ -782,6 +1078,17 @@ export interface SZERO extends BaseContract {
     _user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  permit(
+    owner: PromiseOrValue<string>,
+    spender: PromiseOrValue<string>,
+    value: PromiseOrValue<BigNumberish>,
+    deadline: PromiseOrValue<BigNumberish>,
+    v: PromiseOrValue<BigNumberish>,
+    r: PromiseOrValue<BytesLike>,
+    s: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   poolInfo(
     arg0: PromiseOrValue<BigNumberish>,
@@ -796,6 +1103,10 @@ export interface SZERO extends BaseContract {
   >;
 
   poolLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+  redeem(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -839,8 +1150,13 @@ export interface SZERO extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  updatePool(
-    _pid: PromiseOrValue<BigNumberish>,
+  updateZAssetReward(
+    idx: PromiseOrValue<BigNumberish>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  updateZeroPool(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -852,25 +1168,27 @@ export interface SZERO extends BaseContract {
     [BigNumber, BigNumber] & { amount: BigNumber; rewardDebt: BigNumber }
   >;
 
-  withdraw(
-    _pid: PromiseOrValue<BigNumberish>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  zassets(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber, BigNumber] & {
+      token: string;
+      rewardsToBeMinted: BigNumber;
+      multiplier: BigNumber;
+    }
+  >;
 
   zero(overrides?: CallOverrides): Promise<string>;
 
   zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+  zerofrost(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
-    add(
-      _allocPoint: PromiseOrValue<BigNumberish>,
-      _lpToken: PromiseOrValue<string>,
-      _withUpdate: PromiseOrValue<boolean>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -891,6 +1209,18 @@ export interface SZERO extends BaseContract {
 
     bonusEndBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    calculateZeroReward(
+      multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    checkpoints(
+      account: PromiseOrValue<string>,
+      pos: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<ERC20VotesUpgradeable.CheckpointStructOutput>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
@@ -899,11 +1229,25 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    deposit(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
+    delegate(
+      delegatee: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    delegateBySig(
+      delegatee: PromiseOrValue<string>,
+      nonce: PromiseOrValue<BigNumberish>,
+      expiry: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    delegates(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     dev(
       _devaddr: PromiseOrValue<string>,
@@ -912,19 +1256,38 @@ export interface SZERO extends BaseContract {
 
     devaddr(overrides?: CallOverrides): Promise<string>;
 
-    emergencyWithdraw(
-      _pid: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    emergencyWithdraw(overrides?: CallOverrides): Promise<void>;
 
     enterStaking(
       zeroAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    enterStakingWithPermit(
+      zeroAmount: PromiseOrValue<BigNumberish>,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getMultiplier(
       _from: PromiseOrValue<BigNumberish>,
       _to: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPastTotalSupply(
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPastVotes(
+      account: PromiseOrValue<string>,
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getVotes(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -936,9 +1299,9 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
-      _startBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -947,8 +1310,6 @@ export interface SZERO extends BaseContract {
       zeroAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    massUpdatePools(overrides?: CallOverrides): Promise<void>;
 
     migrate(
       _pid: PromiseOrValue<BigNumberish>,
@@ -959,6 +1320,16 @@ export interface SZERO extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    nonces(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    numCheckpoints(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     pendingZero(
@@ -966,6 +1337,17 @@ export interface SZERO extends BaseContract {
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     poolInfo(
       arg0: PromiseOrValue<BigNumberish>,
@@ -980,6 +1362,8 @@ export interface SZERO extends BaseContract {
     >;
 
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeem(overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1021,10 +1405,13 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updatePool(
-      _pid: PromiseOrValue<BigNumberish>,
+    updateZAssetReward(
+      idx: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    updateZeroPool(overrides?: CallOverrides): Promise<void>;
 
     userInfo(
       arg0: PromiseOrValue<BigNumberish>,
@@ -1034,15 +1421,22 @@ export interface SZERO extends BaseContract {
       [BigNumber, BigNumber] & { amount: BigNumber; rewardDebt: BigNumber }
     >;
 
-    withdraw(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
+    zassets(
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<
+      [string, BigNumber, BigNumber] & {
+        token: string;
+        rewardsToBeMinted: BigNumber;
+        multiplier: BigNumber;
+      }
+    >;
 
     zero(overrides?: CallOverrides): Promise<string>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    zerofrost(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -1056,6 +1450,28 @@ export interface SZERO extends BaseContract {
       spender?: PromiseOrValue<string> | null,
       value?: null
     ): ApprovalEventFilter;
+
+    "DelegateChanged(address,address,address)"(
+      delegator?: PromiseOrValue<string> | null,
+      fromDelegate?: PromiseOrValue<string> | null,
+      toDelegate?: PromiseOrValue<string> | null
+    ): DelegateChangedEventFilter;
+    DelegateChanged(
+      delegator?: PromiseOrValue<string> | null,
+      fromDelegate?: PromiseOrValue<string> | null,
+      toDelegate?: PromiseOrValue<string> | null
+    ): DelegateChangedEventFilter;
+
+    "DelegateVotesChanged(address,uint256,uint256)"(
+      delegate?: PromiseOrValue<string> | null,
+      previousBalance?: null,
+      newBalance?: null
+    ): DelegateVotesChangedEventFilter;
+    DelegateVotesChanged(
+      delegate?: PromiseOrValue<string> | null,
+      previousBalance?: null,
+      newBalance?: null
+    ): DelegateVotesChangedEventFilter;
 
     "Deposit(address,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
@@ -1117,12 +1533,7 @@ export interface SZERO extends BaseContract {
   estimateGas: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
-    add(
-      _allocPoint: PromiseOrValue<BigNumberish>,
-      _lpToken: PromiseOrValue<string>,
-      _withUpdate: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1143,6 +1554,18 @@ export interface SZERO extends BaseContract {
 
     bonusEndBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    calculateZeroReward(
+      multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    checkpoints(
+      account: PromiseOrValue<string>,
+      pos: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
@@ -1151,10 +1574,24 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    deposit(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
+    delegate(
+      delegatee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    delegateBySig(
+      delegatee: PromiseOrValue<string>,
+      nonce: PromiseOrValue<BigNumberish>,
+      expiry: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    delegates(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     dev(
@@ -1165,7 +1602,6 @@ export interface SZERO extends BaseContract {
     devaddr(overrides?: CallOverrides): Promise<BigNumber>;
 
     emergencyWithdraw(
-      _pid: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1174,9 +1610,31 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    enterStakingWithPermit(
+      zeroAmount: PromiseOrValue<BigNumberish>,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getMultiplier(
       _from: PromiseOrValue<BigNumberish>,
       _to: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPastTotalSupply(
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPastVotes(
+      account: PromiseOrValue<string>,
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getVotes(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1188,19 +1646,15 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
-      _startBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     leaveStaking(
       zeroAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    massUpdatePools(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1213,6 +1667,16 @@ export interface SZERO extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nonces(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    numCheckpoints(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pendingZero(
@@ -1221,12 +1685,27 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     poolInfo(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1270,8 +1749,13 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    updatePool(
-      _pid: PromiseOrValue<BigNumberish>,
+    updateZAssetReward(
+      idx: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    updateZeroPool(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1281,26 +1765,22 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    withdraw(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    zassets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     zero(overrides?: CallOverrides): Promise<BigNumber>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    zerofrost(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     BONUS_MULTIPLIER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    add(
-      _allocPoint: PromiseOrValue<BigNumberish>,
-      _lpToken: PromiseOrValue<string>,
-      _withUpdate: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -1321,6 +1801,18 @@ export interface SZERO extends BaseContract {
 
     bonusEndBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    calculateZeroReward(
+      multiplier: PromiseOrValue<BigNumberish>,
+      lpSupply: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    checkpoints(
+      account: PromiseOrValue<string>,
+      pos: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
@@ -1329,10 +1821,24 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    deposit(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
+    delegate(
+      delegatee: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    delegateBySig(
+      delegatee: PromiseOrValue<string>,
+      nonce: PromiseOrValue<BigNumberish>,
+      expiry: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    delegates(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     dev(
@@ -1343,7 +1849,6 @@ export interface SZERO extends BaseContract {
     devaddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     emergencyWithdraw(
-      _pid: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1352,9 +1857,31 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    enterStakingWithPermit(
+      zeroAmount: PromiseOrValue<BigNumberish>,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     getMultiplier(
       _from: PromiseOrValue<BigNumberish>,
       _to: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPastTotalSupply(
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPastVotes(
+      account: PromiseOrValue<string>,
+      blockNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getVotes(
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1366,19 +1893,15 @@ export interface SZERO extends BaseContract {
 
     initialize(
       _zero: PromiseOrValue<string>,
+      zerofrost: PromiseOrValue<string>,
       _devaddr: PromiseOrValue<string>,
       _zeroPerBlock: PromiseOrValue<BigNumberish>,
-      _startBlock: PromiseOrValue<BigNumberish>,
       _bonusEndBlock: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     leaveStaking(
       zeroAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    massUpdatePools(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1391,6 +1914,16 @@ export interface SZERO extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    nonces(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    numCheckpoints(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pendingZero(
@@ -1399,12 +1932,27 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     poolInfo(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     poolLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1448,8 +1996,13 @@ export interface SZERO extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    updatePool(
-      _pid: PromiseOrValue<BigNumberish>,
+    updateZAssetReward(
+      idx: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateZeroPool(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1459,14 +2012,15 @@ export interface SZERO extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
-      _pid: PromiseOrValue<BigNumberish>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    zassets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     zero(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     zeroPerBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    zerofrost(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

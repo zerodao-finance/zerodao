@@ -2,5 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as governance from "./governance";
+export * as interfaces from "./interfaces";
+export * as nft from "./nft";
 export * as token from "./token";
 export * as util from "./util";
+export * as zero from "./zero";

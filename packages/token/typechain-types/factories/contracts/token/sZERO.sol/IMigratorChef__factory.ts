@@ -29,7 +29,7 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-];
+] as const;
 
 export class IMigratorChef__factory {
   static readonly abi = _abi;
