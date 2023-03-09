@@ -73,6 +73,7 @@ describe("ZeroHeroNFT - Minting before start", function () {
         { value: ethers.utils.parseEther('999') }
       );
       await expect(tx).to.be.revertedWith('PrivateMintNotStarted');
+      expect(await contract.isPrivateActive()).to.equal(false)
     });
   }
 
@@ -89,6 +90,7 @@ describe("ZeroHeroNFT - Minting before start", function () {
         { value: ethers.utils.parseEther('999') }
       );
       await expect(tx).to.be.revertedWith('WhitelistMintNotStarted');
+      expect(await contract.isWhitelistActive()).to.equal(false)
     });
   }
 
@@ -117,6 +119,7 @@ describe("ZeroHeroNFT - Private Mint", async function () {
   it("Should not be able to mint if not on private list", async function () {
     const amount = 3;
     await contract.startPrivateMint();
+    expect(await contract.isPrivateActive()).to.equal(true)
     const tx = contract
       .connect(buyer2)
       .privateMint(
@@ -164,8 +167,8 @@ describe("ZeroHeroNFT - Private Mint", async function () {
     expect(await contract.balanceOf(buyer1.address)).to.equal(previousAmount + amount);
   });
 
-  it("Should not allow for minting more than 5 NFT's per address", async function () {
-    const amount = 6;
+  it("Should not allow for minting more than 10 NFT's per address", async function () {
+    const amount = 11;
     const tx = contract
       .connect(buyer1)
       .privateMint(
@@ -199,6 +202,7 @@ describe("ZeroHeroNFT - Whitelist Mint", async function () {
   it("Should not be able to mint if not on white list", async function () {
     const amount = 3;
     await contract.startWhitelistMint();
+    expect(await contract.isWhitelistActive()).to.equal(true)
     const tx = contract
       .connect(buyer2)
       .whitelistMint(
@@ -246,8 +250,8 @@ describe("ZeroHeroNFT - Whitelist Mint", async function () {
     expect(await contract.balanceOf(buyer1.address)).to.equal(previousAmount + amount);
   });
 
-  it("Should not allow for minting more than 5 NFT's per address", async function () {
-    const amount = 6;
+  it("Should not allow for minting more than 10 NFT's per address", async function () {
+    const amount = 11;
     const tx = contract
       .connect(buyer1)
       .whitelistMint(
