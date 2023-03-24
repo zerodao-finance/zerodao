@@ -6,7 +6,7 @@ import { useMerkleGenerator } from "../merkle/use-merkle";
 import path from "path";
 import fs from 'fs';
 
-export const ZHERO_META_CID = process.env.ZHERO_META_CID || 'QmQsJReMPJGFUmBM9phUuhKBfxzwxmBGL1GQ9hLAq8snqk';
+export const ZHERO_META_CID = process.env.ZHERO_META_CID || 'QmR4Kdi64gwJQ2AWkbHEfKrnDTLybECXHwCewqAC8FNhxJ';
 
 const deploy: DeployFunction = async (hre) => {  
   if(!process.env.NFT_ONLY && process.env.TOKEN_ONLY) return;

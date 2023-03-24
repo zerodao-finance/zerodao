@@ -4,7 +4,7 @@ import { ZeroHeroNFT } from '../typechain-types';
 import { ZHERO_META_CID } from '../deploy/2_deploy_zero_hero';
 import path from 'path';
 import fs from 'fs';
-import { useMerkleGenerator } from './use-merkle';
+import { useMerkleGenerator } from '../merkle/use-merkle';
 
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://eth-goerli.blastapi.io/${process.env.BLASTAPI_GOERLI_ID}`)
