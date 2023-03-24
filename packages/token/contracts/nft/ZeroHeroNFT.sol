@@ -4,7 +4,6 @@ pragma solidity ^0.8.11;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts-new/access/Ownable.sol";
 import "@openzeppelin/contracts-new/utils/Address.sol";
-import "@openzeppelin/contracts-new/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-new/utils/cryptography/MerkleProof.sol";
 
 error PrivateMintNotStarted();
@@ -15,8 +14,9 @@ error NotInWhitelist();
 error NotInPrivatelist();
 error ExceedSupply();
 error ExceedMaxPerWallet();
+error MerkleRootNotInitialized();
 
-contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
+contract ZeroHeroNFT is ERC721A, Ownable {
   using MerkleProof for bytes32[];
 
   // ===== Variables =====
@@ -56,55 +56,20 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     _;
   }
 
-  // ===== Utils =====
-  function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len;
-        while (_i != 0) {
-            k = k-1;
-            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
-    }
-
-  // ===== Checks =====
-  function isPrivateActive() external view returns (bool) {
-    if (privateMintStarted) return true;
-    return false;
-  }
-
-  function isWhitelistActive() external view returns (bool) {
-    if (whitelistMintStarted) return true;
-    return false;
-  }
-
-  // ===== Dev mint =====
+  // ===== Minters =====
   function devMint(uint8 quantity) external onlyOwner {
     if (totalSupply() + quantity > devSupply) revert ExceedSupply();
 
     _mint(msg.sender, quantity);
   }
 
-  // ===== Private mint =====
   function privateMint(
     uint256 _index,
     address _account,
     uint256 _amount,
     bytes32[] memory proof,
     uint256 quantity
-  ) external payable nonReentrant whenPrivateMint {
+  ) external payable whenPrivateMint {
     if (msg.value < mintPrice * quantity) revert InsufficientPayment();
     if (totalSupply() + quantity > collectionSupply) revert ExceedSupply();
     if (_numberMinted(msg.sender) + quantity > maxItemsPerWallet) revert ExceedMaxPerWallet();
@@ -113,14 +78,13 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     _mint(_account, quantity);
   }
 
-  // ===== Whitelist mint =====
   function whitelistMint(
     uint256 _index,
     address _account,
     uint256 _amount,
     bytes32[] memory proof,
     uint256 quantity
-  ) external payable nonReentrant whenWhitelistMint {
+  ) external payable whenWhitelistMint {
     if (msg.value < mintPrice * quantity) revert InsufficientPayment();
     if (totalSupply() + quantity > collectionSupply) revert ExceedSupply();
     if (_numberMinted(msg.sender) + quantity > maxItemsPerWallet) revert ExceedMaxPerWallet();
@@ -129,40 +93,19 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     _mint(_account, quantity);
   }
 
-  // ===== Public mint =====
-  function mint(uint256 quantity) external payable nonReentrant whenPublicMint {
+  function mint(uint256 quantity) external payable whenPublicMint {
     if (msg.value < mintPrice * quantity) revert InsufficientPayment();
     if (totalSupply() + quantity > collectionSupply) revert ExceedSupply();
 
     _mint(msg.sender, quantity);
   }
 
-  // ===== Whitelisting =====
-  function isAddressWhitelisted(
-    bytes32[] memory proof,
-    uint256 _index,
-    address _account,
-    uint256 _amount
-  ) internal view returns (bool) {
-    return proof.verify(whitelistMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
-  }
-
-  // ===== Private Listing =====
-  function isAddressPrivatelisted(
-    bytes32[] memory proof,
-    uint256 _index,
-    address _account,
-    uint256 _amount
-  ) internal view returns (bool) {
-    return proof.verify(privateMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
-  }
-
   // ===== Withdraw =====
-  function withdraw() external onlyOwner nonReentrant {
+  function withdraw() external onlyOwner {
     Address.sendValue(payable(owner()), address(this).balance);
   }
 
-  // ===== Metadata URI =====
+  // ===== Token URI =====
   function _baseURI() internal view override(ERC721A) returns (string memory) {
     return baseTokenURI;
   }
@@ -185,12 +128,41 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
         : "";
   }
 
-  // ===== Setters =====
+  // ===== Checks =====
+  function isPrivateActive() external view returns (bool) {
+    return privateMintStarted;
+  }
+
+  function isWhitelistActive() external view returns (bool) {
+    return whitelistMintStarted;
+  }
+
+  function isAddressWhitelisted(
+    bytes32[] memory proof,
+    uint256 _index,
+    address _account,
+    uint256 _amount
+  ) internal view returns (bool) {
+    return proof.verify(whitelistMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
+  }
+
+  function isAddressPrivatelisted(
+    bytes32[] memory proof,
+    uint256 _index,
+    address _account,
+    uint256 _amount
+  ) internal view returns (bool) {
+    return proof.verify(privateMerkleRoot, keccak256(abi.encodePacked(_index, _account, _amount)));
+  }
+
+  // ===== Starters =====
   function startPrivateMint() external onlyOwner {
+    if(privateMerkleRoot == bytes32(0)) revert MerkleRootNotInitialized();
     privateMintStarted = true;
   }
 
   function startWhitelistMint() external onlyOwner {
+    if(whitelistMerkleRoot == bytes32(0)) revert MerkleRootNotInitialized();
     whitelistMintStarted = true;
   }
 
@@ -198,6 +170,7 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
     publicMintStarted = true;
   }
 
+  // ===== Setters =====
   function setMaxItemsPerWallet(uint8 value) external onlyOwner {
     maxItemsPerWallet = value;
   }
@@ -220,5 +193,28 @@ contract ZeroHeroNFT is ERC721A, Ownable, ReentrancyGuard {
 
   function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
     baseExtension = _newBaseExtension;
+  }
+
+  // ===== Utils =====
+  function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+    if (_i == 0) {
+      return "0";
+    }
+    uint j = _i;
+    uint len;
+    while (j != 0) {
+      len++;
+      j /= 10;
+    }
+    bytes memory bstr = new bytes(len);
+    uint k = len;
+    while (_i != 0) {
+      k = k-1;
+      uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+      bytes1 b1 = bytes1(temp);
+      bstr[k] = b1;
+      _i /= 10;
+    }
+    return string(bstr);
   }
 }
