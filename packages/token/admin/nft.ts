@@ -40,6 +40,11 @@ async function main() {
     fs.writeFileSync(path.join(merkleDir, 'zhero-whitelist.json'), JSON.stringify(whitelistMerkleTree, null, 2));
     await contract.setWhitelistMerkleRoot(whitelistMerkleTree.merkleRoot);
   }
+
+  // Withdraw
+  if(process.env.WITHDRAW) {
+    await contract.withdraw();
+  }
 }
 
 main().then(() => process.exit(0)).catch((err) => {
