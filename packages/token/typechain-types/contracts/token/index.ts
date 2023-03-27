@@ -3,5 +3,7 @@
 /* eslint-disable */
 import type * as sZeroSol from "./sZERO.sol";
 export type { sZeroSol };
+import type * as zAssetBaseSol from "./zAssetBase.sol";
+export type { zAssetBaseSol };
 export type { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable";
 export type { ZERO } from "./ZERO";

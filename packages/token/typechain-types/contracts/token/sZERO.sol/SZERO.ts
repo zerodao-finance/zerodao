@@ -65,6 +65,7 @@ export interface SZEROInterface extends utils.Interface {
     "delegates(address)": FunctionFragment;
     "dev(address)": FunctionFragment;
     "devaddr()": FunctionFragment;
+    "editZAsset(uint256,address,uint256,uint256)": FunctionFragment;
     "emergencyWithdraw()": FunctionFragment;
     "enterStaking(uint256)": FunctionFragment;
     "enterStakingWithPermit(uint256,bytes)": FunctionFragment;
@@ -86,6 +87,7 @@ export interface SZEROInterface extends utils.Interface {
     "poolInfo(uint256)": FunctionFragment;
     "poolLength()": FunctionFragment;
     "redeem()": FunctionFragment;
+    "registerZAsset(address,uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "set(uint256,uint256,bool)": FunctionFragment;
     "setMigrator(address)": FunctionFragment;
@@ -122,6 +124,7 @@ export interface SZEROInterface extends utils.Interface {
       | "delegates"
       | "dev"
       | "devaddr"
+      | "editZAsset"
       | "emergencyWithdraw"
       | "enterStaking"
       | "enterStakingWithPermit"
@@ -143,6 +146,7 @@ export interface SZEROInterface extends utils.Interface {
       | "poolInfo"
       | "poolLength"
       | "redeem"
+      | "registerZAsset"
       | "renounceOwnership"
       | "set"
       | "setMigrator"
@@ -223,6 +227,15 @@ export interface SZEROInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "devaddr", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "editZAsset",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "emergencyWithdraw",
     values?: undefined
@@ -309,6 +322,14 @@ export interface SZEROInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "redeem", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "registerZAsset",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -413,6 +434,7 @@ export interface SZEROInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "dev", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "devaddr", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "editZAsset", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "emergencyWithdraw",
     data: BytesLike
@@ -464,6 +486,10 @@ export interface SZEROInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "poolInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolLength", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "registerZAsset",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -734,6 +760,14 @@ export interface SZERO extends BaseContract {
 
     devaddr(overrides?: CallOverrides): Promise<[string]>;
 
+    editZAsset(
+      idx: PromiseOrValue<BigNumberish>,
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     emergencyWithdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -844,6 +878,13 @@ export interface SZERO extends BaseContract {
     poolLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    registerZAsset(
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -995,6 +1036,14 @@ export interface SZERO extends BaseContract {
 
   devaddr(overrides?: CallOverrides): Promise<string>;
 
+  editZAsset(
+    idx: PromiseOrValue<BigNumberish>,
+    token: PromiseOrValue<string>,
+    rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+    multiplier: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   emergencyWithdraw(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1105,6 +1154,13 @@ export interface SZERO extends BaseContract {
   poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   redeem(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  registerZAsset(
+    token: PromiseOrValue<string>,
+    rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+    multiplier: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1256,6 +1312,14 @@ export interface SZERO extends BaseContract {
 
     devaddr(overrides?: CallOverrides): Promise<string>;
 
+    editZAsset(
+      idx: PromiseOrValue<BigNumberish>,
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     emergencyWithdraw(overrides?: CallOverrides): Promise<void>;
 
     enterStaking(
@@ -1364,6 +1428,13 @@ export interface SZERO extends BaseContract {
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     redeem(overrides?: CallOverrides): Promise<void>;
+
+    registerZAsset(
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1601,6 +1672,14 @@ export interface SZERO extends BaseContract {
 
     devaddr(overrides?: CallOverrides): Promise<BigNumber>;
 
+    editZAsset(
+      idx: PromiseOrValue<BigNumberish>,
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     emergencyWithdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1704,6 +1783,13 @@ export interface SZERO extends BaseContract {
     poolLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    registerZAsset(
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1848,6 +1934,14 @@ export interface SZERO extends BaseContract {
 
     devaddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    editZAsset(
+      idx: PromiseOrValue<BigNumberish>,
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     emergencyWithdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1951,6 +2045,13 @@ export interface SZERO extends BaseContract {
     poolLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     redeem(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerZAsset(
+      token: PromiseOrValue<string>,
+      rewardsToBeMinted: PromiseOrValue<BigNumberish>,
+      multiplier: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

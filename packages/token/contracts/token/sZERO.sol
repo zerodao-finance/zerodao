@@ -164,6 +164,22 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     poolInfo[_pid].allocPoint = _allocPoint;
   }
 
+  function registerZAsset(address token, uint256 rewardsToBeMinted, uint256 multiplier) public onlyOwner returns (uint256 idx)  {
+    idx = zassets.length;
+    zassets.push(ZAsset({
+      token: IERC20(token),
+      rewardsToBeMinted: rewardsToBeMinted,
+      multiplier: multiplier
+    }));
+  }
+
+  function editZAsset(uint256 idx, address token, uint256 rewardsToBeMinted, uint256 multiplier) public onlyOwner {
+    ZAsset storage asset = zassets[idx];
+    asset.rewardsToBeMinted = rewardsToBeMinted;
+    asset.multiplier = multiplier;
+    asset.token = IERC20(token);
+  }
+
   // Set the migrator contract. Can only be called by the owner.
   function setMigrator(IMigratorChef _migrator) public onlyOwner {
     migrator = _migrator;
@@ -192,7 +208,6 @@ contract sZERO is Initializable, OwnableUpgradeable, ERC20VotesUpgradeable {
     }
   }
 
-  //TODO: rework this a bit
   function calculateZeroReward(uint256 multiplier, uint256 lpSupply) public view returns (uint256 zeroReward) {
     zeroReward = multiplier.mul(zeroPerBlock).mul(lpSupply).div(1 ether);
     for (uint256 i = 0; i < zassets.length; i++) {
