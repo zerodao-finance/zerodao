@@ -5,9 +5,10 @@ pragma solidity ^0.8.0;
 import { IZEROFROST } from "../interfaces/IZEROFROST.sol";
 import "@openzeppelin/contracts-upgradeable-new/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable-new/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable-new/token/ERC721/ERC721Upgradeable.sol";
 
 // dummy contract to just return epoch length for now
-contract ZEROFROST is Initializable, OwnableUpgradeable, IZEROFROST {
+contract ZEROFROST is Initializable, OwnableUpgradeable, ERC721Upgradeable, IZEROFROST {
   function initialize() public initializer {
     __Ownable_init_unchained();
   }
