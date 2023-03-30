@@ -10,6 +10,7 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
   address _gateway;
   address _szero;
   uint256 _idx;
+  mapping(address => bool) _isPrecompiled;
   modifier onlyGatewayOrOwner() {
     require(msg.sender == owner() || msg.sender == _szero);
     _;
@@ -35,13 +36,25 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
     _idx = idx;
   }
 
-  function mint(address account, uint256 amount) public onlyGatewayOrOwner {
+  function mint(
+    address account,
+    bytes32 pHash,
+    bytes32 nHash,
+    uint256 amount,
+    bytes memory signature
+  ) public virtual {
+    //TODO: write signature verification
     _mint(account, amount);
     ISZERO(_szero).updateZAssetReward(_idx, amount);
   }
 
-  function burn(address account, uint256 amount) public onlyGatewayOrOwner {
-    _burn(account, amount);
+  function burn(
+    uint256 amount,
+    bytes memory blsPubKey,
+    bytes memory data
+  ) public virtual {
+    //TODO: write signature verification
+    _burn(msg.sender, amount);
     ISZERO(_szero).updateZAssetReward(_idx, amount);
   }
 }
