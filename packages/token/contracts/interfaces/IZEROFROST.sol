@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 // ERC721 contract that issues an NFT representing a FROST signer's bond and active collateral.
 
+// Returns a UNIX timestamp representing when a ZEROFROST bond is considered inactive and eligible to call `redeem(bytes)`.
 interface IZEROFROST {
   // Current epoch number. ZEROFROST holders which have acquired a bond for the current epoch remain locked until the next epoch after the one which they call `goodbye(bytes)`. Epochs begin at 0 and increment deterministically.
   function epoch() external view returns (uint256);
@@ -43,7 +44,6 @@ interface IZEROFROST {
   function wrappedAssetValueInETH() external view returns (address[] memory assets, uint256[] memory totalValue);
 
   // Signal your intent to leave the FROST ring and abdicate your responsibility as a signer. But, you can't leave yet! You have to keep signing until the next epoch is triggered.
-
   // Without calling this function, whether or not your node is online to participate in DKG, your ZEROFROST bond will still have its collateral on the line, and you will still earn rewards.
   function goodbye(bytes memory blsPubKey) external;
 
