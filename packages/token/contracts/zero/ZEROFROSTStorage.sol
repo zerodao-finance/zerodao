@@ -14,6 +14,5 @@ contract ZEROFROSTStorage is Initializable, OwnableUpgradeable, ERC721Upgradeabl
   mapping(bytes32 => Bond) bonds;
   mapping(address => bool) _acceptsCollateral;
   address[] acceptedCollateral;
-
-  constructor() ERC721Upgradeable("ZEROFROST", "ZFRST") {}
+  address[] assets;
 }

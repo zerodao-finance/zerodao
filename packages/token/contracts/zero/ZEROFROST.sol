@@ -10,6 +10,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
   function initialize() public initializer {
     __Ownable_init_unchained();
+    __ERC721_init_unchained("ZEROFROST", "ZFRST");
   }
 
   function epoch() public view returns (uint256) {
@@ -22,6 +23,10 @@ contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
 
   function epochLength() public view returns (uint256) {
     return 3600 * 24 * 180;
+  }
+
+  function addWrappedAsset(address asset) public onlyOwner {
+    assets.push(asset);
   }
 
   function addAcceptedCollateral(address input) public onlyOwner {
@@ -38,6 +43,10 @@ contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
       _acceptedCollaterals[i] = acceptedCollaterals[i];
     }
   }
+
+  function _convertAssetToETH(address asset, uint256 totalSupply) internal returns (uint256) {}
+
+  function _convertCollateralToETH(address asset, uint256 supply) internal returns (uint256) {}
 
   function purchase(
     address[] memory inputCollateral,
@@ -62,5 +71,25 @@ contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
     Bond memory _bond = bonds[keccak256(blsPubKey)];
     inputCollateral = _bond.inputCollateral;
     inputCollateralAmounts = _bond.inputCollateralAmounts;
+  }
+
+  function canLeaveAfter(bytes memory blsPubKey) public view returns (uint256 timestamp) {}
+
+  function collateralValueInETH() public view returns (address[] memory _assets, uint256[] memory totalValue) {
+    _assets = new address[](acceptedCollateral.length);
+    totalValue = new uint256[](_assets.length);
+    for (uint256 i = 0; i < _assets.length; i++) {
+      _assets[i] = acceptedCollateral[i];
+      totalValue[i] = _convertCollateralToETH(_assets[i], IERC20(_assets[i]).balanceOf(address(this)));
+    }
+  }
+
+  function wrappedAssetValueInETH() public view returns (address[] memory _assets, uint256[] memory totalValue) {
+    _assets = new address[](assets.length);
+    totalValue = new uint256[](_assets.length);
+    for (uint256 i = 0; i < _assets.length; i++) {
+      _assets[i] = assets[i];
+      totalValue[i] = _convertAssetToETH(_assets[i], IERC20(_assets[i]).totalSupply());
+    }
   }
 }
