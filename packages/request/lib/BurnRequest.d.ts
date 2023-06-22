@@ -2,9 +2,7 @@ import { Contract } from "@ethersproject/contracts";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
-import type { ZeroP2P } from "@zerodao/p2p";
 import { Request } from "./Request";
-import { PublishEventEmitter } from "./PublishEventEmitter";
 export declare function getRenAsset(request: any): Contract;
 export declare class BurnRequest extends Request {
     asset: string;
@@ -88,7 +86,7 @@ export declare class BurnRequest extends Request {
     getNormalizedDestinationAddress(): any;
     waitForRemoteTransaction(): Promise<import("send-crypto/build/main/lib/utxo").UTXO>;
     sign(signer: any): Promise<any>;
-    publish(peer: ZeroP2P): Promise<PublishEventEmitter>;
+    publish(peer: any): Promise<any>;
     fetchData(): Promise<this>;
     buildTransaction(): {
         chainId: number;

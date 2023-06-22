@@ -1,7 +1,9 @@
+/*
 import type { ZeroP2P } from "@zerodao/p2p";
 import peerId = require("peer-id");
 import lp from "it-length-prefixed";
 import pipe from "it-pipe";
+*/
 import { PublishEventEmitter } from "./PublishEventEmitter";
 import deployments from "@zerodao/protocol";
 import { getAddress } from "@ethersproject/address";
@@ -63,7 +65,8 @@ export abstract class Request {
         })()
     );
   }
-  async publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
+  async publish(peer: ZeroP2P): Promise<any> {
+	  /*
     const request = this.serialize().toString('utf8');
     const result = new PublishEventEmitter();
     if (peer._keepers.length === 0) {
@@ -92,5 +95,7 @@ export abstract class Request {
       result.emit("finish");
     })().catch((err) => result.emit("error", err));
     return result;
+   */
+    return {};
   }
 }

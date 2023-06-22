@@ -2,13 +2,14 @@ import { hexlify, arrayify } from "@ethersproject/bytes";
 import { randomBytes } from "@ethersproject/random";
 import { Buffer } from "buffer";
 import { BigNumberish, ethers } from "ethers";
-import { Zcash, Bitcoin } from "@renproject/chains";
-import RenJS, { Gateway, GatewayTransaction } from "@renproject/ren";
 import { Contract } from "@ethersproject/contracts";
 import { getProvider } from "@zerodao/chains";
 import { FIXTURES } from "@zerodao/common";
 import { Request } from "./Request";
+import url from "url";
+import qs from "querystring";
 
+/*
 const assetToRenVMChain = (assetName) => {
   switch (assetName) {
     case "renBTC":
@@ -28,6 +29,7 @@ const renVMChainToAssetName = (chain) => {
       return "ZEC";
   }
 };
+*/
 
 export class TransferRequest extends Request {
   public module: string;
@@ -39,6 +41,7 @@ export class TransferRequest extends Request {
   public amount: string;
   public data: string;
   public contractAddress: string;
+  public signer: any;
 
   protected _queryTxResult: any;
   protected _mint: any;
@@ -72,8 +75,9 @@ export class TransferRequest extends Request {
     nonce?: BigNumberish;
     pNonce?: BigNumberish;
     contractAddress: string;
-  }) {
+  }, signer: any) {
     super();
+    this.signer = signer;
     this.module = params.module;
     this.to = params.to;
     this.underwriter = params.underwriter;
@@ -130,6 +134,7 @@ export class TransferRequest extends Request {
   hash(): string {
     return ethers.utils.keccak256(this.serialize());
   }
+  /*
 
   _getRemoteChain() {
     const RenVMChain = assetToRenVMChain(
@@ -156,6 +161,7 @@ export class TransferRequest extends Request {
   _getRenVM() {
     return new RenJS("mainnet").withChain(this._getRemoteChain());
   };
+ */
 
   _getContractParams() {
     return {
@@ -187,39 +193,39 @@ export class TransferRequest extends Request {
     };
   };
 
-  async submitToRenVM(): Promise<Gateway> {
+  async submitToThorChain(): Promise<any> {
     if (this._mint) return this._mint;
-    const eth = getProvider(this);
-    const renVM = this._getRenVM();
-    const result = renVM.withChains(eth).gateway({
-      asset: this._getRemoteChainName(),
-      from: this._getRemoteChain().GatewayAddress(),
-      to: eth.Contract(this._getContractParams()),
-      //@ts-ignore
-      nonce: arrayify(this.nonce),
-    });
+    const mint = await (await fetch(url.format({
+      hostname: 'thornode.thorchain.liquify.com',
+      pathname: '/thorchain/quote/swap',
+      search: '?' + qs.stringify({ amount: this.amount, from_asset: 'BTC.BTC', to_asset: 'ETH.ETH', destination: await this.signer.getAddress() })
+    }))).json();
 
-    return result;
-  };
+    this._mint = { gatewayAddress: mint.inbound_address };
+    return this._mint;
+  }
 
   async waitForDeposit() {
+	  /*
     if (this._deposit) return this._deposit;
     const mint = await this.submitToRenVM();
     return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
+   */
   };
 
   async getTransactionHash() {
-    const deposit = await this.waitForDeposit();
-    return deposit.renVM.tx.hash;
+//    const deposit = await this.waitForDeposit();
+    return Buffer.from(randomBytes(32)).toString('base64');
+//    return deposit.renVM.tx.hash;
   };
 
   async waitForSignature() {
+	  /*
     if (this._queryTxResult) return this._queryTxResult;
     const mint = await this.submitToRenVM();
     const deposit = await this.waitForDeposit();
     /*
     await deposit.in.wait();
-   */
     await deposit.renVM.submit();
     await deposit.renVM.wait();
 
@@ -233,13 +239,18 @@ export class TransferRequest extends Request {
       signature: hexlify(signature),
     });
     return result;
+    */
   };
 
+  async submitToRenVM(): Promise<any> {
+    return await this.submitToThorChain();
+  }
   async toGatewayAddress(): Promise<string> {
-    const mint = await this.submitToRenVM();
+    const mint = await this.submitToThorChain();
     return mint.gatewayAddress;
   };
 
+  /*
   async fallbackMint(signer) {
     if (!this._queryTxResult) await this.waitForSignature();
     const { amount: actualAmount, nHash, signature } = this._queryTxResult;
@@ -248,4 +259,5 @@ export class TransferRequest extends Request {
     ], signer);
     return await contract.fallbackMint(this.contractAddress, this.to, this.asset, this.amount, actualAmount, this.pNonce, this.module, nHash, this.data, signature);
   }
+ */
 }

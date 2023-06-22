@@ -1,6 +1,4 @@
 /// <reference types="node" />
-import type { ZeroP2P } from "@zerodao/p2p";
-import { PublishEventEmitter } from "./PublishEventEmitter";
 import { BytesLike } from "@ethersproject/bytes";
 import { Buffer } from "buffer";
 export declare abstract class Request {
@@ -14,5 +12,4 @@ export declare abstract class Request {
     toPlainObject(): Object;
     static fromJSON(data: string): Request;
     getChainId(): number;
-    publish(peer: ZeroP2P): Promise<PublishEventEmitter>;
 }

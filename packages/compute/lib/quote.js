@@ -1,25 +1,20 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeCompute = exports.makeQuoter = exports.getChainNameFixture = exports.applyRatio = exports.keeperReward = void 0;
 const units_1 = require("@ethersproject/units");
 const solidity_1 = require("@ethersproject/solidity");
 const contracts_1 = require("@ethersproject/contracts");
 const common_1 = require("@zerodao/common");
-const ren_1 = __importDefault(require("@renproject/ren"));
 const bignumber_1 = require("@ethersproject/bignumber");
-const chains_1 = require("@renproject/chains");
 const JOE = require("@traderjoe-xyz/sdk");
 const UNISWAP = require("@uniswap/sdk");
 const sdk_1 = require("@uniswap/sdk");
-const chains_2 = require("@zerodao/chains");
+const chains_1 = require("@zerodao/chains");
 const constants_1 = require("@ethersproject/constants");
 const ethers_1 = require("ethers");
 exports.keeperReward = (0, units_1.parseEther)("0.001");
 const getProvider = (chainName) => {
-    return (0, chains_2.providerFromChainId)(chains_2.NAME_CHAIN[chainName].id);
+    return (0, chains_1.providerFromChainId)(chains_1.NAME_CHAIN[chainName].id);
 };
 function applyRatio(amount, ratio) {
     return bignumber_1.BigNumber.from(amount)
@@ -29,8 +24,8 @@ function applyRatio(amount, ratio) {
 exports.applyRatio = applyRatio;
 ;
 function returnChainDetails(CHAINID) {
-    const provider = (0, chains_2.providerFromChainId)(Number(CHAINID));
-    const chain = chains_2.CHAINS[CHAINID];
+    const provider = (0, chains_1.providerFromChainId)(Number(CHAINID));
+    const chain = chains_1.CHAINS[CHAINID];
     return {
         provider,
         name: chain.chainName.toUpperCase(),
@@ -319,29 +314,40 @@ function makeCompute(CHAIN = "1") {
                 return "420000";
         }
     })());
-    const bitcoin = new chains_1.Bitcoin({ network: "mainnet" });
-    const zcash = new chains_1.Zcash({ network: "mainnet" });
-    const arbitrum = new chains_1.Arbitrum({
-        provider: getProvider("Arbitrum"),
-        network: "mainnet",
+    /*
+    const bitcoin = new Bitcoin({ network: "mainnet" });
+    const zcash = new Zcash({ network: "mainnet" });
+    const arbitrum = new Arbitrum({
+      provider: getProvider("Arbitrum"),
+      network: "mainnet",
     });
-    const avalanche = new chains_1.Avalanche({
-        provider: getProvider("Avalanche"),
-        network: "mainnet",
+    const avalanche = new Avalanche({
+      provider: getProvider("Avalanche"),
+      network: "mainnet",
     });
-    const polygon = new chains_1.Polygon({
-        provider: getProvider("Polygon"),
-        network: "mainnet",
+    const polygon = new Polygon({
+      provider: getProvider("Polygon"),
+      network: "mainnet",
     });
-    const optimism = new chains_1.Optimism({
-        provider: getProvider("Optimism"),
-        network: "mainnet",
+    const optimism = new Optimism({
+      provider: getProvider("Optimism"),
+      network: "mainnet",
     });
-    const ethereum = new chains_1.Ethereum({
-        provider: getProvider("Ethereum"),
-        network: "mainnet",
+    const ethereum = new Ethereum({
+      provider: getProvider("Ethereum"),
+      network: "mainnet",
     });
-    const renJS = new ren_1.default("mainnet").withChains(bitcoin, zcash, arbitrum, avalanche, polygon, optimism, ethereum);
+    const renJS = new RenJS("mainnet").withChains(
+      bitcoin,
+      zcash,
+      arbitrum,
+      avalanche,
+      polygon,
+      optimism,
+      ethereum
+    );
+  
+    */
     const computeTransferOutput = async ({ module, amount, primaryToken }) => {
         if (primaryToken == "ZEC") {
             switch (module) {
@@ -463,15 +469,17 @@ function makeCompute(CHAIN = "1") {
         const gasPrice = await quotes.chain.provider.getGasPrice();
         const { network, asset } = selectNetwork(primaryToken);
         const gasFee = await computeGasFee(GAS_COST.add(exports.keeperReward.div(gasPrice)), gasPrice, primaryToken);
-        const evmChain = (0, chains_2.getChainName)(CHAIN);
+        const evmChain = (0, chains_1.getChainName)(CHAIN);
         let renOutput = (0, units_1.parseUnits)("0", 8);
         try {
-            const renVmFees = await renJS.getFees({
-                asset: asset,
-                from: zeroFee == mintFee ? network : evmChain,
-                to: zeroFee == burnFee ? network : evmChain,
-            });
-            renOutput = bignumber_1.BigNumber.from(renVmFees.estimateOutput(amountIn.toString()).toFixed());
+            /*
+          const renVmFees = await renJS.getFees({
+            asset: asset,
+            from: zeroFee == mintFee ? network : evmChain,
+            to: zeroFee == burnFee ? network : evmChain,
+          });
+         */
+            renOutput = bignumber_1.BigNumber.from(amountIn);
         }
         catch (e) {
             console.error("error getting renVM fees", e);

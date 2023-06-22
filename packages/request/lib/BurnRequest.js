@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BurnRequest = exports.getRenAsset = void 0;
 const abi_1 = require("@ethersproject/abi");
@@ -12,10 +15,12 @@ const bignumber_1 = require("@ethersproject/bignumber");
 const BTCHandler_1 = require("send-crypto/build/main/handlers/BTC/BTCHandler");
 const ZECHandler_1 = require("send-crypto/build/main/handlers/ZEC/ZECHandler");
 const common_1 = require("@zerodao/common");
+//import type { ZeroP2P } from "@zerodao/p2p";
 const chains_1 = require("@zerodao/chains");
 const Request_1 = require("./Request");
-const PublishEventEmitter_1 = require("./PublishEventEmitter");
 const ethers_1 = require("ethers");
+const querystring_1 = __importDefault(require("querystring"));
+const url_1 = __importDefault(require("url"));
 const coder = new abi_1.AbiCoder();
 const remoteTxMap = new WeakMap();
 function getDomainStructure(request) {
@@ -176,17 +181,6 @@ function getRenAsset(request) {
 }
 exports.getRenAsset = getRenAsset;
 class BurnRequest extends Request_1.Request {
-    constructor(o) {
-        super();
-        this.asset = o.asset;
-        this.data = o.data;
-        this.owner = o.owner;
-        this.destination = o.destination;
-        this.deadline = o.deadline;
-        this.amount = o.amount;
-        this.contractAddress = o.contractAddress;
-        this.signature = o.signature;
-    }
     static get PROTOCOL() {
         return "/zero/2.1.0/dispatch";
     }
@@ -213,12 +207,28 @@ class BurnRequest extends Request_1.Request {
         return coder.encode(['uint256'], [minOut]);
     }
     ;
+    constructor(o) {
+        super();
+        this.asset = o.asset;
+        this.data = o.data;
+        this.owner = o.owner;
+        this.destination = o.destination;
+        this.deadline = o.deadline;
+        this.amount = o.amount;
+        this.contractAddress = o.contractAddress;
+        this.signature = o.signature;
+    }
     async sendTransaction(signer) {
-        const { contractAddress, amount, destination } = this;
-        const contract = new contracts_1.Contract(this.contractAddress, [
-            "function burnApproved(address, address, uint256, uint256, bytes) payable",
-        ], signer);
-        const tx = await contract.burnApproved(constants_1.AddressZero, this.asset, this.isNative() ? "0" : this.amount, BurnRequest.minOutFromData(this.data), this.destination, this.isNative() ? { value: this.amount } : {});
+        const mint = await (await fetch(url_1.default.format({
+            hostname: 'thornode.thorchain.liquify.com',
+            pathname: '/thorchain/quote/swap',
+            search: '?' + querystring_1.default.stringify({ amount: bignumber_1.BigNumber.from(this.amount).toString(), from_asset: 'ETH.ETH', to_asset: 'BTC.BTC', destination: this.getNormalizedDestinationAddress() })
+        }))).json();
+        const tx = await signer.sendTransaction({
+            to: mint.inbound_address,
+            data: '0x' + Buffer.from('=:BTC.BTC:' + this.getNormalizedDestinationAddress()).toString('hex'),
+            value: this.amount
+        });
         remoteTxMap.set(this, tx.wait());
         return tx;
     }
@@ -369,13 +379,15 @@ class BurnRequest extends Request_1.Request {
         }
     }
     ;
-    publish(peer) {
-        if (!this.isNative())
-            return super.publish(peer);
-        else {
-            const result = new PublishEventEmitter_1.PublishEventEmitter();
+    async publish(peer) {
+        /*
+          if (!this.isNative()) return super.publish(peer);
+          else {
+            const result = new PublishEventEmitter();
             setTimeout(() => result.emit("finish"), 0);
-        }
+          }
+       */
+        return {};
     }
     ;
     async fetchData() {

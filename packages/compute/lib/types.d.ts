@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-export declare type Chain = {
+export type Chain = {
     name: string;
     uniswapName: string;
     chainId: string;

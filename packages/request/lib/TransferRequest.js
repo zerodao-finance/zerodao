@@ -6,52 +6,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransferRequest = void 0;
 const bytes_1 = require("@ethersproject/bytes");
 const random_1 = require("@ethersproject/random");
+const buffer_1 = require("buffer");
 const ethers_1 = require("ethers");
-const chains_1 = require("@renproject/chains");
-const ren_1 = __importDefault(require("@renproject/ren"));
-const contracts_1 = require("@ethersproject/contracts");
-const chains_2 = require("@zerodao/chains");
-const common_1 = require("@zerodao/common");
 const Request_1 = require("./Request");
+const url_1 = __importDefault(require("url"));
+const querystring_1 = __importDefault(require("querystring"));
+/*
 const assetToRenVMChain = (assetName) => {
-    switch (assetName) {
-        case "renBTC":
-            return chains_1.Bitcoin;
-        case "renZEC":
-            return chains_1.Zcash;
-        default:
-            return chains_1.Bitcoin;
-    }
+  switch (assetName) {
+    case "renBTC":
+      return Bitcoin;
+    case "renZEC":
+      return Zcash;
+    default:
+      return Bitcoin;
+  }
 };
+
 const renVMChainToAssetName = (chain) => {
-    switch (chain) {
-        case chains_1.Bitcoin:
-            return "BTC";
-        case chains_1.Zcash:
-            return "ZEC";
-    }
+  switch (chain) {
+    case Bitcoin:
+      return "BTC";
+    case Zcash:
+      return "ZEC";
+  }
 };
+*/
 class TransferRequest extends Request_1.Request {
-    constructor(params) {
-        super();
-        this.module = params.module;
-        this.to = params.to;
-        this.underwriter = params.underwriter;
-        this.asset = params.asset;
-        this.amount = ethers_1.ethers.utils.hexlify(typeof params.amount === "number"
-            ? params.amount
-            : typeof params.amount === "string"
-                ? ethers_1.ethers.BigNumber.from(params.amount)
-                : params.amount);
-        this.data = params.data;
-        this.nonce = params.nonce
-            ? (0, bytes_1.hexlify)(params.nonce)
-            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
-        this.pNonce = params.pNonce
-            ? (0, bytes_1.hexlify)(params.pNonce)
-            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
-        this.contractAddress = params.contractAddress;
-    }
     static get FIELDS() {
         return [
             'contractAddress',
@@ -70,6 +51,27 @@ class TransferRequest extends Request_1.Request {
         return "/zero/2.1.0/dispatch";
     }
     ;
+    constructor(params, signer) {
+        super();
+        this.signer = signer;
+        this.module = params.module;
+        this.to = params.to;
+        this.underwriter = params.underwriter;
+        this.asset = params.asset;
+        this.amount = ethers_1.ethers.utils.hexlify(typeof params.amount === "number"
+            ? params.amount
+            : typeof params.amount === "string"
+                ? ethers_1.ethers.BigNumber.from(params.amount)
+                : params.amount);
+        this.data = params.data;
+        this.nonce = params.nonce
+            ? (0, bytes_1.hexlify)(params.nonce)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.pNonce = params.pNonce
+            ? (0, bytes_1.hexlify)(params.pNonce)
+            : (0, bytes_1.hexlify)((0, random_1.randomBytes)(32));
+        this.contractAddress = params.contractAddress;
+    }
     ;
     buildLoanTransaction() {
         throw Error("TransferRequest#buildLoanTransaction(): V1 Transaction does not support lending");
@@ -101,23 +103,34 @@ class TransferRequest extends Request_1.Request {
     hash() {
         return ethers_1.ethers.utils.keccak256(this.serialize());
     }
+    /*
+  
     _getRemoteChain() {
-        const RenVMChain = assetToRenVMChain(["renBTC", "renZEC"].find((v) => Object.values(common_1.FIXTURES).find((network) => Object.entries(network).find(([token, address]) => v === token &&
-            ethers_1.ethers.utils.getAddress(address) ===
-                ethers_1.ethers.utils.getAddress(this.asset)))));
-        return new RenVMChain({
-            network: 'mainnet'
-        });
-    }
-    ;
+      const RenVMChain = assetToRenVMChain(
+        ["renBTC", "renZEC"].find((v) =>
+          Object.values(FIXTURES).find((network) =>
+            Object.entries(network).find(
+              ([token, address]) =>
+                v === token &&
+                ethers.utils.getAddress(address) ===
+                  ethers.utils.getAddress(this.asset)
+            )
+          )
+        )
+      );
+      return new (RenVMChain as any)({
+        network: 'mainnet'
+      });
+    };
+  
     _getRemoteChainName() {
-        return renVMChainToAssetName(this._getRemoteChain().constructor);
-    }
-    ;
+      return renVMChainToAssetName(this._getRemoteChain().constructor);
+    };
+  
     _getRenVM() {
-        return new ren_1.default("mainnet").withChain(this._getRemoteChain());
-    }
-    ;
+      return new RenJS("mainnet").withChain(this._getRemoteChain());
+    };
+   */
     _getContractParams() {
         return {
             to: this.contractAddress,
@@ -148,69 +161,62 @@ class TransferRequest extends Request_1.Request {
         };
     }
     ;
-    async submitToRenVM() {
+    async submitToThorChain() {
         if (this._mint)
             return this._mint;
-        const eth = (0, chains_2.getProvider)(this);
-        const renVM = this._getRenVM();
-        const result = renVM.withChains(eth).gateway({
-            asset: this._getRemoteChainName(),
-            from: this._getRemoteChain().GatewayAddress(),
-            to: eth.Contract(this._getContractParams()),
-            //@ts-ignore
-            nonce: (0, bytes_1.arrayify)(this.nonce),
-        });
-        return result;
+        const mint = await (await fetch(url_1.default.format({
+            hostname: 'thornode.thorchain.liquify.com',
+            pathname: '/thorchain/quote/swap',
+            search: '?' + querystring_1.default.stringify({ amount: this.amount, from_asset: 'BTC.BTC', to_asset: 'ETH.ETH', destination: await this.signer.getAddress() })
+        }))).json();
+        this._mint = { gatewayAddress: mint.inbound_address };
+        return this._mint;
     }
-    ;
     async waitForDeposit() {
-        if (this._deposit)
-            return this._deposit;
-        const mint = await this.submitToRenVM();
-        return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
+        /*
+      if (this._deposit) return this._deposit;
+      const mint = await this.submitToRenVM();
+      return (this._deposit = await new Promise((resolve) => mint.on('transaction', resolve)));
+     */
     }
     ;
     async getTransactionHash() {
-        const deposit = await this.waitForDeposit();
-        return deposit.renVM.tx.hash;
+        //    const deposit = await this.waitForDeposit();
+        return buffer_1.Buffer.from((0, random_1.randomBytes)(32)).toString('base64');
+        //    return deposit.renVM.tx.hash;
     }
     ;
     async waitForSignature() {
-        if (this._queryTxResult)
-            return this._queryTxResult;
-        const mint = await this.submitToRenVM();
-        const deposit = await this.waitForDeposit();
         /*
-        await deposit.in.wait();
-       */
-        await deposit.renVM.submit();
-        await deposit.renVM.wait();
-        const queryTx = deposit.queryTxResult.tx;
-        const { amount, sig: signature } = queryTx.out;
-        const { nhash, phash } = queryTx.in;
-        const result = (this._queryTxResult = {
-            amount: String(amount),
-            nHash: (0, bytes_1.hexlify)(nhash),
-            pHash: (0, bytes_1.hexlify)(phash),
-            signature: (0, bytes_1.hexlify)(signature),
-        });
-        return result;
+      if (this._queryTxResult) return this._queryTxResult;
+      const mint = await this.submitToRenVM();
+      const deposit = await this.waitForDeposit();
+      /*
+      await deposit.in.wait();
+      await deposit.renVM.submit();
+      await deposit.renVM.wait();
+  
+      const queryTx = (deposit as any).queryTxResult.tx;
+      const { amount, sig: signature } = queryTx.out;
+      const { nhash, phash } = queryTx.in;
+      const result = (this._queryTxResult = {
+        amount: String(amount),
+        nHash: hexlify(nhash),
+        pHash: hexlify(phash),
+        signature: hexlify(signature),
+      });
+      return result;
+      */
     }
     ;
+    async submitToRenVM() {
+        return await this.submitToThorChain();
+    }
     async toGatewayAddress() {
-        const mint = await this.submitToRenVM();
+        const mint = await this.submitToThorChain();
         return mint.gatewayAddress;
     }
     ;
-    async fallbackMint(signer) {
-        if (!this._queryTxResult)
-            await this.waitForSignature();
-        const { amount: actualAmount, nHash, signature } = this._queryTxResult;
-        const contract = new contracts_1.Contract(this.contractAddress, [
-            "function fallbackMint(address underwriter, address to, address asset, uint256 amount, uint256 actualAmount, uint256 nonce, address module, bytes32 nHash, bytes data, bytes signature)"
-        ], signer);
-        return await contract.fallbackMint(this.contractAddress, this.to, this.asset, this.amount, actualAmount, this.pNonce, this.module, nHash, this.data, signature);
-    }
 }
 exports.TransferRequest = TransferRequest;
 //# sourceMappingURL=TransferRequest.js.map

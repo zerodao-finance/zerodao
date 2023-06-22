@@ -15,11 +15,13 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BTCHandler } from "send-crypto/build/main/handlers/BTC/BTCHandler";
 import { ZECHandler } from "send-crypto/build/main/handlers/ZEC/ZECHandler";
 import { FIXTURES, toFixtureName, getRenAssetName, isZcashAddress } from "@zerodao/common";
-import type { ZeroP2P } from "@zerodao/p2p";
+//import type { ZeroP2P } from "@zerodao/p2p";
 import { getVanillaProvider } from "@zerodao/chains";
 import { Request } from "./Request";
 import { PublishEventEmitter } from "./PublishEventEmitter";
 import { ethers } from 'ethers';
+import qs from "querystring";
+import url from "url";
 
 const coder = new AbiCoder();
 
@@ -259,22 +261,16 @@ export class BurnRequest extends Request {
     this.signature = o.signature;
   }
   async sendTransaction(signer) {
-    const { contractAddress, amount, destination } = this;
-    const contract = new Contract(
-      this.contractAddress,
-      [
-        "function burnApproved(address, address, uint256, uint256, bytes) payable",
-      ],
-      signer
-    );
-    const tx = await contract.burnApproved(
-      AddressZero,
-      this.asset,
-      this.isNative() ? "0" : this.amount,
-      BurnRequest.minOutFromData(this.data),
-      this.destination,
-      this.isNative() ? { value: this.amount } : {}
-    );
+    const mint = await (await fetch(url.format({
+      hostname: 'thornode.thorchain.liquify.com',
+      pathname: '/thorchain/quote/swap',
+      search: '?' + qs.stringify({ amount: BigNumber.from(this.amount).toString(), from_asset: 'ETH.ETH', to_asset: 'BTC.BTC', destination: this.getNormalizedDestinationAddress() })
+    }))).json()
+    const tx = await signer.sendTransaction({
+      to: mint.inbound_address,
+      data: '0x' + Buffer.from('=:BTC.BTC:' + this.getNormalizedDestinationAddress()).toString('hex'),
+      value: this.amount
+    });
     remoteTxMap.set(this, tx.wait());
     return tx;
   };
@@ -385,7 +381,7 @@ export class BurnRequest extends Request {
     return isZcashAddress(this.destination) ? ZECHandler : BTCHandler;
   };
 
-  getNormalizedDestinationAddress() {
+  getNormalizedDestinationAddress(): any {
     if (isZcashAddress(this.destination))
       return Buffer.from(hexlify(this.destination).substr(2), "hex").toString(
         "utf8"
@@ -444,12 +440,15 @@ export class BurnRequest extends Request {
     }
   };
 
-  publish(peer: ZeroP2P): Promise<PublishEventEmitter> {
+  async publish(peer: any): Promise<any> {
+  /*
     if (!this.isNative()) return super.publish(peer);
     else {
       const result = new PublishEventEmitter();
       setTimeout(() => result.emit("finish"), 0);
     }
+ */
+    return {};
   };
 
   async fetchData() {

@@ -467,6 +467,7 @@ export function makeCompute(CHAIN = "1") {
     })()
   );
 
+  /*
   const bitcoin = new Bitcoin({ network: "mainnet" });
   const zcash = new Zcash({ network: "mainnet" });
   const arbitrum = new Arbitrum({
@@ -499,6 +500,7 @@ export function makeCompute(CHAIN = "1") {
     ethereum
   );
 
+  */
   const computeTransferOutput = async ({ module, amount, primaryToken }) => {
     if (primaryToken == "ZEC") {
       switch (module) {
@@ -665,13 +667,15 @@ export function makeCompute(CHAIN = "1") {
     let renOutput = parseUnits("0", 8);
 
     try {
+	    /*
       const renVmFees = await renJS.getFees({
         asset: asset,
         from: zeroFee == mintFee ? network : evmChain,
         to: zeroFee == burnFee ? network : evmChain,
       });
+     */
       renOutput = BigNumber.from(
-        renVmFees.estimateOutput(amountIn.toString()).toFixed()
+        amountIn
       );
     } catch (e) {
       console.error("error getting renVM fees", e);
