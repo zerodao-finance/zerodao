@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/compute",
-  "version": "0.3.45",
+  "version": "0.3.46",
   "description": "zerodao sdk package",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao.git",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/node": "^18.6.2"
   },
-  "gitHead": "1f77fb9de4aec537a52a1811d43ff283f13e3fb6",
+  "gitHead": "2702f77f2ae44fcb1e2968ecddaefa4261ed51d7",
   "publishConfig": {
     "access": "public"
   }
