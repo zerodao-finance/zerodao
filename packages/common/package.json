@@ -28,7 +28,7 @@
     "ethers": "^5.6.9",
     "hardhat-deploy-ethers": "^0.3.0-beta.13"
   },
-  "gitHead": "b9a38c5a5fd1463d5a6921e44a5eb6541f9b9f79",
+  "gitHead": "65b0d048f424635fee7154e20de70e21b06f0243",
   "publishConfig": {
     "access": "public"
   }

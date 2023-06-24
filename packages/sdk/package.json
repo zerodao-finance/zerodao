@@ -34,7 +34,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1"
   },
-  "gitHead": "f5de56359a38c1d981f2db41c2c78c7869440ea4",
+  "gitHead": "65b0d048f424635fee7154e20de70e21b06f0243",
   "publicConfig": {
     "access": "public"
   },

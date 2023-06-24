@@ -24,7 +24,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3"
   },
-  "gitHead": "252cda13aab56d411cf4f02b7f45cdb14ee1af58",
+  "gitHead": "65b0d048f424635fee7154e20de70e21b06f0243",
   "publishConfig": {
     "access": "public"
   }
