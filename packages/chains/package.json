@@ -25,7 +25,7 @@
     "build": "tsc",
     "test": "jest"
   },
-  "gitHead": "2702f77f2ae44fcb1e2968ecddaefa4261ed51d7",
+  "gitHead": "8ef6db2e7bcfbc173a43eed38bbd718ce7970605",
   "publishConfig": {
     "access": "public"
   }

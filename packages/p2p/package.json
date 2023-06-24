@@ -52,7 +52,7 @@
     "webpack-cli": "^4.10.0",
     "wepack-cli": "^0.0.1-security"
   },
-  "gitHead": "1f77fb9de4aec537a52a1811d43ff283f13e3fb6",
+  "gitHead": "8ef6db2e7bcfbc173a43eed38bbd718ce7970605",
   "publishConfig": {
     "access": "public"
   }
