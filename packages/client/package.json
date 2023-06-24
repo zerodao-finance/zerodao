@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/client",
-  "version": "0.3.40",
+  "version": "0.3.42",
   "description": "zerodao SDK client exports",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",

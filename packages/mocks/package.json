@@ -1,6 +1,6 @@
 {
   "name": "@zerodao/mocks",
-  "version": "0.3.40",
+  "version": "0.3.42",
   "description": "zerodao SDK mocks",
   "main": "lib/index.js",
   "repository": "https://github.com/zerodao-finance/zerodao",

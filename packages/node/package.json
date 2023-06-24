@@ -1,6 +1,6 @@
 {
   "name": "zeronode",
-  "version": "1.0.0",
+  "version": "0.3.42",
   "description": "cross-chain node",
   "main": "lib/index.js",
   "scripts": {
