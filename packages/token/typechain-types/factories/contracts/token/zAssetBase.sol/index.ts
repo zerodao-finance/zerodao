@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ZAssetBase__factory } from "./ZAssetBase__factory";
-export { ZERO__factory } from "./ZERO__factory";

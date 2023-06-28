@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ZAssetBase } from "./ZAssetBase";
-export type { ZERO } from "./ZERO";

@@ -31,16 +31,16 @@ contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
 
   function addAcceptedCollateral(address input) public onlyOwner {
     _acceptsCollateral[input] = true;
-    _acceptedCollaterals.push(input);
+    acceptedCollateral.push(input);
   }
 
   function acceptsCollateral(address input) public view returns (bool) {
     return _acceptsCollateral[input];
   }
 
-  function getAcceptedCollateral() external view returns (address memory _acceptedCollaterals) {
-    for (uint256 i = 0; i < acceptedCollaterals.length; i++) {
-      _acceptedCollaterals[i] = acceptedCollaterals[i];
+  function getAcceptedCollateral() external view returns (address[] memory _acceptedCollaterals) {
+    for (uint256 i = 0; i < acceptedCollateral.length; i++) {
+      _acceptedCollaterals[i] = acceptedCollateral[i];
     }
   }
 

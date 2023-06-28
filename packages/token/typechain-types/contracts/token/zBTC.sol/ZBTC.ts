@@ -27,7 +27,7 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export interface ZAssetBaseInterface extends utils.Interface {
+export interface ZBTCInterface extends utils.Interface {
   functions: {
     "DOMAIN_SEPARATOR()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
@@ -42,6 +42,7 @@ export interface ZAssetBaseInterface extends utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "mint(address,bytes32,bytes32,uint256,bytes)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
@@ -69,7 +70,8 @@ export interface ZAssetBaseInterface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "increaseAllowance"
-      | "initialize"
+      | "initialize(address,address)"
+      | "initialize()"
       | "mint"
       | "name"
       | "nonces"
@@ -133,8 +135,12 @@ export interface ZAssetBaseInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize",
+    functionFragment: "initialize(address,address)",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize()",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
@@ -220,7 +226,14 @@ export interface ZAssetBaseInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initialize(address,address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "initialize()",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
@@ -301,12 +314,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface ZAssetBase extends BaseContract {
+export interface ZBTC extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ZAssetBaseInterface;
+  interface: ZBTCInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -385,9 +398,13 @@ export interface ZAssetBase extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    initialize(
+    "initialize(address,address)"(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -504,9 +521,13 @@ export interface ZAssetBase extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  initialize(
+  "initialize(address,address)"(
     sZERO: PromiseOrValue<string>,
     gateway: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "initialize()"(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -623,11 +644,13 @@ export interface ZAssetBase extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    initialize(
+    "initialize(address,address)"(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    "initialize()"(overrides?: CallOverrides): Promise<void>;
 
     mint(
       account: PromiseOrValue<string>,
@@ -777,9 +800,13 @@ export interface ZAssetBase extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    initialize(
+    "initialize(address,address)"(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -897,9 +924,13 @@ export interface ZAssetBase extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    initialize(
+    "initialize(address,address)"(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

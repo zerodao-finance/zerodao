@@ -4,8 +4,11 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
+  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -22,28 +25,145 @@ import type {
 
 export interface IZEROFROSTInterface extends utils.Interface {
   functions: {
+    "acceptsCollateral(address)": FunctionFragment;
+    "canLeaveAfter(bytes)": FunctionFragment;
+    "collateral(bytes)": FunctionFragment;
+    "collateralValueInETH()": FunctionFragment;
+    "collect(uint256)": FunctionFragment;
     "epoch()": FunctionFragment;
     "epochLength()": FunctionFragment;
+    "getAcceptedCollateral()": FunctionFragment;
+    "goodbye(bytes)": FunctionFragment;
+    "liquidate()": FunctionFragment;
     "nextEpoch()": FunctionFragment;
+    "principal()": FunctionFragment;
+    "purchase(address[],uint256[],bytes)": FunctionFragment;
+    "redeem(bytes)": FunctionFragment;
+    "rotate(bytes)": FunctionFragment;
+    "setEpochLength(uint256)": FunctionFragment;
+    "wrappedAssetValueInETH()": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "epoch" | "epochLength" | "nextEpoch"
+    nameOrSignatureOrTopic:
+      | "acceptsCollateral"
+      | "canLeaveAfter"
+      | "collateral"
+      | "collateralValueInETH"
+      | "collect"
+      | "epoch"
+      | "epochLength"
+      | "getAcceptedCollateral"
+      | "goodbye"
+      | "liquidate"
+      | "nextEpoch"
+      | "principal"
+      | "purchase"
+      | "redeem"
+      | "rotate"
+      | "setEpochLength"
+      | "wrappedAssetValueInETH"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "acceptsCollateral",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "canLeaveAfter",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collateral",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collateralValueInETH",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collect",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "epochLength",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "getAcceptedCollateral",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "goodbye",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(functionFragment: "liquidate", values?: undefined): string;
   encodeFunctionData(functionFragment: "nextEpoch", values?: undefined): string;
+  encodeFunctionData(functionFragment: "principal", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "purchase",
+    values: [
+      PromiseOrValue<string>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeem",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rotate",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setEpochLength",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "wrappedAssetValueInETH",
+    values?: undefined
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "acceptsCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "canLeaveAfter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "collateral", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collateralValueInETH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "epochLength",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAcceptedCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "goodbye", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "liquidate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nextEpoch", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "principal", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "purchase", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "rotate", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setEpochLength",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "wrappedAssetValueInETH",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -75,42 +195,371 @@ export interface IZEROFROST extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    acceptsCollateral(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { canUse: boolean }>;
+
+    canLeaveAfter(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { timestamp: BigNumber }>;
+
+    collateral(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; qtys: BigNumber[] }
+    >;
+
+    collateralValueInETH(
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+    >;
+
+    collect(
+      epoch: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     epoch(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     epochLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getAcceptedCollateral(overrides?: CallOverrides): Promise<[string[]]>;
+
+    goodbye(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    liquidate(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     nextEpoch(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    principal(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { requiredZeroTokens: BigNumber }>;
+
+    purchase(
+      inputCollateral: PromiseOrValue<string>[],
+      inputCollateralAmounts: PromiseOrValue<BigNumberish>[],
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    redeem(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rotate(
+      frostPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setEpochLength(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    wrappedAssetValueInETH(
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+    >;
   };
+
+  acceptsCollateral(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  canLeaveAfter(
+    blsPubKey: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  collateral(
+    blsPubKey: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<[string[], BigNumber[]] & { assets: string[]; qtys: BigNumber[] }>;
+
+  collateralValueInETH(
+    overrides?: CallOverrides
+  ): Promise<
+    [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+  >;
+
+  collect(
+    epoch: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
   epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getAcceptedCollateral(overrides?: CallOverrides): Promise<string[]>;
+
+  goodbye(
+    blsPubKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  liquidate(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
 
+  principal(overrides?: CallOverrides): Promise<BigNumber>;
+
+  purchase(
+    inputCollateral: PromiseOrValue<string>[],
+    inputCollateralAmounts: PromiseOrValue<BigNumberish>[],
+    blsPubKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  redeem(
+    blsPubKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rotate(
+    frostPubKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setEpochLength(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  wrappedAssetValueInETH(
+    overrides?: CallOverrides
+  ): Promise<
+    [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+  >;
+
   callStatic: {
+    acceptsCollateral(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    canLeaveAfter(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    collateral(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; qtys: BigNumber[] }
+    >;
+
+    collateralValueInETH(
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+    >;
+
+    collect(
+      epoch: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAcceptedCollateral(overrides?: CallOverrides): Promise<string[]>;
+
+    goodbye(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    liquidate(overrides?: CallOverrides): Promise<void>;
+
     nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
+
+    principal(overrides?: CallOverrides): Promise<BigNumber>;
+
+    purchase(
+      inputCollateral: PromiseOrValue<string>[],
+      inputCollateralAmounts: PromiseOrValue<BigNumberish>[],
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    redeem(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rotate(
+      frostPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setEpochLength(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    wrappedAssetValueInETH(
+      overrides?: CallOverrides
+    ): Promise<
+      [string[], BigNumber[]] & { assets: string[]; totalValue: BigNumber[] }
+    >;
   };
 
   filters: {};
 
   estimateGas: {
+    acceptsCollateral(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    canLeaveAfter(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    collateral(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    collateralValueInETH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    collect(
+      epoch: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     epochLength(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAcceptedCollateral(overrides?: CallOverrides): Promise<BigNumber>;
+
+    goodbye(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    liquidate(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     nextEpoch(overrides?: CallOverrides): Promise<BigNumber>;
+
+    principal(overrides?: CallOverrides): Promise<BigNumber>;
+
+    purchase(
+      inputCollateral: PromiseOrValue<string>[],
+      inputCollateralAmounts: PromiseOrValue<BigNumberish>[],
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    redeem(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rotate(
+      frostPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setEpochLength(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    wrappedAssetValueInETH(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    acceptsCollateral(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    canLeaveAfter(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    collateral(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    collateralValueInETH(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    collect(
+      epoch: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     epochLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getAcceptedCollateral(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    goodbye(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    liquidate(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     nextEpoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    principal(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    purchase(
+      inputCollateral: PromiseOrValue<string>[],
+      inputCollateralAmounts: PromiseOrValue<BigNumberish>[],
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    redeem(
+      blsPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rotate(
+      frostPubKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setEpochLength(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    wrappedAssetValueInETH(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

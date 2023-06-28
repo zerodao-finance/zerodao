@@ -1,0 +1,3 @@
+[submodule "packages/token/bip340-solidity"]
+	path = packages/token/bip340-solidity
+	url = https://github.com/zerodao-finance/bip340-solidity.git

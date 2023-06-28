@@ -133,7 +133,7 @@ const config: any = {
     excludeContracts: ["contracts/libraries/"],
   },
   paths: {
-    sources: "contracts",
+    sources: "contracts/token",
   },
   solidity: {
     compilers: [

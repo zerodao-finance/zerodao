@@ -2,5 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as openzeppelin from "./@openzeppelin";
+export * as bip340Solidity from "./bip340-solidity";
 export * as contracts from "./contracts";
-export * as erc721A from "./erc721a";

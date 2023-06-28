@@ -5,8 +5,15 @@ import { ERC20PermitUpgradeable } from "@openzeppelin/contracts-upgradeable-new/
 import { ERC20CappedUpgradeable, ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable-new/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable-new/access/OwnableUpgradeable.sol";
 import { ISZERO } from "../interfaces/ISZERO.sol";
+import "../../bip340-solidity/contracts/Bip340Ecrec.sol";
+import "hardhat/console.sol";
 
 abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
+    Bip340Ecrec public bip340Ecrec;
+
+    constructor() {
+        bip340Ecrec = new Bip340Ecrec();
+    }
   address _gateway;
   address _szero;
   uint256 _idx;
@@ -43,9 +50,15 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
     uint256 amount,
     bytes memory signature
   ) public virtual {
-    //TODO: write signature verification
+
+    require(signature.length == 64, "Invalid signature length");
+    bytes32 rx = bytesToBytes32(signature, 0);
+    bytes32 s = bytesToBytes32(signature, 32);
+    bytes32 m = keccak256(abi.encodePacked(account, pHash, nHash, amount));
+    require(bip340Ecrec.verify(uint256(pHash), uint256(rx), uint256(s), m), "Invalid signature");
+
     _mint(account, amount);
-    ISZERO(_szero).updateZAssetReward(_idx, amount);
+   // ISZERO(_szero).updateZAssetReward(_idx, amount);
   }
 
   function burn(
@@ -53,8 +66,20 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
     bytes memory blsPubKey,
     bytes memory data
   ) public virtual {
-    //TODO: write signature verification
     _burn(msg.sender, amount);
     ISZERO(_szero).updateZAssetReward(_idx, amount);
   }
+
+  // A helper function to convert bytes (b) to bytes32
+function bytesToBytes32(bytes memory b, uint offset) private pure returns (bytes32) {
+  bytes32 out;
+
+  for (uint i = 0; i < 32; i++) {
+    out |= bytes32(b[offset + i] & 0xFF) >> (i * 8);
+  }
+  return out;
 }
+}
+
+
+
