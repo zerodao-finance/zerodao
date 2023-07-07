@@ -25,6 +25,13 @@ const deploy: DeployFunction = async function (hre) {
       },
     },
   });
+
+
+  const deployedControl = await deployments.deploy("Control", {
+    from: signer.address,
+  });
+  const gateway = ethers.utils.getAddress("0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef")
+ 
   const deployedZeroFrost = await deployments.deploy("ZEROFROST", {
     from: signer.address,
     proxy: {
@@ -40,6 +47,7 @@ const deploy: DeployFunction = async function (hre) {
   });
   await deployments.save("ZEROFROST", deployedZeroFrost);
   await deployments.save("ZERO", deployedZero);
+  await deployments.save("Control", deployedControl);
   const zero = new ethers.Contract(
     deployedZero.address,
     deployedZero.abi,
@@ -83,7 +91,36 @@ const deploy: DeployFunction = async function (hre) {
       },
     },
   });
+  const deployedZAsset = await deployments.deploy("ZAssetBase", {
+    from: signer.address,
+    proxy: {
+      owner: signer.address,
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [deployedSZero.address, gateway, deployedControl.address],
+        },
+      },
+    },
+  });
 
+  const deployedZBTC = await deployments.deploy("ZBTC", {
+    from: signer.address,
+    proxy: {
+      owner: signer.address,
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [deployedSZero.address, gateway, deployedControl.address],
+        },
+      },
+    },
+  });
+
+  await deployments.save("zAssetBase", deployedZAsset);
+  await deployments.save("zBTC", deployedZBTC);
   await deployments.save("ZeroGovernor", deployerGov);
   const nft = await deployments.deploy("ZeroHeroNFT", {
     from: signer.address,

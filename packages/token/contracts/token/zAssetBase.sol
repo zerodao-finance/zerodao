@@ -9,27 +9,30 @@ import "../../bip340-solidity/contracts/Bip340Ecrec.sol";
 import "hardhat/console.sol";
 
 abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
-    Bip340Ecrec public bip340Ecrec;
-
-    constructor() {
-        bip340Ecrec = new Bip340Ecrec();
-    }
+    
   address _gateway;
   address _szero;
   uint256 _idx;
+  address _signer;
   mapping(address => bool) _isPrecompiled;
   modifier onlyGatewayOrOwner() {
     require(msg.sender == owner() || msg.sender == _szero);
     _;
   }
 
-  function initialize(address sZERO, address gateway) public initializer {
+  function initialize(address sZERO, address gateway, address signer) public initializer {
     __ERC20Permit_init("ZERO");
     __ERC20_init_unchained("ZERO", "ZERO");
     __Ownable_init_unchained();
     _szero = sZERO;
     _gateway = gateway;
+    _signer = signer;
   }
+
+  modifier onlyMuSig { 
+    require(msg.sender == _signer, "!signer"); 
+    _;
+    }
 
   function changeSZero(address sZero) public onlyOwner {
     _szero = sZero;
@@ -45,17 +48,12 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
 
   function mint(
     address account,
-    bytes32 pHash,
-    bytes32 nHash,
-    uint256 amount,
-    bytes memory signature
-  ) public virtual {
-
-    require(signature.length == 64, "Invalid signature length");
-    bytes32 rx = bytesToBytes32(signature, 0);
-    bytes32 s = bytesToBytes32(signature, 32);
-    bytes32 m = keccak256(abi.encodePacked(account, pHash, nHash, amount));
-    require(bip340Ecrec.verify(uint256(pHash), uint256(rx), uint256(s), m), "Invalid signature");
+    uint256 amount
+  ) public virtual onlyMuSig {
+    // bytes32 rx = bytesToBytes32(signature, 0);
+    // bytes32 s = bytesToBytes32(signature, 32);
+    // bytes32 m = keccak256(abi.encodePacked(account, pHash, nHash, amount));
+    // require(bip340Ecrec.verify(uint256(pHash), uint256(rx), uint256(s), m), "Invalid signature");
 
     _mint(account, amount);
    // ISZERO(_szero).updateZAssetReward(_idx, amount);
@@ -65,7 +63,7 @@ abstract contract ZAssetBase is OwnableUpgradeable, ERC20PermitUpgradeable {
     uint256 amount,
     bytes memory blsPubKey,
     bytes memory data
-  ) public virtual {
+  ) public virtual onlyMuSig {
     _burn(msg.sender, amount);
     ISZERO(_szero).updateZAssetReward(_idx, amount);
   }

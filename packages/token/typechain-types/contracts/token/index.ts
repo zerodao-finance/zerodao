@@ -7,5 +7,6 @@ import type * as zAssetBaseSol from "./zAssetBase.sol";
 export type { zAssetBaseSol };
 import type * as zBtcSol from "./zBTC.sol";
 export type { zBtcSol };
+export type { Control } from "./Control";
 export type { ERC20VotesUpgradeable } from "./ERC20VotesUpgradeable";
 export type { ZERO } from "./ZERO";

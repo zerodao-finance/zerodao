@@ -4,5 +4,6 @@
 export * as sZeroSol from "./sZERO.sol";
 export * as zAssetBaseSol from "./zAssetBase.sol";
 export * as zBtcSol from "./zBTC.sol";
+export { Control__factory } from "./Control__factory";
 export { ERC20VotesUpgradeable__factory } from "./ERC20VotesUpgradeable__factory";
 export { ZERO__factory } from "./ZERO__factory";

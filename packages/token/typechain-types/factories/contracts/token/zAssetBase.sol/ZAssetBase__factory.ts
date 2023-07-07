@@ -173,19 +173,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "bip340Ecrec",
-    outputs: [
-      {
-        internalType: "contract Bip340Ecrec",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -320,6 +307,11 @@ const _abi = [
         name: "gateway",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "signer",
+        type: "address",
+      },
     ],
     name: "initialize",
     outputs: [],
@@ -334,24 +326,9 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "bytes32",
-        name: "pHash",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "nHash",
-        type: "bytes32",
-      },
-      {
         internalType: "uint256",
         name: "amount",
         type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes",
       },
     ],
     name: "mint",

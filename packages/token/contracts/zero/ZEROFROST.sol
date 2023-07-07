@@ -7,7 +7,7 @@ import { ZEROFROSTStorage } from "./ZEROFROSTStorage.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // dummy contract to just return epoch length for now
-contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
+abstract contract ZEROFROST is ZEROFROSTStorage, IZEROFROST {
   function initialize() public initializer {
     __Ownable_init_unchained();
     __ERC721_init_unchained("ZEROFROST", "ZFRST");

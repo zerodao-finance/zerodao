@@ -44,6 +44,8 @@ export type { ISZERO } from "./contracts/interfaces/ISZERO";
 export { ISZERO__factory } from "./factories/contracts/interfaces/ISZERO__factory";
 export type { IZEROFROST } from "./contracts/interfaces/IZEROFROST";
 export { IZEROFROST__factory } from "./factories/contracts/interfaces/IZEROFROST__factory";
+export type { Control } from "./contracts/token/Control";
+export { Control__factory } from "./factories/contracts/token/Control__factory";
 export type { ERC20VotesUpgradeable } from "./contracts/token/ERC20VotesUpgradeable";
 export { ERC20VotesUpgradeable__factory } from "./factories/contracts/token/ERC20VotesUpgradeable__factory";
 export type { IMigratorChef } from "./contracts/token/sZERO.sol/IMigratorChef";

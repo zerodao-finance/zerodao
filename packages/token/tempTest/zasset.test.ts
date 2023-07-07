@@ -45,7 +45,7 @@ describe("ZBTC", function () {
         const nHash = Buffer.from('4321432143214321432143214321432143214321432143214321432143214321', 'hex');
         const amount = 1000; // some amount
         const publicKey = keyPair.publicKey; // Get the public key
-        const xOnlyPublicKey = publicKey.slice(1, 33); // Get the X coordinate (the first 32 bytes)
+        const xOnlyPublicKey = publicKey.subarray(1, 33); // Get the X coordinate (the first 32 bytes)
         const pHash = '0x' + xOnlyPublicKey.toString('hex'); // Convert to hex string format
         // Perform the ABI encoding and the keccak256 hash
         let message = eth.utils.solidityKeccak256(['address', 'bytes32', 'bytes32', 'uint256'], [account, pHash, nHash, amount]);

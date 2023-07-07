@@ -33,7 +33,6 @@ export interface ZAssetBaseInterface extends utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "bip340Ecrec()": FunctionFragment;
     "burn(uint256,bytes,bytes)": FunctionFragment;
     "changeGateway(address)": FunctionFragment;
     "changeIdx(uint256)": FunctionFragment;
@@ -41,8 +40,8 @@ export interface ZAssetBaseInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(address,address)": FunctionFragment;
-    "mint(address,bytes32,bytes32,uint256,bytes)": FunctionFragment;
+    "initialize(address,address,address)": FunctionFragment;
+    "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -61,7 +60,6 @@ export interface ZAssetBaseInterface extends utils.Interface {
       | "allowance"
       | "approve"
       | "balanceOf"
-      | "bip340Ecrec"
       | "burn"
       | "changeGateway"
       | "changeIdx"
@@ -100,10 +98,6 @@ export interface ZAssetBaseInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "bip340Ecrec",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "burn",
     values: [
       PromiseOrValue<BigNumberish>,
@@ -134,17 +128,15 @@ export interface ZAssetBaseInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -197,10 +189,6 @@ export interface ZAssetBaseInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "bip340Ecrec",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "changeGateway",
@@ -347,8 +335,6 @@ export interface ZAssetBase extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    bip340Ecrec(overrides?: CallOverrides): Promise<[string]>;
-
     burn(
       amount: PromiseOrValue<BigNumberish>,
       blsPubKey: PromiseOrValue<BytesLike>,
@@ -388,15 +374,13 @@ export interface ZAssetBase extends BaseContract {
     initialize(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      signer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     mint(
       account: PromiseOrValue<string>,
-      pHash: PromiseOrValue<BytesLike>,
-      nHash: PromiseOrValue<BytesLike>,
       amount: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -466,8 +450,6 @@ export interface ZAssetBase extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  bip340Ecrec(overrides?: CallOverrides): Promise<string>;
-
   burn(
     amount: PromiseOrValue<BigNumberish>,
     blsPubKey: PromiseOrValue<BytesLike>,
@@ -507,15 +489,13 @@ export interface ZAssetBase extends BaseContract {
   initialize(
     sZERO: PromiseOrValue<string>,
     gateway: PromiseOrValue<string>,
+    signer: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   mint(
     account: PromiseOrValue<string>,
-    pHash: PromiseOrValue<BytesLike>,
-    nHash: PromiseOrValue<BytesLike>,
     amount: PromiseOrValue<BigNumberish>,
-    signature: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -585,8 +565,6 @@ export interface ZAssetBase extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    bip340Ecrec(overrides?: CallOverrides): Promise<string>;
-
     burn(
       amount: PromiseOrValue<BigNumberish>,
       blsPubKey: PromiseOrValue<BytesLike>,
@@ -626,15 +604,13 @@ export interface ZAssetBase extends BaseContract {
     initialize(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      signer: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mint(
       account: PromiseOrValue<string>,
-      pHash: PromiseOrValue<BytesLike>,
-      nHash: PromiseOrValue<BytesLike>,
       amount: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -739,8 +715,6 @@ export interface ZAssetBase extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    bip340Ecrec(overrides?: CallOverrides): Promise<BigNumber>;
-
     burn(
       amount: PromiseOrValue<BigNumberish>,
       blsPubKey: PromiseOrValue<BytesLike>,
@@ -780,15 +754,13 @@ export interface ZAssetBase extends BaseContract {
     initialize(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      signer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     mint(
       account: PromiseOrValue<string>,
-      pHash: PromiseOrValue<BytesLike>,
-      nHash: PromiseOrValue<BytesLike>,
       amount: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -859,8 +831,6 @@ export interface ZAssetBase extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    bip340Ecrec(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     burn(
       amount: PromiseOrValue<BigNumberish>,
       blsPubKey: PromiseOrValue<BytesLike>,
@@ -900,15 +870,13 @@ export interface ZAssetBase extends BaseContract {
     initialize(
       sZERO: PromiseOrValue<string>,
       gateway: PromiseOrValue<string>,
+      signer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     mint(
       account: PromiseOrValue<string>,
-      pHash: PromiseOrValue<BytesLike>,
-      nHash: PromiseOrValue<BytesLike>,
       amount: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
